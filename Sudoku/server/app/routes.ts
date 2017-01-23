@@ -4,7 +4,7 @@ import * as puzzleManagerService from './services/puzzle-manager.service';
 
 module Route {
 
-  export class RouteManager  {
+  export class RouteManager {
     puzzleManagerService : puzzleManagerService.PuzzleManager;
 
     /**
@@ -12,7 +12,8 @@ module Route {
      *
      * @class RouteManager
      */
-    constructor() { }
+    constructor() { // Default constructor
+    }
 
      /**
      * The index function to render the main access page of the server ui.
@@ -34,9 +35,9 @@ module Route {
      * @return newPuzzle
      */
     public getNewPuzzle(req: express.Request, res: express.Response, next: express.NextFunction) {
-        
+
         // Get a new puzzle from the PuzzleManger service.
-        let puzzleManager =  new puzzleManagerService.PuzzleManager()
+        let puzzleManager = new puzzleManagerService.PuzzleManager();
         let newPuzzle = puzzleManager.getNewPuzzle();
 
         res.send(newPuzzle);

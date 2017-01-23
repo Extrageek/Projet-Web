@@ -6,7 +6,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import {PuzzleCommon} from '../commons/puzzle-common';
+import { PuzzleCommon } from '../commons/puzzle-common';
 
 @Injectable()
 export class PuzzleEventManagerService {
@@ -15,7 +15,9 @@ export class PuzzleEventManagerService {
     _newPositionY = 0;
     _nextInputPositionYX : string;
 
-    constructor() { }
+    constructor() {
+        // Default constructor
+     }
 
     /**
      * The isDirection function, check if the keypress source is one of the Left/Right/Up/Down arrow keycode.
@@ -26,7 +28,7 @@ export class PuzzleEventManagerService {
      */
     isDirection (keyCode: number): boolean {
         // If code of the key is an arrow (left/right/up/downArrowKeyCode)
-        return 37 <= keyCode && keyCode <= 40; 
+        return 37 <= keyCode && keyCode <= 40;
     }
 
      /**
@@ -38,8 +40,8 @@ export class PuzzleEventManagerService {
      */
     isDeleteKey (keyCode: number): boolean {
         // TODO: Must be checked, let's keep this for now
-        return keyCode == PuzzleCommon.deleteKeyCode || 
-            keyCode == PuzzleCommon.deleteKeyCodeOnMac; 
+        return keyCode === PuzzleCommon.deleteKeyCode ||
+            keyCode === PuzzleCommon.deleteKeyCodeOnMac;
     }
 
     /**
@@ -50,7 +52,7 @@ export class PuzzleEventManagerService {
      * @return true for a valid number for the puzzle
      */
     isSudokuNumber (keyCode: number): boolean{
-        return 49 <= keyCode && keyCode <= 57; 
+        return 49 <= keyCode && keyCode <= 57;
     }
 
     /**
@@ -59,7 +61,7 @@ export class PuzzleEventManagerService {
      * @class PuzzleEventManagerService
      * @method onKeyEventUpdateCurrentCursor
      */
-    onKeyEventUpdateCurrentCursor(event:KeyboardEvent): void{
+    onKeyEventUpdateCurrentCursor(event: KeyboardEvent): void{
 
         let currentPositionXY = event.srcElement.id.split('');
         let keyCode = event.keyCode;
@@ -67,10 +69,12 @@ export class PuzzleEventManagerService {
         // TODO: Remove after a clean debug
         //console.log(this.isDeleteKey(keyCode));
         //console.log(keyCode);
-        if(this.isDirection(keyCode))
+        if (this.isDirection(keyCode)) {
             this.updateFocus(currentPositionXY, keyCode);
-        else if(this.isDeleteKey(keyCode))
+        }
+        else if (this.isDeleteKey(keyCode)) {
             this.deleteCellContent(currentPositionXY);
+        }
     }
 
      /**
@@ -81,42 +85,45 @@ export class PuzzleEventManagerService {
      */
     updateFocus(currentPositionXY: string[], keyCode: number): void {
         switch (keyCode) {
-            case PuzzleCommon.downArrowKeyCode: 
+            case PuzzleCommon.downArrowKeyCode:
                 let downPosition = Number(currentPositionXY[PuzzleCommon.yPosition]) + 1;
-                this._newPositionX = ( downPosition > PuzzleCommon.maxColumnIndex)? PuzzleCommon.minColIndex: downPosition;
+                this._newPositionX = ( downPosition > PuzzleCommon.maxColumnIndex)
+                    ? PuzzleCommon.minColIndex : downPosition;
                 break;
             case PuzzleCommon.upArrowKeyCode:
                 let upPosition = Number(currentPositionXY[PuzzleCommon.yPosition]) - 1;
-                this._newPositionX = (upPosition < PuzzleCommon.minColIndex)? PuzzleCommon.maxRowIndex: upPosition;
+                this._newPositionX = (upPosition < PuzzleCommon.minColIndex)
+                    ? PuzzleCommon.maxRowIndex : upPosition;
                 break;
             case PuzzleCommon.leftArrowKeyCode:
                 let leftPosition = Number(currentPositionXY[PuzzleCommon.xPosition]) - 1;
-                this._newPositionY = (leftPosition < PuzzleCommon.minColIndex) ? PuzzleCommon.maxRowIndex : leftPosition;
+                this._newPositionY = (leftPosition < PuzzleCommon.minColIndex)
+                    ? PuzzleCommon.maxRowIndex : leftPosition;
                 break;
             case PuzzleCommon.rightArrowKeyCode:
                 let rightPosition = Number(currentPositionXY[PuzzleCommon.xPosition]) + 1;
-                this._newPositionY = (rightPosition > PuzzleCommon.maxColumnIndex) ? PuzzleCommon.minColIndex : rightPosition;
+                this._newPositionY = (rightPosition > PuzzleCommon.maxColumnIndex)
+                    ? PuzzleCommon.minColIndex : rightPosition;
                 break;
             case PuzzleCommon.deleteKeyCode:
                 event.srcElement.innerHTML = "";
                 break;
             default:
                 break;
-        };
+        }
 
-        if (keyCode == PuzzleCommon.leftArrowKeyCode || keyCode == PuzzleCommon.rightArrowKeyCode) {
+        if (keyCode === PuzzleCommon.leftArrowKeyCode || keyCode === PuzzleCommon.rightArrowKeyCode) {
             // TODO: To be removed after a clean debug
             //console.log("Left/Right Key Pressed");
             this._nextInputPositionYX = currentPositionXY[PuzzleCommon.yPosition] + this._newPositionY.toString();
-        } else if (keyCode == PuzzleCommon.upArrowKeyCode || keyCode == PuzzleCommon.downArrowKeyCode) {
+        } else if (keyCode === PuzzleCommon.upArrowKeyCode || keyCode === PuzzleCommon.downArrowKeyCode) {
             // TODO: To be removed after a clean debug
             //console.log("Up/Down Key Pressed");            
             this._nextInputPositionYX = this._newPositionX.toString() + currentPositionXY[PuzzleCommon.xPosition];
         }
 
-        let focusElement = <HTMLInputElement>document.getElementById(this._nextInputPositionYX);  
-        focusElement.focus(); 
-
+        let focusElement = <HTMLInputElement>document.getElementById(this._nextInputPositionYX);
+        focusElement.focus();
     }
 
      /**
@@ -126,7 +133,7 @@ export class PuzzleEventManagerService {
      * @method deleteCellContent
      */
     deleteCellContent(currentPositionXY: string[]): void {
-        
+
         let focusElement = <HTMLInputElement>document.getElementById(currentPositionXY.join(''));
         //console.log(focusElement.innerHTML);
         focusElement.innerHTML = "";
