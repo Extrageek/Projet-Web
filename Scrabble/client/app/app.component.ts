@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
   selector: 'my-app',
   template: `
     <grid></grid>
+    <easel></easel>
   `,
 })
 export class AppComponent { name = 'Angular'; }
