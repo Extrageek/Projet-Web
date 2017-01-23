@@ -11,7 +11,7 @@ import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 
-import * as indexRoute from './routes';
+import * as route from './routes';
 
 export class Application {
 
@@ -60,6 +60,7 @@ export class Application {
     this.app.use(bodyParser.urlencoded({ extended: true }));
     this.app.use(cookieParser());
     this.app.use(express.static(path.join(__dirname, '../client')));
+    
   }
 
   /**
@@ -72,11 +73,21 @@ export class Application {
     let router: express.Router;
     router = express.Router();
 
-    //create routes
-    const index: indexRoute.Index = new indexRoute.Index();
+    // Allow request from external services
+    this.app.use(function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
 
+    next();
+    });
+
+    //create routes
+    const routeManager: route.RouteManager = new route.RouteManager();
+    
     //home page
-    router.get('/', index.index.bind(index.index));
+    router.get('/', routeManager.index.bind(routeManager.index));
+    router.get('/api/puzzle', routeManager.getNewPuzzle.bind(routeManager.getNewPuzzle));
 
     //use router middleware
     this.app.use(router);
