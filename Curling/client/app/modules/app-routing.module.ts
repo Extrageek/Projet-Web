@@ -2,13 +2,15 @@ import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { DashboardComponent } from '../components/dashboard.component';
-
+import { UserSettingComponent } from '../components/user-setting.component';
 import { GlComponent } from '../components/gl.component';
+
 // TODO : Put the right paths
 const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch:'full' },
+  { path: '', redirectTo: 'user', pathMatch:'full' },
+  { path: 'user', component: UserSettingComponent},
   { path: 'dashboard', component: DashboardComponent},
-  { path: 'glcomp', component: GlComponent }
+  { path: 'game', component: GlComponent }
 ];
 @NgModule({
   imports: [ RouterModule.forRoot(routes) ],

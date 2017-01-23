@@ -6,3 +6,8 @@ body {
 a {
   color: #00B7FF;
 }
+
+html {
+    background-image: url("../images/curling.jpg");
+    background-size: cover;
+}
