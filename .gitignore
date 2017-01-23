@@ -210,4 +210,6 @@ $RECYCLE.BIN/
 !.vscode/launch.json
 !.vscode/extensions.json
 
+#idea
+.idea
 # End of https://www.gitignore.io/api/emacs,linux,macos,node,sublimetext,vim,windows,visualstudiocode
