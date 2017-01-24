@@ -1,0 +1,7 @@
+<table class="mainBoard">
+    <tr *ngFor="let lineNumber of columnNumberList">
+       <td class="mainBoard" *ngFor="let scrabbleLine of line[lineNumber]">
+            <img class="mainBoard" src="{{ mappingLinkImage[scrabbleLine] }}" alt="{{ scrabbleLine }}">
+        </td>
+    </tr>
+</table>
