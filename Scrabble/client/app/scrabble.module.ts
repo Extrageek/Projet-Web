@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ScrabbleBoard } from './ScrabbleBoard';
+import { ScrabbleBoard } from './scrabbleBoard.component';
 
 
 @NgModule({

@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 @Component({
     selector: 'scrabble-main-board', 
     templateUrl: 'app/scrabble.html',
-    styleUrls: ['app/scrabbleStyle.css']
+    styleUrls: ['app/scrabble.css']
 })
 
 export class ScrabbleBoard {
