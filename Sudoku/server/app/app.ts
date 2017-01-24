@@ -60,7 +60,7 @@ export class Application {
     this.app.use(bodyParser.urlencoded({ extended: true }));
     this.app.use(cookieParser());
     this.app.use(express.static(path.join(__dirname, '../client')));
-    
+
   }
 
   /**
@@ -84,7 +84,7 @@ export class Application {
 
     //create routes
     const routeManager: route.RouteManager = new route.RouteManager();
-    
+
     //home page
     router.get('/', routeManager.index.bind(routeManager.index));
     router.get('/api/puzzle', routeManager.getNewPuzzle.bind(routeManager.getNewPuzzle));

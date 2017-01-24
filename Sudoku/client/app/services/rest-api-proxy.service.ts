@@ -6,9 +6,9 @@
  */
 
 import { Injectable } from '@angular/core';
-import {Headers, Response, Http, RequestOptions} from '@angular/http';
+import { Headers, Response, Http, RequestOptions } from '@angular/http';
 
-import { Observable }     from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
@@ -52,7 +52,7 @@ export class RestApiProxyService {
         let body = res.json();
         return body.data || { };
     }
-        
+
     /**
      * Handle error by sending logs.
      *
@@ -67,7 +67,7 @@ export class RestApiProxyService {
             const body = error.json() || '';
             const err = body.error || JSON.stringify(body);
             errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-        } 
+        }
         else
         {
             errMsg = error.message ? error.message : error.toString();

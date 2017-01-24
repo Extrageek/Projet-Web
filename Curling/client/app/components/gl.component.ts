@@ -1,6 +1,7 @@
 import {Component,OnInit} from '@angular/core';
 import { RenderService } from '../services/render.service'
 import {MdDialog, MdDialogRef, MdSnackBar} from '@angular/material';
+
 @Component({
     selector: 'My-GL',
     template:`

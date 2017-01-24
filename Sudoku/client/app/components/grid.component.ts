@@ -7,7 +7,7 @@
 
 import { Component, OnInit } from '@angular/core';
 
-import { Observable }     from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
@@ -33,13 +33,13 @@ import { Puzzle, PuzzleItem } from '../models/puzzle';
         </div>
 
     `,
-    styles:[`
+    styles: [`
         .generatedValue {
             color:#fff;
             background-color:#78909c;
         }
     `],
-    providers : [ 
+    providers : [
         PuzzleEventManagerService,
         RestApiProxyService ]
 })
@@ -53,13 +53,13 @@ export class GridComponent implements OnInit {
                 private restApiProxyService: RestApiProxyService) { }
 
     // Initialization
-    ngOnInit() { 
+    ngOnInit() {
         this.restApiProxyService.getNewPuzzle()
             .subscribe(puzzle => this._puzzle = puzzle );
     }
 
     // Handle the directions key event by using the EventManager
-    onKeyEventHandler(event:KeyboardEvent) {
-       this.puzzleEventManager.onKeyEventUpdateCurrentCursor(event);  
+    onKeyEventHandler(event: KeyboardEvent) {
+       this.puzzleEventManager.onKeyEventUpdateCurrentCursor(event);
     }
 }

@@ -43,10 +43,13 @@ export class RenderService {
         this.renderer = new THREE.WebGLRenderer({antialias: true, devicePixelRatio: window.devicePixelRatio});
         this.renderer.setSize(window.innerWidth*0.8,window.innerHeight*0.8, true);
 
-        this._cam_x = this._cam_y = 0;
-        this._cam_z = 500;
-        this.camera= new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight,1,5000);
+        this._cam_x = 0;
+        this._cam_y = 10;
+        this._cam_z = 25;
+        this.camera= new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight,1,100);
         this.camera.position.set(this._cam_x,this._cam_y,this._cam_z);
+        //this.camera.rotateX(-140);
+        this.camera.rotateX(-0.5);
 
         this.scene = new THREE.Scene();
 
@@ -76,11 +79,12 @@ export class RenderService {
                             new THREE.MeshBasicMaterial({wireframe:true}));
 
         let plane: THREE.Mesh = new THREE.Mesh(
-            new THREE.PlaneBufferGeometry( 1000, 1000 ),
-            new THREE.MeshBasicMaterial( { color: 0xffffff, opacity: 0.5, transparent: true, wireframe:true})
+            new THREE.CircleBufferGeometry( 1.83 , 32),
+            new THREE.MeshBasicMaterial( { color: 16711680, opacity: 1, transparent: false, wireframe:true})
         );
-        plane.position.x = 100;
-        plane.position.z = 50;
+        plane.position.x = 0;
+        plane.position.z = 0;
+        plane.rotateX(Math.PI/2)
         this.scene.add(plane);
 
         // Array to hold our created objects from the factory
@@ -100,7 +104,8 @@ export class RenderService {
 
         /** Load Teapot */
         this.objectLoader = new THREE.ObjectLoader();
-        this.loadObject();
+        this.loadRink();
+        this.loadStoneRed();
 
         // Inser the canvas into the DOM
         //var container = document.getElementById("glContainer");
@@ -120,7 +125,7 @@ export class RenderService {
 
         this.avancer(this.dt);
 
-        this.mesh.rotation.y += 0.01;
+        //this.mesh.rotation.y += 0.01;
         let tp: THREE.Object3D = this.scene.getObjectByName('Teapot001');
         if (tp !== undefined) {
             (tp as THREE.Mesh).rotateZ(this.dt);
@@ -224,10 +229,38 @@ export class RenderService {
         this.camera.updateProjectionMatrix();
     }
 
-    public loadObject(): void {
-        this.objectLoader.load('/assets/models/json/teapot-claraio.json',obj => {
-            obj.position.set(0,0,100);
-            obj.scale.set(50,50,50);
+    public loadStoneRed(): void {
+        this.objectLoader.load('/assets/models/json/curling-stone-red.json',obj => {
+            obj.position.set(0,0,0);
+            obj.scale.set(1,1,1);
+            this.mesh.add(obj);
+            
+            (obj as THREE.Mesh).material =new THREE.MeshPhongMaterial({
+                wireframe: false,
+                shininess: 0.2,
+            });
+
+        });
+    }
+
+    public loadStoneBlue(): void {
+        this.objectLoader.load('/assets/models/json/curling-stone-blue.json',obj => {
+            obj.position.set(0,0,0);
+            obj.scale.set(1,1,1);
+            this.mesh.add(obj);
+            
+            (obj as THREE.Mesh).material =new THREE.MeshPhongMaterial({
+                wireframe: false,
+                shininess: 0.2,
+            });
+
+        });
+    }
+
+     public loadRink(): void {
+        this.objectLoader.load('/assets/models/json/curling-rink.json',obj => {
+            obj.position.set(0,0,0);
+            obj.scale.set(1,1,1);
             this.mesh.add(obj);
             
             (obj as THREE.Mesh).material =new THREE.MeshPhongMaterial({
@@ -239,7 +272,8 @@ export class RenderService {
     }
 
     public newTeapot():void{
-        this.loadObject();
+        this.loadStoneBlue();
+        this.loadRink();
     }
 
 }

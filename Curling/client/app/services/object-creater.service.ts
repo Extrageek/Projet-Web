@@ -28,7 +28,7 @@ export class ObjectCreaterService {
      */
     public createTeapot(): Promise<THREE.Object3D> {
         return new Promise<THREE.Mesh>((resolve,error) => {
-            this.objectLoader.load('/assets/models/json/teapot-claraio.json',obj => {
+            this.objectLoader.load('/assets/models/json/curling-stone-red.json',obj => {
                 if (obj === undefined){
                     error("Unable to load teapot");
                 } else {
