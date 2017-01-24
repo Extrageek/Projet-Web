@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'my-app',
-  template: `<h1>Team {{name}}</h1>
+  template: `<h1> {{name}}</h1>
+    <sudoku-grid></sudoku-grid>
   `,
 })
-export class AppComponent {
-  name = '2.';
+export class AppComponent { 
+  name = 'Sudoku Game ...'; 
 }
