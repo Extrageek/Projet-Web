@@ -51,7 +51,7 @@ export class PuzzleEventManagerService {
      * @method isDeleteKey
      * @return true for a valid number for the puzzle
      */
-    isSudokuNumber (keyCode: number): boolean{
+    isSudokuNumber (keyCode: number): boolean {
         return 49 <= keyCode && keyCode <= 57;
     }
 
@@ -61,7 +61,7 @@ export class PuzzleEventManagerService {
      * @class PuzzleEventManagerService
      * @method onKeyEventUpdateCurrentCursor
      */
-    onKeyEventUpdateCurrentCursor(event: KeyboardEvent): void{
+    onKeyEventUpdateCurrentCursor(event: KeyboardEvent): void {
 
         let currentPositionXY = event.srcElement.id.split('');
         let keyCode = event.keyCode;
@@ -71,8 +71,7 @@ export class PuzzleEventManagerService {
         //console.log(keyCode);
         if (this.isDirection(keyCode)) {
             this.updateFocus(currentPositionXY, keyCode);
-        }
-        else if (this.isDeleteKey(keyCode)) {
+        } else if (this.isDeleteKey(keyCode)) {
             this.deleteCellContent(currentPositionXY);
         }
     }
@@ -84,6 +83,8 @@ export class PuzzleEventManagerService {
      * @method updateFocus
      */
     updateFocus(currentPositionXY: string[], keyCode: number): void {
+        // Reads next direction of arrow keys and decide if it warps to the other end 
+        // or if it goes to the next cell
         switch (keyCode) {
             case PuzzleCommon.downArrowKeyCode:
                 let downPosition = Number(currentPositionXY[PuzzleCommon.yPosition]) + 1;
@@ -121,7 +122,6 @@ export class PuzzleEventManagerService {
             //console.log("Up/Down Key Pressed");            
             this._nextInputPositionYX = this._newPositionX.toString() + currentPositionXY[PuzzleCommon.xPosition];
         }
-
         let focusElement = <HTMLInputElement>document.getElementById(this._nextInputPositionYX);
         focusElement.focus();
     }

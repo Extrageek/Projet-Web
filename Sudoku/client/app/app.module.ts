@@ -13,17 +13,17 @@ import { PuzzleManagerService } from './services/puzzle-manager.service';
 
 
 @NgModule({
-  imports: [ 
+  imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     JsonpModule ],
-  declarations: [ 
-    AppComponent,   
+  declarations: [
+    AppComponent,
     GridComponent
-    ],
-  providers : [ 
-    PuzzleEventManagerService, 
+  ],
+  providers: [
+    PuzzleEventManagerService,
     RestApiProxyService,
     PuzzleManagerService ],
   bootstrap: [ AppComponent, GridComponent ]

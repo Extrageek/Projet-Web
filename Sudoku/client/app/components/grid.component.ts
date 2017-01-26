@@ -7,7 +7,7 @@
 
 import { Component, OnInit } from '@angular/core';
 
-import { Observable }     from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
@@ -21,10 +21,10 @@ import { Puzzle, PuzzleItem } from '../models/puzzle';
 @Component({
     moduleId: module.id,
     selector: 'sudoku-grid',
-    templateUrl : '/app/views/grid.component.html',
+    templateUrl: '/app/views/grid.component.html',
     // TODO: Must be removed to an external css file
     // Do it after a clean debug
-    styles :[`
+    styles: [`
         .grid {
             width: 465px;
             padding: 1px 2px 0px 2px;
@@ -100,7 +100,7 @@ import { Puzzle, PuzzleItem } from '../models/puzzle';
             border-right: 3px solid #212121;
         }
         `],
-    providers : [ 
+    providers: [
         PuzzleManagerService,
         PuzzleEventManagerService,
         RestApiProxyService ]
@@ -108,21 +108,21 @@ import { Puzzle, PuzzleItem } from '../models/puzzle';
 
 export class GridComponent implements OnInit {
 
-    _newPuzzle : Puzzle;
-    _puzzleSolution : Puzzle;
+    _newPuzzle: Puzzle;
+    _puzzleSolution: Puzzle;
 
     // Defaut constructor
-    constructor(private puzzleMangerService : PuzzleManagerService,
-                private puzzleEventManager : PuzzleEventManagerService,
+    constructor(private puzzleMangerService: PuzzleManagerService,
+                private puzzleEventManager: PuzzleEventManagerService,
                 private restApiProxyService: RestApiProxyService) {
-                   
-                 }
+
+    }
 
     // Initialization
-    ngOnInit() { 
+    ngOnInit() {
         this.restApiProxyService.getNewPuzzle()
             .subscribe(puzzle => {
-                
+
                 // The puzzle to display when binding the model to the input box,
                 // must not contains the solution. We need to extract the new puzzle 
                 // for the user.
@@ -140,18 +140,17 @@ export class GridComponent implements OnInit {
      * @method extractTheNewPuzzle
      * @return Puzzle
      */
-    extractTheNewPuzzle(puzzle:Puzzle){
-       puzzle.puzzle.forEach(function(puzzleItems){
-            puzzleItems.forEach(function(puzzleItem){
-                puzzleItem.value = (puzzleItem.hide)? null : puzzleItem.value;
+    extractTheNewPuzzle(puzzle: Puzzle) {
+       puzzle.puzzle.forEach(function(puzzleItems) {
+            puzzleItems.forEach(function(puzzleItem) {
+                puzzleItem.value = (puzzleItem.hide) ? null : puzzleItem.value;
                 });
         });
-
         return puzzle;
     }
 
     // Handle the directions key event by using the EventManager
-    onKeyEventHandler(event:KeyboardEvent) {
+    onKeyEventHandler(event: KeyboardEvent) {
 
         // TODO: Must be removed after a clean debug
         // Some instructions must not be here
@@ -163,29 +162,24 @@ export class GridComponent implements OnInit {
 
         let rowColIndex = eventSourceId.split('');
         let rowIndex = Number(rowColIndex[PuzzleCommon.yPosition]);
-        let colIndex =  Number(rowColIndex[PuzzleCommon.xPosition]);
+        let colIndex = Number(rowColIndex[PuzzleCommon.xPosition]);
 
 
-        if(this.puzzleMangerService.isValidValue(this._newPuzzle,rowIndex,colIndex)){
+        if (this.puzzleMangerService.isValidValue(this._newPuzzle, rowIndex, colIndex)) {
+            //TODO: To remove after a clean debug
             //this.puzzleEventManager.onKeyEventUpdateCurrentCursor(event); 
-
             console.log("true");
-            this.puzzleEventManager.onKeyEventUpdateCurrentCursor(event); 
-
-        }else{
-
-           eventSource.innerHTML = "";
-           eventSource.focus();
-           
+            this.puzzleEventManager.onKeyEventUpdateCurrentCursor(event);
+        } else {
+            eventSource.innerHTML = "";
+            eventSource.focus();
+            //TODO: To remove after a clean debug
             console.log("false");
         }
-
-    
-    } 
-
-    // TODO : must be removed after a clean debug
-    onValueChange(event: KeyboardEvent){
-       console.log("change");
     }
 
+    // TODO : must be removed after a clean debug
+    onValueChange(event: KeyboardEvent) {
+        console.log("change");
+    }
 }

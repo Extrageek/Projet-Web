@@ -6,6 +6,6 @@ import { Component } from '@angular/core';
     <sudoku-grid></sudoku-grid>
   `,
 })
-export class AppComponent { 
-  name = 'Sudoku Game ...'; 
+export class AppComponent {
+  name = 'Sudoku Game ...';
 }

@@ -6,12 +6,14 @@ import { Puzzle, PuzzleItem } from '../models/puzzle';
 
 @Injectable()
 export class PuzzleManagerService {
-    _puzzle : Puzzle;
+    _puzzle: Puzzle;
 
-    constructor() { }
+    constructor() {
+        // Default constructor
+    }
 
     //  Check if the value is valid
-    public isValidValue(puzzle : Puzzle, rowIndex: number, columnIndex : number): boolean{
+    public isValidValue(puzzle: Puzzle, rowIndex: number, columnIndex: number): boolean {
         let grid = puzzle.puzzle;
 
         //console.log(grid);
@@ -23,13 +25,13 @@ export class PuzzleManagerService {
     }
 
     // Check if the row is valid.
-    isValidRow(grid: PuzzleItem[][], rowIndex: number, columnIndex : number){
+    isValidRow(grid: PuzzleItem[][], rowIndex: number, columnIndex: number) {
         let item = grid[rowIndex][columnIndex];
 
-        for(let column = 0; column <= PuzzleCommon.maxColumnIndex; column++){
-            console.log(grid[rowIndex][column], item)
-            if(Number(grid[rowIndex][column].value)===item.value
-                && (column != columnIndex)){
+        for (let column = 0; column <= PuzzleCommon.maxColumnIndex; ++column) {
+            console.log(grid[rowIndex][column], item);
+            if (Number(grid[rowIndex][column].value) === item.value
+                && (column !== columnIndex)) {
                 return false;
             }
         }
@@ -37,11 +39,11 @@ export class PuzzleManagerService {
     }
 
     // Check if the column is valid.
-    isValidColumn(grid: PuzzleItem[][], rowIndex: number, columnIndex : number){
+    isValidColumn(grid: PuzzleItem[][], rowIndex: number, columnIndex: number) {
         let item = grid[rowIndex][columnIndex];
 
-        for(let row = 0; row <= PuzzleCommon.maxColumnIndex; row++){
-            if(grid[row][columnIndex]===item){
+        for (let row = 0; row <= PuzzleCommon.maxColumnIndex; ++row) {
+            if (grid[row][columnIndex] === item) {
                 return false;
             }
         }
@@ -49,7 +51,7 @@ export class PuzzleManagerService {
     }
 
     // Check if the square around the value is valid.
-    isValidSquare(grid: PuzzleItem[][], rowIndex: number, columnIndex : number){
+    isValidSquare(grid: PuzzleItem[][], rowIndex: number, columnIndex: number) {
         let item = grid[rowIndex][columnIndex];
 
         // for(let row = 0; row <= PuzzleCommon.maxColumnIndex; row++){
