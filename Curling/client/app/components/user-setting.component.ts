@@ -13,7 +13,7 @@ import { RestApiProxyService } from '../services/rest-api-proxy.service';
     `
         <form #f='ngForm'>
             <div id="username" class="form-group">
-                <label for="username">Pseudo </label>
+                <label for="username"> Pseudonyme </label>
                 <input type='text' placeholder='Entrer votre pseudo...' name='username' [(ngModel)]="_userSetting._name">
                 <button type='submit' (click)='verifyUsername()'>Verifier Pseudo</button>
             </div>
