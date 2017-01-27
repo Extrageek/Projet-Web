@@ -21,13 +21,8 @@ import { PuzzleManagerService } from './services/grid-manager.service';
   declarations: [
     AppComponent,
     GridComponent
-<<<<<<< HEAD
-    ],
-  providers : [
-=======
   ],
   providers: [
->>>>>>> e17a7717774b617085902d4ee3d5330aa144eac4
     PuzzleEventManagerService,
     RestApiProxyService,
     PuzzleManagerService ],

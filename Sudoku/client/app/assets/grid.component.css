@@ -67,11 +67,7 @@ tr#gridRowId0 {
     border-top: 3px solid #212121;
 }
 
-<<<<<<< HEAD
 tr#gridRowId8 {
-=======
-tr#gridRow8 {
->>>>>>> e17a7717774b617085902d4ee3d5330aa144eac4
     border-bottom: 3px solid #212121;
 }
 
@@ -80,7 +76,6 @@ tr#gridRow8 {
 #cellId05,#cellId15,#cellId25,#cellId35,#cellId45,
 #cellId55,#cellId65,#cellId75,#cellId85 {
     border-right: 3px solid #212121;
-<<<<<<< HEAD
 }*/
 
 #cellId03,#cellId13,#cellId23,#cellId33,#cellId43,
@@ -89,6 +84,3 @@ tr#gridRow8 {
 #cellId56,#cellId66,#cellId76,#cellId86 {
     border-left: 3px solid #212121;
 }
-=======
-}
->>>>>>> e17a7717774b617085902d4ee3d5330aa144eac4

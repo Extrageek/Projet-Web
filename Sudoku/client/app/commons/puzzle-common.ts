@@ -6,7 +6,7 @@
     static upArrowKeyCode = 38;
     static downArrowKeyCode = 40;
 
-    static deleteKeyCode = 8 | 46;
+    static deleteKeyCode = 46;
     static deleteKeyCodeOnMac = 8; // Delete keycode for mac /backspace
 
     static oneKey = 49;
@@ -28,13 +28,8 @@
     static maxRowIndex = 8;
 
     constructor() {
-<<<<<<< HEAD
         //Default constructor
     }
-=======
-        // Default constructor
-     }
->>>>>>> e17a7717774b617085902d4ee3d5330aa144eac4
 }
 
 export enum Difficulty {
