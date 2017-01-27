@@ -17,7 +17,6 @@ export class DisplayComponent implements OnInit {
 
     ngOnInit (){
         this._gameStatus = new GameStatus();
-        //this._userSetting = UserSettingComponent.get();
     }
 
     public showComputerName(): void{

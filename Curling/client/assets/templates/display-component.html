@@ -1,8 +1,10 @@
 <link href='//fonts.googleapis.com/css?family=Bungee Inline' rel='stylesheet'>
 <div id="display-component">
     <div class="col-sm-12">
-        <div id="playerName" class="col-sm-4">
-            Rami
+        <div class="col-sm-4 pull-left">
+            <div id="playerName" class="pull-left">
+                PLAYER NAME
+            </div>
         </div>
         <div id="gameInfo" class="col-sm-4">
             <div id="score" class="col-sm-12">
@@ -10,73 +12,77 @@
             </div>
             <div id="gameSet" class="col-sm-12">
                 <div class="col-sm-5">
-                    <div id="firstSet" class="pull-right"></div>
+                    <div *ngIf="_gameStatus._currentSet < 1" id="firstSetToDo" class="pull-right"></div>
+                    <div *ngIf="_gameStatus._currentSet >= 1" id="firstSetDone" class="pull-right"></div>
                 </div>
-                <div class="col-sm-2">
-                    <div id="secondSet" class="pull-center"></div>
+                <div class="col-sm-2 ">
+                    <div *ngIf="_gameStatus._currentSet < 2" id="secondSetToDo" class="pull-center"></div>
+                    <div *ngIf="_gameStatus._currentSet >= 2" id="secondSetDone" class="pull-center"></div>
                 </div>
                 <div class="col-sm-5 ">
-                    <div id="thirdSet" class="pull-left"></div>
+                    <div *ngIf="_gameStatus._currentSet < 3" id="thirdSetToDo" class="pull-left"></div>
+                    <div *ngIf="_gameStatus._currentSet >= 3" id="thirdSetDone" class="pull-left"></div>
                 </div>
             </div>
         </div>
-        <div id="computerName" class="col-sm-4 pull-right">
-            CPU Facile
+        <div class="col-sm-4 pull-right">
+            <div id="computerName" class="pull-right">
+                CPU NAME
+            </div>
         </div>
-    </div>
 
-    <div class="col-sm-12">
-        <div id="playerStones" class="pull-left col-sm-3">
-            <div *ngIf="_gameStatus._currentStonesPlayer > 0">
-                <img src=" ../../assets/images/stone-blue.png " alt="Pierre bleue " height="48" width="48">
+        <div class="col-sm-12 ">
+            <div id="playerStones " class="pull-left col-sm-3 ">
+                <div *ngIf="_gameStatus._currentStonesPlayer > 0">
+                    <img src=" ../../assets/images/stone-blue.png " alt="Pierre bleue " height="48" width="48">
+                </div>
+                <div *ngIf="_gameStatus._currentStonesPlayer > 1">
+                    <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
+                </div>
+                <div *ngIf="_gameStatus._currentStonesPlayer > 2">
+                    <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
+                </div>
+                <div *ngIf="_gameStatus._currentStonesPlayer > 3">
+                    <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
+                </div>
+                <div *ngIf="_gameStatus._currentStonesPlayer > 4">
+                    <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
+                </div>
+                <div *ngIf="_gameStatus._currentStonesPlayer > 5">
+                    <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
+                </div>
+                <div *ngIf="_gameStatus._currentStonesPlayer > 6">
+                    <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
+                </div>
+                <div *ngIf="_gameStatus._currentStonesPlayer > 7">
+                    <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
+                </div>
             </div>
-            <div *ngIf="_gameStatus._currentStonesPlayer> 1">
-                <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
-            </div>
-            <div *ngIf="_gameStatus._currentStonesPlayer > 2">
-                <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
-            </div>
-            <div *ngIf="_gameStatus._currentStonesPlayer > 3">
-                <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
-            </div>
-            <div *ngIf="_gameStatus._currentStonesPlayer > 4">
-                <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
-            </div>
-            <div *ngIf="_gameStatus._currentStonesPlayer > 5">
-                <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
-            </div>
-            <div *ngIf="_gameStatus._currentStonesPlayer > 6">
-                <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
-            </div>
-            <div *ngIf="_gameStatus._currentStonesPlayer > 7">
-                <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
-            </div>
-        </div>
-        <div id=" computerStones " class="pull-right col-sm-3 ">
-            <div *ngIf="_gameStatus._currentStonesComputer > 0" class="col-sm-12">
-                <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
-            </div>
-            <div *ngIf="_gameStatus._currentStonesComputer > 1" class="col-sm-12">
-                <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
-            </div>
-            <div *ngIf="_gameStatus._currentStonesComputer > 2" class="col-sm-12">
-                <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
-            </div>
-            <div *ngIf="_gameStatus._currentStonesComputer > 3" class="col-sm-12">
-                <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
-            </div>
-            <div *ngIf="_gameStatus._currentStonesComputer > 4" class="col-sm-12">
-                <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
-            </div>
-            <div *ngIf="_gameStatus._currentStonesComputer > 5" class="col-sm-12">
-                <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
-            </div>
-            <div *ngIf="_gameStatus._currentStonesComputer > 6" class="col-sm-12">
-                <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
-            </div>
-            <div *ngIf="_gameStatus._currentStonesComputer > 7" class="col-sm-12">
-                <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
+            <div id=" computerStones " class="pull-right col-sm-3 ">
+                <div *ngIf="_gameStatus._currentStonesComputer > 0" class="col-sm-12">
+                    <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
+                </div>
+                <div *ngIf="_gameStatus._currentStonesComputer > 1" class="col-sm-12">
+                    <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
+                </div>
+                <div *ngIf="_gameStatus._currentStonesComputer > 2" class="col-sm-12">
+                    <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
+                </div>
+                <div *ngIf="_gameStatus._currentStonesComputer > 3" class="col-sm-12">
+                    <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
+                </div>
+                <div *ngIf="_gameStatus._currentStonesComputer > 4" class="col-sm-12">
+                    <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
+                </div>
+                <div *ngIf="_gameStatus._currentStonesComputer > 5" class="col-sm-12">
+                    <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
+                </div>
+                <div *ngIf="_gameStatus._currentStonesComputer > 6" class="col-sm-12">
+                    <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
+                </div>
+                <div *ngIf="_gameStatus._currentStonesComputer > 7" class="col-sm-12">
+                    <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
+                </div>
             </div>
         </div>
     </div>
-</div>

@@ -24,32 +24,62 @@
         text-align: center
     }
     
-    #firstSet {
-        width: 20px;
-        height: 20px;
-        -webkit-border-radius: 10px;
-        -moz-border-radius: 10px;
-        border-radius: 10px;
+    #firstSetToDo {
+        width: 24px;
+        height: 24px;
+        -webkit-border-radius: 12px;
+        -moz-border-radius: 12px;
+        border-radius: 12px;
+        background: white;
+        display: inline-block;
+    }
+    
+    #secondSetToDo {
+        width: 24px;
+        height: 24px;
+        -webkit-border-radius: 12px;
+        -moz-border-radius: 12px;
+        border-radius: 12px;
+        background: white;
+        display: inline-block;
+    }
+    
+    #thirdSetToDo {
+        width: 24px;
+        height: 24px;
+        -webkit-border-radius: 12px;
+        -moz-border-radius: 12px;
+        border-radius: 12px;
+        background: white;
+        display: inline-block;
+    }
+    
+    #firstSetDone {
+        width: 24px;
+        height: 24px;
+        -webkit-border-radius: 12px;
+        -moz-border-radius: 12px;
+        border-radius: 12px;
         background: mediumseagreen;
         display: inline-block;
     }
     
-    #secondSet {
-        width: 20px;
-        height: 20px;
-        -webkit-border-radius: 10px;
-        -moz-border-radius: 10px;
-        border-radius: 10px;
+    #secondSetDone {
+        width: 24px;
+        height: 24px;
+        -webkit-border-radius: 12px;
+        -moz-border-radius: 12px;
+        border-radius: 12px;
         background: mediumseagreen;
         display: inline-block;
     }
     
-    #thirdSet {
-        width: 20px;
-        height: 20px;
-        -webkit-border-radius: 10px;
-        -moz-border-radius: 10px;
-        border-radius: 10px;
+    #thirdSetDone {
+        width: 24px;
+        height: 24px;
+        -webkit-border-radius: 12px;
+        -moz-border-radius: 12px;
+        border-radius: 12px;
         background: mediumseagreen;
         display: inline-block;
     }
