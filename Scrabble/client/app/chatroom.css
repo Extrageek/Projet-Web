@@ -17,6 +17,11 @@
     overflow-y:scroll;
     border-bottom: 1px solid dimgrey;
 }
+.chatMessageBox {
+    height:340px;
+    overflow-y:scroll;
+    border-bottom: 1px solid white;
+}
 
 .individualMessages {
     list-style: none;
@@ -24,7 +29,7 @@
     padding: 3px;
     background-color: lightgray;
 }
-li:nth-child(odd) { background: white; }
+.individualMessages:nth-child(odd) { background: white; }
 
 #inputMessage {
     width:80%;
