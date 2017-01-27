@@ -35,11 +35,18 @@ export class RestApiProxyService {
      * @returns an Observable with a newPuzzle json data 
      * TODO: Must be checked if we need to convert to an object.
      */
+<<<<<<< HEAD
     async getNewPuzzle() : Promise<Puzzle> {
         return await this.http.get(this.newPuzzleUrl)
             .toPromise()
             .then(this.retrieveDataFromHttpResponse)
             .catch(this.handleError);
+=======
+    getNewPuzzle(): Observable<Puzzle> {
+        return this.http.get(this.newPuzzleUrl)
+                        .map(this.retrieveDataFromHttpResponse)
+                        .catch(this.handleError);
+>>>>>>> e17a7717774b617085902d4ee3d5330aa144eac4
     }
 
     /**
@@ -68,9 +75,7 @@ export class RestApiProxyService {
             const body = error.json() || '';
             const err = body.error || JSON.stringify(body);
             errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-        }
-        else
-        {
+        } else {
             errMsg = error.message ? error.message : error.toString();
         }
 

@@ -28,8 +28,13 @@
     static maxRowIndex = 8;
 
     constructor() {
+<<<<<<< HEAD
         //Default constructor
     }
+=======
+        // Default constructor
+     }
+>>>>>>> e17a7717774b617085902d4ee3d5330aa144eac4
 }
 
 export enum Difficulty {

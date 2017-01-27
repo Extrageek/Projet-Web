@@ -53,7 +53,7 @@ export class PuzzleEventManagerService {
      * @method isDeleteKey
      * @return true for a valid number for the puzzle
      */
-    isSudokuNumber (keyCode: number): boolean{
+    isSudokuNumber (keyCode: number): boolean {
         return 49 <= keyCode && keyCode <= 57;
     }
 
@@ -63,16 +63,25 @@ export class PuzzleEventManagerService {
      * @class PuzzleEventManagerService
      * @method onKeyEventUpdateCurrentCursor
      */
+<<<<<<< HEAD
     onKeyEventUpdateCurrentCursor(event: KeyboardEvent): void{
+=======
+    onKeyEventUpdateCurrentCursor(event: KeyboardEvent): void {
+
+>>>>>>> e17a7717774b617085902d4ee3d5330aa144eac4
         let currentPositionXY = event.srcElement.id.split('');
         let keyCode = event.keyCode;
 
         // TODO: Remove after a clean debug
         if (this.isDirection(keyCode)) {
             this.updateFocus(currentPositionXY, keyCode);
+<<<<<<< HEAD
         }
         else if (this.isDeleteKey(keyCode)) {
 
+=======
+        } else if (this.isDeleteKey(keyCode)) {
+>>>>>>> e17a7717774b617085902d4ee3d5330aa144eac4
             this.deleteCellContent(currentPositionXY);
         }
     }
@@ -84,6 +93,8 @@ export class PuzzleEventManagerService {
      * @method updateFocus
      */
     updateFocus(currentPositionXY: string[], keyCode: number): void {
+        // Reads next direction of arrow keys and decide if it warps to the other end 
+        // or if it goes to the next cell
         switch (keyCode) {
             case PuzzleCommon.downArrowKeyCode:
                 let downPosition = Number(currentPositionXY[PuzzleCommon.yPosition]) + 1;
@@ -117,9 +128,14 @@ export class PuzzleEventManagerService {
           
             this._nextInputPositionYX = this._newPositionX.toString() + currentPositionXY[PuzzleCommon.xPosition];
         }
+<<<<<<< HEAD
         
         let inputId = "#" + this._nextInputPositionYX;
         jQuery(inputId).focus();
+=======
+        let focusElement = <HTMLInputElement>document.getElementById(this._nextInputPositionYX);
+        focusElement.focus();
+>>>>>>> e17a7717774b617085902d4ee3d5330aa144eac4
     }
 
      /**

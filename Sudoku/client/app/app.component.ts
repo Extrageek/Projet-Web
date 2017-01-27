@@ -7,5 +7,9 @@ import { Component } from '@angular/core';
   `,
 })
 export class AppComponent {
+<<<<<<< HEAD
   name = ' ...';
+=======
+  name = 'Sudoku Game ...';
+>>>>>>> e17a7717774b617085902d4ee3d5330aa144eac4
 }

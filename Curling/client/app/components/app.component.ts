@@ -7,6 +7,6 @@ import { Component } from '@angular/core';
 })
 
 export class AppComponent {
-  title = "Check mon cube";
+  title = "Curling";
   private value = "Hello World";
 }

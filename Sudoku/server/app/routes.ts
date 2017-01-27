@@ -12,7 +12,8 @@ module Route {
      *
      * @class RouteManager
      */
-    constructor() { // Default constructor
+    constructor() {
+      // Default constructor
     }
 
      /**
@@ -43,7 +44,6 @@ module Route {
         res.send(newPuzzle);
     }
   }
-
 }
 
 export = Route;

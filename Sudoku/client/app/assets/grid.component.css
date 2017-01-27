@@ -3,6 +3,7 @@
     padding: 1px 2px 0px 2px;
     background-color: #fff;
 }
+
 .grid-box {
     padding: 16px;
     border: 4px solid #ddd;
@@ -36,9 +37,10 @@ input:focus {
     background-color:#90A4AE;
 }
 
-.readWriteCell{
+.readWriteCell {
     background-color: darkgoldenrod;
 }
+
 .table {
     width: 100%;
     max-width: 100%;
@@ -50,6 +52,7 @@ input:focus {
     padding: 2px 1px 2px 2px;
     vertical-align: top;
 }
+
 tr {
     border-left: 3px solid #212121;
     border-right: 3px solid #212121;
@@ -64,7 +67,11 @@ tr#gridRowId0 {
     border-top: 3px solid #212121;
 }
 
+<<<<<<< HEAD
 tr#gridRowId8 {
+=======
+tr#gridRow8 {
+>>>>>>> e17a7717774b617085902d4ee3d5330aa144eac4
     border-bottom: 3px solid #212121;
 }
 
@@ -73,6 +80,7 @@ tr#gridRowId8 {
 #cellId05,#cellId15,#cellId25,#cellId35,#cellId45,
 #cellId55,#cellId65,#cellId75,#cellId85 {
     border-right: 3px solid #212121;
+<<<<<<< HEAD
 }*/
 
 #cellId03,#cellId13,#cellId23,#cellId33,#cellId43,
@@ -81,3 +89,6 @@ tr#gridRowId8 {
 #cellId56,#cellId66,#cellId76,#cellId86 {
     border-left: 3px solid #212121;
 }
+=======
+}
+>>>>>>> e17a7717774b617085902d4ee3d5330aa144eac4
