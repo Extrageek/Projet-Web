@@ -1,24 +1,19 @@
-import {Component,OnInit} from '@angular/core';
-import { RenderService } from '../services/render.service'
-import {MdDialog, MdDialogRef, MdSnackBar} from '@angular/material';
+import { Component, OnInit } from '@angular/core';
+import { RenderService } from '../services/render.service';
+import { MdSnackBar } from '@angular/material';
 
 @Component({
-    selector: 'My-GL',
-    template:`
-        <dashboard></dashboard>
-        <modifier [container]="container"
-                  [webgltext]="webgltext">
-        </modifier>
-        <div #container> 
-        </div> 
-    `,
+    selector: 'my-gl',
+    templateUrl: "../../assets/templates/gl-component.html",
+    styleUrls: ['../../assets/stylesheets/gl-component.css']
 })
+
 export class GlComponent implements OnInit{
     webgltext: string;
     xmodel: number;
     ymodel: number;
-    zCamera:number;
-    ngOnInit():void{
+    zCamera: number;
+    ngOnInit(): void{
         this.webgltext = "";
         this.xmodel = this.ymodel = 0;
         this.zCamera = 0;
@@ -27,58 +22,58 @@ export class GlComponent implements OnInit{
     constructor(private renderService : RenderService,
                 private snackbar: MdSnackBar
                 ){
-        
+    }
+    /*
+    private displaceX(): void{
+        this.renderService.translateMesh(this.xmodel, 0);
     }
 
-    private displaceX():void{
-        this.renderService.translateMesh(this.xmodel,0);
-    }
-    
-    private displaceY():void{
-        this.renderService.translateMesh(0,this.ymodel);        
+    private displaceY(): void{
+        this.renderService.translateMesh(0, this.ymodel);
     }
 
-    private displaceCameraZ():void{ 
+    private displaceCameraZ(): void{
         console.log(this.zCamera);
-        this.renderService.translateCamera(0,0,this.zCamera);
+        this.renderService.translateCamera(0, 0, this.zCamera);
     }
 
     private newTeapot(): void{
-        for(let i = 0;i<1;++i)
+        for (let i = 0; i < 1; ++i) {
             this.renderService.newTeapot();
-
-            console.log('cyclomatic')
+        }
+        console.log('cyclomatic');
     }
-    
+    */
+
     private trigger(): string{
-        var x;
-        if (Math.random())
-            x = function*(){ var a = yield Math.random(); }
-        if (x)
-        {
-            var _new = x();
-            var r = _new.next();
-            console.log(r)
+        /*
+        let x;
+        if (Math.random()) {
+            x = function*(){ let a = yield Math.random(); };
         }
-        else
-        {
-            x = function(){return 'À traduire';}
-            console.log(x() + 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius augue eget magna commodo, a ultrices justo pretium. Proin id egestas eros. Sed pellentesque turpis et augue volutpat, ut aliquet nisi dignissim. Integer lobortis ligula ac leo imperdiet, eu viverra.');
+        if (x) {
+            let _new = x();
+            let r = _new.next();
+            console.log(r);
         }
-        for (var i = 0; i <42; ++i){
+        else {
+            x = function(){return 'À traduire'; };
+            console.log(x());
+        }
+        for (let i = 0; i < 42; ++i){
             try {
-                var y = 1/Math.random();
-            } catch(e) {
+                let y = 1 / Math.random();
+            } catch (e) {
                 console.log(e);
                 return 'Catched';
-            } finally {
-                continue;
             }
         }
         return 'Will I be returned?';
-   } 
+        */
+    return null;
+    }
 
    public showNotImplemented(): void{
-       this.snackbar.open('Sorry, this is not implemented yet. Would you do it for me? :)', 'Yes')
+       this.snackbar.open('Sorry, this is not implemented yet. Would you do it for me? :)', 'Yes');
    }
 }

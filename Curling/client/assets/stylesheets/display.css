@@ -1,0 +1,55 @@
+    #display-component {
+        background: transparent;
+    }
+    
+    #playerName {
+        font-family: 'Bungee Inline';
+        /*font-family: Georgia;*/
+        font-size: 45px;
+        color: blue;
+        text-align: left
+    }
+    
+    #computerName {
+        font-family: 'Bungee Inline';
+        font-size: 45px;
+        color: red;
+        text-align: left
+    }
+    
+    #score {
+        font-family: 'Bungee Inline';
+        font-size: 60px;
+        color: white;
+        text-align: center
+    }
+    
+    #firstSet {
+        width: 20px;
+        height: 20px;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        background: mediumseagreen;
+        display: inline-block;
+    }
+    
+    #secondSet {
+        width: 20px;
+        height: 20px;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        background: mediumseagreen;
+        display: inline-block;
+    }
+    
+    #thirdSet {
+        width: 20px;
+        height: 20px;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        background: mediumseagreen;
+        display: inline-block;
+    }

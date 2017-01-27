@@ -9,15 +9,15 @@ import { UserSetting } from '../models/user-setting';
 @Injectable()
 export class RestApiProxyService {
     private _urlAddUser = '/api/usersetting';
+    private _headers = new Headers({'Content-Type': 'application/json'});
 
     constructor(private http : Http) {
      }
 
-     private _headers = new Headers({'Content-Type' : 'application/json'});
-
     public addUser(userSetting : UserSetting){
         this.http
-        .post(this._urlAddUser, JSON.stringify({username : userSetting._name, difficulty: userSetting._difficulty}), {headers: this._headers})
+        .post(this._urlAddUser, JSON.stringify({username : userSetting._name, difficulty: userSetting._difficulty}),
+        {headers: this._headers})
         .toPromise()
         .then(response => response.json().data as string)
         .catch(this.handleError);
@@ -25,7 +25,8 @@ export class RestApiProxyService {
 
     public verifyUsername(userSetting : UserSetting){
         this.http
-        .post(this._urlAddUser, JSON.stringify({username : userSetting._name, difficulty: userSetting._difficulty}), {headers: this._headers})
+        .post(this._urlAddUser, JSON.stringify({username : userSetting._name, difficulty: userSetting._difficulty}),
+        {headers: this._headers})
         .toPromise()
         .then(response => response.json().data as string)
         .catch(this.handleError);

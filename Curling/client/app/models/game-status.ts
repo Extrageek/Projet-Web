@@ -4,9 +4,10 @@ export class GameStatus{
     _currentSet: number = 0;
     _currentStonesPlayer: number = 8;
     _currentStonesComputer: number = 8;
+    _isLaunched: boolean = false;
 
     public usedStonePlayer(): void {
-        this._currentStonesPlayer = this._currentStonesPlayer -1;
+        this._currentStonesPlayer = this._currentStonesPlayer - 1;
     }
 
     public usedStoneComputer(): void {
@@ -23,14 +24,19 @@ export class GameStatus{
 
     public resetStones(): void {
         this._currentStonesComputer = 8;
-        this._currentStonesPlayer   = 8;
+        this._currentStonesPlayer = 8;
+    }
+
+    public lauchedGame(): void{
+        this._isLaunched = true;
     }
 
     public resetGameStatus(): void{
-        this._scorePlayer           = 0;
-        this._scoreComputer         = 0;
-        this._currentSet            = 0;
-        this._currentStonesPlayer   = 8;
+        this._scorePlayer = 0;
+        this._scoreComputer = 0;
+        this._currentSet = 0;
+        this._currentStonesPlayer = 8;
         this._currentStonesComputer = 8;
+        this._isLaunched = false;
     }
 }
