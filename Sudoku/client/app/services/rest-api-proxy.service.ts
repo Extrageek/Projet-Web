@@ -6,10 +6,10 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Headers, Response, Http, RequestOptions } from '@angular/http';
+import { Response, Http } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/catch';
 
 import { Puzzle } from '../models/puzzle';
@@ -35,10 +35,11 @@ export class RestApiProxyService {
      * @returns an Observable with a newPuzzle json data 
      * TODO: Must be checked if we need to convert to an object.
      */
-    getNewPuzzle() : Observable<Puzzle> {
-        return this.http.get(this.newPuzzleUrl)
-                        .map(this.retrieveDataFromHttpResponse)
-                        .catch(this.handleError);
+    async getNewPuzzle() : Promise<Puzzle> {
+        return await this.http.get(this.newPuzzleUrl)
+            .toPromise()
+            .then(this.retrieveDataFromHttpResponse)
+            .catch(this.handleError);
     }
 
     /**
@@ -76,6 +77,6 @@ export class RestApiProxyService {
         // Use an new service to handle as a Logger,but we can keep the console for now
         console.error(errMsg);
 
-        return Observable.throw(errMsg);
+        return Promise.reject(errMsg);
   }
 }

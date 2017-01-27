@@ -2,15 +2,15 @@
            <div class="table-responsive">          
                 <table class="table">
                     <tbody>
-                        <tr class="grid" *ngFor = "let row of _newPuzzle?.puzzle , let i = index" [attr.id] = "'gridRow' + i">
-                            <td *ngFor ="let cell of row, let j = index" [attr.id] = "'cell' + j"> 
-                                <input class="readOnlyCell" *ngIf ="!cell.hide" readonly  type="text" name=""
-                                [attr.id]="i +''+ j" [ngModel]="cell.value" (keydown)="onKeyEventHandler($event)">
+                        <tr class="grid" *ngFor = "let row of _newPuzzle?.puzzle , let i = index" [attr.id] = "'gridRowId' + i">
+                            <td *ngFor ="let cell of row, let j = index" [attr.id] = "'cellId' + i + '' + j"> 
+                                <input class="readOnlyCell" *ngIf ="!cell.hidden" readonly minlength="1" maxlength="1" type="number" name=""
+                                [attr.id]="i +''+ j" [ngModel]="cell.number" (keydown)="onKeyEventHandler($event)">
 
-                                <input class="readWriteCell" *ngIf ="cell.hide" type="text" name="" 
-                                [attr.id]="i +''+ j"  [(ngModel)]="cell.value" 
-                                    (keydown)="onKeyEventHandler($event);"
-                                    (onchange)="onValueChange($event);">
+                                <input class="readWriteCell" *ngIf ="cell.hidden" minlength="1" maxlength="1" type="number" name="" 
+                                [attr.id]="i +''+ j"  [(ngModel)]="cell.number" 
+                                    (keydown)="onKeyEventHandler($event)"
+                                    (keyup) = "onValueChange($event)">
                             </td>
                         </tr>
                     </tbody>
@@ -28,6 +28,5 @@
                         (onchange)="onValueChange($event);">
                 </ng-container>
             </div>
-        </div>
-
-        -->
+            -->
+    </div>
