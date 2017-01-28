@@ -1,0 +1,7 @@
+<div class="mainBoard" >
+    <div style="background-color: #916a32" *ngFor="let lineNumber of columnNumberList">
+        <ng-container class="imageContainer" *ngFor="let scrabbleLine of line[lineNumber]">
+            <img class="cell" src="../{{mappingLinkImage[scrabbleLine] }}" alt="{{ scrabbleLine }}">
+        </ng-container>
+    </div>
+</div>
