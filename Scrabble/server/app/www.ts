@@ -7,6 +7,7 @@
 
 import { Application } from './app';
 import * as http from 'http';
+import { IoConnection } from './socketHandler';
 
 const application: Application = Application.bootstrap();
 
@@ -16,6 +17,8 @@ application.app.set('port', appPort);
 
 // Création du serveur HTTP.
 let server = http.createServer(application.app);
+
+new IoConnection(server);
 
 /**
  *  Écoute du traffic sur le port configuré.
@@ -32,9 +35,9 @@ server.on('listening', onListening);
  */
 function normalizePort(val: number|string): number|string|boolean {
   let port: number = (typeof val === 'string') ? parseInt(val, 10) : val;
-  if (isNaN(port)) return val;
-  else if (port >= 0) return port;
-  else return false;
+  if (isNaN(port)) { return val; }
+  else if (port >= 0) { return port; }
+  else { return false; }
 }
 
 /**
@@ -43,9 +46,9 @@ function normalizePort(val: number|string): number|string|boolean {
  * @param error Erreur interceptée par le serveur.
  */
 function onError(error: NodeJS.ErrnoException): void {
-  if (error.syscall !== 'listen') throw error;
+  if (error.syscall !== 'listen') { throw error; }
   let bind = (typeof appPort === 'string') ? 'Pipe ' + appPort : 'Port ' + appPort;
-  switch(error.code) {
+  switch (error.code) {
     case 'EACCES':
       console.error(`${bind} requires elevated privileges`);
       process.exit(1);
