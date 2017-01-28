@@ -12,68 +12,68 @@ module PuzzleManagerService {
         "data": {
                 "puzzle": [
                   [
-                    {"value": 4, "hide": true}, {"value": 1, "hide": true},
-                    {"value": 5, "hide": true}, {"value": 6, "hide": true},
-                    {"value": 3, "hide": false}, {"value": 8, "hide": true},
-                    {"value": 9, "hide": true}, {"value": 7, "hide": true},
-                    {"value": 2, "hide": false}
+                    {"number": 4, "hide": true}, {"number": 1, "hide": true},
+                    {"number": 5, "hide": true}, {"number": 6, "hide": true},
+                    {"number": 3, "hide": false}, {"number": 8, "hide": true},
+                    {"number": 9, "hide": true}, {"number": 7, "hide": true},
+                    {"number": 2, "hide": false}
                   ],
                   [
-                    {"value": 3, "hide": true}, {"value": 6, "hide": false},
-                    {"value": 2, "hide": false}, {"value": 4, "hide": false},
-                    {"value": 7, "hide": true}, {"value": 9, "hide": true},
-                    {"value": 1, "hide": true}, {"value": 8, "hide": false},
-                    {"value": 5, "hide": true}
-                  ],
-                  [
-                     {"value": 7, "hide": false}, {"value": 8, "hide": true},
-                     {"value": 9, "hide": true}, {"value": 2, "hide": false},
-                     {"value": 1, "hide": true}, {"value": 5, "hide": false},
-                     {"value": 3, "hide": true}, {"value": 6, "hide": true},
-                     {"value": 4, "hide": true}
-                  ],
-                  [
-                     {"value": 9, "hide": true}, {"value": 2, "hide": true},
-                     {"value": 6, "hide": false}, {"value": 3, "hide": true},
-                     {"value": 4, "hide": true}, {"value": 1, "hide": true},
-                     {"value": 7, "hide": true}, {"value": 5, "hide": true},
-                     {"value": 8, "hide": false}
-                  ],
-                  [
-                     {"value": 1, "hide": true}, {"value": 3, "hide": true},
-                     {"value": 8, "hide": true}, {"value": 7, "hide": true},
-                     {"value": 5, "hide": true}, {"value": 6, "hide": true},
-                     {"value": 4, "hide": true}, {"value": 2, "hide": true},
-                     {"value": 9, "hide": true}
-                  ],
-                  [
-                     {"value": 5, "hide": true}, {"value": 7, "hide": false},
-                     {"value": 4, "hide": false}, {"value": 9, "hide": true},
-                     {"value": 8, "hide": true}, {"value": 2, "hide": true},
-                     {"value": 6, "hide": true}, {"value": 3, "hide": false},
-                     {"value": 1, "hide": true}
-                  ],
-                  [
-                     {"value": 2, "hide": false}, {"value": 5, "hide": true},
-                     {"value": 7, "hide": true}, {"value": 1, "hide": false},
-                     {"value": 6, "hide": true}, {"value": 4, "hide": false},
-                     {"value": 8, "hide": false}, {"value": 9, "hide": true},
-                     {"value": 3, "hide": true}
-                  ],
-                  [
-                     {"value": 8, "hide": true}, {"value": 4, "hide": true},
-                     {"value": 3, "hide": true}, {"value": 5, "hide": false},
-                     {"value": 9, "hide": true}, {"value": 7, "hide": true},
-                     {"value": 2, "hide": true}, {"value": 1, "hide": true},
-                     {"value": 6, "hide": true}
-                  ],
-                  [
-                     {"value": 6, "hide": true}, {"value": 9, "hide": true},
-                     {"value": 1, "hide": true}, {"value": 8, "hide": false},
-                     {"value": 2, "hide": false}, {"value": 3, "hide": true},
-                     {"value": 5, "hide": true}, {"value": 4, "hide": true},
-                     {"value": 7, "hide": false}
-                  ]
+                    {"number": 3, "hide": true}, {"number": 6, "hide": false},
+                    {"number": 2, "hide": false}, {"number": 4, "hide": false},
+                    {"number": 7, "hide": true}, {"number": 9, "hide": true},
+                    {"number": 1, "hide": true}, {"number": 8, "hide": false},
+                    {"number": 5, "hide": true}
+                   ],
+                   [
+                     {"number": 7, "hide": false}, {"number": 8, "hide": true},
+                     {"number": 9, "hide": true}, {"number": 2, "hide": false},
+                     {"number": 1, "hide": true}, {"number": 5, "hide": false},
+                     {"number": 3, "hide": true}, {"number": 6, "hide": true},
+                     {"number": 4, "hide": true}
+                   ],
+                   [
+                     {"number": 9, "hide": true}, {"number": 2, "hide": true},
+                     {"number": 6, "hide": false}, {"number": 3, "hide": true},
+                     {"number": 4, "hide": true}, {"number": 1, "hide": true},
+                     {"number": 7, "hide": true}, {"number": 5, "hide": true},
+                     {"number": 8, "hide": false}
+                   ],
+                   [
+                     {"number": 1, "hide": true}, {"number": 3, "hide": true},
+                     {"number": 8, "hide": true}, {"number": 7, "hide": true},
+                     {"number": 5, "hide": true}, {"number": 6, "hide": true},
+                     {"number": 4, "hide": true}, {"number": 2, "hide": true},
+                     {"number": 9, "hide": true}
+                   ],
+                   [
+                     {"number": 5, "hide": true}, {"number": 7, "hide": false},
+                     {"number": 4, "hide": false}, {"number": 9, "hide": true},
+                     {"number": 8, "hide": true}, {"number": 2, "hide": true},
+                     {"number": 6, "hide": true}, {"number": 3, "hide": false},
+                     {"number": 1, "hide": true}
+                   ],
+                   [
+                     {"number": 2, "hide": false}, {"number": 5, "hide": true},
+                     {"number": 7, "hide": true}, {"number": 1, "hide": false},
+                     {"number": 6, "hide": true}, {"number": 4, "hide": false},
+                     {"number": 8, "hide": false}, {"number": 9, "hide": true},
+                     {"number": 3, "hide": true}
+                   ],
+                   [
+                     {"number": 8, "hide": true}, {"number": 4, "hide": true},
+                     {"number": 3, "hide": true}, {"number": 5, "hide": false},
+                     {"number": 9, "hide": true}, {"number": 7, "hide": true},
+                     {"number": 2, "hide": true}, {"number": 1, "hide": true},
+                     {"number": 6, "hide": true}
+                   ],
+                   [
+                     {"number": 6, "hide": true}, {"number": 9, "hide": true},
+                     {"number": 1, "hide": true}, {"number": 8, "hide": false},
+                     {"number": 2, "hide": false}, {"number": 3, "hide": true},
+                     {"number": 5, "hide": true}, {"number": 4, "hide": true},
+                     {"number": 7, "hide": false}
+                   ]
                 ],
                 "difficulty" : "normal"
             }

@@ -4,10 +4,14 @@ export class GameStatus{
     _currentSet: number = 0;
     _currentStonesPlayer: number = 8;
     _currentStonesComputer: number = 8;
+<<<<<<< HEAD
     _isGameOver: boolean = false;
+=======
+    _isLaunched: boolean = false;
+>>>>>>> bf80269e4702264caf7977ead797d170951ddad2
 
     public usedStonePlayer(): void {
-        this._currentStonesPlayer = this._currentStonesPlayer -1;
+        this._currentStonesPlayer = this._currentStonesPlayer - 1;
     }
 
     public usedStoneComputer(): void {
@@ -28,15 +32,23 @@ export class GameStatus{
 
     public resetStones(): void {
         this._currentStonesComputer = 8;
-        this._currentStonesPlayer   = 8;
+        this._currentStonesPlayer = 8;
+    }
+
+    public lauchedGame(): void{
+        this._isLaunched = true;
     }
 
     public resetGameStatus(): void{
-        this._scorePlayer           = 0;
-        this._scoreComputer         = 0;
-        this._currentSet            = 0;
-        this._currentStonesPlayer   = 8;
+        this._scorePlayer = 0;
+        this._scoreComputer = 0;
+        this._currentSet = 0;
+        this._currentStonesPlayer = 8;
         this._currentStonesComputer = 8;
+<<<<<<< HEAD
         this._isGameOver            = false;
+=======
+        this._isLaunched = false;
+>>>>>>> bf80269e4702264caf7977ead797d170951ddad2
     }
 }

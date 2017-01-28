@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { RestApiProxyService } from '../services/rest-api-proxy.service';
@@ -8,6 +7,7 @@ import { UserSetting } from '../models/user-setting';
 
 @Component({
     moduleId: module.id,
+<<<<<<< HEAD
     selector: 'user',
     // TODO : template url 
     template: 
@@ -42,16 +42,19 @@ import { UserSetting } from '../models/user-setting';
     styles: [ `
     `]
 
+=======
+    selector: 'user-component',
+    templateUrl: "../../assets/templates/user-setting-component.html",
+>>>>>>> bf80269e4702264caf7977ead797d170951ddad2
 })
+
 export class UserSettingComponent implements OnInit{
-    _userSetting : UserSetting;
-    /**
-     *
-     */
+    //TODO : Change for private - Problem with binding
+   public _userSetting : UserSetting;
+
     constructor(
         private router: Router,
         private restApiProxyService : RestApiProxyService) {
-        
     }
 
     ngOnInit (){
@@ -81,5 +84,13 @@ export class UserSettingComponent implements OnInit{
         this.router.navigate(['/game']);
         // creer une partie et sauvegarder dans la db
         this.restApiProxyService.launchGame();
+    }
+
+    public get(): UserSetting {
+        return this._userSetting;
+    }
+
+    public set(userSetting: UserSetting) {
+        this._userSetting = userSetting;
     }
 }

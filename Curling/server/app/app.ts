@@ -10,7 +10,7 @@ import * as path from 'path';
 import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
-import * as cors from 'cors'
+import * as cors from 'cors';
 
 import * as indexRoute from './routes';
 
