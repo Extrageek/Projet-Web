@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule }    from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { ScrabbleBoardComponent } from './scrabbleBoard.component'
-import { EaselComponent} from './easel.component';
-import { ChatroomComponent } from './chatroom.component'
+import { ScrabbleBoardComponent } from './scrabble-board.component';
+import { EaselComponent } from './easel.component';
+import { ChatroomComponent } from './chatroom.component';
+import { InformationPanelComponent } from './information-panel.component';
 
 @NgModule({
   imports: [ BrowserModule ,
@@ -13,7 +14,8 @@ import { ChatroomComponent } from './chatroom.component'
   declarations: [ AppComponent,
       EaselComponent,
       ScrabbleBoardComponent,
-      ChatroomComponent],
+      ChatroomComponent,
+      InformationPanelComponent],
 
   bootstrap: [ AppComponent ]
 })

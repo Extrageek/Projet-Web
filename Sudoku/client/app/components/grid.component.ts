@@ -44,10 +44,11 @@ export class GridComponent implements OnInit {
     async ngOnInit() {
 
         await this.restApiProxyService.getNewPuzzle()
-            .then((puzzle) => {
+            .subscribe((puzzle) => {
                 // The puzzle to display when binding the model to the input box,
                 // must not contains the solution. We need to extract the new puzzle 
                 // for the user.
+
                 this._newPuzzle = this.extractTheNewPuzzle(puzzle);
 
                 // Keep the puzzle with the solution.
@@ -62,10 +63,10 @@ export class GridComponent implements OnInit {
      * @method extractTheNewPuzzle
      * @return Puzzle
      */
-    extractTheNewPuzzle(puzzle : Puzzle) {
-       puzzle.puzzle.forEach(function(puzzleItems){
+    extractTheNewPuzzle(puzzle: Puzzle) {
+       puzzle._puzzle.forEach(function(puzzleItems){
             puzzleItems.forEach(function(puzzleItem){
-                puzzleItem.number = (puzzleItem.hide) ? null : puzzleItem.number;
+                puzzleItem._value = (puzzleItem._hide) ? null : puzzleItem._value;
                 });
         });
         return puzzle;

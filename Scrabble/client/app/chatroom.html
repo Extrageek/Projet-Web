@@ -1,5 +1,6 @@
+
 <div class = 'chatContainer'>
-    <div class = 'chatTitle'>Equipe 23</div>
+    <div class = 'chatTitle'>Chat Room</div>
     <div #scroll class = 'chatMessageBox'>
         <div class= "individualMessages" *ngFor="let message of messageArray">{{message}}</div>
     </div>
@@ -7,7 +8,6 @@
         <form autocomplete="off">
             <input #message (keyup.enter) = "submitMessage(message)"
                    id="inputMessage" type="text" placeholder="Enter your message" />
-
             <input (mousedown) = "submitMessage(message)" id="submitMessage" type="submit" value="Send"/>
         </form>
     </div>
