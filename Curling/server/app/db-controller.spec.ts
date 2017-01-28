@@ -1,6 +1,5 @@
-import {DbController} from './db-controller';
-
-import { expect} from 'chai';
+import { DbController } from './db-controller';
+import { expect } from 'chai';
 
 describe('A Database Controller ', () => {
     it('should be created with an ID', done => {
@@ -9,4 +8,4 @@ describe('A Database Controller ', () => {
         expect(dbC.getId()).to.equal(expectedId);
         done();
     });
-})
+});

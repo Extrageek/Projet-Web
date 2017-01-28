@@ -23,13 +23,13 @@
     static xPosition = 1;
 
     static minRowIndex = 0;
-    static minColIndex = 0;
+    static minColumnIndex = 0;
     static maxColumnIndex = 8;
     static maxRowIndex = 8;
 
     constructor() {
-        // Default constructor
-     }
+        //Default constructor
+    }
 }
 
 export enum Difficulty {

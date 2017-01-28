@@ -10,7 +10,7 @@ import * as path from 'path';
 import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
-import * as cors from 'cors'
+import * as cors from 'cors';
 
 import * as indexRoute from './routes';
 
@@ -80,7 +80,10 @@ export class Application {
     //home page
     router.get('/', index.index.bind(index.index));
     router.get('/game', index.glComponent.bind(index.glComponent));
-//    router.post('/api/usersetting', index.addUser.bind(index.addUser));
+    router.post('/api/usersetting', index.addUser.bind(index.addUser));
+    router.get('/api/test', (req, res, next) => {
+        res.send([{"id" : "mat"}]);
+    });
 
     //use router middleware
     this.app.use(router);
