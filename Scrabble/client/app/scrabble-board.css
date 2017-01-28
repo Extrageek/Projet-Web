@@ -13,5 +13,14 @@
 }
 
 .cell {
+    margin-bottom:2px;
+    height: 38px;
+    width: 38px;
+}
+div.mainboard > div:lastchild > img.cell {
     margin: 0;
+}
+.mainBoard {
+    width: 634px;
+    border: 4px solid black;
 }
