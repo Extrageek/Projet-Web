@@ -5,19 +5,16 @@
  * @date 2017/01/22
  */
 
-import { Difficulty } from '../commons/puzzle-common';
-
 export class Puzzle {
-    puzzle: Array<Array<PuzzleItem>>;
-    difficulty: Difficulty.NORMAL;
+    _puzzle: Array<Array<PuzzleItem>>;
 }
 
 export class PuzzleItem {
-    number: number;
-    hide: boolean;
+    _value: number;
+    _hide: boolean;
 
     constructor(value: number, hide: boolean) {
-        this.number = value;
-        this.hide = hide;
+        this._value = value;
+        this._hide = hide;
     }
 }

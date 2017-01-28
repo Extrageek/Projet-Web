@@ -2,13 +2,13 @@
            <div class="table-responsive">          
                 <table class="table">
                     <tbody>
-                        <tr class="grid" *ngFor = "let row of _newPuzzle?.puzzle , let i = index" [attr.id] = "'gridRowId' + i">
+                        <tr class="grid" *ngFor = "let row of _newPuzzle?._puzzle , let i = index" [attr.id] = "'gridRowId' + i">
                             <td *ngFor ="let cell of row, let j = index" [attr.id] = "'cellId' + i + '' + j"> 
-                                <input class="readOnlyCell" *ngIf ="!cell.hide" readonly minlength="1" maxlength="1" type="number" name=""
-                                [attr.id]="i +''+ j" [ngModel]="cell.number" (keydown)="onKeyEventHandler($event)">
+                                <input class="readOnlyCell" *ngIf ="!cell._hide" readonly minlength="1" maxlength="1" type="number" name=""
+                                [attr.id]="i +''+ j" [ngModel]="cell._value" (keydown)="onKeyEventHandler($event)">
 
-                                <input class="readWriteCell" *ngIf ="cell.hide" minlength="1" maxlength="1" type="number" name="" 
-                                [attr.id]="i +''+ j"  [(ngModel)]="cell.number" 
+                                <input class="readWriteCell" *ngIf ="cell._hide" minlength="1" maxlength="1" type="number" name="" 
+                                [attr.id]="i +''+ j"  [(ngModel)]="cell._value" 
                                     (keydown)="onKeyEventHandler($event)"
                                     (keyup) = "onValueChange($event)">
                             </td>

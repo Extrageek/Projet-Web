@@ -5,81 +5,24 @@
  * @date 2017/01/22
  */
 
+import { Puzzle, AxisDiagonal } from './../models/puzzle';
+
+const NOMBRE_ITERATION = 1;
+
+// Used to generate the type of transformation and to give a number of holes to dig in sudoku
+function getRandomInRange(min: number, max: number) {
+    return function (): number {
+        console.log(Math.floor(Math.random() * (max - min)) + min);
+        return Math.floor(Math.random() * (max - min)) + min;
+    };
+}
+
 module PuzzleManagerService {
 
-// TODO: Must be removed after a clean debug
-    export const dummyPuzzle = {
-        "data": {
-                "puzzle": [
-                  [
-                    {"number": 4, "hide": true}, {"number": 1, "hide": true},
-                    {"number": 5, "hide": true}, {"number": 6, "hide": true},
-                    {"number": 3, "hide": false}, {"number": 8, "hide": true},
-                    {"number": 9, "hide": true}, {"number": 7, "hide": true},
-                    {"number": 2, "hide": false}
-                  ],
-                  [
-                    {"number": 3, "hide": true}, {"number": 6, "hide": false},
-                    {"number": 2, "hide": false}, {"number": 4, "hide": false},
-                    {"number": 7, "hide": true}, {"number": 9, "hide": true},
-                    {"number": 1, "hide": true}, {"number": 8, "hide": false},
-                    {"number": 5, "hide": true}
-                   ],
-                   [
-                     {"number": 7, "hide": false}, {"number": 8, "hide": true},
-                     {"number": 9, "hide": true}, {"number": 2, "hide": false},
-                     {"number": 1, "hide": true}, {"number": 5, "hide": false},
-                     {"number": 3, "hide": true}, {"number": 6, "hide": true},
-                     {"number": 4, "hide": true}
-                   ],
-                   [
-                     {"number": 9, "hide": true}, {"number": 2, "hide": true},
-                     {"number": 6, "hide": false}, {"number": 3, "hide": true},
-                     {"number": 4, "hide": true}, {"number": 1, "hide": true},
-                     {"number": 7, "hide": true}, {"number": 5, "hide": true},
-                     {"number": 8, "hide": false}
-                   ],
-                   [
-                     {"number": 1, "hide": true}, {"number": 3, "hide": true},
-                     {"number": 8, "hide": true}, {"number": 7, "hide": true},
-                     {"number": 5, "hide": true}, {"number": 6, "hide": true},
-                     {"number": 4, "hide": true}, {"number": 2, "hide": true},
-                     {"number": 9, "hide": true}
-                   ],
-                   [
-                     {"number": 5, "hide": true}, {"number": 7, "hide": false},
-                     {"number": 4, "hide": false}, {"number": 9, "hide": true},
-                     {"number": 8, "hide": true}, {"number": 2, "hide": true},
-                     {"number": 6, "hide": true}, {"number": 3, "hide": false},
-                     {"number": 1, "hide": true}
-                   ],
-                   [
-                     {"number": 2, "hide": false}, {"number": 5, "hide": true},
-                     {"number": 7, "hide": true}, {"number": 1, "hide": false},
-                     {"number": 6, "hide": true}, {"number": 4, "hide": false},
-                     {"number": 8, "hide": false}, {"number": 9, "hide": true},
-                     {"number": 3, "hide": true}
-                   ],
-                   [
-                     {"number": 8, "hide": true}, {"number": 4, "hide": true},
-                     {"number": 3, "hide": true}, {"number": 5, "hide": false},
-                     {"number": 9, "hide": true}, {"number": 7, "hide": true},
-                     {"number": 2, "hide": true}, {"number": 1, "hide": true},
-                     {"number": 6, "hide": true}
-                   ],
-                   [
-                     {"number": 6, "hide": true}, {"number": 9, "hide": true},
-                     {"number": 1, "hide": true}, {"number": 8, "hide": false},
-                     {"number": 2, "hide": false}, {"number": 3, "hide": true},
-                     {"number": 5, "hide": true}, {"number": 4, "hide": true},
-                     {"number": 7, "hide": false}
-                   ]
-                ],
-                "difficulty" : "normal"
-            }
-    };
-
     export class PuzzleManager {
+
+        _easySudoku: Array<Puzzle>;
+        _hardSudoku: Array<Puzzle>;
 
         /**
          * The getNewPuzzle function, return a new puzzle.
@@ -89,10 +32,39 @@ module PuzzleManagerService {
          * @return newPuzzle
          */
         public getNewPuzzle() {
-
-            // Return a fake (but a valid) puzzle for now
+            // let iterationChoice = getRandomInRange(0, 5);
+            let getRandomSudoku = getRandomInRange(1, 9);
+            console.log("je suis une itération");
+            let newPuzzle: Puzzle = new Puzzle();
+            for (let it = 0; it < NOMBRE_ITERATION; ++it) {
+                let test = 2;
+                console.log(test);
+                switch (test) {
+                    case 0 :
+                        newPuzzle.swapRow(getRandomSudoku(), getRandomSudoku());
+                        break;
+                    case 1 :
+                        newPuzzle.swapColumn(getRandomSudoku(), getRandomSudoku());
+                        break;
+                    case 2 :
+                        newPuzzle.horizontalSymmetry();
+                        break;
+                    case 3 :
+                        newPuzzle.verticalSymmetry();
+                        break;
+                    case 4 :
+                        newPuzzle.diagonalSymmetry(AxisDiagonal.UP_LEFT_TO_DOWN_RIGHT);
+                        break;
+                    case 5 :
+                        newPuzzle.diagonalSymmetry(AxisDiagonal.DOWN_LEFT_TO_UP_RIGHT);
+                        break;
+                }
+            }
             // TODO: Must be completed after a clean debug
-            return dummyPuzzle;
+
+            // console.log(newPuzzle);
+
+            return newPuzzle;
         }
     }
 }

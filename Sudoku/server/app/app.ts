@@ -12,6 +12,7 @@ import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 
 import * as route from './routes';
+import * as puzzleManagerService from './services/puzzle-manager.service';
 
 export class Application {
 
@@ -86,7 +87,14 @@ export class Application {
 
     //home page
     router.get('/', routeManager.index.bind(routeManager.index));
-    router.get('/api/puzzle', routeManager.getNewPuzzle.bind(routeManager.getNewPuzzle));
+    router.get('/api/puzzle', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+
+        // Get a new puzzle from the PuzzleManger service.
+        let puzzleManager = new puzzleManagerService.PuzzleManager();
+        let newPuzzle = puzzleManager.getNewPuzzle();
+
+        res.send(newPuzzle);
+    });
 
     //use router middleware
     this.app.use(router);
