@@ -1,65 +1,31 @@
-<<<<<<< HEAD
-import {Component,OnInit} from '@angular/core';
-import {MdDialog, MdDialogRef, MdSnackBar} from '@angular/material';
-=======
 import { Component, OnInit } from '@angular/core';
 import { RenderService } from '../services/render.service';
 import { MdSnackBar } from '@angular/material';
->>>>>>> bf80269e4702264caf7977ead797d170951ddad2
-
-import { RenderService } from '../services/render.service';
 
 @Component({
-<<<<<<< HEAD
-    selector: 'My-GL',
-    template:`
-        <modifier [container]="container"
-                  [webgltext]="webgltext">
-        </modifier>
-        <div #container> 
-        </div> 
-    `,
-=======
     selector: 'my-gl',
     templateUrl: "../../assets/templates/gl-component.html",
-    styleUrls: ['../../assets/stylesheets/gl-component.css']
->>>>>>> bf80269e4702264caf7977ead797d170951ddad2
 })
 
 export class GlComponent implements OnInit{
     webgltext: string;
     xmodel: number;
     ymodel: number;
-<<<<<<< HEAD
-    zCamera:number;
+    zCamera: number;
 
     ngOnInit(): void {
-=======
-    zCamera: number;
-    ngOnInit(): void{
->>>>>>> bf80269e4702264caf7977ead797d170951ddad2
         this.webgltext = "";
         this.xmodel = this.ymodel = 0;
         this.zCamera = 0;
-        console.log(this.trigger());
+        //console.log(this.trigger());
     }
-<<<<<<< HEAD
     constructor(
         private renderService : RenderService,
         private snackbar: MdSnackBar
-                ){}
+    ){}
 
     private displaceX():void{
         this.renderService.translateMesh(this.xmodel,0);
-=======
-    constructor(private renderService : RenderService,
-                private snackbar: MdSnackBar
-                ){
-    }
-    /*
-    private displaceX(): void{
-        this.renderService.translateMesh(this.xmodel, 0);
->>>>>>> bf80269e4702264caf7977ead797d170951ddad2
     }
 
     private displaceY(): void{
@@ -77,7 +43,6 @@ export class GlComponent implements OnInit{
         }
         console.log('cyclomatic');
     }
-    */
 
     private trigger(): string{
         /*
@@ -107,7 +72,7 @@ export class GlComponent implements OnInit{
     return null;
     }
 
-   public showNotImplemented(): void{
+   public showNotImplemented(): void {
        this.snackbar.open('Sorry, this is not implemented yet. Would you do it for me? :)', 'Yes');
    }
 }

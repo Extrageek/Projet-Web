@@ -7,7 +7,6 @@ import { Record } from '../models/record';
 
 @Component({
   selector: 'dashboard-component',
-<<<<<<< HEAD
   templateUrl: '../../assets/templates/dashboard-component.html'
 })
 export class DashboardComponent implements OnInit{
@@ -37,17 +36,4 @@ export class DashboardComponent implements OnInit{
     public returnMainPage(): void {
         this.router.navigate(['/']);
     }
-=======
-  template:
-  `
-    <nav>  </nav> 
-  `
-})
-export class DashboardComponent implements OnInit{
-    private canPlay: boolean;
-    //constructor(){ }
-    ngOnInit(): void{
-        this.canPlay = true;
-    }
->>>>>>> bf80269e4702264caf7977ead797d170951ddad2
 }
