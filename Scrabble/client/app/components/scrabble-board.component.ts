@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
     @Component({
         moduleId: module.id,
     selector: 'scrabble-main-board-selector',
-    templateUrl: '../app/scrabble.html',
-    styleUrls: ['../app/scrabble-board.css']
+    templateUrl: '../../app/views/scrabble.html',
+    styleUrls: ['../../app/assets/scrabble-board.css']
 })
 
 export class ScrabbleBoardComponent {
@@ -12,12 +12,12 @@ export class ScrabbleBoardComponent {
     columnNumberList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
     mappingLinkImage = {
-        "Star": 'scrabbleImages/starTile.jpg',
-        "Normal": 'scrabbleImages/ordinaryTile.jpg',
-        "DoubleLetterScore": 'scrabbleImages/doubleLetterScore.jpg',
-        "DoubleWordScore": 'scrabbleImages/doubleWordScore.jpg',
-        "TripleLetterScore": 'scrabbleImages/tripleLetterScore.jpg',
-        "TripleWordScore": 'scrabbleImages/tripleWordScore.jpg'
+        "Star": 'app/scrabbleImages/starTile.jpg',
+        "Normal": 'app/scrabbleImages/ordinaryTile.jpg',
+        "DoubleLetterScore": 'app/scrabbleImages/doubleLetterScore.jpg',
+        "DoubleWordScore": 'app/scrabbleImages/doubleWordScore.jpg',
+        "TripleLetterScore": 'app/scrabbleImages/tripleLetterScore.jpg',
+        "TripleWordScore": 'app/scrabbleImages/tripleWordScore.jpg'
     };
 
     line1 = ['TripleWordScore', 'Normal', 'Normal', 'DoubleLetterScore', 'Normal',

@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { ScrabbleLetter }	from './scrabble-letter';
+import { ScrabbleLetter }	from '../models/scrabble-letter';
 
 @Component({
   selector: "easel-selector",
   template: `
     <div id="easelContainer">
       <ng-container *ngFor="let letter of letters; let i=index" >
-          <input type = "image" src = "./app/{{letter._imageSource}}" id = "{{i + 1}}"> 
+          <input type = "image" src = "app/scrabbleImages/{{letter._imageSource}}" id = "{{i + 1}}"> 
       </ng-container>    
     </div>
   `,
-    styleUrls: ['./app/easel.css'],
+    styleUrls: ['../app/assets/easel.css'],
 
 })
 export class EaselComponent implements OnInit {

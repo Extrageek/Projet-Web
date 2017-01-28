@@ -3,8 +3,8 @@ import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild } from '@ang
 @Component({
     moduleId: module.id,
     selector: 'scrabble-chatroom-selector',
-    templateUrl: '../app/chatroom.html',
-    styleUrls: ['../app/chatroom.css'],
+    templateUrl: '../../app//views/chatroom.html',
+    styleUrls: ['../../app/assets/chatroom.css'],
 })
 export class ChatroomComponent implements OnInit, AfterViewChecked {
     messageArray: string[];
