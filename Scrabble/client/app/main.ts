@@ -1,5 +1,4 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { AppModule } from './app.module';
 
-import { ScrabbleModule } from './scrabble.module';
-
-platformBrowserDynamic().bootstrapModule(ScrabbleModule);
+platformBrowserDynamic().bootstrapModule(AppModule);

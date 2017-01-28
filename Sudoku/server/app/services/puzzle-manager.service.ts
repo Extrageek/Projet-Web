@@ -5,81 +5,24 @@
  * @date 2017/01/22
  */
 
+import { Puzzle, AxisDiagonal } from './../models/puzzle';
+
+const NOMBRE_ITERATION = 1;
+
+// Used to generate the type of transformation and to give a number of holes to dig in sudoku
+function getRandomInRange(min: number, max: number) {
+    return function (): number {
+        console.log(Math.floor(Math.random() * (max - min)) + min);
+        return Math.floor(Math.random() * (max - min)) + min;
+    };
+}
+
 module PuzzleManagerService {
 
-// TODO: Must be removed after a clean debug
-    export const dummyPuzzle = {
-        "data": {
-                "puzzle": [
-                  [
-                    {"value": 4, "hide": true}, {"value": 1, "hide": true},
-                    {"value": 5, "hide": true}, {"value": 6, "hide": true},
-                    {"value": 3, "hide": false}, {"value": 8, "hide": true},
-                    {"value": 9, "hide": true}, {"value": 7, "hide": true},
-                    {"value": 2, "hide": false}
-                  ],
-                  [
-                    {"value": 3, "hide": true}, {"value": 6, "hide": false},
-                    {"value": 2, "hide": false}, {"value": 4, "hide": false},
-                    {"value": 7, "hide": true}, {"value": 9, "hide": true},
-                    {"value": 1, "hide": true}, {"value": 8, "hide": false},
-                    {"value": 5, "hide": true}
-                  ],
-                  [
-                     {"value": 7, "hide": false}, {"value": 8, "hide": true},
-                     {"value": 9, "hide": true}, {"value": 2, "hide": false},
-                     {"value": 1, "hide": true}, {"value": 5, "hide": false},
-                     {"value": 3, "hide": true}, {"value": 6, "hide": true},
-                     {"value": 4, "hide": true}
-                  ],
-                  [
-                     {"value": 9, "hide": true}, {"value": 2, "hide": true},
-                     {"value": 6, "hide": false}, {"value": 3, "hide": true},
-                     {"value": 4, "hide": true}, {"value": 1, "hide": true},
-                     {"value": 7, "hide": true}, {"value": 5, "hide": true},
-                     {"value": 8, "hide": false}
-                  ],
-                  [
-                     {"value": 1, "hide": true}, {"value": 3, "hide": true},
-                     {"value": 8, "hide": true}, {"value": 7, "hide": true},
-                     {"value": 5, "hide": true}, {"value": 6, "hide": true},
-                     {"value": 4, "hide": true}, {"value": 2, "hide": true},
-                     {"value": 9, "hide": true}
-                  ],
-                  [
-                     {"value": 5, "hide": true}, {"value": 7, "hide": false},
-                     {"value": 4, "hide": false}, {"value": 9, "hide": true},
-                     {"value": 8, "hide": true}, {"value": 2, "hide": true},
-                     {"value": 6, "hide": true}, {"value": 3, "hide": false},
-                     {"value": 1, "hide": true}
-                  ],
-                  [
-                     {"value": 2, "hide": false}, {"value": 5, "hide": true},
-                     {"value": 7, "hide": true}, {"value": 1, "hide": false},
-                     {"value": 6, "hide": true}, {"value": 4, "hide": false},
-                     {"value": 8, "hide": false}, {"value": 9, "hide": true},
-                     {"value": 3, "hide": true}
-                  ],
-                  [
-                     {"value": 8, "hide": true}, {"value": 4, "hide": true},
-                     {"value": 3, "hide": true}, {"value": 5, "hide": false},
-                     {"value": 9, "hide": true}, {"value": 7, "hide": true},
-                     {"value": 2, "hide": true}, {"value": 1, "hide": true},
-                     {"value": 6, "hide": true}
-                  ],
-                  [
-                     {"value": 6, "hide": true}, {"value": 9, "hide": true},
-                     {"value": 1, "hide": true}, {"value": 8, "hide": false},
-                     {"value": 2, "hide": false}, {"value": 3, "hide": true},
-                     {"value": 5, "hide": true}, {"value": 4, "hide": true},
-                     {"value": 7, "hide": false}
-                  ]
-                ],
-                "difficulty" : "normal"
-            }
-    };
-
     export class PuzzleManager {
+
+        _easySudoku: Array<Puzzle>;
+        _hardSudoku: Array<Puzzle>;
 
         /**
          * The getNewPuzzle function, return a new puzzle.
@@ -89,10 +32,39 @@ module PuzzleManagerService {
          * @return newPuzzle
          */
         public getNewPuzzle() {
-
-            // Return a fake (but a valid) puzzle for now
+            // let iterationChoice = getRandomInRange(0, 5);
+            let getRandomSudoku = getRandomInRange(1, 9);
+            console.log("je suis une itération");
+            let newPuzzle: Puzzle = new Puzzle();
+            for (let it = 0; it < NOMBRE_ITERATION; ++it) {
+                let test = 2;
+                console.log(test);
+                switch (test) {
+                    case 0 :
+                        newPuzzle.swapRow(getRandomSudoku(), getRandomSudoku());
+                        break;
+                    case 1 :
+                        newPuzzle.swapColumn(getRandomSudoku(), getRandomSudoku());
+                        break;
+                    case 2 :
+                        newPuzzle.horizontalSymmetry();
+                        break;
+                    case 3 :
+                        newPuzzle.verticalSymmetry();
+                        break;
+                    case 4 :
+                        newPuzzle.diagonalSymmetry(AxisDiagonal.UP_LEFT_TO_DOWN_RIGHT);
+                        break;
+                    case 5 :
+                        newPuzzle.diagonalSymmetry(AxisDiagonal.DOWN_LEFT_TO_UP_RIGHT);
+                        break;
+                }
+            }
             // TODO: Must be completed after a clean debug
-            return dummyPuzzle;
+
+            // console.log(newPuzzle);
+
+            return newPuzzle;
         }
     }
 }

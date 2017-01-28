@@ -1,0 +1,14 @@
+display-component,
+#threejs {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+display-component {
+    z-index: 1;
+}
+
+#threejs {
+    z-index: -1;
+}

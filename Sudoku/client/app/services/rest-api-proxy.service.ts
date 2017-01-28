@@ -6,10 +6,11 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Headers, Response, Http, RequestOptions } from '@angular/http';
+import { Response, Http } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
+
+import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/catch';
 
 import { Puzzle } from '../models/puzzle';
@@ -18,7 +19,7 @@ import { Puzzle } from '../models/puzzle';
 export class RestApiProxyService {
 
     // API Url for new Puzzle request to the server
-    private newPuzzleUrl = 'http://localhost:3002/api/puzzle';
+    private _newPuzzleUrl = 'http://localhost:3002/api/puzzle';
 
     /**
      * constructor.
@@ -35,10 +36,10 @@ export class RestApiProxyService {
      * @returns an Observable with a newPuzzle json data 
      * TODO: Must be checked if we need to convert to an object.
      */
-    getNewPuzzle(): Observable<Puzzle> {
-        return this.http.get(this.newPuzzleUrl)
-                        .map(this.retrieveDataFromHttpResponse)
-                        .catch(this.handleError);
+     getNewPuzzle() : Observable<Puzzle> {
+        return this.http.get(this._newPuzzleUrl)
+            .map(this.retrieveDataFromHttpResponse)
+            .catch(this.handleError);
     }
 
     /**
@@ -50,7 +51,7 @@ export class RestApiProxyService {
      */
     private retrieveDataFromHttpResponse(res: Response) {
         let body = res.json();
-        return body.data || { };
+        return body || { };
     }
 
     /**

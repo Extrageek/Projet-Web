@@ -1,54 +1,54 @@
 import * as express from 'express';
 
-var mongodb = require('mongodb');
+var mongodb = require('mongojs');
 
-var db = mongodb('mongodb://juyer:log2990-23@ds117859.mlab.com:17859/curling', ['username']);
+var db = mongodb('mongodb://curling23:log2990-23@ds117859.mlab.com:17859/curling', ['username']);
 
 export class DatabaseManager {
 
     // GET: api/tasks - for all the tasks
     //[req: request, res: response]
-    static addUser(body : any, res: express.Response, next: express.NextFunction){
-        var user = body.data;
+    static addUser(body : any): boolean{
+        let user = body;
 
         // Send an error task is empty
-        if(user.username === '')
+        if (user.username === '')
         {
-            res.status(400);
-            res.json({
-                "error": "Bad Request: the username is empty."
-            })
-        }else{
-            // Save the task if everything is find
-            db.username.save(JSON.stringify({username : user.username}), (err :any, tasks : any) =>{
-                if (err){
-                    res.status(400);
-                    res.json({
-                        "error": "Database : username not inserted. Already existing."
-                    })
-                }else{
-                    res.status(200);
-                    res.json({
-                        "error": "Database : username inserted successfully."
-                    })
-                }
-            });
+            return false;
         }
-        
-        
-        
-       
+        else{
+            try {
+                 // Save the task if everything is find
+                db.username.save(body, (err: any, body: any) =>{
+                    if (err){
+                        console.log('username existing');
+                        return false;
+                    }
+                    else{
+                        console.log('insert username');
+                        return true;
+                    }
+                });
+            } catch (error) {
+                console.log('une erreur est survenue lors de la connexion a la db. - DatabaseManager addUser');
+                return false;
+            }
+        }
     };
 
-    /*
-    find all
-     db.tasksCollection.find((err :any, tasks : any) =>{
+    static getAll(req : express.Request, res: express.Response, next: express.NextFunction){
+        db.username.find((err :any, users : any) =>{
             if (err){
                 res.send(err);
             }else{
-                res.json(tasks);
+                //res.json(users);
+                console.log("recup all   " + users);
             }
         });
+    }
+    /*
+    find all
+     
     
      GET: api/task/:id  - for a single task
     router.get('/task/:id', function(req, res, next){
@@ -99,7 +99,7 @@ export class DatabaseManager {
     router.put('/task/:id', function(req, res, next){
         var task = req.body;
         var updatedTask = {} // leave empty for now
-        
+
         if(task.isDone){
             updatedTask = task.isDone;
         }
@@ -113,17 +113,15 @@ export class DatabaseManager {
                 "error":"Bad data"
             })
         }else{
-            db.tasksCollection.update({_id: mongojs.ObjectId(req.params.id)}, 
-                updatedTask, {/* empty object/function } , (err :any, tasks : any) =>{
-                if (err){
-                    res.send(err);
-                }else{
-                    res.json(task);
-                }
-            });
-        }
-
-    
-    });
-    */
+            db.tasksCollection.update({_id: mongojs.ObjectId(req.params.id)},
+            updatedTask, {/* empty object/function } , (err :any, tasks : any) =>{
+            if (err){
+                res.send(err);
+            }else{
+                res.json(task);
+            }
+        });
+    }
+});
+*/
 }

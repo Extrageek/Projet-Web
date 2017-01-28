@@ -1,13 +1,13 @@
 import { AppComponent } from './app.component';
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By }           from '@angular/platform-browser';
+import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 // Un peu plus de recherche est nécessaire pour comprendre cette 
 // ligne suivante
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
-import { expect, assert } from 'chai'
+import { expect } from 'chai';
 
 class RouterStub {
   navigateByUrl(url: string) { return url; }

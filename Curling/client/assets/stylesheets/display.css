@@ -1,0 +1,85 @@
+    #display-component {
+        background: transparent;
+    }
+    
+    #playerName {
+        font-family: 'Bungee Inline';
+        /*font-family: Georgia;*/
+        font-size: 45px;
+        color: blue;
+        text-align: left
+    }
+    
+    #computerName {
+        font-family: 'Bungee Inline';
+        font-size: 45px;
+        color: red;
+        text-align: left
+    }
+    
+    #score {
+        font-family: 'Bungee Inline';
+        font-size: 60px;
+        color: white;
+        text-align: center
+    }
+    
+    #firstSetToDo {
+        width: 24px;
+        height: 24px;
+        -webkit-border-radius: 12px;
+        -moz-border-radius: 12px;
+        border-radius: 12px;
+        background: white;
+        display: inline-block;
+    }
+    
+    #secondSetToDo {
+        width: 24px;
+        height: 24px;
+        -webkit-border-radius: 12px;
+        -moz-border-radius: 12px;
+        border-radius: 12px;
+        background: white;
+        display: inline-block;
+    }
+    
+    #thirdSetToDo {
+        width: 24px;
+        height: 24px;
+        -webkit-border-radius: 12px;
+        -moz-border-radius: 12px;
+        border-radius: 12px;
+        background: white;
+        display: inline-block;
+    }
+    
+    #firstSetDone {
+        width: 24px;
+        height: 24px;
+        -webkit-border-radius: 12px;
+        -moz-border-radius: 12px;
+        border-radius: 12px;
+        background: mediumseagreen;
+        display: inline-block;
+    }
+    
+    #secondSetDone {
+        width: 24px;
+        height: 24px;
+        -webkit-border-radius: 12px;
+        -moz-border-radius: 12px;
+        border-radius: 12px;
+        background: mediumseagreen;
+        display: inline-block;
+    }
+    
+    #thirdSetDone {
+        width: 24px;
+        height: 24px;
+        -webkit-border-radius: 12px;
+        -moz-border-radius: 12px;
+        border-radius: 12px;
+        background: mediumseagreen;
+        display: inline-block;
+    }

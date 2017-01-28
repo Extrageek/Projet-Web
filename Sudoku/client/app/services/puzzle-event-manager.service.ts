@@ -7,6 +7,9 @@
 
 import { Injectable } from '@angular/core';
 import { PuzzleCommon } from '../commons/puzzle-common';
+import { PuzzleManagerService } from './grid-manager.service';
+
+declare var jQuery: any;
 
 @Injectable()
 export class PuzzleEventManagerService {
@@ -15,7 +18,7 @@ export class PuzzleEventManagerService {
     _newPositionY = 0;
     _nextInputPositionYX : string;
 
-    constructor() {
+    constructor(private puzzleManagerService: PuzzleManagerService) {
         // Default constructor
      }
 
@@ -40,8 +43,7 @@ export class PuzzleEventManagerService {
      */
     isDeleteKey (keyCode: number): boolean {
         // TODO: Must be checked, let's keep this for now
-        return keyCode === PuzzleCommon.deleteKeyCode ||
-            keyCode === PuzzleCommon.deleteKeyCodeOnMac;
+        return keyCode === PuzzleCommon.deleteKeyCode;
     }
 
     /**
@@ -62,13 +64,10 @@ export class PuzzleEventManagerService {
      * @method onKeyEventUpdateCurrentCursor
      */
     onKeyEventUpdateCurrentCursor(event: KeyboardEvent): void {
-
         let currentPositionXY = event.srcElement.id.split('');
         let keyCode = event.keyCode;
 
         // TODO: Remove after a clean debug
-        //console.log(this.isDeleteKey(keyCode));
-        //console.log(keyCode);
         if (this.isDirection(keyCode)) {
             this.updateFocus(currentPositionXY, keyCode);
         } else if (this.isDeleteKey(keyCode)) {
@@ -89,41 +88,35 @@ export class PuzzleEventManagerService {
             case PuzzleCommon.downArrowKeyCode:
                 let downPosition = Number(currentPositionXY[PuzzleCommon.yPosition]) + 1;
                 this._newPositionX = ( downPosition > PuzzleCommon.maxColumnIndex)
-                    ? PuzzleCommon.minColIndex : downPosition;
+                    ? PuzzleCommon.minColumnIndex : downPosition;
                 break;
             case PuzzleCommon.upArrowKeyCode:
                 let upPosition = Number(currentPositionXY[PuzzleCommon.yPosition]) - 1;
-                this._newPositionX = (upPosition < PuzzleCommon.minColIndex)
+                this._newPositionX = (upPosition < PuzzleCommon.minColumnIndex)
                     ? PuzzleCommon.maxRowIndex : upPosition;
                 break;
             case PuzzleCommon.leftArrowKeyCode:
                 let leftPosition = Number(currentPositionXY[PuzzleCommon.xPosition]) - 1;
-                this._newPositionY = (leftPosition < PuzzleCommon.minColIndex)
+                this._newPositionY = (leftPosition < PuzzleCommon.minColumnIndex)
                     ? PuzzleCommon.maxRowIndex : leftPosition;
                 break;
             case PuzzleCommon.rightArrowKeyCode:
                 let rightPosition = Number(currentPositionXY[PuzzleCommon.xPosition]) + 1;
                 this._newPositionY = (rightPosition > PuzzleCommon.maxColumnIndex)
-                    ? PuzzleCommon.minColIndex : rightPosition;
-                break;
-            case PuzzleCommon.deleteKeyCode:
-                event.srcElement.innerHTML = "";
+                    ? PuzzleCommon.minColumnIndex : rightPosition;
                 break;
             default:
                 break;
         }
 
         if (keyCode === PuzzleCommon.leftArrowKeyCode || keyCode === PuzzleCommon.rightArrowKeyCode) {
-            // TODO: To be removed after a clean debug
-            //console.log("Left/Right Key Pressed");
             this._nextInputPositionYX = currentPositionXY[PuzzleCommon.yPosition] + this._newPositionY.toString();
         } else if (keyCode === PuzzleCommon.upArrowKeyCode || keyCode === PuzzleCommon.downArrowKeyCode) {
-            // TODO: To be removed after a clean debug
-            //console.log("Up/Down Key Pressed");            
             this._nextInputPositionYX = this._newPositionX.toString() + currentPositionXY[PuzzleCommon.xPosition];
         }
-        let focusElement = <HTMLInputElement>document.getElementById(this._nextInputPositionYX);
-        focusElement.focus();
+
+        let inputId = "#" + this._nextInputPositionYX;
+        jQuery(inputId).focus();
     }
 
      /**
@@ -133,9 +126,7 @@ export class PuzzleEventManagerService {
      * @method deleteCellContent
      */
     deleteCellContent(currentPositionXY: string[]): void {
-
-        let focusElement = <HTMLInputElement>document.getElementById(currentPositionXY.join(''));
-        //console.log(focusElement.innerHTML);
-        focusElement.innerHTML = "";
+        let inputId = "#" + currentPositionXY.join('');
+        jQuery(inputId).text = "";
     }
 }
