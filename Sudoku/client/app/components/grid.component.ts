@@ -75,8 +75,23 @@ export class GridComponent implements OnInit {
     // Handle the directions key event by using the EventManager
     onKeyEventHandler(event: KeyboardEvent) {
 
+        let inputId = jQuery('#' + event.srcElement.id).val();
+        //console.log(value);
+
+        // document.getElementById(inputId).onkeydown = function(e) {
+        //     if(e.keyCode < 49 && e.keyCode > 57
+        //         && e.keyCode != PuzzleCommon.leftArrowKeyCode
+        //         && e.keyCode != PuzzleCommon.rightArrowKeyCode
+        //         && e.keyCode != PuzzleCommon.upArrowKeyCode
+        //         && e.keyCode != PuzzleCommon.downArrowKeyCode){
+        //             return false;
+        //         }
+        //     }
+
         // TODO: Must be removed after a clean debug
         this.puzzleEventManager.onKeyEventUpdateCurrentCursor(event);
+
+        //event.preventDefault();
     }
 
     // TODO : must be removed after a clean debug

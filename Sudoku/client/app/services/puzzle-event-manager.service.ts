@@ -42,8 +42,7 @@ export class PuzzleEventManagerService {
      * @return true for a delete keypress
      */
     isDeleteKey (keyCode: number): boolean {
-        // TODO: Must be checked, let's keep this for now
-        return keyCode === PuzzleCommon.deleteKeyCode;
+        return (keyCode === PuzzleCommon.deleteKeyCode);
     }
 
     /**
@@ -65,9 +64,8 @@ export class PuzzleEventManagerService {
      */
     onKeyEventUpdateCurrentCursor(event: KeyboardEvent): void {
         let currentPositionXY = event.srcElement.id.split('');
-        let keyCode = event.keyCode;
+        let keyCode = event.which;
 
-        // TODO: Remove after a clean debug
         if (this.isDirection(keyCode)) {
             this.updateFocus(currentPositionXY, keyCode);
         } else if (this.isDeleteKey(keyCode)) {
@@ -126,7 +124,10 @@ export class PuzzleEventManagerService {
      * @method deleteCellContent
      */
     deleteCellContent(currentPositionXY: string[]): void {
+        // Get the id of the current input id and delete it value
         let inputId = "#" + currentPositionXY.join('');
-        jQuery(inputId).text = "";
+        jQuery(inputId).val("");
     }
+
+    
 }

@@ -7,7 +7,7 @@
                                 <input class="readOnlyCell" *ngIf ="!cell._hide" readonly minlength="1" maxlength="1" type="number" name=""
                                 [attr.id]="i +''+ j" [ngModel]="cell._value" (keydown)="onKeyEventHandler($event)">
 
-                                <input class="readWriteCell" *ngIf ="cell._hide" minlength="1" maxlength="1" type="number" name="" 
+                                <input class="readWriteCell" *ngIf ="cell._hide" pattern="[1-9]" [attr.min]="1" [attr.max]="9" type="number" name="" 
                                 [attr.id]="i +''+ j"  [(ngModel)]="cell._value" 
                                     (keydown)="onKeyEventHandler($event)"
                                     (keyup) = "onValueChange($event)">
