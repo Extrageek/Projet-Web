@@ -80,7 +80,7 @@ export class PuzzleEventManagerService {
      * @method updateFocus
      */
     updateFocus(currentPositionXY: string[], keyCode: number): void {
-        // Reads next direction of arrow keys and decide if it warps to the other end 
+        // Reads next direction of arrow keys and decide if it warps to the other end
         // or if it goes to the next cell
         switch (keyCode) {
             case PuzzleCommon.downArrowKeyCode:
@@ -128,6 +128,4 @@ export class PuzzleEventManagerService {
         let inputId = "#" + currentPositionXY.join('');
         jQuery(inputId).val("");
     }
-
-    
 }

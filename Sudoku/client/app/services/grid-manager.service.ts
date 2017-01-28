@@ -178,4 +178,15 @@ export class PuzzleManagerService {
                squareMinColumnIndex: squareMinColumnIndex,
                squareMaxColumnIndex: squareMaxColumnIndex};
    }
+
+   // Clears the cells the user filled
+    restartGrid(grid: PuzzleItem[][]) {
+        for (let row = 0; row < PuzzleCommon.maxRowIndex; ++row) {
+            for (let column = 0; column < PuzzleCommon.maxColumnIndex; ++column) {
+                if (grid[row][column]._hide) {
+                    grid[row][column]._value = null;
+                }
+            }
+        }
+    }
 }

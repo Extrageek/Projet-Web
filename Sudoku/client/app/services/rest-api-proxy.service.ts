@@ -33,7 +33,7 @@ export class RestApiProxyService {
      *
      * @class RestApiProxyService
      * @method getNewSudokuPuzzle
-     * @returns an Observable with a newPuzzle json data 
+     * @returns an Observable with a newPuzzle json data
      * TODO: Must be checked if we need to convert to an object.
      */
      getNewPuzzle() : Observable<Puzzle> {
