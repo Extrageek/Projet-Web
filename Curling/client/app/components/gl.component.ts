@@ -1,11 +1,11 @@
 import {Component,OnInit} from '@angular/core';
-import { RenderService } from '../services/render.service'
 import {MdDialog, MdDialogRef, MdSnackBar} from '@angular/material';
+
+import { RenderService } from '../services/render.service';
 
 @Component({
     selector: 'My-GL',
     template:`
-        <dashboard></dashboard>
         <modifier [container]="container"
                   [webgltext]="webgltext">
         </modifier>
@@ -18,17 +18,17 @@ export class GlComponent implements OnInit{
     xmodel: number;
     ymodel: number;
     zCamera:number;
-    ngOnInit():void{
+
+    ngOnInit(): void {
         this.webgltext = "";
         this.xmodel = this.ymodel = 0;
         this.zCamera = 0;
         console.log(this.trigger());
     }
-    constructor(private renderService : RenderService,
-                private snackbar: MdSnackBar
-                ){
-        
-    }
+    constructor(
+        private renderService : RenderService,
+        private snackbar: MdSnackBar
+                ){}
 
     private displaceX():void{
         this.renderService.translateMesh(this.xmodel,0);

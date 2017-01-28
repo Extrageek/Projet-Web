@@ -1,54 +1,53 @@
 import * as express from 'express';
 
-var mongodb = require('mongodb');
+var mongodb = require('mongojs');
 
-var db = mongodb('mongodb://juyer:log2990-23@ds117859.mlab.com:17859/curling', ['username']);
+var db = mongodb('mongodb://curling23:log2990-23@ds117859.mlab.com:17859/curling', ['username']);
 
 export class DatabaseManager {
 
     // GET: api/tasks - for all the tasks
     //[req: request, res: response]
     static addUser(body : any, res: express.Response, next: express.NextFunction){
-        var user = body.data;
-
+        let user = body;
         // Send an error task is empty
         if(user.username === '')
         {
             res.status(400);
-            res.json({
-                "error": "Bad Request: the username is empty."
-            })
-        }else{
+            res.statusMessage = "username vide"; 
+        }
+        else{
             // Save the task if everything is find
-            db.username.save(JSON.stringify({username : user.username}), (err :any, tasks : any) =>{
+            db.username.save(body, (err: any, body: any) =>{
                 if (err){
                     res.status(400);
-                    res.json({
-                        "error": "Database : username not inserted. Already existing."
-                    })
-                }else{
+                    res.statusMessage = "username existing";
+                    console.log('username existing');
+                    console.log(res.statusCode);
+                }
+                else{
                     res.status(200);
-                    res.json({
-                        "error": "Database : username inserted successfully."
-                    })
+                    console.log('insert username');
+                    //res.send();
+                    //res.send([{"info:" : "Database - username inserted successfully."}]);
                 }
             });
         }
-        
-        
-        
-       
     };
 
-    /*
-    find all
-     db.tasksCollection.find((err :any, tasks : any) =>{
+    static getAll(req : express.Request, res: express.Response, next: express.NextFunction){
+        db.username.find((err :any, users : any) =>{
             if (err){
                 res.send(err);
             }else{
-                res.json(tasks);
+                //res.json(users);
+                console.log("recup all   " + users);
             }
         });
+    }
+    /*
+    find all
+     
     
      GET: api/task/:id  - for a single task
     router.get('/task/:id', function(req, res, next){

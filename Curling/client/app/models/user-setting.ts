@@ -3,7 +3,7 @@
     _difficulty : Difficulty = Difficulty.NORMAL;
 }
 
-enum Difficulty {
+export enum Difficulty {
     NORMAL,
     HARD
 }
