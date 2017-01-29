@@ -11,13 +11,24 @@ import { GridManagerService } from './grid-manager.service';
 
 declare var jQuery: any;
 
+export const INPUT_ID_PREFIX = '#';
+export const READ_ONLY_ATTRIBUTE ='readonly';
+export enum ArrayDirection {
+    LEFT = 0,
+    RIGHT = 1,
+    UP = 2,
+    DOWN = 3
+}
+
+
 @Injectable()
 export class PuzzleEventManagerService {
 
     _newPositionX = 0;
     _newPositionY = 0;
     _nextInputPositionYX : string;
-
+    _newInputId ="";
+    
     constructor(private puzzleManagerService: GridManagerService) {
         // Default constructor
      }
@@ -82,39 +93,135 @@ export class PuzzleEventManagerService {
     updateFocus(currentPositionXY: string[], keyCode: number): void {
         // Reads next direction of arrow keys and decide if it warps to the other end
         // or if it goes to the next cell
+
         switch (keyCode) {
             case PuzzleCommon.downArrowKeyCode:
-                let downPosition = Number(currentPositionXY[PuzzleCommon.yPosition]) + 1;
-                this._newPositionX = ( downPosition > PuzzleCommon.maxColumnIndex)
-                    ? PuzzleCommon.minColumnIndex : downPosition;
+                this.jumpToNextUpOrDownEmptyCell(currentPositionXY, ArrayDirection.DOWN)
                 break;
             case PuzzleCommon.upArrowKeyCode:
-                let upPosition = Number(currentPositionXY[PuzzleCommon.yPosition]) - 1;
-                this._newPositionX = (upPosition < PuzzleCommon.minColumnIndex)
-                    ? PuzzleCommon.maxRowIndex : upPosition;
+                this.jumpToNextUpOrDownEmptyCell(currentPositionXY, ArrayDirection.UP)
                 break;
             case PuzzleCommon.leftArrowKeyCode:
-                let leftPosition = Number(currentPositionXY[PuzzleCommon.xPosition]) - 1;
-                this._newPositionY = (leftPosition < PuzzleCommon.minColumnIndex)
-                    ? PuzzleCommon.maxRowIndex : leftPosition;
+                this.jumpToNextLeftOrRightEmptyCell(currentPositionXY, ArrayDirection.LEFT);
                 break;
             case PuzzleCommon.rightArrowKeyCode:
-                let rightPosition = Number(currentPositionXY[PuzzleCommon.xPosition]) + 1;
-                this._newPositionY = (rightPosition > PuzzleCommon.maxColumnIndex)
-                    ? PuzzleCommon.minColumnIndex : rightPosition;
+                 this.jumpToNextLeftOrRightEmptyCell(currentPositionXY, ArrayDirection.RIGHT);
                 break;
             default:
                 break;
         }
 
-        if (keyCode === PuzzleCommon.leftArrowKeyCode || keyCode === PuzzleCommon.rightArrowKeyCode) {
-            this._nextInputPositionYX = currentPositionXY[PuzzleCommon.yPosition] + this._newPositionY.toString();
-        } else if (keyCode === PuzzleCommon.upArrowKeyCode || keyCode === PuzzleCommon.downArrowKeyCode) {
-            this._nextInputPositionYX = this._newPositionX.toString() + currentPositionXY[PuzzleCommon.xPosition];
+        // Give the focus to next read/write cell.
+        jQuery(this._newInputId).focus();
+    }
+
+    // On Left/Right Arrow key press, jump to the next left/right empty cell, according to the direction.
+    jumpToNextLeftOrRightEmptyCell(currentPositionXY: string[], arrayDirection: ArrayDirection) {
+
+        let newPosition = 0;
+
+        // Find the new left or right postion index
+        if(arrayDirection === ArrayDirection.LEFT) {
+            newPosition = Number(currentPositionXY[PuzzleCommon.xPosition]) - 1;
+            this._newPositionY = (newPosition < PuzzleCommon.minColumnIndex)
+                ? PuzzleCommon.maxRowIndex : newPosition;
+
+        }else if(arrayDirection === ArrayDirection.RIGHT) {
+            newPosition = Number(currentPositionXY[PuzzleCommon.xPosition]) + 1;
+            this._newPositionY = (newPosition > PuzzleCommon.maxColumnIndex)
+                ? PuzzleCommon.minColumnIndex : newPosition;
         }
 
-        let inputId = "#" + this._nextInputPositionYX;
-        jQuery(inputId).focus();
+        // Loop the related column and find the new empty cell position.
+        for(let rowRightIndex = PuzzleCommon.minRowIndex, rowLeftIndex = PuzzleCommon.maxRowIndex;
+            rowRightIndex <= PuzzleCommon.maxRowIndex, rowLeftIndex >= PuzzleCommon.minRowIndex; 
+            ++rowRightIndex, --rowLeftIndex) {
+
+            this._nextInputPositionYX = [currentPositionXY[PuzzleCommon.yPosition], this._newPositionY.toString()].join('');
+            this._newInputId = INPUT_ID_PREFIX + this._nextInputPositionYX;
+
+            // Check if the new position is a read only cell and jump to next in this case.
+            if(jQuery(this._newInputId ).prop(READ_ONLY_ATTRIBUTE)) { 
+
+                // Increment or Decrement according the specified direction.
+                if(arrayDirection === ArrayDirection.LEFT) {
+                    --newPosition;
+
+                    if(newPosition < PuzzleCommon.minRowIndex) {
+                        this._newPositionY = rowLeftIndex;
+                    }else {
+                        this._newPositionY = newPosition;
+                    }
+                }else if(arrayDirection === ArrayDirection.RIGHT) {
+                    ++newPosition;
+
+                    if(newPosition > PuzzleCommon.maxRowIndex) {
+                        this._newPositionY = rowRightIndex;
+                    }else {
+                        this._newPositionY = newPosition;
+                    }
+                }
+
+            }else {
+                // If we are in a read/write cell, break and allow the focus option
+                break;
+            }
+        }
+    }
+
+    // On Up/Down Arrow key press, jump to the next Up/Down empty cell, according to the direction.
+    jumpToNextUpOrDownEmptyCell(currentPositionXY: string[], arrayDirection: ArrayDirection) {
+
+        let newPositionIndex = 0;
+
+        // Find the new up or down postion index
+        if(arrayDirection === ArrayDirection.UP) {
+            newPositionIndex = Number(currentPositionXY[PuzzleCommon.yPosition]) - 1;
+            this._newPositionX = (newPositionIndex < PuzzleCommon.minColumnIndex)
+                ? PuzzleCommon.maxColumnIndex : newPositionIndex;
+
+        }else if(arrayDirection === ArrayDirection.DOWN) {
+            newPositionIndex = Number(currentPositionXY[PuzzleCommon.yPosition]) + 1;
+            this._newPositionX = (newPositionIndex > PuzzleCommon.maxColumnIndex)
+                ? PuzzleCommon.minColumnIndex : newPositionIndex;
+        }
+
+        // Loop the related row and find the new empty cell position.
+        for(let rowDownIndex = PuzzleCommon.minColumnIndex, rowUpIndex = PuzzleCommon.maxColumnIndex;
+            rowDownIndex <= PuzzleCommon.maxColumnIndex, rowUpIndex >= PuzzleCommon.minColumnIndex; 
+            ++rowDownIndex, --rowUpIndex) {
+
+                this._nextInputPositionYX = [ this._newPositionX.toString(), currentPositionXY[PuzzleCommon.xPosition] ].join('');
+                this._newInputId = INPUT_ID_PREFIX + this._nextInputPositionYX;
+
+
+                // Check if the new position is a read only cell and jump to next in this case.
+                if(jQuery(this._newInputId ).prop(READ_ONLY_ATTRIBUTE)) { 
+
+                    // Increment or Decrement according the specified direction.
+                    if(arrayDirection === ArrayDirection.UP) {
+                        --newPositionIndex;
+
+                        if(newPositionIndex < PuzzleCommon.minColumnIndex) {
+                            this._newPositionX = rowUpIndex;
+                        }else {
+                            this._newPositionX = newPositionIndex;
+                        }
+                    }else if(arrayDirection === ArrayDirection.DOWN) {
+                        ++newPositionIndex;
+
+                        if(newPositionIndex > PuzzleCommon.maxColumnIndex) {
+                            this._newPositionX = rowDownIndex;
+                        }else {
+                            this._newPositionX = newPositionIndex;
+                        }
+                    }
+
+                }else {
+                    // If we are in a read/write cell, break and allow the focus option
+                    break;
+                }
+        }
     }
 
      /**
@@ -125,7 +232,7 @@ export class PuzzleEventManagerService {
      */
     deleteCellContent(currentPositionXY: string[]): void {
         // Get the id of the current input id and delete it value
-        let inputId = "#" + currentPositionXY.join('');
+        let inputId = INPUT_ID_PREFIX + currentPositionXY.join('');
         jQuery(inputId).val("");
     }
 }

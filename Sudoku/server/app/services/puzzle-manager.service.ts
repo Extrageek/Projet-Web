@@ -7,12 +7,11 @@
 
 import { Puzzle, AxisDiagonal } from './../models/puzzle';
 
-const NOMBRE_ITERATION = 1;
+const NOMBRE_ITERATION = 100;
 
 // Used to generate the type of transformation and to give a number of holes to dig in sudoku
 function getRandomInRange(min: number, max: number) {
     return function (): number {
-        console.log(Math.floor(Math.random() * (max - min)) + min);
         return Math.floor(Math.random() * (max - min)) + min;
     };
 }
@@ -34,12 +33,12 @@ module PuzzleManagerService {
         public getNewPuzzle() {
             // let iterationChoice = getRandomInRange(0, 5);
             let getRandomSudoku = getRandomInRange(1, 9);
-            console.log("je suis une itération");
             let newPuzzle: Puzzle = new Puzzle();
+
             for (let it = 0; it < NOMBRE_ITERATION; ++it) {
-                let test = 2;
-                console.log(test);
-                switch (test) {
+                let iterationChoice = getRandomInRange(0, 5);
+
+                switch (iterationChoice()) {
                     case 0 :
                         newPuzzle.swapRow(getRandomSudoku(), getRandomSudoku());
                         break;

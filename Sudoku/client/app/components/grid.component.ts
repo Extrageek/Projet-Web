@@ -85,11 +85,11 @@ export class GridComponent implements OnInit {
 
         if (this.gridMangerService.validateEnteredNumber(this._newPuzzle, rowIndex, colIndex)) {
 
-            console.log("is valid");
+            //console.log("is valid");
 
         }else{
 
-            console.log("is not valid");
+            //console.log("is not valid");
         }
     }
 

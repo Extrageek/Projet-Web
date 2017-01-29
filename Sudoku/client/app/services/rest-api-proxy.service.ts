@@ -19,6 +19,7 @@ import { Puzzle } from '../models/puzzle';
 export class RestApiProxyService {
 
     // API Url for new Puzzle request to the server
+    // Check how to manage cookies after
     private _newPuzzleUrl = 'http://localhost:3002/api/puzzle';
 
     /**

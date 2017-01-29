@@ -31,52 +31,52 @@ export class PuzzleItem {
 }
 
 export const puzzleSeed = [
+    // [
+    //     new PuzzleItem(1, false), new PuzzleItem(2, false), new PuzzleItem(3, false),
+    //     new PuzzleItem(4, false), new PuzzleItem(5, false), new PuzzleItem(6, false),
+    //     new PuzzleItem(7, false), new PuzzleItem(8, false), new PuzzleItem(9, false)
+    // ],
+    // [
+    //     new PuzzleItem(4, false), new PuzzleItem(5, false), new PuzzleItem(6, false),
+    //     new PuzzleItem(7, false), new PuzzleItem(8, false), new PuzzleItem(9, false),
+    //     new PuzzleItem(1, false), new PuzzleItem(2, false), new PuzzleItem(3, false)
+    // ],
+    // [
+    //     new PuzzleItem(7, false), new PuzzleItem(8, false), new PuzzleItem(9, false),
+    //     new PuzzleItem(1, false), new PuzzleItem(2, false), new PuzzleItem(3, false),
+    //     new PuzzleItem(4, false), new PuzzleItem(5, false), new PuzzleItem(6, false)
+    // ],
+    // [
+    //     new PuzzleItem(2, false), new PuzzleItem(3, false), new PuzzleItem(4, false),
+    //     new PuzzleItem(5, false), new PuzzleItem(6, false), new PuzzleItem(7, false),
+    //     new PuzzleItem(8, false), new PuzzleItem(9, false), new PuzzleItem(1, false)
+    // ],
+    // [
+    //     new PuzzleItem(5, false), new PuzzleItem(6, false), new PuzzleItem(7, false),
+    //     new PuzzleItem(8, false), new PuzzleItem(9, false), new PuzzleItem(1, false),
+    //     new PuzzleItem(2, false), new PuzzleItem(3, false), new PuzzleItem(4, false)
+    // ],
+    // [
+    //     new PuzzleItem(8, false), new PuzzleItem(9, false), new PuzzleItem(1, false),
+    //     new PuzzleItem(2, false), new PuzzleItem(3, false), new PuzzleItem(4, false),
+    //     new PuzzleItem(5, false), new PuzzleItem(6, false), new PuzzleItem(7, false)
+    // ],
+    // [
+    //     new PuzzleItem(3, false), new PuzzleItem(4, false), new PuzzleItem(5, false),
+    //     new PuzzleItem(6, false), new PuzzleItem(7, false), new PuzzleItem(8, false),
+    //     new PuzzleItem(9, false), new PuzzleItem(1, false), new PuzzleItem(2, false)
+    // ],
+    // [
+    //     new PuzzleItem(6, false), new PuzzleItem(7, false), new PuzzleItem(8, false),
+    //     new PuzzleItem(9, false), new PuzzleItem(1, false), new PuzzleItem(2, false),
+    //     new PuzzleItem(3, false), new PuzzleItem(4, false), new PuzzleItem(5, false)
+    // ],
+    // [
+    //     new PuzzleItem(9, false), new PuzzleItem(1, false), new PuzzleItem(2, false),
+    //     new PuzzleItem(3, false), new PuzzleItem(4, false), new PuzzleItem(5, false),
+    //     new PuzzleItem(6, false), new PuzzleItem(7, false), new PuzzleItem(8, false)
+    // ]
     [
-        new PuzzleItem(1, false), new PuzzleItem(2, false), new PuzzleItem(3, false),
-        new PuzzleItem(4, false), new PuzzleItem(5, false), new PuzzleItem(6, false),
-        new PuzzleItem(7, false), new PuzzleItem(8, false), new PuzzleItem(9, false)
-    ],
-    [
-        new PuzzleItem(4, false), new PuzzleItem(5, false), new PuzzleItem(6, false),
-        new PuzzleItem(7, false), new PuzzleItem(8, false), new PuzzleItem(9, false),
-        new PuzzleItem(1, false), new PuzzleItem(2, false), new PuzzleItem(3, false)
-    ],
-    [
-        new PuzzleItem(7, false), new PuzzleItem(8, false), new PuzzleItem(9, false),
-        new PuzzleItem(1, false), new PuzzleItem(2, false), new PuzzleItem(3, false),
-        new PuzzleItem(4, false), new PuzzleItem(5, false), new PuzzleItem(6, false)
-    ],
-    [
-        new PuzzleItem(2, false), new PuzzleItem(3, false), new PuzzleItem(4, false),
-        new PuzzleItem(5, false), new PuzzleItem(6, false), new PuzzleItem(7, false),
-        new PuzzleItem(8, false), new PuzzleItem(9, false), new PuzzleItem(1, false)
-    ],
-    [
-        new PuzzleItem(5, false), new PuzzleItem(6, false), new PuzzleItem(7, false),
-        new PuzzleItem(8, false), new PuzzleItem(9, false), new PuzzleItem(1, false),
-        new PuzzleItem(2, false), new PuzzleItem(3, false), new PuzzleItem(4, false)
-    ],
-    [
-        new PuzzleItem(8, false), new PuzzleItem(9, false), new PuzzleItem(1, false),
-        new PuzzleItem(2, false), new PuzzleItem(3, false), new PuzzleItem(4, false),
-        new PuzzleItem(5, false), new PuzzleItem(6, false), new PuzzleItem(7, false)
-    ],
-    [
-        new PuzzleItem(3, false), new PuzzleItem(4, false), new PuzzleItem(5, false),
-        new PuzzleItem(6, false), new PuzzleItem(7, false), new PuzzleItem(8, false),
-        new PuzzleItem(9, false), new PuzzleItem(1, false), new PuzzleItem(2, false)
-    ],
-    [
-        new PuzzleItem(6, false), new PuzzleItem(7, false), new PuzzleItem(8, false),
-        new PuzzleItem(9, false), new PuzzleItem(1, false), new PuzzleItem(2, false),
-        new PuzzleItem(3, false), new PuzzleItem(4, false), new PuzzleItem(5, false)
-    ],
-    [
-        new PuzzleItem(9, false), new PuzzleItem(1, false), new PuzzleItem(2, false),
-        new PuzzleItem(3, false), new PuzzleItem(4, false), new PuzzleItem(5, false),
-        new PuzzleItem(6, false), new PuzzleItem(7, false), new PuzzleItem(8, false)
-    ]
-  /*  [
         new PuzzleItem(4, true), new PuzzleItem(1, true), new PuzzleItem(5, true),
         new PuzzleItem(6, true), new PuzzleItem(3, false), new PuzzleItem(8, true),
         new PuzzleItem(9, true), new PuzzleItem(7, true), new PuzzleItem(2, false)
@@ -120,7 +120,7 @@ export const puzzleSeed = [
         new PuzzleItem(6, true), new PuzzleItem(9, true), new PuzzleItem(1, true),
         new PuzzleItem(8, false), new PuzzleItem(2, false), new PuzzleItem(3, true),
         new PuzzleItem(5, true), new PuzzleItem(4, true), new PuzzleItem(7, false)
-    ]*/
+    ]
 ];
 
 const MAX_ROW_SIZE = 9;
@@ -151,7 +151,6 @@ export class Puzzle {
 
     public horizontalSymmetry() {
         for (let i = 0; i < MID_COLUMN_INDEX; ++i) {
-            console.log(i, MAX_COLUMN_SIZE - i - 1);
                 this.swapRow(i, MAX_COLUMN_SIZE - i - 1);
         }
     }
@@ -179,7 +178,7 @@ export class Puzzle {
                 }
             }
         } else if (AxisDiagonal.DOWN_LEFT_TO_UP_RIGHT) {
-            for (let i = MAX_ROW_SIZE - 1; i >= 0; ++i) {
+            for (let i = MAX_ROW_SIZE - 1; i >= 0; --i) {
                 for (let j = 0; j < MAX_COLUMN_SIZE; ++j) {
                     this._puzzle[i][j].swap(this._puzzle[j][i]);
                 }
