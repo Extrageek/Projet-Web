@@ -12,7 +12,8 @@
                                 <input class="readWriteCell" *ngIf ="cell._hide" [attr.maxlength]="1" type="text" name="inputCell" 
                                 [attr.id]="i +''+ j"  [(ngModel)]="cell._value" 
                                     (keydown)="onKeyDownEventHandler($event)"
-                                    (keyup) = "onValueChange($event)">
+                                    (keyup) = "onValueChange($event)"
+                                    (keypress) = "validateInputValue($event)">
                             </td>
                         </tr>
                     </tbody>

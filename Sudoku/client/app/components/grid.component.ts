@@ -97,4 +97,11 @@ export class GridComponent implements OnInit {
     initializeCurrentGrid() {
         this.gridMangerService.initializeGrid(this._newPuzzle._puzzle);
     }
+
+    validateInputValue(event: KeyboardEvent) {
+    // TODO: Move to the event handler service.
+    if (!this.puzzleEventManager.isSudokuNumber(event.which)) {
+        return false;
+    }
+}
 }
