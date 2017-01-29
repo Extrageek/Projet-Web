@@ -36,9 +36,12 @@ module PuzzleManagerService {
             let newPuzzle: Puzzle = new Puzzle();
 
             for (let it = 0; it < NOMBRE_ITERATION; ++it) {
-                let iterationChoice = getRandomInRange(0, 5);
+                //let iterationChoice = getRandomInRange(0, 5);
 
-                switch (iterationChoice()) {
+                // Must be removed after a clean debug
+                let dummyValue = 1;
+
+                switch (dummyValue) {
                     case 0 :
                         newPuzzle.swapRow(getRandomSudoku(), getRandomSudoku());
                         break;

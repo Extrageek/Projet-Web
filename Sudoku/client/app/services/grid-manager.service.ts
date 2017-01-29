@@ -134,7 +134,7 @@ export class GridManagerService {
                    for (let columnId2 = squareMinColumnIndex; columnId2 <= squareMaxColumnIndex; ++columnId2) {
 
                        if (Number(grid[rowId2][columnId2]._value) === Number(cellValue)
-                        && Number(cellValue) != 0) {
+                        && Number(cellValue) !== 0) {
                            ++count;
                        }
                        if (count > 1) {

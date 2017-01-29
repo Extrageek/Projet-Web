@@ -12,7 +12,7 @@ import { GridManagerService } from './grid-manager.service';
 declare var jQuery: any;
 
 export const INPUT_ID_PREFIX = '#';
-export const READ_ONLY_ATTRIBUTE ='readonly';
+export const READ_ONLY_ATTRIBUTE = 'readonly';
 export enum ArrayDirection {
     LEFT = 0,
     RIGHT = 1,
@@ -27,8 +27,8 @@ export class PuzzleEventManagerService {
     _newPositionX = 0;
     _newPositionY = 0;
     _nextInputPositionYX : string;
-    _newInputId ="";
-    
+    _newInputId = "";
+
     constructor(private puzzleManagerService: GridManagerService) {
         // Default constructor
      }
@@ -96,10 +96,10 @@ export class PuzzleEventManagerService {
 
         switch (keyCode) {
             case PuzzleCommon.downArrowKeyCode:
-                this.jumpToNextUpOrDownEmptyCell(currentPositionXY, ArrayDirection.DOWN)
+                this.jumpToNextUpOrDownEmptyCell(currentPositionXY, ArrayDirection.DOWN);
                 break;
             case PuzzleCommon.upArrowKeyCode:
-                this.jumpToNextUpOrDownEmptyCell(currentPositionXY, ArrayDirection.UP)
+                this.jumpToNextUpOrDownEmptyCell(currentPositionXY, ArrayDirection.UP);
                 break;
             case PuzzleCommon.leftArrowKeyCode:
                 this.jumpToNextLeftOrRightEmptyCell(currentPositionXY, ArrayDirection.LEFT);
@@ -121,41 +121,46 @@ export class PuzzleEventManagerService {
         let newPosition = 0;
 
         // Find the new left or right postion index
-        if(arrayDirection === ArrayDirection.LEFT) {
+        if (arrayDirection === ArrayDirection.LEFT) {
             newPosition = Number(currentPositionXY[PuzzleCommon.xPosition]) - 1;
             this._newPositionY = (newPosition < PuzzleCommon.minColumnIndex)
                 ? PuzzleCommon.maxRowIndex : newPosition;
 
-        }else if(arrayDirection === ArrayDirection.RIGHT) {
+        }else if (arrayDirection === ArrayDirection.RIGHT) {
             newPosition = Number(currentPositionXY[PuzzleCommon.xPosition]) + 1;
             this._newPositionY = (newPosition > PuzzleCommon.maxColumnIndex)
                 ? PuzzleCommon.minColumnIndex : newPosition;
         }
 
         // Loop the related column and find the new empty cell position.
-        for(let rowRightIndex = PuzzleCommon.minRowIndex, rowLeftIndex = PuzzleCommon.maxRowIndex;
-            rowRightIndex <= PuzzleCommon.maxRowIndex, rowLeftIndex >= PuzzleCommon.minRowIndex; 
+        for (let rowRightIndex = PuzzleCommon.minRowIndex, rowLeftIndex = PuzzleCommon.maxRowIndex;
+            rowRightIndex <= PuzzleCommon.maxRowIndex, rowLeftIndex >= PuzzleCommon.minRowIndex;
             ++rowRightIndex, --rowLeftIndex) {
 
-            this._nextInputPositionYX = [currentPositionXY[PuzzleCommon.yPosition], this._newPositionY.toString()].join('');
+            this._nextInputPositionYX = [
+                    currentPositionXY[PuzzleCommon.yPosition],
+                    this._newPositionY.toString()
+                ]
+                .join('');
+
             this._newInputId = INPUT_ID_PREFIX + this._nextInputPositionYX;
 
             // Check if the new position is a read only cell and jump to next in this case.
-            if(jQuery(this._newInputId ).prop(READ_ONLY_ATTRIBUTE)) { 
+            if (jQuery(this._newInputId ).prop(READ_ONLY_ATTRIBUTE)) {
 
                 // Increment or Decrement according the specified direction.
-                if(arrayDirection === ArrayDirection.LEFT) {
+                if (arrayDirection === ArrayDirection.LEFT) {
                     --newPosition;
 
-                    if(newPosition < PuzzleCommon.minRowIndex) {
+                    if (newPosition < PuzzleCommon.minRowIndex) {
                         this._newPositionY = rowLeftIndex;
                     }else {
                         this._newPositionY = newPosition;
                     }
-                }else if(arrayDirection === ArrayDirection.RIGHT) {
+                }else if (arrayDirection === ArrayDirection.RIGHT) {
                     ++newPosition;
 
-                    if(newPosition > PuzzleCommon.maxRowIndex) {
+                    if (newPosition > PuzzleCommon.maxRowIndex) {
                         this._newPositionY = rowRightIndex;
                     }else {
                         this._newPositionY = newPosition;
@@ -175,42 +180,45 @@ export class PuzzleEventManagerService {
         let newPositionIndex = 0;
 
         // Find the new up or down postion index
-        if(arrayDirection === ArrayDirection.UP) {
+        if (arrayDirection === ArrayDirection.UP) {
             newPositionIndex = Number(currentPositionXY[PuzzleCommon.yPosition]) - 1;
             this._newPositionX = (newPositionIndex < PuzzleCommon.minColumnIndex)
                 ? PuzzleCommon.maxColumnIndex : newPositionIndex;
 
-        }else if(arrayDirection === ArrayDirection.DOWN) {
+        }else if (arrayDirection === ArrayDirection.DOWN) {
             newPositionIndex = Number(currentPositionXY[PuzzleCommon.yPosition]) + 1;
             this._newPositionX = (newPositionIndex > PuzzleCommon.maxColumnIndex)
                 ? PuzzleCommon.minColumnIndex : newPositionIndex;
         }
 
         // Loop the related row and find the new empty cell position.
-        for(let rowDownIndex = PuzzleCommon.minColumnIndex, rowUpIndex = PuzzleCommon.maxColumnIndex;
-            rowDownIndex <= PuzzleCommon.maxColumnIndex, rowUpIndex >= PuzzleCommon.minColumnIndex; 
+        for (let rowDownIndex = PuzzleCommon.minColumnIndex, rowUpIndex = PuzzleCommon.maxColumnIndex;
+            rowDownIndex <= PuzzleCommon.maxColumnIndex, rowUpIndex >= PuzzleCommon.minColumnIndex;
             ++rowDownIndex, --rowUpIndex) {
 
-                this._nextInputPositionYX = [ this._newPositionX.toString(), currentPositionXY[PuzzleCommon.xPosition] ].join('');
+                this._nextInputPositionYX = [
+                            this._newPositionX.toString(),
+                            currentPositionXY[PuzzleCommon.xPosition]
+                        ].join('');
+
                 this._newInputId = INPUT_ID_PREFIX + this._nextInputPositionYX;
 
-
                 // Check if the new position is a read only cell and jump to next in this case.
-                if(jQuery(this._newInputId ).prop(READ_ONLY_ATTRIBUTE)) { 
+                if (jQuery(this._newInputId ).prop(READ_ONLY_ATTRIBUTE)) {
 
                     // Increment or Decrement according the specified direction.
-                    if(arrayDirection === ArrayDirection.UP) {
+                    if (arrayDirection === ArrayDirection.UP) {
                         --newPositionIndex;
 
-                        if(newPositionIndex < PuzzleCommon.minColumnIndex) {
+                        if (newPositionIndex < PuzzleCommon.minColumnIndex) {
                             this._newPositionX = rowUpIndex;
                         }else {
                             this._newPositionX = newPositionIndex;
                         }
-                    }else if(arrayDirection === ArrayDirection.DOWN) {
+                    }else if (arrayDirection === ArrayDirection.DOWN) {
                         ++newPositionIndex;
 
-                        if(newPositionIndex > PuzzleCommon.maxColumnIndex) {
+                        if (newPositionIndex > PuzzleCommon.maxColumnIndex) {
                             this._newPositionX = rowDownIndex;
                         }else {
                             this._newPositionX = newPositionIndex;
