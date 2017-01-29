@@ -53,7 +53,7 @@ export class PuzzleEventManagerService {
      * @return true for a valid number for the puzzle
      */
     isSudokuNumber (keyCode: number): boolean {
-        return 49 <= keyCode && keyCode <= 57;
+        return PuzzleCommon.oneKey <= keyCode && keyCode <= PuzzleCommon.nineKey;
     }
 
     /**

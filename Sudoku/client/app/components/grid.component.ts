@@ -26,7 +26,7 @@ import { Puzzle } from '../models/puzzle';
     // TODO: Must be removed to an external css file
     // Do it after a clean debug, remove the reference in the index.html file
     styleUrls : ['/app/assets/grid.component.css'],
-    providers : [GridManagerService, PuzzleEventManagerService, RestApiProxyService ]
+    providers : [ GridManagerService, PuzzleEventManagerService, RestApiProxyService ]
 })
 
 export class GridComponent implements OnInit {
@@ -83,7 +83,7 @@ export class GridComponent implements OnInit {
         let rowIndex = Number(rowColIndex[PuzzleCommon.yPosition]);
         let colIndex = Number(rowColIndex[PuzzleCommon.xPosition]);
 
-        if (this.gridMangerService.validateEnteredNumber(this._newPuzzle, rowIndex, colIndex)){
+        if (this.gridMangerService.validateEnteredNumber(this._newPuzzle, rowIndex, colIndex)) {
 
             console.log("is valid");
 
@@ -94,7 +94,7 @@ export class GridComponent implements OnInit {
     }
 
     // Initialize the current grid
-    initializeCurrentGrid(){
+    initializeCurrentGrid() {
         this.gridMangerService.initializeGrid(this._newPuzzle._puzzle);
     }
 }

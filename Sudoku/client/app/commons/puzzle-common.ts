@@ -7,7 +7,7 @@
     static downArrowKeyCode = 40;
 
     static deleteKeyCode = 48;
-    static backspaceKeyCode = 8; // Delete keycode for mac /backspace
+    //static backspaceKeyCode = 8; // Delete keycode for mac /backspace
 
     static oneKey = 49;
     static twoKey = 50;
