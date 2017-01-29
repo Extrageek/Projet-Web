@@ -87,14 +87,7 @@ export class Application {
 
     //home page
     router.get('/', routeManager.index.bind(routeManager.index));
-    router.get('/api/puzzle', (req: express.Request, res: express.Response, next: express.NextFunction) => {
-
-        // Get a new puzzle from the PuzzleManger service.
-        let puzzleManager = new puzzleManagerService.PuzzleManager();
-        let newPuzzle = puzzleManager.getNewPuzzle();
-
-        res.send(newPuzzle);
-    });
+    router.get('/api/puzzle', routeManager.getNewPuzzle.bind(routeManager.getNewPuzzle));
 
     //use router middleware
     this.app.use(router);

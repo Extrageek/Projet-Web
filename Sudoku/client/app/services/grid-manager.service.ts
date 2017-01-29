@@ -10,17 +10,17 @@ export const CSS_BACKGROUND_ON_ERROR = "background-color";
 export const CSS_BACKGROUND_VALUE = "#E57373 ";
 
 @Injectable()
-export class PuzzleManagerService {
+export class GridManagerService {
 
    constructor() {
        //Default constructor
    }
 
    //  Check if the value is valid
-   public isValidNumber(puzzle: Puzzle, rowIndex: number, columnIndex: number) {
+   public validateEnteredNumber(puzzle: Puzzle, rowIndex: number, columnIndex: number): boolean {
+
        let grid = puzzle._puzzle;
 
-       // TODO: Must be checked
        let isColumnValid = this.isDuplicatedNumberInCurrentColumn(grid, rowIndex, columnIndex);
        let isRowValid = this.isDuplicatedNumberInCurrentRow(grid, rowIndex, columnIndex);
        let isSquareValid = this.isDuplicatedNumberInCurrentSquare(grid, rowIndex, columnIndex);
@@ -179,13 +179,22 @@ export class PuzzleManagerService {
                squareMaxColumnIndex: squareMaxColumnIndex};
    }
 
-   // Clears the cells the user filled
-    restartGrid(grid: PuzzleItem[][]) {
-        for (let row = 0; row < PuzzleCommon.maxRowIndex; ++row) {
-            for (let column = 0; column < PuzzleCommon.maxColumnIndex; ++column) {
+    // Clears the cells the user filled.
+    // Initialize the grid format to prevent when an invalid grid format is applied.
+    initializeGrid(grid: PuzzleItem[][]) {
+        for (let row = 0; row <= PuzzleCommon.maxRowIndex; ++row) {
+
+            // Initialize the current row format.
+            this.updateCurrentRowFormat(row, true);
+
+            for (let column = 0; column <= PuzzleCommon.maxColumnIndex; ++column) {
                 if (grid[row][column]._hide) {
                     grid[row][column]._value = null;
                 }
+
+                // Initialize the current colum/square format
+                this.updateCurrentColumnFormat(column, true);
+                this.updateCurrentSquareFormat(row, column, true);
             }
         }
     }

@@ -7,7 +7,7 @@
 
 import { Injectable } from '@angular/core';
 import { PuzzleCommon } from '../commons/puzzle-common';
-import { PuzzleManagerService } from './grid-manager.service';
+import { GridManagerService } from './grid-manager.service';
 
 declare var jQuery: any;
 
@@ -18,7 +18,7 @@ export class PuzzleEventManagerService {
     _newPositionY = 0;
     _nextInputPositionYX : string;
 
-    constructor(private puzzleManagerService: PuzzleManagerService) {
+    constructor(private puzzleManagerService: GridManagerService) {
         // Default constructor
      }
 
