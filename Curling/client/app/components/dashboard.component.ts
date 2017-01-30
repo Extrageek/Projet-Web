@@ -9,17 +9,15 @@ import { Record } from '../models/record';
   selector: 'dashboard-component',
   templateUrl: '../../assets/templates/dashboard-component.html'
 })
-export class DashboardComponent implements OnInit{
+export class DashboardComponent implements OnInit {
     private _records: Array<Record>;
 
-    public constructor(private router: Router) {
-        this._records = new Array<Record>();
+    public constructor( private router: Router,
+                        private restApi: RestApiProxyService) {
     }
 
-    public ngOnInit():void {
-        this.addRecord(new Record('julien', 0, 4, 2));
-        this.addRecord(new Record('rami', 0, 5, 1));
-        // TODO : aller chercher les donnees dans la db 
+    public ngOnInit(): void {
+        this.fetchRecords();
     }
 
     public get records(): Array<Record> {
@@ -31,6 +29,12 @@ export class DashboardComponent implements OnInit{
 
     public addRecord(record: Record): void{
         this._records.push(record);
+    }
+
+    public async fetchRecords(): Promise<void>{
+        await this.restApi.getAllRecords().then(results =>{
+            this._records = results;
+        });
     }
 
     public returnMainPage(): void {

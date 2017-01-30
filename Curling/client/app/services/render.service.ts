@@ -41,7 +41,7 @@ export class RenderService {
         this.clock = new THREE.Clock();
 
         this.renderer = new THREE.WebGLRenderer({antialias: true, devicePixelRatio: window.devicePixelRatio});
-        this.renderer.setSize(window.innerWidth * 0.8, window.innerHeight * 0.8, true);
+        this.renderer.setSize(window.innerWidth, window.innerHeight, true);
 
         //this._cam_x = 0;
         //this._cam_y = 10;
@@ -161,8 +161,8 @@ export class RenderService {
     }
 
     onResize() {
-        const width = window.innerWidth * 0.95;
-        const height = window.innerHeight - 90;
+        const width = window.innerWidth;
+        const height = window.innerHeight;
 
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
