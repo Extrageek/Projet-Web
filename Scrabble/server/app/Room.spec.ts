@@ -27,10 +27,11 @@ describe("Room capacity tester", () => {
     let socketServer: SocketIO.Server;
     let player: Player;
     let connection: SocketIOClient.Socket;
-    before(() => {
+    before(done => {
         socketServer = io.listen(3000);
         socketServer.on("connection", (socket: SocketIO.Socket) => {
             player = new Player("playerName", 3, socket);
+            done();
         });
         connection = ioClient.connect("http://localhost:3000");
     });
@@ -38,10 +39,6 @@ describe("Room capacity tester", () => {
     after(() => {
         socketServer.close();
         connection.close();
-    });
-
-    it("dummy test", done => {
-        done();
     });
 
     it("should contain the player after insertion of a player", done => {
@@ -89,9 +86,17 @@ describe("Room with multiple players tester", () => {
         socketServer.close();
     });
 
-    beforeEach(() => {
+    beforeEach(done => {
+        let numberOfConnectionsToCreate = 2;
+        let i = 0;
+        let doneCalled = false;
          socketServer.on("connection", (socket: SocketIO.Socket) => {
             players.push(new Player("playerName", 3, socket));
+            ++i;
+            if (!doneCalled && i >= numberOfConnectionsToCreate) {
+                doneCalled = true;
+                done();
+            }
         });
         connection1 = ioClient.connect("http://localhost:3000");
         connection2 = ioClient.connect("http://localhost:3000");
@@ -101,11 +106,7 @@ describe("Room with multiple players tester", () => {
         connection1.close();
         connection2.close();
     });
-
-    it("dummy test", done => {
-        done();
-    });
-
+    
     it("should refuse new player", done => {
         let room = new Room(1);
         let addPlayer1 = () => { room.addPlayer(players[0]); };
