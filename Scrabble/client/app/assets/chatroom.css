@@ -1,7 +1,8 @@
 .chatContainer {
     width:375px;
-    height:530px;
-    border: 1px solid dimgrey;
+    height:533px;
+    border: 2px solid dimgrey;
+    background-color: white;
 }
 
 .chatTitle {
