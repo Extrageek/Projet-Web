@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { Player } from "./Player";
+import { Player } from "./RoomsAndPlayers";
 import * as io from "socket.io";
 import * as ioClient from "socket.io-client";
 
@@ -61,6 +61,7 @@ describe("test player class", () => {
         let socketListener = ioClient("http://localhost:3000");
         socketListener.close();
     });
+    /*
     it("should add player to a room.", done => {
         socketServer.on("connection", (socket: SocketIO.Socket) => {
             let playerCreated = new Player("playerName", 3, socket);
@@ -83,4 +84,5 @@ describe("test player class", () => {
         let socketListener = ioClient("http://localhost:3000");
         socketListener.close();
     });
+    */
 });

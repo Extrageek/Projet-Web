@@ -1,31 +1,37 @@
-import * as http from 'http';
-import * as io from 'socket.io';
-import { Player } from './Player';
-import { RoomHandler } from './RoomHandler';
+import * as http from "http";
+import * as io from "socket.io";
+import { SocketCanalNames } from "./SocketCanalNames";
+import { RoomHandler, Player } from "./RoomsAndPlayers";
 
 export class IoConnection {
 
+    private _roomHandler: RoomHandler;
+
     constructor(server: http.Server) {
+        if (server === null || typeof(server) === "undefined") {
+            throw new Error("Invalid server parameter.");
+        }
         let connection = io.listen(server);
-        connection.sockets.on("connection", this.onPlayerConnection);
+        connection.sockets.on(SocketCanalNames.CONNECTION, this.onPlayerConnection);
+        this._roomHandler = new RoomHandler();
     }
 
     private onPlayerConnection(socket: SocketIO.Socket) {
         const INVALID_NAME = 0;
         const NAME_ALREADY_EXISTS = 1;
-        socket.on("newGameDemand", (demandInfo: {name: String, numberOfPlayers: number}) => {
+        socket.on(SocketCanalNames.NEW_GAME_DEMAND, (demandInfo: {name: String, numberOfPlayers: number}) => {
             let regularExpression = new RegExp('^[A-Za-z0-9]$');
             if (regularExpression.test(name)) {
-                if (RoomHandler.hasPlayerWithName(name)) {
-                    let player = new Player(demandInfo.name, demandInfo.numberOfPlayers, socket);
-                    player.connectToARoom();
+                let player = new Player(demandInfo.name, demandInfo.numberOfPlayers, socket);
+                if (!this._roomHandler.hasPlayerWithNameOrSocket(player)) {
+                    this._roomHandler.addPlayertoARoom(player);
                 }
                 else {
-                    socket.emit(String(NAME_ALREADY_EXISTS));
+                    socket.emit(SocketCanalNames.NAME_ALREADY_EXISTS, NAME_ALREADY_EXISTS);
                 }
             }
             else {
-                socket.emit(String(INVALID_NAME));
+                socket.emit(SocketCanalNames.INVALID_NAME, INVALID_NAME);
             }
         });
     }
