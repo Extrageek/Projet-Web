@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 
 @Component({
     moduleId: module.id,
@@ -9,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
       <h5 class="panel-title">Information panel</h5>
       </header>
       <div class="panel-body">
-       <p>Timer: 00:00 </p>
+       <p (click)="updateClock()"> Timer: {{hour}}:{{minute}}:{{seconds}} </p>
        <p>Users playing : </p>
        <p>Your score : </p>
        <p>Number of letters on easel:  </p>
@@ -18,12 +18,34 @@ import { Component, OnInit } from '@angular/core';
     </section>
    `,
 })
-export class InformationPanelComponent implements OnInit {
+export class InformationPanelComponent implements OnInit, AfterViewInit {
+    seconds : number;
+    minute: number;
+    hour: number;
+
     constructor() {
-        //TODO
+        this.seconds = 0;
+        this.minute = 0;
+        this.hour = 0;
+    }
+    updateClock() {
+        ++this.seconds;
+        if (this.seconds === 60) {
+            ++this.minute;
+            this.seconds = 0;
+        }
+        else if (this.minute === 60) {
+            ++this.hour;
+            this.minute = 0;
+        }
     }
 
     ngOnInit() {
         //TODO
+    }
+    ngAfterViewInit() {
+        setInterval(() => {
+            this.updateClock();
+        }, 1000);
     }
 }

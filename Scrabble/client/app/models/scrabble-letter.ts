@@ -6,10 +6,15 @@ export class ScrabbleLetter {
     private _letter : string;
     private _imageSource: string;
 
-    constructor (letter: string, imageSource: string) {
-        this._letter = letter;
-        this._imageSource = imageSource;
+    constructor () {
+        let max = 26;
+        let min = 0;
+
+        let offset = Math.random() * (max - min) + min;
+        this._letter = String.fromCharCode(65 + offset );
+        this._imageSource = this._letter + ".jpg";
     }
+
     get letter() {
         return this._letter;
     }
