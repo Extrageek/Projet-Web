@@ -81,6 +81,8 @@ export class PuzzleEventManagerService {
             this.updateFocus(currentPositionXY, keyCode);
         } else if (this.isDeleteKey(keyCode)) {
             this.deleteCellContent(currentPositionXY);
+        } else if (this.isSudokuNumber(keyCode)) {
+            // TODO: finish implementation
         }
     }
 
@@ -111,7 +113,7 @@ export class PuzzleEventManagerService {
                 break;
         }
 
-        // Give the focus to next read/write cell.
+        // Give the focus to next cell.
         jQuery(this._newInputId).focus();
     }
 
@@ -126,52 +128,19 @@ export class PuzzleEventManagerService {
             this._newPositionY = (newPosition < PuzzleCommon.minColumnIndex)
                 ? PuzzleCommon.maxRowIndex : newPosition;
 
-        }else if (arrayDirection === ArrayDirection.RIGHT) {
+        } else if (arrayDirection === ArrayDirection.RIGHT) {
             newPosition = Number(currentPositionXY[PuzzleCommon.xPosition]) + 1;
             this._newPositionY = (newPosition > PuzzleCommon.maxColumnIndex)
                 ? PuzzleCommon.minColumnIndex : newPosition;
         }
 
-        // Loop the related column and find the new empty cell position.
-        for (let rowRightIndex = PuzzleCommon.minRowIndex, rowLeftIndex = PuzzleCommon.maxRowIndex;
-            rowRightIndex <= PuzzleCommon.maxRowIndex, rowLeftIndex >= PuzzleCommon.minRowIndex;
-            ++rowRightIndex, --rowLeftIndex) {
 
             this._nextInputPositionYX = [
                     currentPositionXY[PuzzleCommon.yPosition],
                     this._newPositionY.toString()
-                ]
-                .join('');
+                ].join('');
 
             this._newInputId = INPUT_ID_PREFIX + this._nextInputPositionYX;
-
-            // Check if the new position is a read only cell and jump to next in this case.
-            if (jQuery(this._newInputId ).prop(READ_ONLY_ATTRIBUTE)) {
-
-                // Increment or Decrement according the specified direction.
-                if (arrayDirection === ArrayDirection.LEFT) {
-                    --newPosition;
-
-                    if (newPosition < PuzzleCommon.minRowIndex) {
-                        this._newPositionY = rowLeftIndex;
-                    }else {
-                        this._newPositionY = newPosition;
-                    }
-                }else if (arrayDirection === ArrayDirection.RIGHT) {
-                    ++newPosition;
-
-                    if (newPosition > PuzzleCommon.maxRowIndex) {
-                        this._newPositionY = rowRightIndex;
-                    }else {
-                        this._newPositionY = newPosition;
-                    }
-                }
-
-            }else {
-                // If we are in a read/write cell, break and allow the focus option
-                break;
-            }
-        }
     }
 
     // On Up/Down Arrow key press, jump to the next Up/Down empty cell, according to the direction.
@@ -185,51 +154,18 @@ export class PuzzleEventManagerService {
             this._newPositionX = (newPositionIndex < PuzzleCommon.minColumnIndex)
                 ? PuzzleCommon.maxColumnIndex : newPositionIndex;
 
-        }else if (arrayDirection === ArrayDirection.DOWN) {
+        } else if (arrayDirection === ArrayDirection.DOWN) {
             newPositionIndex = Number(currentPositionXY[PuzzleCommon.yPosition]) + 1;
             this._newPositionX = (newPositionIndex > PuzzleCommon.maxColumnIndex)
                 ? PuzzleCommon.minColumnIndex : newPositionIndex;
         }
 
-        // Loop the related row and find the new empty cell position.
-        for (let rowDownIndex = PuzzleCommon.minColumnIndex, rowUpIndex = PuzzleCommon.maxColumnIndex;
-            rowDownIndex <= PuzzleCommon.maxColumnIndex, rowUpIndex >= PuzzleCommon.minColumnIndex;
-            ++rowDownIndex, --rowUpIndex) {
+        this._nextInputPositionYX = [
+            this._newPositionX.toString(),
+            currentPositionXY[PuzzleCommon.xPosition]
+            ].join('');
 
-                this._nextInputPositionYX = [
-                            this._newPositionX.toString(),
-                            currentPositionXY[PuzzleCommon.xPosition]
-                        ].join('');
-
-                this._newInputId = INPUT_ID_PREFIX + this._nextInputPositionYX;
-
-                // Check if the new position is a read only cell and jump to next in this case.
-                if (jQuery(this._newInputId ).prop(READ_ONLY_ATTRIBUTE)) {
-
-                    // Increment or Decrement according the specified direction.
-                    if (arrayDirection === ArrayDirection.UP) {
-                        --newPositionIndex;
-
-                        if (newPositionIndex < PuzzleCommon.minColumnIndex) {
-                            this._newPositionX = rowUpIndex;
-                        }else {
-                            this._newPositionX = newPositionIndex;
-                        }
-                    }else if (arrayDirection === ArrayDirection.DOWN) {
-                        ++newPositionIndex;
-
-                        if (newPositionIndex > PuzzleCommon.maxColumnIndex) {
-                            this._newPositionX = rowDownIndex;
-                        }else {
-                            this._newPositionX = newPositionIndex;
-                        }
-                    }
-
-                }else {
-                    // If we are in a read/write cell, break and allow the focus option
-                    break;
-                }
-        }
+            this._newInputId = INPUT_ID_PREFIX + this._nextInputPositionYX;
     }
 
      /**
@@ -240,7 +176,9 @@ export class PuzzleEventManagerService {
      */
     deleteCellContent(currentPositionXY: string[]): void {
         // Get the id of the current input id and delete it value
+        console.log("deleteCellContent");
         let inputId = INPUT_ID_PREFIX + currentPositionXY.join('');
         jQuery(inputId).val("");
+        jQuery(inputId).css("background-color", "");
     }
 }

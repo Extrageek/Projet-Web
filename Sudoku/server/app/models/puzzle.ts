@@ -178,9 +178,10 @@ export class Puzzle {
                 }
             }
         } else if (AxisDiagonal.DOWN_LEFT_TO_UP_RIGHT) {
-            for (let i = MAX_ROW_SIZE - 1; i >= 0; --i) {
+            for (let i = 0; i < MAX_ROW_SIZE; ++i) {
                 for (let j = 0; j < MAX_COLUMN_SIZE; ++j) {
-                    this._puzzle[i][j].swap(this._puzzle[j][i]);
+                    console.log(i, j, "swap", MAX_ROW_SIZE - j - 1, MAX_COLUMN_SIZE - i - 1);
+                    this._puzzle[i][j].swap(this._puzzle[MAX_ROW_SIZE - j - 1][MAX_COLUMN_SIZE - i - 1]);
                 }
             }
         }

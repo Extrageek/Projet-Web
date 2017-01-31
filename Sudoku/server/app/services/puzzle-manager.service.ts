@@ -7,7 +7,7 @@
 
 import { Puzzle, AxisDiagonal } from './../models/puzzle';
 
-const NOMBRE_ITERATION = 100;
+const NOMBRE_ITERATION = 1;
 
 // Used to generate the type of transformation and to give a number of holes to dig in sudoku
 function getRandomInRange(min: number, max: number) {
@@ -31,7 +31,6 @@ module PuzzleManagerService {
          * @return newPuzzle
          */
         public getNewPuzzle() {
-            // let iterationChoice = getRandomInRange(0, 5);
             let getRandomSudoku = getRandomInRange(1, 9);
             let newPuzzle: Puzzle = new Puzzle();
 
@@ -39,7 +38,7 @@ module PuzzleManagerService {
                 //let iterationChoice = getRandomInRange(0, 5);
 
                 // Must be removed after a clean debug
-                let dummyValue = 1;
+                let dummyValue = 5;
 
                 switch (dummyValue) {
                     case 0 :
