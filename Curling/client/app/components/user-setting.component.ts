@@ -11,25 +11,26 @@ import { UserSetting } from '../models/user-setting';
     templateUrl: "../../assets/templates/user-setting-component.html",
 })
 
-export class UserSettingComponent implements OnInit{
+export class UserSettingComponent implements OnInit {
     //TODO : Change for private - Problem with binding
-   public _userSetting : UserSetting;
+    public _userSetting: UserSetting;
 
     constructor(
         private router: Router,
-        private restApiProxyService : RestApiProxyService) {
+        private restApiProxyService: RestApiProxyService) {
     }
 
-    ngOnInit (){
+    ngOnInit() {
         this._userSetting = new UserSetting();
         document.getElementById('difficulty').hidden = true;
         //document.getElementById('alertUsername').hidden = true;
     }
 
-    public async verifyUsername(){
-        let isValid: boolean = await this.restApiProxyService.verifyUsername(this._userSetting);
+    public async verifyUsername() {
+        console.log("1 appel verifyUsername");
+        let isValid = true; //await this.restApiProxyService.verifyUsername(this._userSetting);
         console.log('is username valid - ' + isValid);
-        if(isValid.valueOf() === true){
+        if (isValid.valueOf() === true) {
             document.getElementById('username').hidden = true;
             document.getElementById('difficulty').hidden = false;
         } else {
@@ -37,11 +38,11 @@ export class UserSettingComponent implements OnInit{
         }
     }
 
-    public goToLeaderBoard(){
+    public goToLeaderBoard() {
         this.router.navigate(['/dashboard']);
     }
 
-    public launchGame(){
+    public launchGame() {
         this.router.navigate(['/game']);
         // creer une partie et sauvegarder dans la db
         //this.restApiProxyService.launchGame();

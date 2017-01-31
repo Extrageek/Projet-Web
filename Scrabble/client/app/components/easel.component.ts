@@ -6,7 +6,7 @@ import { ScrabbleLetter }	from '../models/scrabble-letter';
   template: `
     <div id="easelContainer">
       <ng-container *ngFor="let letter of letters; let i=index" >
-          <input type = "image" src = "app/scrabbleImages/{{letter._imageSource}}" id = "{{i + 1}}"> 
+          <input type = "image" src = "/app/scrabbleImages/{{letter._imageSource}}" id = "{{i + 1}}"> 
       </ng-container>    
     </div>
   `,
@@ -15,8 +15,10 @@ import { ScrabbleLetter }	from '../models/scrabble-letter';
 })
 export class EaselComponent implements OnInit {
   letters : ScrabbleLetter[];
+
   constructor() {
-      this.letters = Array(7).fill(new ScrabbleLetter("A", "A.jpg"));
+      this.letters = Array(7).fill(0);
+      this.letters = this.letters.map(() => new ScrabbleLetter());
   }
    ngOnInit() {
      //TODO

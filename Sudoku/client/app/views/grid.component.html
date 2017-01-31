@@ -1,19 +1,29 @@
-<div class="form-control" class="grid-box">
-           <div class="table-responsive">          
+<div class="col-md-12">
+    <div class="col-md-7 grid-panel">
+        <div class="form-control" class="grid-box">
+            <div class="table-responsive">          
                 <table class="table">
                     <tbody>
                         <tr class="grid" *ngFor = "let row of _newPuzzle?._puzzle , let i = index" [attr.id] = "'gridRowId' + i">
                             <td *ngFor ="let cell of row, let j = index" [attr.id] = "'cellId' + i + '' + j"> 
-                                <input class="readOnlyCell" *ngIf ="!cell._hide" readonly minlength="1" maxlength="1" type="number" name=""
-                                [attr.id]="i +''+ j" [ngModel]="cell._value" (keydown)="onKeyEventHandler($event)">
+                                <input class="readOnlyCell" *ngIf ="!cell._hide" readonly [attr.maxlength]="1" type="text" name="inputCell"
+                                [attr.id]="i +''+ j" [ngModel]="cell._value">
 
-                                <input class="readWriteCell" *ngIf ="cell._hide" minlength="1" maxlength="1" type="number" name="" 
+                                <input class="readWriteCell" *ngIf ="cell._hide" [attr.maxlength]="1" type="text" name="inputCell"
                                 [attr.id]="i +''+ j"  [(ngModel)]="cell._value" 
-                                    (keydown)="onKeyEventHandler($event)"
-                                    (keyup) = "onValueChange($event)">
+                                    (keydown)="onKeyDownEventHandler($event)"
+                                    (keyup) = "onValueChange($event)"
+                                    (keypress) = "validateInputValue($event)">
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+        </div>
     </div>
+
+    <div class="col-md-5 menu-panel">
+        <button type="button" class="btn btn-primary" (click)="initializeCurrentGrid()">Initialize Game</button>
+    </div>
+</div>
+

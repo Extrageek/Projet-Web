@@ -6,21 +6,22 @@ import { Puzzle, PuzzleItem } from '../models/puzzle';
 declare var jQuery: any;
 
 export const CELL_ID_PREFIX = "#";
-export const CSS_BACKGROUND_ON_ERROR = "background-color";
+export const CSS_BACKGROUND_PROPERTY = "background-color";
 export const CSS_BACKGROUND_VALUE = "#E57373 ";
+export const CSS_BACKGROUND_INIT = "";
 
 @Injectable()
-export class PuzzleManagerService {
+export class GridManagerService {
 
    constructor() {
        //Default constructor
    }
 
    //  Check if the value is valid
-   public isValidNumber(puzzle: Puzzle, rowIndex: number, columnIndex: number) {
+   public validateEnteredNumber(puzzle: Puzzle, rowIndex: number, columnIndex: number): boolean {
+
        let grid = puzzle._puzzle;
 
-       // TODO: Must be checked
        let isColumnValid = this.isDuplicatedNumberInCurrentColumn(grid, rowIndex, columnIndex);
        let isRowValid = this.isDuplicatedNumberInCurrentRow(grid, rowIndex, columnIndex);
        let isSquareValid = this.isDuplicatedNumberInCurrentSquare(grid, rowIndex, columnIndex);
@@ -70,11 +71,11 @@ export class PuzzleManagerService {
    // Update the current row format when an invalid number is entered or not
    updateCurrentRowFormat(rowIndex: number, removeBorder?: boolean) {
 
-       let borderPropertyValue = (!removeBorder) ? CSS_BACKGROUND_VALUE : "";
+       let borderPropertyValue = (!removeBorder) ? CSS_BACKGROUND_VALUE : CSS_BACKGROUND_INIT;
 
        for (let colId = 0; colId <= PuzzleCommon.maxColumnIndex; ++colId) {
            let cellId = CELL_ID_PREFIX + rowIndex + colId;
-           jQuery(cellId).css(CSS_BACKGROUND_ON_ERROR, borderPropertyValue);
+           jQuery(cellId).css(CSS_BACKGROUND_PROPERTY, borderPropertyValue);
        }
    }
 
@@ -102,12 +103,12 @@ export class PuzzleManagerService {
 
 // Update the current column format when an invalid number is entered or not
    updateCurrentColumnFormat(columnIndex: number, removeBorder?: boolean ) {
-       let borderPropertyValue = (!removeBorder) ? CSS_BACKGROUND_VALUE : "";
+       let borderPropertyValue = (!removeBorder) ? CSS_BACKGROUND_VALUE : CSS_BACKGROUND_INIT;
 
        for (let rowId = 0; rowId <= PuzzleCommon.maxColumnIndex; ++rowId) {
            let cellId = CELL_ID_PREFIX + rowId + columnIndex;
 
-           jQuery(cellId).css(CSS_BACKGROUND_ON_ERROR, borderPropertyValue);
+           jQuery(cellId).css(CSS_BACKGROUND_PROPERTY, borderPropertyValue);
        }
    }
 
@@ -132,7 +133,8 @@ export class PuzzleManagerService {
                for (let rowId2 = squareMinRowIndex; rowId2 <= squareMaxRowIndex; ++rowId2) {
                    for (let columnId2 = squareMinColumnIndex; columnId2 <= squareMaxColumnIndex; ++columnId2) {
 
-                       if (grid[rowId2][columnId2]._value === Number(cellValue)) {
+                       if (Number(grid[rowId2][columnId2]._value) === Number(cellValue)
+                        && Number(cellValue) !== 0) {
                            ++count;
                        }
                        if (count > 1) {
@@ -148,7 +150,7 @@ export class PuzzleManagerService {
 
     updateCurrentSquareFormat(rowIndex: number, columnIndex: number, removeBorder?: boolean ) {
 
-       let borderPropertyValue = (!removeBorder) ? CSS_BACKGROUND_VALUE : "";
+       let borderPropertyValue = (!removeBorder) ? CSS_BACKGROUND_VALUE : CSS_BACKGROUND_INIT;
 
        // TODO: Find a good way to avoid code duplication
        let squareMinRowIndex = Math.floor(rowIndex / 3) * 3;
@@ -160,7 +162,7 @@ export class PuzzleManagerService {
 
            for (let columnId = squareMinColumnIndex; columnId <= squareMaxColumnIndex; ++columnId) {
                let cellId = CELL_ID_PREFIX + rowId + columnId;
-               jQuery(cellId).css(CSS_BACKGROUND_ON_ERROR, borderPropertyValue);
+               jQuery(cellId).css(CSS_BACKGROUND_PROPERTY, borderPropertyValue);
            }
        }
    }
@@ -178,4 +180,24 @@ export class PuzzleManagerService {
                squareMinColumnIndex: squareMinColumnIndex,
                squareMaxColumnIndex: squareMaxColumnIndex};
    }
+
+    // Clears the cells the user filled.
+    // Initialize the grid format to prevent when an invalid grid format is applied.
+    initializeGrid(grid: PuzzleItem[][]) {
+        for (let row = 0; row < PuzzleCommon.maxRowIndex; ++row) {
+
+            // Initialize the current row format.
+            this.updateCurrentRowFormat(row, true);
+
+            for (let column = 0; column < PuzzleCommon.maxColumnIndex; ++column) {
+                if (grid[row][column]._hide) {
+                    grid[row][column]._value = null;
+                }
+
+                // Initialize the current colum/square format
+                this.updateCurrentColumnFormat(column, true);
+                this.updateCurrentSquareFormat(row, column, true);
+            }
+        }
+    }
 }

@@ -1,10 +1,19 @@
-export class GameStatus{
-    _scorePlayer: number = 0;
-    _scoreComputer: number = 0;
-    _currentSet: number = 0;
-    _currentStonesPlayer: number = 8;
-    _currentStonesComputer: number = 8;
-    _isLaunched: boolean = false;
+export class GameStatus {
+    _scorePlayer: number;
+    _scoreComputer: number;
+    _currentSet: number;
+    _currentStonesPlayer: number;
+    _currentStonesComputer: number;
+    _isLaunched: boolean;
+
+    constructor() {
+        this._scorePlayer = 0;
+        this._scoreComputer = 0;
+        this._currentSet = 0;
+        this._currentStonesPlayer = 8;
+        this._currentStonesComputer = 8;
+        this._isLaunched = false;
+    }
 
     public usedStonePlayer(): void {
         this._currentStonesPlayer = this._currentStonesPlayer - 1;
@@ -27,11 +36,11 @@ export class GameStatus{
         this._currentStonesPlayer = 8;
     }
 
-    public lauchedGame(): void{
+    public lauchedGame(): void {
         this._isLaunched = true;
     }
 
-    public resetGameStatus(): void{
+    public resetGameStatus(): void {
         this._scorePlayer = 0;
         this._scoreComputer = 0;
         this._currentSet = 0;

@@ -11,11 +11,47 @@ module Route {
     }
 
     public async addUser(req: express.Request, res: express.Response, next: express.NextFunction) {
-        console.log(req.body);
         try {
-            res.sendStatus(await DatabaseManager.addUser(req.body) ? 200 : 400); 
+            await DatabaseManager.addUser(req.body)
+            .then(response => {
+                if(response === true){
+                    res.sendStatus(HttpStatus.SUCCESS);
+                }
+                else{
+                    res.sendStatus(HttpStatus.ERROR);
+                }
+            }).catch(error => {
+                console.log("--- ERROR ---", error)
+            }); 
         } catch (error) {
-            res.sendStatus(400);   
+            res.sendStatus(HttpStatus.ERROR);   
+        }
+    }
+
+    public async getAllRecords(req: express.Request, res: express.Response, next: express.NextFunction) {
+        try {
+            let records: Array<any> = await DatabaseManager.getAllRecords();
+            res.status(records === null ? HttpStatus.ERROR : HttpStatus.SUCCESS).send(records);
+        } catch (error) {
+            res.status(HttpStatus.ERROR).send([{"error" : "Une erreur est survenue lors de la connexion a la base de donnees. (getAllRecords)"}]);   
+        }
+    }
+
+    public async saveGameRecord(req: express.Request, res: express.Response, next: express.NextFunction) {
+        try {
+            await DatabaseManager.saveGameRecord(req.body)
+            .then(response => {
+                if(response === true){
+                    res.sendStatus(HttpStatus.SUCCESS);
+                }
+                else{
+                    res.sendStatus(HttpStatus.ERROR);
+                }
+            }).catch(error => {
+                console.log("--- ERROR ---", error)
+            }); 
+        } catch (error) {
+            res.sendStatus(HttpStatus.ERROR);   
         }
     }
 
@@ -23,6 +59,11 @@ module Route {
       res.redirect('/glcomp');
     }
   }
+}
+
+enum HttpStatus{
+    ERROR = 400,
+    SUCCESS = 200
 }
 
 export = Route;

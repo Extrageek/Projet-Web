@@ -5,6 +5,7 @@ import { MdSnackBar } from '@angular/material';
 @Component({
     selector: 'my-gl',
     templateUrl: "../../assets/templates/gl-component.html",
+    styleUrls: ['../../assets/stylesheets/gl-component.css', '../../assets/stylesheets/menu-hamburger.css']
 })
 
 export class GlComponent implements OnInit{
@@ -17,6 +18,13 @@ export class GlComponent implements OnInit{
         this.webgltext = "";
         this.xmodel = this.ymodel = 0;
         this.zCamera = 0;
+
+        let hamburger = document.querySelector(".hamburger");
+        let menu = document.querySelector(".overlay");
+        hamburger.addEventListener("click", function () {
+            hamburger.classList.toggle("is-active");
+            menu.classList.toggle("is-open-menu");
+        });
         //console.log(this.trigger());
     }
     constructor(

@@ -13,7 +13,7 @@ import 'rxjs/add/operator/catch';
 declare var jQuery: any;
 
 import { RestApiProxyService } from '../services/rest-api-proxy.service';
-import { PuzzleManagerService } from '../services/grid-manager.service';
+import { GridManagerService } from '../services/grid-manager.service';
 import { PuzzleEventManagerService } from '../services/puzzle-event-manager.service';
 
 import { PuzzleCommon } from '../commons/puzzle-common';
@@ -26,7 +26,7 @@ import { Puzzle } from '../models/puzzle';
     // TODO: Must be removed to an external css file
     // Do it after a clean debug, remove the reference in the index.html file
     styleUrls : ['/app/assets/grid.component.css'],
-    providers : [PuzzleManagerService, PuzzleEventManagerService, RestApiProxyService ]
+    providers : [ GridManagerService, PuzzleEventManagerService, RestApiProxyService ]
 })
 
 export class GridComponent implements OnInit {
@@ -34,7 +34,7 @@ export class GridComponent implements OnInit {
     _newPuzzle: Puzzle;
     _puzzleSolution: Puzzle;
 
-    constructor(private puzzleMangerService : PuzzleManagerService,
+    constructor(private gridMangerService : GridManagerService,
                 private puzzleEventManager : PuzzleEventManagerService,
                 private restApiProxyService: RestApiProxyService) {
                 // Defaut constructor
@@ -45,10 +45,9 @@ export class GridComponent implements OnInit {
 
         await this.restApiProxyService.getNewPuzzle()
             .subscribe((puzzle) => {
-                // The puzzle to display when binding the model to the input box,
-                // must not contains the solution. We need to extract the new puzzle 
-                // for the user.
-
+            // The puzzle to display when binding the model to the input box,
+            // must not contains the solution. We need to extract the new puzzle
+            // for the user.
                 this._newPuzzle = this.extractTheNewPuzzle(puzzle);
 
                 // Keep the puzzle with the solution.
@@ -73,26 +72,36 @@ export class GridComponent implements OnInit {
     }
 
     // Handle the directions key event by using the EventManager
-    onKeyEventHandler(event: KeyboardEvent) {
-
-        // TODO: Must be removed after a clean debug
+    onKeyDownEventHandler(event: KeyboardEvent) {
         this.puzzleEventManager.onKeyEventUpdateCurrentCursor(event);
     }
 
-    // TODO : must be removed after a clean debug
+    // Handle the input value changed event from grid
     onValueChange(event: KeyboardEvent) {
 
         let rowColIndex = event.srcElement.id.split('');
         let rowIndex = Number(rowColIndex[PuzzleCommon.yPosition]);
         let colIndex = Number(rowColIndex[PuzzleCommon.xPosition]);
 
-        if (this.puzzleMangerService.isValidNumber(this._newPuzzle, rowIndex, colIndex)){
+        if (this.gridMangerService.validateEnteredNumber(this._newPuzzle, rowIndex, colIndex)) {
 
-            console.log("is valid");
+            //console.log("is valid");
 
         }else{
 
-            console.log("is not valid");
+            //console.log("is not valid");
         }
     }
+
+    // Initialize the current grid
+    initializeCurrentGrid() {
+        this.gridMangerService.initializeGrid(this._newPuzzle._puzzle);
+    }
+
+    validateInputValue(event: KeyboardEvent) {
+    // TODO: Move to the event handler service.
+    if (!this.puzzleEventManager.isSudokuNumber(event.which)) {
+        return false;
+    }
+}
 }
