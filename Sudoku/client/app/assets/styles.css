@@ -2,6 +2,7 @@ body {
     font-size: 16px;
     font-family: WeblySleek UI,Segoe UI,Helvetica Neue,Arial,sans-serif;
     line-height: normal;
+    background-image: url('./images/bg_image.jpg');
 }
 
 h1 {
@@ -11,8 +12,14 @@ h1 {
 }
 
 .game-panel {
-    padding: 15px 0px 50px 50px;
+    /*padding: 15px 0px 50px 50px;
     border: 5px solid #ddd;
     margin-top: 0;
-    background-color: #78909C;
+    background-color: #78909C;*/
+}
+
+.menu-panel {
+    padding: 16px;
+    border: 4px solid #ddd;
+    background-color: #ddd;
 }

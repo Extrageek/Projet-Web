@@ -10,3 +10,8 @@ html {
     background-image: url("../images/curling.jpg");
     background-size: cover;
 }
+
+body{
+  margin: 0px;
+  overflow: hidden;
+}

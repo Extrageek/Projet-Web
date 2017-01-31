@@ -1,127 +1,67 @@
 import * as express from 'express';
 
-var mongodb = require('mongojs');
+var MongoClient = require('mongodb').MongoClient;
 
-var db = mongodb('mongodb://curling23:log2990-23@ds117859.mlab.com:17859/curling', ['username']);
+let url: string = 'mongodb://curling23:log2990-23@ds117859.mlab.com:17859/curling';
 
 export class DatabaseManager {
 
-    // GET: api/tasks - for all the tasks
-    //[req: request, res: response]
-    static addUser(body : any): boolean{
-        let user = body;
-
-        // Send an error task is empty
-        if (user.username === '')
-        {
+    static async addUser(body: any): Promise<boolean> {
+        if (body.username === '') {
             return false;
         }
-        else{
+        else {
+            let db = await MongoClient.connect(url);
+            let isInserted: boolean = false;
             try {
-                 // Save the task if everything is find
-                db.username.save(body, (err: any, body: any) =>{
-                    if (err){
-                        console.log('username existing');
-                        return false;
+                let collection = db.collection('username');
+                (await collection.insertOne(body).then((result: any) => {
+                    if (result.insertedCount === 1) {
+                        isInserted = true;
                     }
-                    else{
-                        console.log('insert username');
-                        return true;
-                    }
-                });
-            } catch (error) {
-                console.log('une erreur est survenue lors de la connexion a la db. - DatabaseManager addUser');
-                return false;
+                }));
+            } finally {
+                db.close();
+                return isInserted;
             }
         }
     };
 
-    static getAll(req : express.Request, res: express.Response, next: express.NextFunction){
-        db.username.find((err :any, users : any) =>{
-            if (err){
-                res.send(err);
-            }else{
-                //res.json(users);
-                console.log("recup all   " + users);
+    static async getAllRecords(): Promise<Array<any>> {
+        try {
+            let db = await MongoClient.connect(url);
+            let docs: Array<any>;
+            try {
+                let collection = db.collection('leaderboard');
+                docs = (await collection.find().toArray());
+            } finally {
+                db.close();
+                return docs;
             }
-        });
+        } catch (error) {
+            console.log('ERROR - connexion a la db. - DatabaseManager getAllRecords');
+            return null;
+        }
     }
-    /*
-    find all
-     
-    
-     GET: api/task/:id  - for a single task
-    router.get('/task/:id', function(req, res, next){
-        db.tasksCollection.findOne({_id: mongojs.ObjectId(req.params.id)}, (err :any, task : any) =>{
-            if (err){
-                res.send(err);
-            }else{
-                res.json(task);
-            }
-        });
-    });
 
-    // POST: api/task/:id  - create a task
-    router.post('/task', function(req, res, next){
-        var task = req.body;
-
-        // Send an error task is empty
-        if(!task.title || (task.isDone + ''))
-        {
-            res.status(400);
-            res.json({
-                "error": "Bad data"
-            })
-        }else{
-            // Save the task if everything is find
-            db.tasks.save(task, (err :any, tasks : any) =>{
-                if (err){
-                    res.send(err);
-                }else{
-                    res.json(task);
-                }
-            });
+    static async saveGameRecord(body: any): Promise<boolean> {
+        let isInserted: boolean = false;
+        if (body.username === '') {
+            return isInserted;
         }
-    });
-
-    // DELETE: api/task/:id  - for a single task
-    router.delete('/task/:id', function(req, res, next){
-        db.tasksCollection.remove({_id: mongojs.ObjectId(req.params.id)}, (err :any, task : any) =>{
-            if (err){
-                res.send(err);
-            }else{
-                res.json(task);
+        else {
+            let db = await MongoClient.connect(url);
+            try {
+                let collection = db.collection('username');
+                (await collection.insertOne(body).then((result: any) => {
+                    if (result.insertedCount === 1) {
+                        isInserted = true;
+                    }
+                }));
+            } finally {
+                db.close();
+                return isInserted;
             }
-        });
-    });
-
-    // PUT: api/task  - for a single task
-    router.put('/task/:id', function(req, res, next){
-        var task = req.body;
-        var updatedTask = {} // leave empty for now
-
-        if(task.isDone){
-            updatedTask = task.isDone;
         }
-        if(task.title){
-            updatedTask.title = task.title;
-        }
-
-        if(!updatedTask){
-            res.status(400);
-            res.json({
-                "error":"Bad data"
-            })
-        }else{
-            db.tasksCollection.update({_id: mongojs.ObjectId(req.params.id)},
-            updatedTask, {/* empty object/function } , (err :any, tasks : any) =>{
-            if (err){
-                res.send(err);
-            }else{
-                res.json(task);
-            }
-        });
-    }
-});
-*/
+    };
 }

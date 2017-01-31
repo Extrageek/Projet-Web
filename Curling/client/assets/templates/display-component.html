@@ -1,3 +1,13 @@
+<div class="menu-nav">
+    <button class="hamburger hamburger--elastic pull-right" type="button">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+</div>
+
+<my-gl class="col-sm-12"> </my-gl>
+
 <div id="display-component">
     <div class="col-sm-12">
         <div class="col-sm-4 pull-left">
@@ -24,16 +34,19 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-4 pull-right">
+        <div class="col-sm-3">
             <div id="computerName" class="pull-right">
                 CPU NAME
             </div>
         </div>
+        <div class="col-sm-1">
+            
+        </div>
 
-        <div class="col-sm-12 ">
-            <div id="playerStones " class="pull-left col-sm-3 ">
+        <div class="col-sm-12">
+            <div id="playerStones" class="pull-left col-sm-3">
                 <div *ngIf="_gameStatus._currentStonesPlayer > 0">
-                    <img src=" ../../assets/images/stone-blue.png " alt="Pierre bleue " height="48" width="48">
+                    <img src=" ../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
                 </div>
                 <div *ngIf="_gameStatus._currentStonesPlayer > 1">
                     <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
@@ -57,7 +70,7 @@
                     <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
                 </div>
             </div>
-            <div id=" computerStones " class="pull-right col-sm-3 ">
+            <div id="computerStones" class="pull-right col-sm-3">
                 <div *ngIf="_gameStatus._currentStonesComputer > 0" class="col-sm-12">
                     <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
                 </div>
@@ -85,3 +98,18 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- The overlay -->
+<div id="myNav" class="overlay">
+
+    <!-- Button to close the overlay navigation -->
+    <!--<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>-->
+
+    <!-- Overlay content -->
+    <div class="overlay-content">
+        <p (click)="gameOver()"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Abandonner</p>
+        <p><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span> Recommencer</p>
+    </div>
+
+</div>
