@@ -1,7 +1,7 @@
 <div class="mainBoard" >
-    <div style="background-color: #916a32" *ngFor="let lineNumber of columnNumberList">
-        <ng-container class="imageContainer" *ngFor="let scrabbleLine of line[lineNumber]">
-            <img class="cell" src="../{{mappingLinkImage[scrabbleLine] }}" alt="{{ scrabbleLine }}">
+    <div style="background-color: #916a32" *ngFor="let currentRow of currentRows; let myIndex =index">
+        <ng-container class="imageContainer" *ngFor="let row of scrabbleGrid[myIndex]">
+            <img class="cell" src="../{{ row }}" alt="{{ row }}">
         </ng-container>
     </div>
 </div>

@@ -73,7 +73,7 @@ describe("messages received by the client", () => {
         clientConnection1.on(SocketCanalNames.NAME_OR_SOCKET_ALREADY_EXISTS, throwError(NAME_ALREADY_EXISTS));
         clientConnection1.on(SocketCanalNames.INVALID_NAME, throwError(INVALID_NAME));
         clientConnection1.on(SocketCanalNames.INVALID_DEMAND, throwError(INVALID_DEMAND));
-        clientConnection1.emit(SocketCanalNames.NEW_GAME_DEMAND, {name: playerName, numberOfPlayers: 2});
+        clientConnection1.emit(SocketCanalNames.NEW_GAME_DEMAND, {name: playerName, gameType: 2});
     });
 
     it("should send name already exists response", done => {
@@ -81,13 +81,13 @@ describe("messages received by the client", () => {
         clientConnection1.on(SocketCanalNames.NAME_OR_SOCKET_ALREADY_EXISTS, throwError(NAME_ALREADY_EXISTS));
         clientConnection1.on(SocketCanalNames.INVALID_NAME, throwError(INVALID_NAME));
         clientConnection1.on(SocketCanalNames.INVALID_DEMAND, throwError(INVALID_DEMAND));
-        clientConnection1.emit(SocketCanalNames.NEW_GAME_DEMAND, {name: playerName, numberOfPlayers: 2});
+        clientConnection1.emit(SocketCanalNames.NEW_GAME_DEMAND, {name: playerName, gameType: 2});
 
         clientConnection2.on(SocketCanalNames.PLAYERS_MISSING, throwError(NO_ERROR));
         clientConnection2.on(SocketCanalNames.NAME_OR_SOCKET_ALREADY_EXISTS, makeTestDone(done));
         clientConnection2.on(SocketCanalNames.INVALID_NAME, throwError(INVALID_NAME));
         clientConnection2.on(SocketCanalNames.INVALID_DEMAND, throwError(INVALID_DEMAND));
-        clientConnection2.emit(SocketCanalNames.NEW_GAME_DEMAND, {name: playerName, numberOfPlayers: 3});
+        clientConnection2.emit(SocketCanalNames.NEW_GAME_DEMAND, {name: playerName, gameType: 3});
     });
 
     it("should send illegal name response", done => {
@@ -95,7 +95,7 @@ describe("messages received by the client", () => {
         clientConnection1.on(SocketCanalNames.NAME_OR_SOCKET_ALREADY_EXISTS, throwError(NAME_ALREADY_EXISTS));
         clientConnection1.on(SocketCanalNames.INVALID_NAME, makeTestDone(done));
         clientConnection1.on(SocketCanalNames.INVALID_DEMAND, throwError(INVALID_DEMAND));
-        clientConnection1.emit(SocketCanalNames.NEW_GAME_DEMAND, {name: invalidPlayerName, numberOfPlayers: 2});
+        clientConnection1.emit(SocketCanalNames.NEW_GAME_DEMAND, {name: invalidPlayerName, gameType: 2});
     });
 
     it("should send illegal game demand response", done => {
@@ -103,7 +103,7 @@ describe("messages received by the client", () => {
         clientConnection1.on(SocketCanalNames.NAME_OR_SOCKET_ALREADY_EXISTS, throwError(NAME_ALREADY_EXISTS));
         clientConnection1.on(SocketCanalNames.INVALID_NAME, throwError(INVALID_NAME));
         clientConnection1.on(SocketCanalNames.INVALID_DEMAND, makeTestDone(done));
-        clientConnection1.emit(SocketCanalNames.NEW_GAME_DEMAND, {numberOfPlayers: 2});
+        clientConnection1.emit(SocketCanalNames.NEW_GAME_DEMAND, {gameType: 2});
     });
 
     it("should not accept two game demands from the same socket connection", done => {
@@ -122,7 +122,7 @@ describe("messages received by the client", () => {
         });
         clientConnection1.on(SocketCanalNames.INVALID_NAME, throwError(INVALID_NAME));
         clientConnection1.on(SocketCanalNames.INVALID_DEMAND, throwError(INVALID_DEMAND));
-        clientConnection1.emit(SocketCanalNames.NEW_GAME_DEMAND, {name: playerName, numberOfPlayers: 2});
-        clientConnection1.emit(SocketCanalNames.NEW_GAME_DEMAND, {name: playerName2, numberOfPlayers: 2});
+        clientConnection1.emit(SocketCanalNames.NEW_GAME_DEMAND, {name: playerName, gameType: 2});
+        clientConnection1.emit(SocketCanalNames.NEW_GAME_DEMAND, {name: playerName2, gameType: 2});
     });
 });

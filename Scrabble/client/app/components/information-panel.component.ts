@@ -1,19 +1,27 @@
-import { Component, AfterViewInit } from '@angular/core';
-import { Timer } from '../models/timer';
+import { Component, AfterViewInit } from "@angular/core";
+import { TimerService } from "../services/timerService";
 
 @Component({
     moduleId: module.id,
-    selector: 'info-panel-selector',
-    templateUrl: '../../app/views/information-panel.html',
+    providers: [TimerService],
+    selector: "info-panel-selector",
+    templateUrl: "../../app/views/information-panel.html",
 })
 export class InformationPanelComponent implements AfterViewInit {
-    timer : Timer;
-    constructor() {
-        this.timer = new Timer();
+
+    seconds: number;
+    minute: number;
+    hour: number;
+
+    constructor(private timerService : TimerService) {
+        this.seconds = 0; this.minute = 0; this.hour = 0;
     }
     ngAfterViewInit() {
         setInterval(() => {
-            this.timer.updateClock();
+            this.timerService.updateClock();
+            this.seconds = this.timerService.seconds;
+            this.minute = this.timerService.minute;
+            this.hour = this.timerService.hour;
         }, 1000);
     }
 }
