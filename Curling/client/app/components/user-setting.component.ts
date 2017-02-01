@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { RestApiProxyService } from '../services/rest-api-proxy.service';
@@ -8,12 +8,13 @@ import { UserSetting } from '../models/user-setting';
 @Component({
     moduleId: module.id,
     selector: 'user-component',
-    templateUrl: "../../assets/templates/user-setting-component.html",
+    templateUrl: '../../assets/templates/user-setting-component.html',
+    styleUrls: ['../../assets/stylesheets/user-setting-component.css']
 })
 
 export class UserSettingComponent implements OnInit {
-    //TODO : Change for private - Problem with binding
-    public _userSetting: UserSetting;
+    @Input() _userSetting: UserSetting;
+    _isLoginNextActivated = false;
 
     constructor(
         private router: Router,
@@ -21,20 +22,28 @@ export class UserSettingComponent implements OnInit {
     }
 
     ngOnInit() {
-        this._userSetting = new UserSetting();
         document.getElementById('difficulty').hidden = true;
-        //document.getElementById('alertUsername').hidden = true;
     }
 
     public async verifyUsername() {
-        console.log("1 appel verifyUsername");
-        let isValid = true; //await this.restApiProxyService.verifyUsername(this._userSetting);
-        console.log('is username valid - ' + isValid);
-        if (isValid.valueOf() === true) {
-            document.getElementById('username').hidden = true;
-            document.getElementById('difficulty').hidden = false;
-        } else {
-            document.getElementById('username').style.backgroundColor = 'red';
+        if ((<HTMLInputElement>document.getElementById("loginInput")).value !== ""){
+            let isValid = await this.restApiProxyService.verifyUsername(this._userSetting);
+            console.log(isValid);
+            if (isValid.valueOf() === true) {
+                document.getElementById('username').hidden = true;
+                document.getElementById('difficulty').hidden = false;
+            } else {
+                document.querySelector('.alert').classList.remove("fade");
+            }
+        }
+    }
+
+    public activateLoginNext(){
+        if ((<HTMLInputElement>document.getElementById("loginInput")).value !== ""){
+            this._isLoginNextActivated = true;
+        }
+        else{
+            this._isLoginNextActivated = false;
         }
     }
 
@@ -43,16 +52,13 @@ export class UserSettingComponent implements OnInit {
     }
 
     public launchGame() {
-        this.router.navigate(['/game']);
+        document.querySelector("user-component").classList.add("hidden");
+        document.querySelector("display-component").classList.remove("hidden");
         // creer une partie et sauvegarder dans la db
         //this.restApiProxyService.launchGame();
     }
 
-    public get(): UserSetting {
-        return this._userSetting;
-    }
-
-    public set(userSetting: UserSetting) {
-        this._userSetting = userSetting;
+    public closeAlert(){
+         document.querySelector('.alert').classList.add("fade");
     }
 }

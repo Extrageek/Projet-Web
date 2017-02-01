@@ -4,10 +4,10 @@ import { Difficulty } from './user-setting';
  * name
  */
 export class Record {
-    private _username: string = '';
+    private _username: string;
     private _difficulty: Difficulty;
-    private _scorePlayer: number = 0;
-    private _scoreComputer: number = 0;
+    private _scorePlayer: number;
+    private _scoreComputer: number;
     private _date: Date;
 
     constructor(username: string, difficulty: Difficulty, scorePlayer: number, scoreComputer: number, date?: Date) {

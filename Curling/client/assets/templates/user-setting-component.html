@@ -1,24 +1,36 @@
-<form #f='ngForm'>
-    <div id="username" class="form-group">
-        <label for="username"> Pseudonyme </label>
-        <input type='text' placeholder='Entrer votre pseudo...' name='username' [(ngModel)]="_userSetting._name">
-        <button type='submit' (click)='verifyUsername()'>Verifier Pseudo</button>
+<form #f='ngForm' class="full-height">
+    <div id="username" class="form-group user-setting-content">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <button type="button" class="close" (click)="closeAlert()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>Pseudonyme invalide.</strong> Pas de chance, il a déjà été pris. Essayez-en un autre!
+        </div>
+        <input id="loginInput" (change)="activateLoginNext()" class="shake" type='text' placeholder='Entrer votre pseudo...' 
+            [(ngModel)]="_userSetting._name" [ngModelOptions]="{standalone: true}" />
+        <button id="loginNext" type="submit" class="btn btn-secondary btn-lg" *ngIf="_isLoginNextActivated" (click)="verifyUsername()">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        </button>
+        <!--<div class="col-md-12">
+            <button type="button" class="btn btn-primary btn-lg" (click)='goToLeaderBoard()'>
+                <p><span class="glyphicon glyphicon-stats" aria-hidden="true"></span></p>
+            </button>
+        </div>-->
     </div>
 
-    <div id="difficulty" class="form-group">
-        Bonjour {{_userSetting._name}}, veuillez choisir le niveau de difficulte :
+    <div id="difficulty" class="form-group user-setting-content">
+        <div> Bonjour {{_userSetting._name}}, veuillez choisir le niveau de difficulte :</div>
         <div class="radio">
             <label>
-                    <input type='radio' value='NORMAL' name='normal' [(ngModel)]='_userSetting._difficulty'> Normal 
-                    </label>
+                <input type='radio' value='NORMAL' name='normal' [(ngModel)]='_userSetting._difficulty'> Normal 
+            </label>
         </div>
         <div class="radio">
             <label>
-                    <input type='radio' value='HARD' name='hard' [(ngModel)]='_userSetting._difficulty'> Difficile
-                    </label>
+                <input type='radio' value='HARD' name='hard' [(ngModel)]='_userSetting._difficulty'> Difficile
+            </label>
         </div>
 
-        <button type='submit' (click)='launchGame()'>Commencer la partie !</button>
+        <button type="submit" class="btn btn-secondary btn-lg" (click)='launchGame()'>Commencer la partie !</button>
     </div>
 </form>
-<button type='submit' (click)='goToLeaderBoard()'>Voir les scores</button>
