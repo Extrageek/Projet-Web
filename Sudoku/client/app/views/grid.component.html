@@ -7,7 +7,7 @@
                         <tr class="grid" *ngFor = "let row of _newPuzzle?._puzzle , let i = index" [attr.id] = "'gridRowId' + i">
                             <td *ngFor ="let cell of row, let j = index" [attr.id] = "'cellId' + i + '' + j"> 
                                 <input class="readOnlyCell" *ngIf ="!cell._hide" readonly [attr.maxlength]="1" type="text" name="inputCell"
-                                [attr.id]="i +''+ j" [ngModel]="cell._value" (keydown)="onKeyDownEventHandler($event)">
+                                [attr.id]="i +''+ j" [ngModel]="cell._value">
 
                                 <input class="readWriteCell" *ngIf ="cell._hide" [attr.maxlength]="1" type="text" name="inputCell"
                                 [attr.id]="i +''+ j"  [(ngModel)]="cell._value" 

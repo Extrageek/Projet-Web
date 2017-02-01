@@ -20,7 +20,7 @@ export class RestApiProxyService {
 
     // API Url for new Puzzle request to the server
     // Check how to manage cookies after
-    private _newPuzzleUrl = 'http://localhost:3002/api/puzzle';
+    _newPuzzleUrl = 'http://localhost:3002/api/puzzle';
 
     /**
      * constructor.
@@ -37,7 +37,13 @@ export class RestApiProxyService {
      * @returns an Observable with a newPuzzle json data
      * TODO: Must be checked if we need to convert to an object.
      */
-     getNewPuzzle() : Observable<Puzzle> {
+    getNewPuzzle(): Observable<Puzzle> {
+        if (this._newPuzzleUrl === null) {
+            let errMsg = `${"The server URL cannot be null."}`;
+
+            return Observable.throw(errMsg);
+        }
+
         return this.http.get(this._newPuzzleUrl)
             .map(this.retrieveDataFromHttpResponse)
             .catch(this.handleError);
@@ -52,7 +58,7 @@ export class RestApiProxyService {
      */
     private retrieveDataFromHttpResponse(res: Response) {
         let body = res.json();
-        return body || { };
+        return body || {};
     }
 
     /**
@@ -62,7 +68,7 @@ export class RestApiProxyService {
      * @method handleError
      * @return.
      */
-    private handleError (error: Response | any) {
+    private handleError(error: Response | any) {
 
         let errMsg: string;
         if (error instanceof Response) {
@@ -77,5 +83,5 @@ export class RestApiProxyService {
         console.error(errMsg);
 
         return Observable.throw(errMsg);
-  }
+    }
 }

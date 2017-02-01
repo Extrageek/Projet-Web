@@ -1,10 +1,15 @@
 import { AppComponent } from './app.component';
-
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  async, ComponentFixture, TestBed
+} from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 
 import { expect } from 'chai';
+
+import { GridComponent } from './components/grid.component';
 
 describe('AppComponent', function () {
   let de: DebugElement;
@@ -13,9 +18,9 @@ describe('AppComponent', function () {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AppComponent ]
-    })
-    .compileComponents();
+      declarations: [AppComponent, GridComponent],
+      imports: [FormsModule, HttpModule],
+    });
   }));
 
   beforeEach(() => {
@@ -29,7 +34,7 @@ describe('AppComponent', function () {
   it('should have expected <h1> text', () => {
     fixture.detectChanges();
     const h1 = de.nativeElement;
-    expect(h1.innerText).to.match(/angular/i,
+    expect(h1.innerText).to.match(/Sudoku/i,
       '<h1> should say something about "Angular"');
   });
 });
