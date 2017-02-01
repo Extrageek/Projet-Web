@@ -88,7 +88,7 @@ module.exports = function(config) {
     },
     
     preprocessors: {
-        'app/**/!(*spec).js': ['coverage']
+        'out/**/!(*spec).js': ['coverage']
     },
     
     reporters: ['mocha','coverage'],
@@ -109,7 +109,7 @@ module.exports = function(config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Firefox'],
+    browsers: ['Chrome'],
     singleRun: false
   })
-}
+};;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

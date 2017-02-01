@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
     @Component({
-        moduleId: module.id,
+    moduleId: module.id,
     selector: 'scrabble-main-board-selector',
     templateUrl: '../../app/views/scrabble.html',
     styleUrls: ['../../app/assets/scrabble-board.css']
@@ -25,7 +25,7 @@ export class ScrabbleBoardComponent {
             'Normal', 'DoubleLetterScore', 'Normal', 'Normal', 'TripleWordScore'];
     line2 = ['Normal', 'DoubleWordScore', 'Normal', 'Normal', 'Normal',
             'TripleLetterScore', 'Normal', 'Normal', 'Normal', 'TripleLetterScore',
-             'Normal', 'Normal', 'Normal', 'DoubleWordScore', 'Normal'];
+            'Normal', 'Normal', 'Normal', 'DoubleWordScore', 'Normal'];
     line3 = ['Normal', 'Normal', 'DoubleWordScore', 'Normal', 'Normal',
             'Normal', 'DoubleLetterScore', 'Normal', 'DoubleLetterScore', 'Normal',
             'Normal', 'Normal', 'DoubleWordScore', 'Normal', 'Normal'];
@@ -48,23 +48,23 @@ export class ScrabbleBoardComponent {
             'Normal', 'DoubleLetterScore', 'Normal', 'DoubleLetterScore', 'Normal',
             'Normal', 'Normal', 'DoubleLetterScore', 'Normal', 'Normal'];
     line10 = ['Normal', 'TripleLetterScore', 'Normal', 'Normal', 'Normal',
-             'TripleLetterScore', 'Normal', 'Normal', 'Normal', 'TripleLetterScore',
-             'Normal', 'Normal', 'Normal', 'TripleLetterScore', 'Normal'];
+            'TripleLetterScore', 'Normal', 'Normal', 'Normal', 'TripleLetterScore',
+            'Normal', 'Normal', 'Normal', 'TripleLetterScore', 'Normal'];
     line11 = ['Normal', 'Normal', 'Normal', 'Normal', 'DoubleWordScore',
-             'Normal', 'Normal', 'Normal', 'Normal', 'Normal',
-             'DoubleWordScore', 'Normal', 'Normal', 'TripleLetterScore', 'Normal'];
+            'Normal', 'Normal', 'Normal', 'Normal', 'Normal',
+            'DoubleWordScore', 'Normal', 'Normal', 'TripleLetterScore', 'Normal'];
     line12 = ['DoubleLetterScore', 'Normal', 'Normal', 'DoubleWordScore', 'Normal',
-             'Normal', 'Normal', 'DoubleLetterScore', 'Normal', 'Normal',
-             'Normal', 'DoubleWordScore', 'Normal', 'Normal', 'DoubleLetterScore'];
+            'Normal', 'Normal', 'DoubleLetterScore', 'Normal', 'Normal',
+            'Normal', 'DoubleWordScore', 'Normal', 'Normal', 'DoubleLetterScore'];
     line13 = ['Normal', 'Normal', 'DoubleWordScore', 'Normal', 'Normal',
-             'Normal', 'DoubleLetterScore', 'Normal', 'DoubleLetterScore', 'Normal',
-             'Normal', 'Normal', 'DoubleWordScore', 'Normal', 'Normal'];
+            'Normal', 'DoubleLetterScore', 'Normal', 'DoubleLetterScore', 'Normal',
+            'Normal', 'Normal', 'DoubleWordScore', 'Normal', 'Normal'];
     line14 = ['Normal', 'DoubleWordScore', 'Normal', 'Normal', 'Normal',
-             'TripleLetterScore', 'Normal', 'Normal', 'Normal', 'TripleLetterScore',
-             'Normal', 'Normal', 'Normal', 'DoubleWordScore', 'Normal'];
+            'TripleLetterScore', 'Normal', 'Normal', 'Normal', 'TripleLetterScore',
+            'Normal', 'Normal', 'Normal', 'DoubleWordScore', 'Normal'];
     line15 = ['TripleWordScore', 'Normal', 'Normal', 'DoubleLetterScore', 'Normal',
-             'Normal', 'Normal', 'TripleWordScore', 'Normal', 'Normal',
-             'Normal', 'DoubleLetterScore', 'Normal', 'Normal', 'TripleWordScore'];
+            'Normal', 'Normal', 'TripleWordScore', 'Normal', 'Normal',
+            'Normal', 'DoubleLetterScore', 'Normal', 'Normal', 'TripleWordScore'];
 
     line = {
         0: this.line1,

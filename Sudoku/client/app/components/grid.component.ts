@@ -32,7 +32,6 @@ import { Puzzle } from '../models/puzzle';
 export class GridComponent implements OnInit {
 
     _newPuzzle: Puzzle;
-    _puzzleSolution: Puzzle;
 
     constructor(private gridMangerService : GridManagerService,
                 private puzzleEventManager : PuzzleEventManagerService,
@@ -49,9 +48,6 @@ export class GridComponent implements OnInit {
             // must not contains the solution. We need to extract the new puzzle
             // for the user.
                 this._newPuzzle = this.extractTheNewPuzzle(puzzle);
-
-                // Keep the puzzle with the solution.
-                this._puzzleSolution = puzzle;
             });
     }
 
@@ -78,19 +74,18 @@ export class GridComponent implements OnInit {
 
     // Handle the input value changed event from grid
     onValueChange(event: KeyboardEvent) {
+      //  if (this.puzzleEventManager.isSudokuNumber(event.which)) {
 
-        let rowColIndex = event.srcElement.id.split('');
-        let rowIndex = Number(rowColIndex[PuzzleCommon.yPosition]);
-        let colIndex = Number(rowColIndex[PuzzleCommon.xPosition]);
+            let rowColIndex = event.srcElement.id.split('');
+            let rowIndex = Number(rowColIndex[PuzzleCommon.yPosition]);
+            let colIndex = Number(rowColIndex[PuzzleCommon.xPosition]);
 
-        if (this.gridMangerService.validateEnteredNumber(this._newPuzzle, rowIndex, colIndex)) {
-
-            //console.log("is valid");
-
-        }else{
-
+            if (this.gridMangerService.validateEnteredNumber(this._newPuzzle, rowIndex, colIndex)) {
+                //console.log("is valid");
+            } else {
             //console.log("is not valid");
-        }
+            }
+       // } 
     }
 
     // Initialize the current grid
@@ -99,9 +94,9 @@ export class GridComponent implements OnInit {
     }
 
     validateInputValue(event: KeyboardEvent) {
-    // TODO: Move to the event handler service.
-    if (!this.puzzleEventManager.isSudokuNumber(event.which)) {
-        return false;
+        // TODO: Move to the event handler service.
+        if (!this.puzzleEventManager.isSudokuNumber(event.which)) {
+            return false;
+        }
     }
-}
 }

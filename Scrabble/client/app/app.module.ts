@@ -9,13 +9,13 @@ import { EaselComponent } from './components/easel.component';
 import { ChatroomComponent } from './components/chatroom.component';
 import { InformationPanelComponent } from './components/information-panel.component';
 import { GameInitiationComponent } from './components/game-initiation.component';
-import { GameComponent } from './components/game.component';
+import { GameComponent } from './components/game-room.component';
 
 const appRoutes: Routes = [
     { path: '', redirectTo: '/game-start', pathMatch: 'full'},
     { path: 'game-start', component: GameInitiationComponent, data: {Username: 'x', NumberOfPlayers: '3'}},
-    { path: 'game-room', component: GameComponent}
-];
+    { path: 'game-room', component: GameComponent},
+    ];
 
 @NgModule({
   imports: [ BrowserModule ,

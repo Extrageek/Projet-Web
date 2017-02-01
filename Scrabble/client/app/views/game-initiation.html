@@ -1,6 +1,6 @@
-<div class="container" style = "width: 30%; margin-top: 9%; border: 2px solid #d3d3d3; border-radius: 10px; ">
+<div class="container" style = "width: 30%; margin-top: 9%; border: 2px solid #d3d3d3; border-radius: 10px; background-color: white ">
     <h1>Scrabble -  23</h1>
-    <form (submit)="goTo(username.value, numberOfPlayers.value)">
+    <form (submit)="navigateToGameRoom(username.value, numberOfPlayers.value)">
         <div class="form-group" >
             <label for="name">Username</label>
             <input #username style = "width: 70%" type="text" class="form-control" placeholder="Please enter a username" id="name" required >
