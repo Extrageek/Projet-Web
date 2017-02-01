@@ -14,17 +14,21 @@ export class ChatroomComponent implements AfterViewChecked {
     constructor() {
         this.messageArray = [];
     }
-    submitMessage(message: HTMLInputElement) {
+
+    submitMessage(message: HTMLInputElement) : string {
         if (message.value !== "") {
-            this.messageArray.push(message.value);
+            let messageReceived = message.value;
+            message.value = "";
+            return messageReceived;
         }
-        message.value = "";
     }
+
     scrollToBottom(): void {
         try {
             this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
         } catch (err) {console.log(err); }
     }
+
     ngAfterViewChecked() {
         this.scrollToBottom();
     }
