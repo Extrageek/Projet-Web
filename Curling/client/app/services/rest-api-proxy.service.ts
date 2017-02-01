@@ -45,9 +45,11 @@ export class RestApiProxyService {
         .toPromise()
         .then(response => {
             if (response.status === 200){
+                console.log(response.status);
                 return true;
             }
             else{
+                console.log(response.status);
                 return false;
             }
         })

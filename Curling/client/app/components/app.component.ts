@@ -11,7 +11,6 @@ import { RestApiProxyService } from '../services/rest-api-proxy.service';
     templateUrl: "/assets/templates/app-component-template.html",
     styleUrls: ['../../assets/stylesheets/display.css']
 })
-
 export class AppComponent implements OnInit {
     title = "Curling";
     _gameStatus: GameStatus;
@@ -22,6 +21,7 @@ export class AppComponent implements OnInit {
     ngOnInit() {
         this._gameStatus = new GameStatus();
         this._userSetting = new UserSetting();
+        document.querySelector("display-component").classList.add("hidden");
     }
 
     public onWindowClosure(): void {

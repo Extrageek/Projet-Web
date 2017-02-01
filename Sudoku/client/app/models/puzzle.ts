@@ -7,6 +7,10 @@
 
 export class Puzzle {
     _puzzle: Array<Array<PuzzleItem>>;
+
+    constructor(grid: PuzzleItem[][]) {
+        this._puzzle = grid;
+     }
 }
 
 export class PuzzleItem {

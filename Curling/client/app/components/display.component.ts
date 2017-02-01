@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 import { GameStatus } from '../models/game-status';
 import { UserSetting, Difficulty } from '../models/user-setting';
@@ -12,15 +12,21 @@ import { RestApiProxyService } from '../services/rest-api-proxy.service';
     styleUrls: ['../../assets/stylesheets/display.css', '../../assets/stylesheets/menu-hamburger.css']
 })
 export class DisplayComponent implements OnInit {
+    @Input() _userSetting: UserSetting;
     _gameStatus: GameStatus;
-    _userSetting: UserSetting;
     _computerName: string;
 
     constructor (private restApiProxyService : RestApiProxyService) {}
 
     ngOnInit() {
         this._gameStatus = new GameStatus();
-        this._userSetting = new UserSetting();
+
+        let hamburger = document.querySelector(".hamburger");
+        let menu = document.querySelector(".overlay");
+        hamburger.addEventListener("click", () => {
+            hamburger.classList.toggle("is-active");
+            menu.classList.toggle("is-open-menu");
+        });
     }
 
     public showComputerName(): void {
@@ -33,6 +39,6 @@ export class DisplayComponent implements OnInit {
 
     public gameOver(){
         console.log("abandon ok");
-        this.restApiProxyService.createGameRecord(this._userSetting, this._gameStatus);
+        //this.restApiProxyService.createGameRecord(this._userSetting, this._gameStatus);
     }
 }

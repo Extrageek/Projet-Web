@@ -12,7 +12,6 @@ export class GameStatus {
         this._currentSet = 0;
         this._currentStonesPlayer = 8;
         this._currentStonesComputer = 8;
-        this._isLaunched = false;
     }
 
     public usedStonePlayer(): void {
@@ -36,16 +35,11 @@ export class GameStatus {
         this._currentStonesPlayer = 8;
     }
 
-    public lauchedGame(): void {
-        this._isLaunched = true;
-    }
-
     public resetGameStatus(): void {
         this._scorePlayer = 0;
         this._scoreComputer = 0;
         this._currentSet = 0;
         this._currentStonesPlayer = 8;
         this._currentStonesComputer = 8;
-        this._isLaunched = false;
     }
 }

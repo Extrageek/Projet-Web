@@ -1,11 +1,11 @@
-module.exports = function(config) {
+module.exports = function (config) {
 
-  var appBase    = 'out/';      // transpiled app JS and map files
+  var appBase = 'out/';      // transpiled app JS and map files
   var appSrcBase = 'app/';      // app source TS files
-  var appAssets  = 'base/app/'; // component assets fetched by Angular's compiler
+  var appAssets = 'base/app/'; // component assets fetched by Angular's compiler
 
   // Testing helpers (optional) are conventionally in a folder called `testing`
-  var testingBase    = 'testing/'; // transpiled test JS and map files
+  var testingBase = 'testing/'; // transpiled test JS and map files
   var testingSrcBase = 'testing/'; // test source TS files
 
   config.set({
@@ -13,12 +13,12 @@ module.exports = function(config) {
     frameworks: ['mocha', 'chai'],
 
     plugins: [
-        require('karma-mocha'),
-        require('karma-mocha-reporter'),
-        require('karma-chai'),
-        require('karma-firefox-launcher'),
-        require('karma-chrome-launcher'),
-        require('karma-coverage')
+      require('karma-mocha'),
+      require('karma-mocha-reporter'),
+      require('karma-chai'),
+      require('karma-firefox-launcher'),
+      require('karma-chrome-launcher'),
+      require('karma-coverage')
     ],
 
     client: {
@@ -41,6 +41,10 @@ module.exports = function(config) {
 
       // Polyfills
       'node_modules/core-js/client/shim.js',
+
+
+      // Jquery
+      'https://code.jquery.com/jquery-1.11.2.min.js',
 
       // zone.js
       'node_modules/zone.js/dist/zone.js',
@@ -78,7 +82,7 @@ module.exports = function(config) {
       { pattern: appSrcBase + '**/*.ts', included: false, watched: false },
       { pattern: appBase + '**/*.js.map', included: false, watched: false },
       { pattern: testingSrcBase + '**/*.ts', included: false, watched: false },
-      { pattern: testingBase + '**/*.js.map', included: false, watched: false}
+      { pattern: testingBase + '**/*.js.map', included: false, watched: false }
     ],
 
     // Proxied base paths for loading assets
@@ -86,22 +90,22 @@ module.exports = function(config) {
       // required for component assets fetched by Angular's compiler
       "/app/": appAssets
     },
-    
+
     preprocessors: {
-        'app/**/!(*spec).js': ['coverage']
+      'out/**/!(*spec).js': ['coverage']
     },
-    
-    reporters: ['mocha','coverage'],
+
+    reporters: ['mocha', 'coverage'],
 
     mochaReporter: {
       maxLogLines: -1
     },
-    
+
     coverageReporter: {
-        includeAllSources: true,
-        reporters:[
-            {type: 'json', subdir: '.', file: 'coverage-final.json'}
-        ]
+      includeAllSources: true,
+      reporters: [
+        { type: 'json', subdir: '.', file: 'coverage-final.json' }
+      ]
     },
     exclude: [],
 
