@@ -1,11 +1,11 @@
-import { Component, AfterViewInit } from '@angular/core';
-import { TimerService } from '../services/timerService';
+import { Component, AfterViewInit } from "@angular/core";
+import { TimerService } from "../services/timerService";
 
 @Component({
     moduleId: module.id,
     providers: [TimerService],
-    selector: 'info-panel-selector',
-    templateUrl: '../../app/views/information-panel.html',
+    selector: "info-panel-selector",
+    templateUrl: "../../app/views/information-panel.html",
 })
 export class InformationPanelComponent implements AfterViewInit {
 

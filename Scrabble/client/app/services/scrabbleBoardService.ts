@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 
-//TODO CLEAN THIS SHIT UP
 
     const STAR = 'app/scrabbleImages/starTile.jpg';
     const NORMAL = 'app/scrabbleImages/ordinaryTile.jpg';

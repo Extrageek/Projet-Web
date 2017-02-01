@@ -1,15 +1,15 @@
-import { Component, AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
+import { Component, AfterViewChecked, ElementRef, ViewChild } from "@angular/core";
 
 @Component({
     moduleId: module.id,
-    selector: 'scrabble-chatroom-selector',
-    templateUrl: '../../app/views/chatroom.html',
-    styleUrls: ['../../app/assets/chatroom.css'],
+    selector: "scrabble-chatroom-selector",
+    templateUrl: "../../app/views/chatroom.html",
+    styleUrls: ["../../app/assets/chatroom.css"],
 })
 export class ChatroomComponent implements AfterViewChecked {
      messageArray: string[];
 
-    @ViewChild('scroll') private myScrollContainer: ElementRef;
+    @ViewChild("scroll") private myScrollContainer: ElementRef;
 
     constructor() {
         this.messageArray = [];

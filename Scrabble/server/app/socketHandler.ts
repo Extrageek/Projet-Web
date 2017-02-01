@@ -15,15 +15,15 @@ export class IoConnection {
         this._roomHandler = new RoomHandler(connection);
         let roomHandler = this._roomHandler;
         connection.sockets.on(SocketCanalNames.CONNECTION, (socket: SocketIO.Socket) => {
-            socket.on(SocketCanalNames.NEW_GAME_DEMAND, (demandInfo: {name: string, numberOfPlayers: number}) => {
+            socket.on(SocketCanalNames.NEW_GAME_DEMAND, (demandInfo: {name: string, gameType: number}) => {
                 if (typeof(demandInfo) !== "object" || typeof(demandInfo.name) !== "string"
-                    || typeof(demandInfo.numberOfPlayers) !== "number") {
+                    || typeof(demandInfo.gameType) !== "number") {
                     socket.emit(SocketCanalNames.INVALID_DEMAND);
                 }
                 else {
                     let regularExpression = new RegExp('^[A-Za-z0-9]+$');
                     if (regularExpression.test(demandInfo.name)) {
-                        let player = new Player(demandInfo.name, demandInfo.numberOfPlayers, socket);
+                        let player = new Player(demandInfo.name, demandInfo.gameType, socket);
                         if (!roomHandler.hasPlayerWithNameOrSocket(player)) {
                             roomHandler.addPlayertoARoom(player);
                         }
