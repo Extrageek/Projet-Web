@@ -7,7 +7,7 @@ import { DisplayComponent } from '../components/display.component';
 
 // TODO : Put the right paths
 const routes: Routes = [
-  { path: '', redirectTo: 'user', pathMatch: 'full' },
+ // { path: '', redirectTo: 'user', pathMatch: 'full' },
   { path: 'user', component: UserSettingComponent},
   { path: 'dashboard', component: DashboardComponent},
   { path: 'game', component: DisplayComponent }

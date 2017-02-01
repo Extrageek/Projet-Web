@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { RenderService } from '../services/render.service';
 import { MdSnackBar } from '@angular/material';
+
+import { RenderService } from '../services/render.service';
 
 @Component({
     selector: 'my-gl',
@@ -18,13 +19,6 @@ export class GlComponent implements OnInit{
         this.webgltext = "";
         this.xmodel = this.ymodel = 0;
         this.zCamera = 0;
-
-        let hamburger = document.querySelector(".hamburger");
-        let menu = document.querySelector(".overlay");
-        hamburger.addEventListener("click", function () {
-            hamburger.classList.toggle("is-active");
-            menu.classList.toggle("is-open-menu");
-        });
         //console.log(this.trigger());
     }
     constructor(

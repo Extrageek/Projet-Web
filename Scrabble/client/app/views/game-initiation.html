@@ -1,11 +1,12 @@
 <div class="container" style = "width: 30%; margin-top: 9%; border: 2px solid #d3d3d3; border-radius: 10px; background-color: white ">
     <h1>Scrabble -  23</h1>
     <form (submit)="navigateToGameRoom(username.value, numberOfPlayers.value)">
-        <div class="form-group" >
+        <div class="form-group has-danger" >
             <label for="name">Username</label>
+            <div class="form-control-feedback">NON!</div>
             <input #username style = "width: 70%" type="text" class="form-control" placeholder="Please enter a username" id="name" required >
         </div>
-        <div>
+        <div class="form-group">
             <label for="numberOfPlayers">Number of players</label>
             <select #numberOfPlayers id = "numberOfPlayers" style = "width: 70%" class="form-control">
                 <option>1</option>

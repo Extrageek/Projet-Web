@@ -1,5 +1,5 @@
 <main>
-    <router-outlet>
-
-    </router-outlet>
+    <user-component class="user-setting" [_userSetting]="_userSetting"></user-component>
+    <display-component [_userSetting]="_userSetting"></display-component>
+    <router-outlet></router-outlet>
 </main>

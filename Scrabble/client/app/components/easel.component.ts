@@ -1,18 +1,21 @@
-import { Component } from '@angular/core';
-import { ScrabbleLetter }	from '../models/scrabble-letter';
+import { Component } from "@angular/core";
+import { ScrabbleLetter }	from "../models/scrabble-letter";
+import { EaselGeneratorService } from "../services/easelGeneratorService";
 
 @Component({
-  selector: "easel-selector",
-  templateUrl: '../../app/views/easel.html',
-    styleUrls: ['../../app/assets/easel.css'],
+    moduleId: module.id,
+    providers: [EaselGeneratorService],
+    selector: "easel-selector",
+    templateUrl: "../../app/views/easel.html",
+    styleUrls: ["../../app/assets/easel.css"],
 })
-export class EaselComponent {
-  letters : ScrabbleLetter[];
 
-  constructor() {
-      this.letters = Array(7).fill(0);
-      this.letters = this.letters.map(() => new ScrabbleLetter());
-  }
+export class EaselComponent {
+    letters : ScrabbleLetter[];
+
+    constructor(private easelGenerator : EaselGeneratorService) {
+    this.letters = easelGenerator.generatedEasel();
+    }
 }
 
 

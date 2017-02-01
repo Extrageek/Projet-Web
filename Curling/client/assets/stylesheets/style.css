@@ -15,3 +15,14 @@ body{
   margin: 0px;
   overflow: hidden;
 }
+
+.user-setting {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: rgb(70,50,255); 
+    background-color: rgba(70,50,255, 0.9); 
+    overflow-y: hidden;
+}
