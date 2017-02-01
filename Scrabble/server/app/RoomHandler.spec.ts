@@ -1,37 +1,62 @@
 import { expect } from "chai";
 import { RoomHandler, Player } from "./RoomsAndPlayers";
+import { SocketCanalNames } from "./SocketCanalNames";
 import * as io from "socket.io";
 import * as ioClient from "socket.io-client";
 
-describe("Room handler tester", () => {
+let connection: SocketIO.Server;
+let clientConnection1: SocketIOClient.Socket;
+let clientConnection2: SocketIOClient.Socket;
+let clientConnection3: SocketIOClient.Socket;
+let clientConnection4: SocketIOClient.Socket;
+let players: Player[] = new Array<Player>();
+let playerNames: string[] = ["player1", "player2", "player3", "player1"];
+let playerNumbers: number[] = [2, 2, 3, 1];
+let roomHandler: RoomHandler;
+let portNumber = 3000;
+let clientAdressConnection = "http://localhost:" + String(portNumber);
 
-    let connection: SocketIO.Server;
-    let clientConnection1: SocketIOClient.Socket;
-    let clientConnection2: SocketIOClient.Socket;
-    let clientConnection3: SocketIOClient.Socket;
-    let clientConnection4: SocketIOClient.Socket;
-    let players: Player[] = new Array<Player>();
-    let playerNames: String[] = ["player1", "player2", "player3", "player1"];
-    let playerNumbers: number[] = [2, 2, 3, 1];
-    let roomHandler: RoomHandler;
+let createConnectionEvent = (numberOfPlayersToConnect: number, done: MochaDone) => {
+    let playerCreated = 0;
+    connection = io.listen(portNumber);
+    connection.on(SocketCanalNames.CONNECTION, (socket: SocketIO.Socket) => {
+        players[playerCreated] = new Player(playerNames[playerCreated], playerNumbers[playerCreated], socket);
+        ++playerCreated;
+        if (playerCreated >= numberOfPlayersToConnect) {
+            playerCreated = 0;
+            done();
+        }
+    });
+};
+
+describe("Room Handler constructor", () => {
+
+    before(() => {
+        connection = io.listen(portNumber);
+    });
+
+    after(() => {
+        connection.close();
+    });
+
+    it("should construct new RoomHandler", () => {
+        expect(() => { new RoomHandler(connection); }).to.not.throw(Error);
+    });
+
+    it("should throw error as constructing RoomHandler", () => {
+        expect(() => { new RoomHandler(null); }).to.throw(Error);
+    });
+});
+
+describe("Room Handler tester", () => {
 
     beforeEach(done => {
-        roomHandler = new RoomHandler();
-        connection = io.listen(3000);
-        let numberOfPlayerToCreate = 4;
-        let playerCreated = 0;
-        connection.on("connection", (socket: SocketIO.Socket) => {
-            players[playerCreated] = new Player(playerNames[playerCreated], playerNumbers[playerCreated], socket);
-            ++playerCreated;
-            if (playerCreated >= numberOfPlayerToCreate) {
-                playerCreated = 0;
-                done();
-            }
-        });
-        clientConnection1 = ioClient.connect("http://localhost:3000");
-        clientConnection2 = ioClient.connect("http://localhost:3000");
-        clientConnection3 = ioClient.connect("http://localhost:3000");
-        clientConnection4 = ioClient.connect("http://localhost:3000");
+        createConnectionEvent(4, done);
+        roomHandler = new RoomHandler(connection);
+        clientConnection1 = ioClient.connect(clientAdressConnection);
+        clientConnection2 = ioClient.connect(clientAdressConnection);
+        clientConnection3 = ioClient.connect(clientAdressConnection);
+        clientConnection4 = ioClient.connect(clientAdressConnection);
     });
 
     afterEach(() => {
@@ -40,6 +65,7 @@ describe("Room handler tester", () => {
         clientConnection3.close();
         clientConnection4.close();
         connection.close();
+        connection = null;
     });
 
     it("should add new player to a room", () => {
@@ -75,71 +101,62 @@ describe("Room handler tester", () => {
         expect(addFirstPlayer).to.not.throw(Error);
         expect(addSecondPlayer).to.throw(Error);
     });
-/*
-    it("should have left room", done => {
-        roomHandler.addPlayertoARoom(players[0]);
-        roomHandler.addPlayertoARoom(players[1]);
-        let socket = players[0].socket;
-        socket.on("playersMissing", (numberOfPlayers: number) => {
-            console.log("passed here 1");
-            expect(numberOfPlayers).to.equals(1);
-            done();
-        });
-        clientConnection1.close();
-    });
-
-    it("should have destroyed the room", done => {
-        roomHandler.addPlayertoARoom(players[0]);
-        let socket = players[0].socket;
-        socket.on("disconnect", () => {
-            console.log("passed here 2");
-            expect(roomHandler.roomCount).to.equals(0);
-            done();
-        });
-        clientConnection1.close();
-    });
-    */
 });
 
-/*
+
+//To make the next tests working, it must not have a beforeEach or afterEach statement. When there are
+//this kind of statements, the disconnect event is only fired after the elapsed time for the test
+//(after the afterEach function has been called). A setTimeout function is also used in the test to
+//permit the disconnect event to be fired in the Player class.
 describe("disconnection of players", () => {
-    let connection: SocketIO.Server;
-    let clientConnection1: SocketIOClient.Socket;
-    let clientConnection2: SocketIOClient.Socket;
-    let roomHandler: RoomHandler;
-    let players: Player[] = new Array<Player>();
-    let playerNames: String[] = ["player1", "player2"];
-    let playerNumbers: number[] = [2, 2];
+    before(done => {
+        createConnectionEvent(2, done);
+        roomHandler = new RoomHandler(connection);
+        clientConnection1 = ioClient.connect(clientAdressConnection);
+        clientConnection2 = ioClient.connect(clientAdressConnection);
+    });
 
-    let callDone: Function = null;
+    after(() => {
+        clientConnection1.close();
+        clientConnection2.close();
+        connection.close();
+        connection = null;
+    });
 
-    let verificationOnDisconnect = () => {
-        expect(roomHandler.roomCount).to.equals(0);
-        callDone();
-    };
-
-    beforeEach(done => {
-        roomHandler = new RoomHandler();
-        connection = io.listen(3000);
-        let numberOfPlayerToCreate = 2;
-        let playerCreated = 0;
-        connection.on("connection", (socket: SocketIO.Socket) => {
-            socket.on("disconnect", verificationOnDisconnect);
-            players[playerCreated] = new Player(playerNames[playerCreated], playerNumbers[playerCreated], socket);
-            ++playerCreated;
-            if (playerCreated >= numberOfPlayerToCreate) {
-                playerCreated = 0;
+    it("should have left room and other player should have been notified", done => {
+        let numberOfMissingPlayersReceived = 0;
+        clientConnection2.on(SocketCanalNames.PLAYERS_MISSING, (numberOfMissingPlayers: number) => {
+            expect(numberOfMissingPlayers).to.equals(numberOfMissingPlayersReceived);
+            ++numberOfMissingPlayersReceived;
+            if (numberOfMissingPlayersReceived === 2) {
                 done();
             }
         });
-        clientConnection1 = ioClient.connect("http://localhost:3000");
-        clientConnection2 = ioClient.connect("http://localhost:3000");
+        roomHandler.addPlayertoARoom(players[0]);
+        roomHandler.addPlayertoARoom(players[1]);
+        clientConnection1.close();
+    });
+});
+
+describe("destruction of rooms", () => {
+    before(done => {
+        createConnectionEvent(1, done);
+        roomHandler = new RoomHandler(connection);
+        clientConnection1 = ioClient.connect(clientAdressConnection);
     });
 
-    it("should have destroyed the room", done => {
-        callDone = () => { done(); };
+    after(() => {
+        clientConnection1.close();
+        connection.close();
+        connection = null;
+    });
+
+    it("should have destroyed the room when it becomes empty", done => {
         roomHandler.addPlayertoARoom(players[0]);
         clientConnection1.close();
-    })
-})
-*/
+        setTimeout(() => {
+            expect(roomHandler.roomCount).to.equals(0);
+            done();
+        }, 10);
+    });
+});

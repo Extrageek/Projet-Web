@@ -2,8 +2,13 @@ import { SocketCanalNames } from "./SocketCanalNames";
 
 export class RoomHandler {
     private _currentRooms: Room[];
+    private _connection: SocketIO.Server;
 
-    public constructor() {
+    public constructor(connection: SocketIO.Server) {
+        if (typeof(connection) === "undefined" || connection === null) {
+            throw new Error("Invalid socket server passed in parameter");
+        }
+        this._connection = connection;
         this._currentRooms = new Array<Room>();
     }
 
@@ -23,7 +28,7 @@ export class RoomHandler {
             player.connectToARoom(room);
         }
         else {
-            room = new Room(player.numberOfPlayers, this);
+            room = new Room(player.numberOfPlayers, this._connection, this);
             room.addPlayer(player);
             player.connectToARoom(room);
             this._currentRooms.push(room);
@@ -64,12 +69,12 @@ export class RoomHandler {
 }
 
 export class Player {
-    private _name: String;
+    private _name: string;
     private _socket: SocketIO.Socket;
     private _numberOfPlayers: number;
     private _room: Room;
 
-    constructor(playerName: String, numberOfPlayers: number, socket: SocketIO.Socket) {
+    constructor(playerName: string, numberOfPlayers: number, socket: SocketIO.Socket) {
         if (playerName === null) {
             throw new Error("Invalid parameters.");
         }
@@ -83,7 +88,7 @@ export class Player {
         this._room = null;
     }
 
-    get name(): String {
+    get name(): string {
         return this._name;
     }
 
@@ -118,24 +123,32 @@ export class Player {
 
 class Room {
 
-    //private static socketRoomGeneratorId: number = 0;
+    private static socketRoomGeneratorId: number = 0;
 
     private _players: Player[];
     private _roomCapacity: number;
     private _roomHandler: RoomHandler;
-    //private _socketRoomId: String;
+    private _socketRoomId: string;
+    private _connection: SocketIO.Server;
 
-    constructor(roomCapacity: number, roomHandler: RoomHandler) {
+    constructor(roomCapacity: number, connection: SocketIO.Server, roomHandler: RoomHandler) {
         if (roomCapacity < 1 || roomCapacity > 4) {
             throw new RangeError("Invalid room capacity. Must be between 1 and 4.");
         }
         this._roomCapacity = roomCapacity;
         this._players = new Array<Player>();
         this._roomHandler = roomHandler;
+        this._socketRoomId = String(Room.socketRoomGeneratorId);
+        this._connection = connection;
+        ++Room.socketRoomGeneratorId;
     }
 
     get roomCapacity(): number {
         return this._roomCapacity;
+    }
+
+    get numberOfMissingPlayers(): number {
+        return this._roomCapacity - this._players.length;
     }
 
     public roomIsFull(): boolean {
@@ -150,14 +163,24 @@ class Room {
             throw new Error("The player is undefined");
         }
         this._players.push(player);
+        player.socket.join(this._socketRoomId);
+        this._connection.to(this._socketRoomId).emit(SocketCanalNames.PLAYERS_MISSING, this.numberOfMissingPlayers);
     }
 
     public removePlayer(player: Player) {
-        this._players = this._players.filter((element) => {
-            return element !== player;
+        let index = this._players.findIndex((element, elementIndex, players) => {
+            return element === player;
         });
-        if (this._players.length === 0) {
-            this._roomHandler.removeRoom(this);
+        if (index !== -1) {
+            let playerRemoved = this._players.splice(index, 1);
+            playerRemoved[0].socket.leave(this._socketRoomId);
+            if (this._players.length === 0) {
+                this._roomHandler.removeRoom(this);
+            }
+            else {
+                this._connection.to(this._socketRoomId).emit(
+                    SocketCanalNames.PLAYERS_MISSING, this.numberOfMissingPlayers);
+            }
         }
     }
 

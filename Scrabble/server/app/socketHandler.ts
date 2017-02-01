@@ -13,13 +13,13 @@ export class IoConnection {
         }
         let connection = io.listen(server);
         connection.sockets.on(SocketCanalNames.CONNECTION, this.onPlayerConnection);
-        this._roomHandler = new RoomHandler();
+        this._roomHandler = new RoomHandler(connection);
     }
 
     private onPlayerConnection(socket: SocketIO.Socket) {
         const INVALID_NAME = 0;
         const NAME_ALREADY_EXISTS = 1;
-        socket.on(SocketCanalNames.NEW_GAME_DEMAND, (demandInfo: {name: String, numberOfPlayers: number}) => {
+        socket.on(SocketCanalNames.NEW_GAME_DEMAND, (demandInfo: {name: string, numberOfPlayers: number}) => {
             let regularExpression = new RegExp('^[A-Za-z0-9]$');
             if (regularExpression.test(name)) {
                 let player = new Player(demandInfo.name, demandInfo.numberOfPlayers, socket);
