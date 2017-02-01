@@ -12,27 +12,30 @@ export class IoConnection {
             throw new Error("Invalid server parameter.");
         }
         let connection = io.listen(server);
-        connection.sockets.on(SocketCanalNames.CONNECTION, this.onPlayerConnection);
         this._roomHandler = new RoomHandler(connection);
-    }
-
-    private onPlayerConnection(socket: SocketIO.Socket) {
-        const INVALID_NAME = 0;
-        const NAME_ALREADY_EXISTS = 1;
-        socket.on(SocketCanalNames.NEW_GAME_DEMAND, (demandInfo: {name: string, numberOfPlayers: number}) => {
-            let regularExpression = new RegExp('^[A-Za-z0-9]$');
-            if (regularExpression.test(name)) {
-                let player = new Player(demandInfo.name, demandInfo.numberOfPlayers, socket);
-                if (!this._roomHandler.hasPlayerWithNameOrSocket(player)) {
-                    this._roomHandler.addPlayertoARoom(player);
+        let roomHandler = this._roomHandler;
+        connection.sockets.on(SocketCanalNames.CONNECTION, (socket: SocketIO.Socket) => {
+            socket.on(SocketCanalNames.NEW_GAME_DEMAND, (demandInfo: {name: string, numberOfPlayers: number}) => {
+                if (typeof(demandInfo) !== "object" || typeof(demandInfo.name) !== "string"
+                    || typeof(demandInfo.numberOfPlayers) !== "number") {
+                    socket.emit(SocketCanalNames.INVALID_DEMAND);
                 }
                 else {
-                    socket.emit(SocketCanalNames.NAME_ALREADY_EXISTS, NAME_ALREADY_EXISTS);
+                    let regularExpression = new RegExp('^[A-Za-z0-9]+$');
+                    if (regularExpression.test(demandInfo.name)) {
+                        let player = new Player(demandInfo.name, demandInfo.numberOfPlayers, socket);
+                        if (!roomHandler.hasPlayerWithNameOrSocket(player)) {
+                            roomHandler.addPlayertoARoom(player);
+                        }
+                        else {
+                            socket.emit(SocketCanalNames.NAME_OR_SOCKET_ALREADY_EXISTS);
+                        }
+                    }
+                    else {
+                        socket.emit(SocketCanalNames.INVALID_NAME);
+                    }
                 }
-            }
-            else {
-                socket.emit(SocketCanalNames.INVALID_NAME, INVALID_NAME);
-            }
+            });
         });
     }
 }

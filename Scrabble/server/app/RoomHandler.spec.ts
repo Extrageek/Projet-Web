@@ -10,11 +10,11 @@ let clientConnection2: SocketIOClient.Socket;
 let clientConnection3: SocketIOClient.Socket;
 let clientConnection4: SocketIOClient.Socket;
 let players: Player[] = new Array<Player>();
-let playerNames: string[] = ["player1", "player2", "player3", "player1"];
-let playerNumbers: number[] = [2, 2, 3, 1];
+const playerNames: string[] = ["player1", "player2", "player3", "player1"];
+const playerNumbers: number[] = [2, 2, 3, 1];
 let roomHandler: RoomHandler;
-let portNumber = 3000;
-let clientAdressConnection = "http://localhost:" + String(portNumber);
+const portNumber = 3000;
+const clientAdressConnection = "http://localhost:" + String(portNumber);
 
 let createConnectionEvent = (numberOfPlayersToConnect: number, done: MochaDone) => {
     let playerCreated = 0;
