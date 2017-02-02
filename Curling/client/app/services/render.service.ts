@@ -3,116 +3,119 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class RenderService {
-    private scene: THREE.Scene;
-    private camera: THREE.PerspectiveCamera;
-    private renderer: THREE.Renderer;
-    private geometry: THREE.Geometry;
-    private material: THREE.MeshBasicMaterial;
-    private mesh: THREE.Mesh;
+    private _scene: THREE.Scene;
+    private _camera: THREE.PerspectiveCamera;
+    private _renderer: THREE.Renderer;
+    private _geometry: THREE.Geometry;
+    //private _material: THREE.MeshBasicMaterial;
+    private _material: THREE.MeshFaceMaterial;
+    private _mesh: THREE.Mesh;
     //private controls: THREE.OrbitControls;
 
-    private useAngle: boolean;
-    //private _cam_x: number;
-    //private _cam_y: number;
-   // private _cam_z: number;
+    private _useAngle: boolean;
+    private _camX: number;
+    private _camY: number;
+    private _camZ: number;
     private _wf: boolean;
-    private clock: THREE.Clock;
-    private dt: number;
+    private _clock: THREE.Clock;
+    private _dt: number;
 
-    private font: THREE.Font;
-    private text: string;
-    private textMaterial: THREE.MultiMaterial;
-    private textGroup: THREE.Group;
-    private fontLoader: THREE.FontLoader;
-    private textMesh: THREE.Mesh;
-    private fontName: string;
+    private _font: THREE.Font;
+    private _text: string;
+    private _textMaterial: THREE.MultiMaterial;
+    private _textGroup: THREE.Group;
+    private _fontLoader: THREE.FontLoader;
+    private _textMesh: THREE.Mesh;
+    private _fontName: string;
 
-    private objectLoader: THREE.ObjectLoader;
+    private _objectLoader: THREE.ObjectLoader;
     //private bbHelper: THREE.BoxHelper;
     //private updateBbHelper: boolean;
 
-    private created : THREE.Mesh[];
+    private _created : THREE.Mesh[];
 
     //constructor() {}
 
     public init(container: HTMLElement) {
 
-        this.useAngle = false;
-        this.clock = new THREE.Clock();
+        this._useAngle = false;
+        this._clock = new THREE.Clock();
 
-        this.renderer = new THREE.WebGLRenderer({antialias: true, devicePixelRatio: window.devicePixelRatio});
-        this.renderer.setSize(window.innerWidth, window.innerHeight, true);
+        this._renderer = new THREE.WebGLRenderer({antialias: true, devicePixelRatio: window.devicePixelRatio});
+        this._renderer.setSize(window.innerWidth, window.innerHeight, true);
 
-        //this._cam_x = 0;
-        //this._cam_y = 10;
-        //this._cam_z = 25;
-        this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 100);
-        //this.camera.position.set(this._cam_x,this._cam_y,this._cam_z);
+        this._camX = 0;
+        this._camY = 10;
+        this._camZ = 50;
+        this._camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 150);
+        this._camera.position.set(this._camX, this._camY, this._camZ);
         //this.camera.rotateX(-140);
-        this.camera.rotateX(-0.5);
+        //this.camera.rotateX(-0.5);
 
-        this.scene = new THREE.Scene();
+        this._scene = new THREE.Scene();
 
-
-        this.scene.add(new THREE.AmbientLight(0x444444));
+        this._scene.add(new THREE.AmbientLight(0x444444));
         let dirLight = new THREE.DirectionalLight(0xeeeeee);
         dirLight.position.set(0, 0, 1);
         dirLight.position.normalize();
-        this.scene.add(dirLight);
+        this._scene.add(dirLight);
 
-        this.geometry = new THREE.BoxGeometry(200, 200, 200);
-        for ( let i = 0; i < this.geometry.faces.length; i += 2 ) {
-            let hex: THREE.Color = new THREE.Color();
-            hex.setRGB(Math.random(), Math.random(), Math.random());
-            this.geometry.faces[ i ].color = hex;
-            this.geometry.faces[ i + 1 ].color = hex;
-        }
+        //this._geometry = new THREE.BoxGeometry(500, 500, 500);
+        this.generateSkybox();
+        // for ( let i = 0; i < this._geometry.faces.length; i += 2 ) {
+        //     let hex: THREE.Color = new THREE.Color();
+        //     hex.setRGB(Math.random(), Math.random(), Math.random());
+        //     this._geometry.faces[ i ].color = hex;
+        //     this._geometry.faces[ i + 1 ].color = hex;
+        // }
 
         this._wf = true;
-        this.material = new THREE.MeshBasicMaterial({wireframe: this._wf, vertexColors: THREE.FaceColors});
+        //this._material = new THREE.MeshBasicMaterial({wireframe: this._wf, vertexColors: THREE.FaceColors});
 
-        this.mesh = new THREE.Mesh(this.geometry, this.material);
-        this.scene.add(this.mesh);
+        this._mesh = new THREE.Mesh(this._geometry, this._material);
+        this._scene.add(this._mesh);
 
         let x: THREE.Mesh;
         x = new THREE.Mesh(new THREE.SphereGeometry(150, 15, 15),
                             new THREE.MeshBasicMaterial({wireframe: true}));
 
         let plane: THREE.Mesh = new THREE.Mesh(
-            new THREE.CircleBufferGeometry( 1.83 , 32),
-            new THREE.MeshBasicMaterial( { color: 16711680, opacity: 1, transparent: false, wireframe: true})
+             new THREE.CircleBufferGeometry( 1.83 , 32),
+             new THREE.MeshBasicMaterial( { color: 16711680, opacity: 1, transparent: false, wireframe: true})
         );
         plane.position.x = 0;
         plane.position.z = 0;
-        plane.rotateX(Math.PI / 2);
-        this.scene.add(plane);
+        //plane.rotateX(Math.PI / 2);
+        this._scene.add(plane);
 
         // Array to hold our created objects from the factory
-        this.created = [];
+        this._created = [];
 
         // Load the font
-        this.fontLoader = new THREE.FontLoader();
-        this.textMaterial = new THREE.MultiMaterial([
+        this._fontLoader = new THREE.FontLoader();
+        this._textMaterial = new THREE.MultiMaterial([
             new THREE.MeshPhongMaterial({shading: THREE.FlatShading}), // front
             new THREE.MeshPhongMaterial({shading: THREE.SmoothShading})
             ]
         );
-        this.textGroup = new THREE.Group();
-        this.textGroup.position.y = 100;
-        this.scene.add(this.textGroup);
-        this.fontName = 'helvetiker_regular';
+        this._textGroup = new THREE.Group();
+        this._textGroup.position.y = 100;
+        this._scene.add(this._textGroup);
+        this._fontName = 'helvetiker_regular';
 
         /** Load Teapot */
-        this.objectLoader = new THREE.ObjectLoader();
+        this._objectLoader = new THREE.ObjectLoader();
         this.loadRink();
         this.loadStoneRed();
+        this.loadStoneBlue();
+        //this.generateSkybox();
 
         // Inser the canvas into the DOM
         //var container = document.getElementById("glContainer");
         if (container.getElementsByTagName('canvas').length === 0) {
-            container.appendChild(this.renderer.domElement);
+            container.appendChild(this._renderer.domElement);
         }
-        this.clock.start();
+        this._clock.start();
         this.animate();
 
         // bind to window resizes
@@ -122,14 +125,14 @@ export class RenderService {
 
      animate(): void {
         window.requestAnimationFrame(_ => this.animate());
-        this.dt = this.clock.getDelta();
+        this._dt = this._clock.getDelta();
 
-        this.avancer(this.dt);
+        this.avancer(this._dt);
 
         //this.mesh.rotation.y += 0.01;
-        let tp: THREE.Object3D = this.scene.getObjectByName('Teapot001');
+        let tp: THREE.Object3D = this._scene.getObjectByName('Teapot001');
         if (tp !== undefined) {
-            (tp as THREE.Mesh).rotateZ(this.dt);
+            (tp as THREE.Mesh).rotateZ(this._dt);
         }
         this.render();
 
@@ -140,20 +143,20 @@ export class RenderService {
         let newWidth: number = window.innerWidth * factor;
         let newHeight: number = window.innerHeight * factor;
 
-        this.camera.aspect = newWidth / newHeight;
-        this.camera.updateProjectionMatrix();
+        this._camera.aspect = newWidth / newHeight;
+        this._camera.updateProjectionMatrix();
 
-        this.renderer.setSize(newWidth, newHeight);
+        this._renderer.setSize(newWidth, newHeight);
     }
 
     render(): void {
-        this.renderer.render(this.scene, this.camera);
+        this._renderer.render(this._scene, this._camera);
     }
 
     toggleWireFrame(): void {
         this._wf = !this._wf;
-        this.material.wireframe = this._wf;
-        this.material.needsUpdate = true;
+        this._material.wireframe = this._wf;
+        this._material.needsUpdate = true;
     }
 
     avancer(deltaT: number): void {
@@ -164,22 +167,22 @@ export class RenderService {
         const width = window.innerWidth;
         const height = window.innerHeight;
 
-        this.camera.aspect = width / height;
-        this.camera.updateProjectionMatrix();
+        this._camera.aspect = width / height;
+        this._camera.updateProjectionMatrix();
 
-        this.renderer.setSize(width, height);
+        this._renderer.setSize(width, height);
     }
 
     /* This version loads the font each time, not efficient ! */
     slowCreateText() {
         console.log(this);
-        this.fontLoader.load('/assets/fonts/helvetiker_regular.typeface.json', r => {
-            this.scene.remove(this.textGroup);
-            this.textGroup.remove(this.textMesh);
-            this.font = new THREE.Font(r);
+        this._fontLoader.load('/assets/fonts/helvetiker_regular.typeface.json', r => {
+            this._scene.remove(this._textGroup);
+            this._textGroup.remove(this._textMesh);
+            this._font = new THREE.Font(r);
             let f = Object(r);
 
-            let textGeo: THREE.TextGeometry = new THREE.TextGeometry( this.text, {
+            let textGeo: THREE.TextGeometry = new THREE.TextGeometry( this._text, {
                 font: f as THREE.Font,
                 size: 20,
                 height: 20,
@@ -192,14 +195,14 @@ export class RenderService {
             textGeo.computeVertexNormals();
 
             let centerOffset = -0.5 * ( textGeo.boundingBox.max.x - textGeo.boundingBox.min.x );
-            this.textMesh = new THREE.Mesh( textGeo, this.textMaterial );
-            this.textMesh.position.x = centerOffset;
-            this.textMesh.position.y = 50;
-            this.textMesh.position.z = 0;
-            this.textMesh.rotation.x = 0;
-            this.textMesh.rotation.y = Math.PI * 2;
-            this.textGroup.add( this.textMesh );
-            this.scene.add(this.textGroup);
+            this._textMesh = new THREE.Mesh( textGeo, this._textMaterial );
+            this._textMesh.position.x = centerOffset;
+            this._textMesh.position.y = 50;
+            this._textMesh.position.z = 0;
+            this._textMesh.rotation.x = 0;
+            this._textMesh.rotation.y = Math.PI * 2;
+            this._textGroup.add( this._textMesh );
+            this._scene.add(this._textGroup);
         });
     }
 
@@ -208,7 +211,7 @@ export class RenderService {
     }
 
     public setText(newText: string): void {
-        this.text = newText;
+        this._text = newText;
         this.refreshText();
     }
 
@@ -217,23 +220,23 @@ export class RenderService {
     }
 
     public translateMesh(x: number, y: number): void {
-        //console.log(this);
-        this.mesh.position.x += x;
-        this.mesh.position.y += y;
+        print();
+        this._mesh.position.x += x;
+        this._mesh.position.y += y;
     }
 
     public translateCamera(x: number, y: number, z: number): void {
-        this.camera.position.x += x === undefined ? 0 : x ;
-        this.camera.position.y += y === undefined ? 0 : y ;
-        this.camera.position.z += z === undefined ? 0 : z ;
-        this.camera.updateProjectionMatrix();
+        this._camera.position.x += x === undefined ? 0 : x ;
+        this._camera.position.y += y === undefined ? 0 : y ;
+        this._camera.position.z += z === undefined ? 0 : z ;
+        this._camera.updateProjectionMatrix();
     }
 
     public loadStoneRed(): void {
-        this.objectLoader.load('/assets/models/json/curling-stone-red.json', obj => {
+        this._objectLoader.load('/assets/models/json/curling-stone-red.json', obj => {
             obj.position.set(0, 0, 0);
             obj.scale.set(1, 1, 1);
-            this.mesh.add(obj);
+            this._mesh.add(obj);
             (obj as THREE.Mesh).material = new THREE.MeshPhongMaterial({
                 wireframe: false,
                 shininess: 0.2,
@@ -242,10 +245,10 @@ export class RenderService {
     }
 
     public loadStoneBlue(): void {
-        this.objectLoader.load('/assets/models/json/curling-stone-blue.json', obj => {
+        this._objectLoader.load('/assets/models/json/curling-stone-blue.json', obj => {
             obj.position.set(0, 0, 0);
             obj.scale.set(1, 1, 1);
-            this.mesh.add(obj);
+            this._mesh.add(obj);
             (obj as THREE.Mesh).material = new THREE.MeshPhongMaterial({
                 wireframe: false,
                 shininess: 0.2,
@@ -254,10 +257,10 @@ export class RenderService {
     }
 
      public loadRink(): void {
-        this.objectLoader.load('/assets/models/json/curling-rink.json', obj => {
+        this._objectLoader.load('/assets/models/json/curling-rink.json', obj => {
             obj.position.set(0, 0, 0);
             obj.scale.set(1, 1, 1);
-            this.mesh.add(obj);
+            this._mesh.add(obj);
             (obj as THREE.Mesh).material = new THREE.MeshPhongMaterial({
                 wireframe: false,
                 shininess: 0.2,
@@ -265,8 +268,26 @@ export class RenderService {
         });
     }
 
-    public newTeapot(): void{
-        this.loadStoneBlue();
-        this.loadRink();
+    /**
+     * See : http://danni-three.blogspot.ca/2013/09/threejs-skybox.html
+     */
+    public generateSkybox(): void{
+        let imagePrefix = "../../assets/images/frozen_";
+        let directions = ["rt", "lf", "up", "dn", "ft", "bk"];
+        let imageSuffix = ".jpg";
+        let materialArray = [];
+        for (let i = 0; i < 6; i++) {
+            materialArray.push( new THREE.MeshBasicMaterial({
+            map: THREE.ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
+            side: THREE.BackSide
+            }));
+        }
+        //let skyGeometry = new THREE.CubeGeometry( 500, 500, 500 );
+        this._geometry = new THREE.CubeGeometry( 200, 200, 200);
+        //let skyMaterial = new THREE.MeshFaceMaterial( materialArray );
+        this._material = new THREE.MeshFaceMaterial( materialArray );
+        let skyBox = new THREE.Mesh( this._geometry, this._material );
+        //skyBox.rotation.x += Math.PI / 2;
+        this._scene.add( skyBox );
     }
 }

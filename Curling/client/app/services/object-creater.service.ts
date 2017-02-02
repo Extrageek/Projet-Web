@@ -24,13 +24,14 @@ export class ObjectCreaterService {
     }
 
     /**
-     * createTeapot
+     * createArena
      */
-    public createTeapot(): Promise<THREE.Object3D> {
+    public createArena(): Promise<THREE.Object3D> {
         return new Promise<THREE.Mesh>((resolve, error) => {
-            this.objectLoader.load('/assets/models/json/curling-stone-red.json', obj => {
+            //this.objectLoader.load('/assets/models/json/curling-stone-red.json', obj => {
+            this.objectLoader.load('/assets/models/json/curling-rink.json', obj => {
                 if (obj === undefined){
-                    error("Unable to load teapot");
+                    error("Unable to load curling rink");
                 } else {
                     this.addAttributes(obj);
                     this.initAttributes(obj);
