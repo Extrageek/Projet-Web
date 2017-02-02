@@ -13,19 +13,29 @@ import { RestApiProxyService } from '../services/rest-api-proxy.service';
 })
 export class DisplayComponent implements OnInit {
     @Input() _userSetting: UserSetting;
-    _gameStatus: GameStatus;
+    @Input() _gameStatus: GameStatus;
     _computerName: string;
 
     constructor (private restApiProxyService : RestApiProxyService) {}
 
     ngOnInit() {
         this._gameStatus = new GameStatus();
-
         let hamburger = document.querySelector(".hamburger");
-        let menu = document.querySelector(".overlay");
+        let overlay = document.querySelector(".overlay");
+
         hamburger.addEventListener("click", () => {
             hamburger.classList.toggle("is-active");
-            menu.classList.toggle("is-open-menu");
+            overlay.classList.toggle("is-open-menu");
+        });
+
+        window.addEventListener("launchGame", () => {
+            this._gameStatus.launchGame();
+        });
+
+        window.addEventListener("beforeunload", () => {
+            if (this._gameStatus._isLaunched === true){
+                this.restApiProxyService.createGameRecord(this._userSetting, this._gameStatus);
+            }
         });
     }
 

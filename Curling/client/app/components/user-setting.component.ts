@@ -48,14 +48,13 @@ export class UserSettingComponent implements OnInit {
     }
 
     public goToLeaderBoard() {
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/leaderboard']);
     }
 
     public launchGame() {
         document.querySelector("user-component").classList.add("hidden");
         document.querySelector("display-component").classList.remove("hidden");
-        // creer une partie et sauvegarder dans la db
-        //this.restApiProxyService.launchGame();
+        dispatchEvent(new Event("launchGame"));
     }
 
     public closeAlert(){

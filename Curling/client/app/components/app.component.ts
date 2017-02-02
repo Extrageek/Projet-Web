@@ -3,8 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { GameStatus } from '../models/game-status';
 import { UserSetting } from '../models/user-setting';
 
-import { RestApiProxyService } from '../services/rest-api-proxy.service';
-
 @Component({
     moduleId: module.id,
     selector: 'mon-app',
@@ -16,14 +14,14 @@ export class AppComponent implements OnInit {
     _gameStatus: GameStatus;
     _userSetting: UserSetting;
 
-    constructor (private restApiProxyService : RestApiProxyService) {}
-
+/**
+ *
+ */
+constructor() {
+   // TODO
+}
     ngOnInit() {
-        this._gameStatus = new GameStatus();
         this._userSetting = new UserSetting();
         document.querySelector("display-component").classList.add("hidden");
-        window.addEventListener("beforeunload", () => {
-            this.restApiProxyService.createGameRecord(this._userSetting, this._gameStatus);
-        });
     }
 }

@@ -6,10 +6,10 @@ import { RestApiProxyService } from '../services/rest-api-proxy.service';
 import { Record } from '../models/record';
 
 @Component({
-  selector: 'dashboard-component',
-  templateUrl: '../../assets/templates/dashboard-component.html'
+  selector: 'leaderboard-component',
+  templateUrl: '../../assets/templates/leaderboard-component.html'
 })
-export class DashboardComponent implements OnInit {
+export class LeaderboardComponent implements OnInit {
     private _records: Array<Record>;
 
     public constructor( private router: Router,

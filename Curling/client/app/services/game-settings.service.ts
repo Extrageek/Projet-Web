@@ -1,3 +1,6 @@
+import { Injectable } from '@angular/core';
+
+@Injectable()
 export class GameSettingsService {
     private _isFirstPlayer: boolean;
 
@@ -6,7 +9,14 @@ export class GameSettingsService {
     }
 
     private randomFirstPlayer(): void {
-        this._isFirstPlayer = Math.random() >= 0.5;
+        let qlq = Math.round(Math.random() * 100) % 2;
+        console.log("HASARD ", qlq);
+        if (qlq === 0){
+            this._isFirstPlayer = true;
+        }
+        else{
+            this._isFirstPlayer = false;
+        }
     }
 
     public getIsFirstPlayer(): boolean {

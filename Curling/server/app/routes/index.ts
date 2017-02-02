@@ -22,6 +22,7 @@ module Route {
                 }
             }).catch(error => {
                 console.log("--- ERROR ---", error);
+                res.sendStatus(HttpStatus.ERROR);
             });
         } catch (error) {
             res.sendStatus(HttpStatus.ERROR);

@@ -7,7 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from '../components/app.component';
 import { GlComponent } from '../components/gl.component';
-import { DashboardComponent } from '../components/dashboard.component';
+import { LeaderboardComponent } from '../components/leaderboard.component';
 import { UserSettingComponent } from '../components/user-setting.component';
 import { DisplayComponent } from '../components/display.component';
 
@@ -18,7 +18,7 @@ import { RestApiProxyService } from '../services/rest-api-proxy.service';
 
 @NgModule({
   imports: [ BrowserModule, FormsModule, AppRoutingModule, MaterialModule.forRoot()],
-  declarations: [ AppComponent, GlComponent, DashboardComponent, ModifierDirective,
+  declarations: [ AppComponent, GlComponent, LeaderboardComponent, ModifierDirective,
                   UserSettingComponent, DisplayComponent],
   providers: [ RenderService, RestApiProxyService ],
   bootstrap: [ AppComponent ]
