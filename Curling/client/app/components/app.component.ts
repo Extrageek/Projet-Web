@@ -22,9 +22,8 @@ export class AppComponent implements OnInit {
         this._gameStatus = new GameStatus();
         this._userSetting = new UserSetting();
         document.querySelector("display-component").classList.add("hidden");
-    }
-
-    public onWindowClosure(): void {
-        //window.onbeforeunload = this.restApiProxyService.createGameRecord(this._userSetting, this._gameStatus);
+        window.addEventListener("beforeunload", () => {
+            this.restApiProxyService.createGameRecord(this._userSetting, this._gameStatus);
+        });
     }
 }

@@ -2,7 +2,7 @@ import * as express from 'express';
 
 var MongoClient = require('mongodb').MongoClient;
 
-let url: string = 'mongodb://curling23:log2990-23@ds117859.mlab.com:17859/curling';
+let url = 'mongodb://curling23:log2990-23@ds117859.mlab.com:17859/curling';
 
 export class DatabaseManager {
 
@@ -11,19 +11,22 @@ export class DatabaseManager {
             return false;
         }
         else {
+            console.log("-- DatabaseManager addUser --");
             let db = await MongoClient.connect(url);
-            let isInserted: boolean = false;
+            let isInserted = false;
             try {
                 let collection = db.collection('username');
                 (await collection.insertOne(body).then((result: any) => {
                     if (result.insertedCount === 1) {
                         isInserted = true;
+                        console.log("-- user inserted --");
                     }
                 }));
             } finally {
                 db.close();
-                return isInserted;
             }
+            console.log("-- isInserted ", isInserted);
+            return isInserted;
         }
     };
 
@@ -36,8 +39,8 @@ export class DatabaseManager {
                 docs = (await collection.find().toArray());
             } finally {
                 db.close();
-                return docs;
             }
+            return docs;
         } catch (error) {
             console.log('ERROR - connexion a la db. - DatabaseManager getAllRecords');
             return null;
@@ -45,23 +48,18 @@ export class DatabaseManager {
     }
 
     static async saveGameRecord(body: any): Promise<boolean> {
-        let isInserted: boolean = false;
-        if (body.username === '') {
-            return isInserted;
+        let isInserted = false;
+        let db = await MongoClient.connect(url);
+        try {
+            let collection = db.collection('leaderboard');
+            (await collection.insertOne(body).then((result: any) => {
+                if (result.insertedCount === 1) {
+                    isInserted = true;
+                }
+            }));
+        } finally {
+            db.close();
         }
-        else {
-            let db = await MongoClient.connect(url);
-            try {
-                let collection = db.collection('username');
-                (await collection.insertOne(body).then((result: any) => {
-                    if (result.insertedCount === 1) {
-                        isInserted = true;
-                    }
-                }));
-            } finally {
-                db.close();
-                return isInserted;
-            }
-        }
+        return isInserted;
     };
 }

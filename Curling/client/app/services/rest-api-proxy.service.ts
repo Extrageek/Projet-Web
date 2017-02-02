@@ -13,10 +13,10 @@ export class RestApiProxyService {
     private _urlAddUser = "http://localhost:3003/api/";
     private _headers = new Headers({'Content-Type' : "application/json"});
 
-    constructor(private http : Http) {
-     }
+    constructor(private http : Http) {}
 
     public async createGameRecord(userSetting: UserSetting, gameStatus: GameStatus): Promise<any>{
+        console.log("-- API createGameRecord --");
         return await this.http
         .post(this._urlAddUser + "game-over", JSON.stringify({
                 username : userSetting._name,
@@ -24,6 +24,7 @@ export class RestApiProxyService {
                 scorePlayer : gameStatus._scorePlayer,
                 scoreComputer : gameStatus._scoreComputer,
                 set : gameStatus._currentSet,
+                date: new Date()
             }), {headers: this._headers})
         .toPromise()
         .then(response => {
@@ -56,12 +57,6 @@ export class RestApiProxyService {
         .catch(error => {
             return false;
         });
-    }
-
-    public launchGame(){
-        this.http
-        .get("/game")
-        .catch(this.handleError);
     }
 
     public async getAllRecords(): Promise<Array<Record>> {
