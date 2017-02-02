@@ -14,17 +14,17 @@ module Route {
         try {
             await DatabaseManager.addUser(req.body)
             .then(response => {
-                if(response === true){
+                if (response === true){
                     res.sendStatus(HttpStatus.SUCCESS);
                 }
                 else{
                     res.sendStatus(HttpStatus.ERROR);
                 }
             }).catch(error => {
-                console.log("--- ERROR ---", error)
-            }); 
+                console.log("--- ERROR ---", error);
+            });
         } catch (error) {
-            res.sendStatus(HttpStatus.ERROR);   
+            res.sendStatus(HttpStatus.ERROR);
         }
     }
 
@@ -33,7 +33,8 @@ module Route {
             let records: Array<any> = await DatabaseManager.getAllRecords();
             res.status(records === null ? HttpStatus.ERROR : HttpStatus.SUCCESS).send(records);
         } catch (error) {
-            res.status(HttpStatus.ERROR).send([{"error" : "Une erreur est survenue lors de la connexion a la base de donnees. (getAllRecords)"}]);   
+            res.status(HttpStatus.ERROR)
+            .send([{"error" : "Une erreur est survenue lors de la connexion a la base de donnees. (getAllRecords)"}]);
         }
     }
 
@@ -42,7 +43,7 @@ module Route {
             console.log("-- INDEX saveGameRecord --");
             await DatabaseManager.saveGameRecord(req.body)
             .then(response => {
-                if(response === true){
+                if (response === true){
                     console.log("-- INDEX saveGameRecord retour succes --");
                     res.sendStatus(HttpStatus.SUCCESS);
                 }
@@ -51,10 +52,10 @@ module Route {
                     res.sendStatus(HttpStatus.ERROR);
                 }
             }).catch(error => {
-                console.log("--- ERROR ---", error)
-            }); 
+                console.log("--- ERROR ---", error);
+            });
         } catch (error) {
-            res.sendStatus(HttpStatus.ERROR);   
+            res.sendStatus(HttpStatus.ERROR);
         }
     }
 

@@ -1,6 +1,6 @@
-import * as express from 'express';
+//import * as express from 'express';
 
-var MongoClient = require('mongodb').MongoClient;
+let MongoClient = require('mongodb').MongoClient;
 
 let url = 'mongodb://curling23:log2990-23@ds117859.mlab.com:17859/curling';
 
@@ -28,7 +28,7 @@ export class DatabaseManager {
             console.log("-- isInserted ", isInserted);
             return isInserted;
         }
-    };
+    }
 
     static async getAllRecords(): Promise<Array<any>> {
         try {
@@ -61,5 +61,5 @@ export class DatabaseManager {
             db.close();
         }
         return isInserted;
-    };
+    }
 }
