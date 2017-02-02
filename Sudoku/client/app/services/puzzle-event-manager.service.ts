@@ -26,12 +26,12 @@ export class PuzzleEventManagerService {
 
     _newPositionX = 0;
     _newPositionY = 0;
-    _nextInputPositionYX : string;
+    _nextInputPositionYX: string;
     _newInputId = "";
 
     constructor(private puzzleManagerService: GridManagerService) {
         // Default constructor
-     }
+    }
 
     /**
      * The isDirection function, check if the keypress source is one of the Left/Right/Up/Down arrow keycode.
@@ -40,19 +40,19 @@ export class PuzzleEventManagerService {
      * @method isDeleteKey
      * @return true for a delete keypress
      */
-    isDirection (keyCode: number): boolean {
+    isDirection(keyCode: number): boolean {
         // If code of the key is an arrow (left/right/up/downArrowKeyCode)
         return 37 <= keyCode && keyCode <= 40;
     }
 
-     /**
-     * The isDeleteKey function, check if the keypress source is a delete button.
-     *
-     * @class PuzzleEventManagerService
-     * @method isDeleteKey
-     * @return true for a delete keypress
-     */
-    isDeleteKey (keyCode: number): boolean {
+    /**
+    * The isDeleteKey function, check if the keypress source is a delete button.
+    *
+    * @class PuzzleEventManagerService
+    * @method isDeleteKey
+    * @return true for a delete keypress
+    */
+    isDeleteKey(keyCode: number): boolean {
         return (keyCode === PuzzleCommon.deleteKeyCode);
     }
 
@@ -63,7 +63,7 @@ export class PuzzleEventManagerService {
      * @method isDeleteKey
      * @return true for a valid number for the puzzle
      */
-    isSudokuNumber (keyCode: number): boolean {
+    isSudokuNumber(keyCode: number): boolean {
         return PuzzleCommon.oneKey <= keyCode && keyCode <= PuzzleCommon.nineKey;
     }
 
@@ -81,17 +81,15 @@ export class PuzzleEventManagerService {
             this.updateFocus(currentPositionXY, keyCode);
         } else if (this.isDeleteKey(keyCode)) {
             this.deleteCellContent(currentPositionXY);
-        } else if (this.isSudokuNumber(keyCode)) {
-            // TODO: finish implementation
         }
     }
 
-     /**
-     * The updateFocus function, update the cursor in the correct input box according to the keyCode.
-     *
-     * @class PuzzleEventManagerService
-     * @method updateFocus
-     */
+    /**
+    * The updateFocus function, update the cursor in the correct input box according to the keyCode.
+    *
+    * @class PuzzleEventManagerService
+    * @method updateFocus
+    */
     updateFocus(currentPositionXY: string[], keyCode: number): void {
         // Reads next direction of arrow keys and decide if it warps to the other end
         // or if it goes to the next cell
@@ -107,13 +105,14 @@ export class PuzzleEventManagerService {
                 this.jumpToNextLeftOrRightEmptyCell(currentPositionXY, ArrayDirection.LEFT);
                 break;
             case PuzzleCommon.rightArrowKeyCode:
-                 this.jumpToNextLeftOrRightEmptyCell(currentPositionXY, ArrayDirection.RIGHT);
+                this.jumpToNextLeftOrRightEmptyCell(currentPositionXY, ArrayDirection.RIGHT);
                 break;
             default:
                 break;
         }
 
-        // Give the focus to next cell.
+        // Calculate and give the focus to next cell.
+        this._newInputId = INPUT_ID_PREFIX + this._nextInputPositionYX;
         jQuery(this._newInputId).focus();
     }
 
@@ -134,13 +133,11 @@ export class PuzzleEventManagerService {
                 ? PuzzleCommon.minColumnIndex : newPosition;
         }
 
-
-            this._nextInputPositionYX = [
-                    currentPositionXY[PuzzleCommon.yPosition],
-                    this._newPositionY.toString()
-                ].join('');
-
-            this._newInputId = INPUT_ID_PREFIX + this._nextInputPositionYX;
+        this._nextInputPositionYX = [
+            currentPositionXY[PuzzleCommon.yPosition],
+            this._newPositionY.toString()
+        ]
+            .join('');
     }
 
     // On Up/Down Arrow key press, jump to the next Up/Down empty cell, according to the direction.
@@ -159,26 +156,21 @@ export class PuzzleEventManagerService {
             this._newPositionX = (newPositionIndex > PuzzleCommon.maxColumnIndex)
                 ? PuzzleCommon.minColumnIndex : newPositionIndex;
         }
-
         this._nextInputPositionYX = [
             this._newPositionX.toString(),
             currentPositionXY[PuzzleCommon.xPosition]
-            ].join('');
-
-            this._newInputId = INPUT_ID_PREFIX + this._nextInputPositionYX;
+        ].join('');
     }
 
-     /**
-     * The deleteCellContent function, delete the value in the selected cell of the grid.
-     *
-     * @class PuzzleEventManagerService
-     * @method deleteCellContent
-     */
+    /**
+    * The deleteCellContent function, delete the value in the selected cell of the grid.
+    *
+    * @class PuzzleEventManagerService
+    * @method deleteCellContent
+    */
     deleteCellContent(currentPositionXY: string[]): void {
         // Get the id of the current input id and delete it value
-        console.log("deleteCellContent");
         let inputId = INPUT_ID_PREFIX + currentPositionXY.join('');
         jQuery(inputId).val("");
-        jQuery(inputId).css("background-color", "");
     }
 }

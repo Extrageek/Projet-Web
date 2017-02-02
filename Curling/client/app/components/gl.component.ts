@@ -39,41 +39,6 @@ export class GlComponent implements OnInit{
         this.renderService.translateCamera(0, 0, this.zCamera);
     }
 
-    private newTeapot(): void{
-        for (let i = 0; i < 1; ++i) {
-            this.renderService.newTeapot();
-        }
-        console.log('cyclomatic');
-    }
-
-    private trigger(): string{
-        /*
-        let x;
-        if (Math.random()) {
-            x = function*(){ let a = yield Math.random(); };
-        }
-        if (x) {
-            let _new = x();
-            let r = _new.next();
-            console.log(r);
-        }
-        else {
-            x = function(){return 'À traduire'; };
-            console.log(x());
-        }
-        for (let i = 0; i < 42; ++i){
-            try {
-                let y = 1 / Math.random();
-            } catch (e) {
-                console.log(e);
-                return 'Catched';
-            }
-        }
-        return 'Will I be returned?';
-        */
-    return null;
-    }
-
    public showNotImplemented(): void {
        this.snackbar.open('Sorry, this is not implemented yet. Would you do it for me? :)', 'Yes');
    }

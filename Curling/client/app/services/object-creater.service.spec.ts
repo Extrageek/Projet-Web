@@ -12,7 +12,7 @@ describe('ObjectCreaterService', function () {
     });
 
     it('should return a valid Object3D', done => {
-        service.createTeapot()
+        service.createArena()
                 .then(obj => {expect(obj).to.not.be.undefined.and.to.be.a('Object3D');
                 })
                 .catch(x => {assert.fail(x);
@@ -22,7 +22,7 @@ describe('ObjectCreaterService', function () {
     });
 
     it('should return the first teapot with a number 0', done => {
-        service.createTeapot()
+        service.createArena()
                 .then(obj => {
                     const regex = new RegExp(/^[a-zA-z]*(\d+)$/, "gi");
                     if (obj.name.search(regex) === -1){
@@ -45,7 +45,7 @@ describe('ObjectCreaterService', function () {
     });
 
     it('should return a teapot with a scale of 1', done => {
-        service.createTeapot()
+        service.createArena()
                 .then(obj => {
                     let expectedVector = new THREE.Vector3(1, 1, 1);
                     expect(obj.scale.clone()).to.deep.equal(expectedVector);
@@ -57,7 +57,7 @@ describe('ObjectCreaterService', function () {
     });
 
     it('should return a teapot with all user attributes', done => {
-        service.createTeapot()
+        service.createArena()
                 .then(obj => {
                     let nVec = new THREE.Vector3(0, 0, 0);
                     expect(obj.userData).to.have.property('vie');
