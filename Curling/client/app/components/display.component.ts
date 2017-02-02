@@ -38,7 +38,6 @@ export class DisplayComponent implements OnInit {
     }
 
     public gameOver(){
-        console.log("abandon ok");
-        //this.restApiProxyService.createGameRecord(this._userSetting, this._gameStatus);
+        this.restApiProxyService.createGameRecord(this._userSetting, this._gameStatus);
     }
 }

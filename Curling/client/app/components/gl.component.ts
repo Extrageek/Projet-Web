@@ -26,18 +26,17 @@ export class GlComponent implements OnInit{
         private snackbar: MdSnackBar
     ){}
 
-    private displaceX():void{
-        this.renderService.translateMesh(this.xmodel,0);
-    }
+    // private displaceX(): void{
+    //     this.renderService.translateMesh(this.xmodel, 0);
+    // }
 
-    private displaceY(): void{
-        this.renderService.translateMesh(0, this.ymodel);
-    }
+    // private displaceY(): void{
+    //     this.renderService.translateMesh(0, this.ymodel);
+    // }
 
-    private displaceCameraZ(): void{
-        console.log(this.zCamera);
-        this.renderService.translateCamera(0, 0, this.zCamera);
-    }
+    // private displaceCameraZ(): void{
+    //     this.renderService.translateCamera(0, 0, this.zCamera);
+    // }
 
    public showNotImplemented(): void {
        this.snackbar.open('Sorry, this is not implemented yet. Would you do it for me? :)', 'Yes');

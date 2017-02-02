@@ -101,14 +101,9 @@
 
 <!-- The overlay -->
 <div id="myNav" class="overlay">
-
-    <!-- Button to close the overlay navigation -->
-    <!--<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>-->
-
-    <!-- Overlay content -->
     <div class="overlay-content">
         <p (click)="gameOver()"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Abandonner</p>
-        <p><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span> Recommencer</p>
+        <p (click)="_gameStatus.resetGameStatus()"><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span> Recommencer</p>
     </div>
 
 </div>

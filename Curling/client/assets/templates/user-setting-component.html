@@ -4,7 +4,7 @@
             <button type="button" class="close" (click)="closeAlert()" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <strong>Pseudonyme invalide.</strong> Pas de chance, il a déjà été pris. Essayez-en un autre!
+            <strong>Pseudonyme déjà existant.</strong> Essayez-en un autre!
         </div>
         <input id="loginInput" (change)="activateLoginNext()" class="shake" type='text' placeholder='Entrer votre pseudo...' 
             [(ngModel)]="_userSetting._name" [ngModelOptions]="{standalone: true}" />

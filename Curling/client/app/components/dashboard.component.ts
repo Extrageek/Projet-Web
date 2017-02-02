@@ -32,7 +32,7 @@ export class DashboardComponent implements OnInit {
     }
 
     public async fetchRecords(): Promise<void>{
-        await this.restApi.getAllRecords().then(results =>{
+        await this.restApi.getAllRecords().then(results => {
             this._records = results;
         });
     }

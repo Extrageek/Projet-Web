@@ -72,8 +72,8 @@ export class RenderService {
         this._wf = true;
         //this._material = new THREE.MeshBasicMaterial({wireframe: this._wf, vertexColors: THREE.FaceColors});
 
-        this._mesh = new THREE.Mesh(this._geometry, this._material);
-        this._scene.add(this._mesh);
+        this._mesh = new THREE.Mesh( this._geometry, this._material );
+        this._scene.add( this._mesh );
 
         let x: THREE.Mesh;
         x = new THREE.Mesh(new THREE.SphereGeometry(150, 15, 15),
@@ -153,11 +153,11 @@ export class RenderService {
         this._renderer.render(this._scene, this._camera);
     }
 
-    toggleWireFrame(): void {
-        this._wf = !this._wf;
-        this._material.wireframe = this._wf;
-        this._material.needsUpdate = true;
-    }
+    // toggleWireFrame(): void {
+    //     this._wf = !this._wf;
+    //     this._material.wireframe = this._wf;
+    //     this._material.needsUpdate = true;
+    // }
 
     avancer(deltaT: number): void {
         //deltaT = deltaT + 1;
