@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-//import { ObjectCreaterService } from './object-creater.service';
+import { GameSettingsService } from './game-settings.service';
 
 @Injectable()
 export class RenderService {
+    private _gameSettings: GameSettingsService;
+
     private _scene: THREE.Scene;
     private _camera: THREE.PerspectiveCamera;
     private _renderer: THREE.Renderer;
@@ -34,10 +36,52 @@ export class RenderService {
 
     private _created : THREE.Mesh[];
 
-    //constructor() {}
+    constructor() {
+        this._scene = new THREE.Scene();
+        this._wf = true;
+         // Array to hold our created objects from the factory
+        this._created = [];
+        this._objectLoader = new THREE.ObjectLoader();
+        this._gameSettings = new GameSettingsService();
+    }
 
     public init(container: HTMLElement) {
+        //Part 1: Camera
+        this.setUpCamera();
+        this.initializePlane();
 
+        //Part 2: Scenery
+        this.setUpLightning(); //Because lighting is everything
+        this.generateSkybox();
+
+        //Part 3: Components
+        this.loadFont();
+        this.loadRink();
+        //if (this._gameSettings.getIsFirstPlayer() === true) {
+            this.loadStoneRed();
+        //} else {
+        //    this.loadStoneBlue();
+        //}
+
+        //Part 4: Service
+        this.linkRenderServerToCanvas(container);
+
+        //Part 5: Events
+        // bind to window resizes
+        window.addEventListener('resize', _ => this.onResize());
+    }
+
+    public linkRenderServerToCanvas(container: HTMLElement): void{
+        // Inser the canvas into the DOM
+        //var container = document.getElementById("glContainer");
+        if (container.getElementsByTagName('canvas').length === 0) {
+            container.appendChild(this._renderer.domElement);
+        }
+        this._clock.start();
+        this.animate();
+        }
+
+    public setUpCamera(): void {
         this._useAngle = false;
         this._clock = new THREE.Clock();
 
@@ -49,49 +93,53 @@ export class RenderService {
         this._camZ = 50;
         this._camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 150);
         this._camera.position.set(this._camX, this._camY, this._camZ);
-        //this.camera.rotateX(-140);
-        //this.camera.rotateX(-0.5);
+    }
 
-        this._scene = new THREE.Scene();
+    public initializePlane(): void {
+        let x: THREE.Mesh;
+        x = new THREE.Mesh(new THREE.SphereGeometry(150, 15, 15),
+                           new THREE.MeshBasicMaterial({wireframe: true}));
 
+        let plane: THREE.Mesh = new THREE.Mesh(
+        new THREE.CircleBufferGeometry( 1.83 , 32),
+            new THREE.MeshBasicMaterial( { color: 16711680, opacity: 1, transparent: false, wireframe: true})
+         );
+        plane.position.x = 0;
+        plane.position.z = 0;
+
+        this._scene.add(plane);
+    }
+
+    public setUpLightning(): void {
         this._scene.add(new THREE.AmbientLight(0x444444));
         let dirLight = new THREE.DirectionalLight(0xeeeeee);
         dirLight.position.set(0, 0, 1);
         dirLight.position.normalize();
         this._scene.add(dirLight);
+    }
 
-        //this._geometry = new THREE.BoxGeometry(500, 500, 500);
-        this.generateSkybox();
-        // for ( let i = 0; i < this._geometry.faces.length; i += 2 ) {
-        //     let hex: THREE.Color = new THREE.Color();
-        //     hex.setRGB(Math.random(), Math.random(), Math.random());
-        //     this._geometry.faces[ i ].color = hex;
-        //     this._geometry.faces[ i + 1 ].color = hex;
-        // }
-
-        this._wf = true;
-        //this._material = new THREE.MeshBasicMaterial({wireframe: this._wf, vertexColors: THREE.FaceColors});
-
+     /**
+     * See : http://danni-three.blogspot.ca/2013/09/threejs-skybox.html
+     */
+    public generateSkybox(): void{
+        let imagePrefix = "../../assets/images/frozen_";
+        let directions = ["rt", "lf", "up", "dn", "ft", "bk"];
+        let imageSuffix = ".jpg";
+        let materialArray = [];
+        for (let i = 0; i < 6; i++) {
+            materialArray.push( new THREE.MeshBasicMaterial({
+            map: THREE.ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
+            side: THREE.BackSide
+            }));
+        }
+        this._geometry = new THREE.CubeGeometry( 200, 200, 200);
+        this._material = new THREE.MeshFaceMaterial( materialArray );
         this._mesh = new THREE.Mesh( this._geometry, this._material );
         this._scene.add( this._mesh );
+    }
 
-        let x: THREE.Mesh;
-        x = new THREE.Mesh(new THREE.SphereGeometry(150, 15, 15),
-                            new THREE.MeshBasicMaterial({wireframe: true}));
-
-        let plane: THREE.Mesh = new THREE.Mesh(
-             new THREE.CircleBufferGeometry( 1.83 , 32),
-             new THREE.MeshBasicMaterial( { color: 16711680, opacity: 1, transparent: false, wireframe: true})
-        );
-        plane.position.x = 0;
-        plane.position.z = 0;
-        //plane.rotateX(Math.PI / 2);
-        this._scene.add(plane);
-
-        // Array to hold our created objects from the factory
-        this._created = [];
-
-        // Load the font
+    // Load the font
+    public loadFont(): void{
         this._fontLoader = new THREE.FontLoader();
         this._textMaterial = new THREE.MultiMaterial([
             new THREE.MeshPhongMaterial({shading: THREE.FlatShading}), // front
@@ -102,25 +150,42 @@ export class RenderService {
         this._textGroup.position.y = 100;
         this._scene.add(this._textGroup);
         this._fontName = 'helvetiker_regular';
+    }
 
-        /** Load Teapot */
-        this._objectLoader = new THREE.ObjectLoader();
-        this.loadRink();
-        this.loadStoneRed();
-        this.loadStoneBlue();
-        //this.generateSkybox();
+    public loadRink(): void {
+        this._objectLoader.load('/assets/models/json/curling-rink.json', obj => {
+            obj.position.set(0, 0, 0);
+            obj.scale.set(2, 2, 2);
+            this._mesh.add(obj);
+            (obj as THREE.Mesh).material = new THREE.MeshPhongMaterial({
+                wireframe: false,
+                shininess: 0.2,
+            });
+        });
+    }
 
-        // Inser the canvas into the DOM
-        //var container = document.getElementById("glContainer");
-        if (container.getElementsByTagName('canvas').length === 0) {
-            container.appendChild(this._renderer.domElement);
-        }
-        this._clock.start();
-        this.animate();
+    public loadStoneRed(): void {
+        this._objectLoader.load('/assets/models/json/curling-stone-red.json', obj => {
+            obj.position.set(0, 0, 25);
+            obj.scale.set(2, 2, 2);
+            this._mesh.add(obj);
+            (obj as THREE.Mesh).material = new THREE.MeshPhongMaterial({
+                wireframe: false,
+                shininess: 0.2,
+            });
+        });
+    }
 
-        // bind to window resizes
-        window.addEventListener('resize', _ => this.onResize());
-
+    public loadStoneBlue(): void {
+        this._objectLoader.load('/assets/models/json/curling-stone-blue.json', obj => {
+            obj.position.set(0, 0, -10);
+            obj.scale.set(2, 2, 2);
+            this._mesh.add(obj);
+            (obj as THREE.Mesh).material = new THREE.MeshPhongMaterial({
+                wireframe: false,
+                shininess: 0.2,
+            });
+        });
     }
 
      animate(): void {
@@ -135,7 +200,6 @@ export class RenderService {
             (tp as THREE.Mesh).rotateZ(this._dt);
         }
         this.render();
-
     }
 
     onWindowResize() {
@@ -153,11 +217,11 @@ export class RenderService {
         this._renderer.render(this._scene, this._camera);
     }
 
-    // toggleWireFrame(): void {
-    //     this._wf = !this._wf;
-    //     this._material.wireframe = this._wf;
-    //     this._material.needsUpdate = true;
-    // }
+    toggleWireFrame(): void {
+         this._wf = !this._wf;
+         //this._material.wireframe = this._wf;
+         this._material.needsUpdate = true;
+     }
 
     avancer(deltaT: number): void {
         //deltaT = deltaT + 1;
@@ -230,64 +294,5 @@ export class RenderService {
         this._camera.position.y += y === undefined ? 0 : y ;
         this._camera.position.z += z === undefined ? 0 : z ;
         this._camera.updateProjectionMatrix();
-    }
-
-    public loadStoneRed(): void {
-        this._objectLoader.load('/assets/models/json/curling-stone-red.json', obj => {
-            obj.position.set(0, 0, 0);
-            obj.scale.set(1, 1, 1);
-            this._mesh.add(obj);
-            (obj as THREE.Mesh).material = new THREE.MeshPhongMaterial({
-                wireframe: false,
-                shininess: 0.2,
-            });
-        });
-    }
-
-    public loadStoneBlue(): void {
-        this._objectLoader.load('/assets/models/json/curling-stone-blue.json', obj => {
-            obj.position.set(0, 0, 0);
-            obj.scale.set(1, 1, 1);
-            this._mesh.add(obj);
-            (obj as THREE.Mesh).material = new THREE.MeshPhongMaterial({
-                wireframe: false,
-                shininess: 0.2,
-            });
-        });
-    }
-
-     public loadRink(): void {
-        this._objectLoader.load('/assets/models/json/curling-rink.json', obj => {
-            obj.position.set(0, 0, 0);
-            obj.scale.set(1, 1, 1);
-            this._mesh.add(obj);
-            (obj as THREE.Mesh).material = new THREE.MeshPhongMaterial({
-                wireframe: false,
-                shininess: 0.2,
-            });
-        });
-    }
-
-    /**
-     * See : http://danni-three.blogspot.ca/2013/09/threejs-skybox.html
-     */
-    public generateSkybox(): void{
-        let imagePrefix = "../../assets/images/frozen_";
-        let directions = ["rt", "lf", "up", "dn", "ft", "bk"];
-        let imageSuffix = ".jpg";
-        let materialArray = [];
-        for (let i = 0; i < 6; i++) {
-            materialArray.push( new THREE.MeshBasicMaterial({
-            map: THREE.ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
-            side: THREE.BackSide
-            }));
-        }
-        //let skyGeometry = new THREE.CubeGeometry( 500, 500, 500 );
-        this._geometry = new THREE.CubeGeometry( 200, 200, 200);
-        //let skyMaterial = new THREE.MeshFaceMaterial( materialArray );
-        this._material = new THREE.MeshFaceMaterial( materialArray );
-        let skyBox = new THREE.Mesh( this._geometry, this._material );
-        //skyBox.rotation.x += Math.PI / 2;
-        this._scene.add( skyBox );
     }
 }
