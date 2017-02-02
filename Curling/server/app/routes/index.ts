@@ -39,12 +39,15 @@ module Route {
 
     public async saveGameRecord(req: express.Request, res: express.Response, next: express.NextFunction) {
         try {
+            console.log("-- INDEX saveGameRecord --");
             await DatabaseManager.saveGameRecord(req.body)
             .then(response => {
                 if(response === true){
+                    console.log("-- INDEX saveGameRecord retour succes --");
                     res.sendStatus(HttpStatus.SUCCESS);
                 }
                 else{
+                    console.log("-- INDEX saveGameRecord retour echec--");
                     res.sendStatus(HttpStatus.ERROR);
                 }
             }).catch(error => {
