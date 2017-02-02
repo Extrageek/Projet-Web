@@ -10,7 +10,11 @@ export class ScrabbleLetter {
         this._letter = String.fromCharCode(65 + offset );
         this._imageSource = this._letter + ".jpg";
     }
+
     get letter() {
         return this._letter;
+    }
+    get imageSource(): string {
+        return this._imageSource;
     }
 }
