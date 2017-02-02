@@ -29,7 +29,7 @@ export class PuzzleEventManagerService {
     _nextInputPositionYX: string;
     _newInputId = "";
 
-    constructor(private puzzleManagerService: GridManagerService) {
+    constructor(private gridManagerService: GridManagerService) {
         // Default constructor
     }
 
@@ -172,5 +172,6 @@ export class PuzzleEventManagerService {
         // Get the id of the current input id and delete it value
         let inputId = INPUT_ID_PREFIX + currentPositionXY.join('');
         jQuery(inputId).val("");
+        jQuery(inputId).css("background-color", "");
     }
 }

@@ -28,15 +28,15 @@ export class GridManagerService {
         if (isColumnValid && isRowValid && isSquareValid) {
             this.updateCurrentCellFormat(rowIndex, columnIndex, true);
         } else {
-            if (!isSquareValid) {
+        if (!isSquareValid && grid[rowIndex][columnIndex]._value !== null) {
                 this.updateCurrentCellFormat(rowIndex, columnIndex);
             }
 
-            if (!isColumnValid) {
+            if (!isColumnValid && grid[rowIndex][columnIndex]._value !== null) {
                 this.updateCurrentCellFormat(rowIndex, columnIndex);
             }
 
-            if (!isRowValid) {
+            if (!isRowValid && grid[rowIndex][columnIndex] !== null) {
                 this.updateCurrentCellFormat(rowIndex, columnIndex);
             }
         }

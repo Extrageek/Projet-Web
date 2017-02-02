@@ -65,7 +65,6 @@ import { Puzzle } from '../models/puzzle';
 export class GridComponent implements OnInit {
 
     _newPuzzle: Puzzle;
-    _puzzleSolution: Puzzle;
 
     constructor(private gridMangerService: GridManagerService,
         private puzzleEventManager: PuzzleEventManagerService,
@@ -82,9 +81,6 @@ export class GridComponent implements OnInit {
                 // must not contains the solution. We need to extract the new puzzle
                 // for the user.
                 this._newPuzzle = this.extractTheNewPuzzle(puzzle);
-
-                // Keep the puzzle with the solution.
-                this._puzzleSolution = puzzle;
             });
     }
 
@@ -143,7 +139,6 @@ export class GridComponent implements OnInit {
             throw new Error("No event source is provided.");
         }
 
-        console.log(event.which, "test");
         if (!this.puzzleEventManager.isSudokuNumber(event.which)) {
             return false;
         }
