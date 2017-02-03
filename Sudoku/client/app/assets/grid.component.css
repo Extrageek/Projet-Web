@@ -6,7 +6,7 @@
 
 .grid-box {
     padding: 16px;
-    border: 4px solid #ddd;
+    border: 3px solid #ddd;
     width: 470px;
     background-color: #ddd;
 }
@@ -32,11 +32,12 @@ input {
 input:focus {
     border: 1px solid;
     background-color: #fff;
+    box-shadow: 0 0 50px 0 deepskyblue;
 }
 
 .readOnlyCell {
     color:#fff;
-    background-color:#90A4AE;
+    background-color: dimgray;
 }
 
 .readOnlyCell:focus {
@@ -46,7 +47,7 @@ user-select: none;
 }
 
 .readWriteCell {
-    background-color: darkgoldenrod;
+    background-color: antiquewhite;
 }
 
 .table {

@@ -23,6 +23,12 @@ module PuzzleManagerService {
         _easySudoku: Array<Puzzle>;
         _hardSudoku: Array<Puzzle>;
 
+        getNewPuzzle(): Puzzle {
+            //this._easySudoku.push(this.generateNewPuzzle());
+            //return this._easySudoku.pop();
+            return this.generateNewPuzzle();
+        }
+
         /**
          * The getNewPuzzle function, return a new puzzle.
          *
@@ -30,7 +36,7 @@ module PuzzleManagerService {
          * @method getNewPuzzle
          * @return newPuzzle
          */
-        public getNewPuzzle() {
+        public generateNewPuzzle() {
             let getRandomSudoku = getRandomInRange(1, 9);
             let newPuzzle: Puzzle = new Puzzle();
 
@@ -38,9 +44,9 @@ module PuzzleManagerService {
                 let iterationChoice = getRandomInRange(0, 5);
 
                 // Must be removed after a clean debug
-                //let dummyValue = 5;
+                let dummyValue = 5;
 
-                switch (iterationChoice()) {
+                switch (/*iterationChoice()*/dummyValue) {
                     case 0 :
                         newPuzzle.swapRow(getRandomSudoku(), getRandomSudoku());
                         break;
