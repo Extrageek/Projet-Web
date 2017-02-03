@@ -22,6 +22,9 @@ import { Puzzle } from '../models/puzzle';
 @Component({
     moduleId: module.id,
     selector: 'sudoku-grid',
+
+    // TODO: Must be removed to an external html file
+    // Do it after a clean debug, remove all the reference
     template: `
         <div class="col-md-12">
             <div class="col-md-7 grid-panel">
@@ -56,8 +59,6 @@ import { Puzzle } from '../models/puzzle';
             </div>
         </div>
     `,
-    // TODO: Must be removed to an external css file
-    // Do it after a clean debug, remove the reference in the index.html file
     styleUrls: ['/app/assets/grid.component.css'],
     providers: [GridManagerService, PuzzleEventManagerService, RestApiProxyService]
 })
