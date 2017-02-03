@@ -38,15 +38,11 @@ export class RestApiProxyService {
      * TODO: Must be checked if we need to convert to an object.
      */
     getNewPuzzle(): Observable<Puzzle> {
-        if (this._newPuzzleUrl === null) {
-            let errMsg = `${"The server URL cannot be null."}`;
-
-            return Observable.throw(errMsg);
-        }
-
         return this.http.get(this._newPuzzleUrl)
             .map(this.retrieveDataFromHttpResponse)
-            .catch(this.handleError);
+            .catch(() => {
+                return Observable.throw("errMsg");
+            });
     }
 
     /**
@@ -58,30 +54,30 @@ export class RestApiProxyService {
      */
     private retrieveDataFromHttpResponse(res: Response) {
         let body = res.json();
-        return body || {};
+        return body;
     }
 
-    /**
-     * Handle error by sending logs.
-     *
-     * @class RestApiProxyService
-     * @method handleError
-     * @return.
-     */
-    private handleError(error: Response | any) {
+    // /**
+    //  * Handle error by sending logs.
+    //  *
+    //  * @class RestApiProxyService
+    //  * @method handleError
+    //  * @return.
+    //  */
+    // handleError(error: Response | any) {
 
-        let errMsg: string;
-        if (error instanceof Response) {
-            const body = error.json() || '';
-            const err = body.error || JSON.stringify(body);
-            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-        } else {
-            errMsg = error.message ? error.message : error.toString();
-        }
+    //     let errMsg: string;
+    //     if (error instanceof Response) {
+    //         const body = error.json() || '';
+    //         const err = body.error || JSON.stringify(body);
+    //         errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+    //     } else {
+    //         errMsg = error.message ? error.message : error.toString();
+    //     }
 
-        // Use an new service to handle as a Logger,but we can keep the console for now
-        console.error(errMsg);
+    //     // Use an new service to handle as a Logger,but we can keep the console for now
+    //     //console.error(errMsg);
 
-        return Observable.throw(errMsg);
-    }
+    //     return Observable.throw(errMsg);
+    //}
 }

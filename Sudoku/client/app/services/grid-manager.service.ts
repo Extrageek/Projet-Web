@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 
-import { PuzzleCommon } from '../commons/puzzle-common';
 import { Puzzle, PuzzleItem } from '../models/puzzle';
 
 declare var jQuery: any;
@@ -28,15 +27,7 @@ export class GridManagerService {
         if (isColumnValid && isRowValid && isSquareValid) {
             this.updateCurrentCellFormat(rowIndex, columnIndex, true);
         } else {
-            if (!isSquareValid) {
-                this.updateCurrentCellFormat(rowIndex, columnIndex);
-            }
-
-            if (!isColumnValid) {
-                this.updateCurrentCellFormat(rowIndex, columnIndex);
-            }
-
-            if (!isRowValid) {
+            if (!isSquareValid || !isColumnValid || !isRowValid) {
                 this.updateCurrentCellFormat(rowIndex, columnIndex);
             }
         }
@@ -53,14 +44,14 @@ export class GridManagerService {
     // Check if the row is valid.
     isDuplicatedNumberInCurrentRow(grid: PuzzleItem[][], rowIndex: number, columnIndex: number): boolean {
         // Check for duplicated number in the related row.
-        for (let column = 0; column <= PuzzleCommon.maxColumnIndex; ++column) {
-            let item = Number(grid[rowIndex][column]._value);
+        for (let columnId1 = 0; columnId1 < grid.length; ++columnId1) {
+            let item = Number(grid[rowIndex][columnId1]._value);
 
             if (item != null) {
-                for (let column2 = 0; column2 <= PuzzleCommon.maxColumnIndex; ++column2) {
-                    if (Number(grid[rowIndex][column2]._value) === item
-                        && (Number(grid[rowIndex][column2]._value) !== 0)
-                        && (column !== column2)) {
+                for (let columnId2 = 0; columnId2 < grid.length; ++columnId2) {
+                    if (Number(grid[rowIndex][columnId2]._value) === item
+                        && (Number(grid[rowIndex][columnId2]._value) !== 0)
+                        && (columnId1 !== columnId2)) {
                         return false;
                     }
                 }
@@ -71,45 +62,18 @@ export class GridManagerService {
         return true;
     }
 
-    // Update the current row format when an invalid number is entered or not
-    updateCurrentRowFormat(rowIndex: number, removeBorder?: boolean) {
-
-
-        let borderPropertyValue = (!removeBorder) ? CSS_BACKGROUND_VALUE : CSS_BACKGROUND_INIT;
-
-        for (let colId = 0; colId <= PuzzleCommon.maxColumnIndex; ++colId) {
-            let cellId = CELL_ID_PREFIX + rowIndex + colId;
-            if (document.getElementById(cellId)) {
-                document.getElementById(cellId).style.backgroundColor = borderPropertyValue;
-            }
-        }
-    }
-
-    // Update the current column format when an invalid number is entered or not
-    updateCurrentColumnFormat(columnIndex: number, removeBorder?: boolean) {
-        let borderPropertyValue = (!removeBorder) ? CSS_BACKGROUND_VALUE : CSS_BACKGROUND_INIT;
-
-        for (let rowId = 0; rowId <= PuzzleCommon.maxColumnIndex; ++rowId) {
-            let cellId = CELL_ID_PREFIX + rowId + columnIndex;
-            if (document.getElementById(cellId)) {
-                document.getElementById(cellId).style.backgroundColor = borderPropertyValue;
-            }
-        }
-    }
-
-
     // Check if the column is valid.
     isDuplicatedNumberInCurrentColumn(grid: PuzzleItem[][], rowIndex: number, columnIndex: number): boolean {
 
         // Check for duplicated number in the related column.
-        for (let row = 0; row <= PuzzleCommon.maxRowIndex; ++row) {
-            let item = Number(grid[row][columnIndex]._value);
+        for (let row1 = 0; row1 < grid.length; ++row1) {
+            let item = Number(grid[row1][columnIndex]._value);
 
             if (item != null) {
-                for (let row2 = 0; row2 <= PuzzleCommon.maxRowIndex; ++row2) {
+                for (let row2 = 0; row2 < grid.length; ++row2) {
                     if (Number(grid[row2][columnIndex]._value) === item
                         && (Number(grid[row2][columnIndex]._value) !== 0)
-                        && (row !== row2)) {
+                        && (row1 !== row2)) {
                         return false;
                     }
                 }
@@ -156,45 +120,6 @@ export class GridManagerService {
         return true;
     }
 
-    updateCurrentSquareFormat(rowIndex: number, columnIndex: number, removeBorder?: boolean) {
-
-        let borderPropertyValue = (!removeBorder) ? CSS_BACKGROUND_VALUE : CSS_BACKGROUND_INIT;
-
-        // TODO: Find a good way to avoid code duplication
-        let squareMinRowIndex = Math.floor(rowIndex / 3) * 3;
-        let squareMaxRowIndex = squareMinRowIndex + 2;
-        let squareMinColumnIndex = Math.floor(columnIndex / 3) * 3;
-        let squareMaxColumnIndex = squareMinColumnIndex + 2;
-
-        for (let rowId = squareMinRowIndex; rowId <= squareMaxRowIndex; ++rowId) {
-
-            for (let columnId = squareMinColumnIndex; columnId <= squareMaxColumnIndex; ++columnId) {
-                let cellId = CELL_ID_PREFIX + rowId + columnId;
-
-                if (document.getElementById(cellId)) {
-                    document.getElementById(cellId).style.backgroundColor = borderPropertyValue;
-                }
-
-            }
-        }
-    }
-
-    // TODO: to be completed, we need to handle the code duplication by using this method.
-    getSquareLimit(rowIndex: number, columnIndex: number): any {
-
-        let squareMinRowIndex = Math.floor(rowIndex / 3) * 3;
-        let squareMaxRowIndex = squareMinRowIndex + 2;
-        let squareMinColumnIndex = Math.floor(columnIndex / 3) * 3;
-        let squareMaxColumnIndex = squareMinColumnIndex + 2;
-
-        return {
-            squareMinRowIndex: squareMinRowIndex,
-            squareMaxRowIndex: squareMaxRowIndex,
-            squareMinColumnIndex: squareMinColumnIndex,
-            squareMaxColumnIndex: squareMaxColumnIndex
-        };
-    }
-
     // Clears the cells the user filled.
     // Initialize the grid format to prevent when an invalid grid format is applied.
     initializeGrid(puzzle: Puzzle) {
@@ -206,20 +131,34 @@ export class GridManagerService {
 
         for (let row = 0; row < puzzle._puzzle.length; ++row) {
 
-            // Initialize the current row format.
-            this.updateCurrentRowFormat(row, true);
-
             for (let column = 0; column < puzzle._puzzle.length; ++column) {
 
                 if (puzzle._puzzle[row][column]._hide) {
                     puzzle._puzzle[row][column]._value = null;
                 }
-
-                // Initialize the current colum/square format
-                this.updateCurrentColumnFormat(column, true);
-                this.updateCurrentSquareFormat(row, column, true);
+                this.updateCurrentCellFormat(row, column, true);
             }
         }
+    }
 
+    // Delete the current value and update the cell format.
+    deleteCurrentValue(rowIndex: number, colIndex: number) {
+
+        if (rowIndex < 0 || colIndex < 0) {
+            throw new Error("A row or a column index cannot be less than (0)");
+        }
+        // Get the id of the current input id and delete it value
+        let inputId = [CELL_ID_PREFIX, rowIndex, colIndex].join('');
+
+        //console.log(jQuery(inputId));
+
+        // if (jQuery(inputId) === undefined) {
+
+        //     console.log("jquery error");
+        //     throw new Error("Invalid Input element");
+        // }
+
+        jQuery(inputId).val("");
+        jQuery(inputId).css("background-color", "");
     }
 }

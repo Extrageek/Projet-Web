@@ -65,7 +65,6 @@ import { Puzzle } from '../models/puzzle';
 export class GridComponent implements OnInit {
 
     _newPuzzle: Puzzle;
-    _puzzleSolution: Puzzle;
 
     constructor(private gridMangerService: GridManagerService,
         private puzzleEventManager: PuzzleEventManagerService,
@@ -82,9 +81,6 @@ export class GridComponent implements OnInit {
                 // must not contains the solution. We need to extract the new puzzle
                 // for the user.
                 this._newPuzzle = this.extractTheNewPuzzle(puzzle);
-
-                // Keep the puzzle with the solution.
-                this._puzzleSolution = puzzle;
             });
     }
 
@@ -110,9 +106,6 @@ export class GridComponent implements OnInit {
 
     // Handle the directions key event by using the EventManager
     onKeyDownEventHandler(event: KeyboardEvent) {
-
-        // let currentInputId = jQuery("#" + inputElement.Id);
-
         this.puzzleEventManager.onKeyEventUpdateCurrentCursor(event);
     }
 
@@ -123,7 +116,12 @@ export class GridComponent implements OnInit {
         let rowIndex = Number(rowColIndex[PuzzleCommon.yPosition]);
         let colIndex = Number(rowColIndex[PuzzleCommon.xPosition]);
 
-        this.gridMangerService.validateEnteredNumber(this._newPuzzle, rowIndex, colIndex);
+        if (event.keyCode === PuzzleCommon.backspaceKeyCode) {
+            this.gridMangerService.deleteCurrentValue(rowIndex, colIndex);
+        }
+        else {
+            this.gridMangerService.validateEnteredNumber(this._newPuzzle, rowIndex, colIndex);
+        }
     }
 
     // Initialize the current grid
@@ -143,7 +141,6 @@ export class GridComponent implements OnInit {
             throw new Error("No event source is provided.");
         }
 
-        console.log(event.which, "test");
         if (!this.puzzleEventManager.isSudokuNumber(event.which)) {
             return false;
         }
