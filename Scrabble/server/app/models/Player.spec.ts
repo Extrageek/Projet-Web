@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { Player } from "./RoomsAndPlayers";
+import { Player } from "./Player";
 import { SocketCanalNames } from "./SocketCanalNames";
 import * as io from "socket.io";
 import * as ioClient from "socket.io-client";

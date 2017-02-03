@@ -1,5 +1,6 @@
 import { expect } from "chai";
-import { RoomHandler, Player } from "./RoomsAndPlayers";
+import { RoomHandler } from "./RoomHandler";
+import { Player } from "./Player";
 import { SocketCanalNames } from "./SocketCanalNames";
 import * as io from "socket.io";
 import * as ioClient from "socket.io-client";

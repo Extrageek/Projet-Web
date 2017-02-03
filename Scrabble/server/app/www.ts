@@ -7,7 +7,7 @@
 
 import { Application } from './app';
 import * as http from 'http';
-import { IoConnection } from './socketHandler';
+import { IoConnection } from './models/socketHandler';
 
 const application: Application = Application.bootstrap();
 
