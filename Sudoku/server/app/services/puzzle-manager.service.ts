@@ -72,7 +72,7 @@ module PuzzleManagerService {
             }
             while (new Date().getTime() / 1000 < endTime) {
                 // Wait until five seconds
-             }
+            }
             return newPuzzle;
         }
     }
