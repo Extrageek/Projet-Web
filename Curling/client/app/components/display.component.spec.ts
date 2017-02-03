@@ -1,3 +1,19 @@
+// import {
+//     fakeAsync,
+//     inject,
+//     ComponentFixture,
+//     TestBed
+// } from '@angular/core/testing';
+// import {
+//     HttpModule, Http, ResponseOptions,
+//     Response,
+//     BaseRequestOptions,
+//     ConnectionBackend
+// } from '@angular/http';
+
+// import { MockBackend, MockConnection } from '@angular/http/testing';
+
+// import { RestApiProxyService } from '../services/rest-api-proxy.service';
 // import { DisplayComponent } from './display.component';
 // import { GameStatus } from '../models/game-status';
 // import { UserSetting, Difficulty } from '../models/user-setting';

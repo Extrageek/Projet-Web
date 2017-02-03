@@ -16,13 +16,13 @@ export class UsernameComponent {
     username: string;
 
     constructor(
-                private router: Router,
-                private restApiProxyService: RestApiProxyService,
-                private userSettingService: UserSettingService) {
+        private router: Router,
+        private restApiProxyService: RestApiProxyService,
+        private userSettingService: UserSettingService) {
     }
 
     public async verifyUsername(username: string) {
-        if (username !== ''){
+        if (username !== '') {
             let isValid = await this.restApiProxyService.verifyUsername(username);
             if (isValid.valueOf() === true) {
                 document.querySelector('.alert').classList.add("fade");
@@ -34,11 +34,11 @@ export class UsernameComponent {
         }
     }
 
-    public activateLoginNext(username: string){
-        if (username !== ""){
+    public activateLoginNext(username: string) {
+        if (username !== "") {
             this._isLoginNextActivated = true;
         }
-        else{
+        else {
             this._isLoginNextActivated = false;
         }
     }
@@ -47,7 +47,7 @@ export class UsernameComponent {
         this.router.navigate(['/leaderboard']);
     }
 
-    public closeAlert(){
-         document.querySelector('.alert').classList.add("fade");
+    public closeAlert() {
+        document.querySelector('.alert').classList.add("fade");
     }
 }

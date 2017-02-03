@@ -12,7 +12,7 @@ export class GameStatus {
     constructor() {
         this._scorePlayer = 0;
         this._scoreComputer = 0;
-        this._currentSet = 0;
+        this._currentSet = 1;
         this._currentStonesPlayer = 8;
         this._currentStonesComputer = 8;
         this._isLaunched = false;
@@ -26,12 +26,12 @@ export class GameStatus {
         this._currentStonesComputer = this._currentStonesComputer - 1;
     }
 
-    public incrementScorePlayer(): void {
-        this._scorePlayer = this._scorePlayer + 1;
+    public incrementScorePlayer(score: number): void {
+        this._scorePlayer = this._scorePlayer + score;
     }
 
-    public incrementScoreComputer(): void {
-        this._scoreComputer = this._scoreComputer + 1;
+    public incrementScoreComputer(score: number): void {
+        this._scoreComputer = this._scoreComputer + score;
     }
 
     public launchGame(){
@@ -46,7 +46,7 @@ export class GameStatus {
     public resetGameStatus(): void {
         this._scorePlayer = 0;
         this._scoreComputer = 0;
-        this._currentSet = 0;
+        this._currentSet = 1;
         this._currentStonesPlayer = 8;
         this._currentStonesComputer = 8;
         this._isLaunched = true;

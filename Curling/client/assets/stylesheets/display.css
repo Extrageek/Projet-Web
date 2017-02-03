@@ -1,17 +1,19 @@
-display-component, my-gl {
+display-component,
+my-gl {
     position: absolute;
     left: 0px;
     top: 0px;
 }
-my-gl{
+
+my-gl {
     z-index: -1;
 }
 
-display-component{
+display-component {
     z-index: 1;
 }
 
-.menu-nav{
+.menu-nav {
     z-index: 3;
     position: absolute;
     top: 0;
@@ -40,7 +42,7 @@ display-component{
 #score {
     font-family: 'Bungee Inline';
     font-size: 60px;
-    color: white;
+    color: black;
     text-align: center
 }
 
@@ -50,7 +52,7 @@ display-component{
     -webkit-border-radius: 12px;
     -moz-border-radius: 12px;
     border-radius: 12px;
-    background: white;
+    background: black;
     display: inline-block;
 }
 
@@ -60,7 +62,7 @@ display-component{
     -webkit-border-radius: 12px;
     -moz-border-radius: 12px;
     border-radius: 12px;
-    background: white;
+    background: black;
     display: inline-block;
 }
 
@@ -70,7 +72,7 @@ display-component{
     -webkit-border-radius: 12px;
     -moz-border-radius: 12px;
     border-radius: 12px;
-    background: white;
+    background: black;
     display: inline-block;
 }
 
