@@ -5,14 +5,14 @@
  * @date 2017/01/22
  */
 
-import { Puzzle, AxisDiagonal } from './../models/puzzle';
+import { Puzzle/*, AxisDiagonal */ } from './../models/puzzle';
 
-const NOMBRE_ITERATION = 1;
+const NOMBRE_ITERATION = 1000;
 
 // Used to generate the type of transformation and to give a number of holes to dig in sudoku
 function getRandomInRange(min: number, max: number) {
     return function (): number {
-        return Math.floor(Math.random() * (max - min)) + min;
+        return Math.floor((Math.random() / Math.random() / Math.random()) % (max - min)) + min;
     };
 }
 
@@ -37,40 +37,44 @@ module PuzzleManagerService {
          * @return newPuzzle
          */
         public generateNewPuzzle() {
+            let endTime = new Date().getTime() / 1000 + 5 ;
             let getRandomSudoku = getRandomInRange(1, 9);
             let newPuzzle: Puzzle = new Puzzle();
 
-            for (let it = 0; it < NOMBRE_ITERATION; ++it) {
-                let iterationChoice = getRandomInRange(0, 5);
+            let deltaIteration: number = Math.round(NOMBRE_ITERATION * Math.random());
 
-                // Must be removed after a clean debug
-                let dummyValue = 5;
+            for (let it = 0; it < NOMBRE_ITERATION + deltaIteration; ++it) {
+                // Rows swapping
+                let rowA;
+                let rowB;
+                do {
+                    rowA = getRandomSudoku() - 1;
+                    rowB = getRandomSudoku() - 1;
+                } while (rowA === rowB || Math.floor(rowA / 3) * 3 !== Math.floor(rowB / 3) * 3);
+                // While the rows aren't in the same square (3x3) or while the rows are equal
+                newPuzzle.swapRow(rowA, rowB);
 
-                switch (/*iterationChoice()*/dummyValue) {
-                    case 0 :
-                        newPuzzle.swapRow(getRandomSudoku(), getRandomSudoku());
-                        break;
-                    case 1 :
-                        newPuzzle.swapColumn(getRandomSudoku(), getRandomSudoku());
-                        break;
-                    case 2 :
-                        newPuzzle.horizontalSymmetry();
-                        break;
-                    case 3 :
-                        newPuzzle.verticalSymmetry();
-                        break;
-                    case 4 :
-                        newPuzzle.diagonalSymmetry(AxisDiagonal.UP_LEFT_TO_DOWN_RIGHT);
-                        break;
-                    case 5 :
-                        newPuzzle.diagonalSymmetry(AxisDiagonal.DOWN_LEFT_TO_UP_RIGHT);
-                        break;
-                }
+                // Column swapping
+                let columnA;
+                let columnB;
+                do {
+                    columnA = getRandomSudoku() - 1;
+                    columnB = getRandomSudoku() - 1;
+                } while (columnA === columnB || Math.floor(columnA / 3) * 3 !== Math.floor(columnB / 3) * 3);
+                // While the columns aren't in the same square (3x3) or while the columns are equal
+                newPuzzle.swapColumn(columnA, columnB);
+
+                // Horizontal Symmetry
+                newPuzzle.horizontalSymmetry();
+
+                // Vertical Symmetry
+                newPuzzle.verticalSymmetry();
+                //     newPuzzle.diagonalSymmetry(AxisDiagonal.UP_LEFT_TO_DOWN_RIGHT);
+                //     newPuzzle.diagonalSymmetry(AxisDiagonal.DOWN_LEFT_TO_UP_RIGHT);
             }
-            // TODO: Must be completed after a clean debug
-
-            // console.log(newPuzzle);
-
+            while (new Date().getTime() / 1000 < endTime) {
+                // Wait until five seconds
+             }
             return newPuzzle;
         }
     }

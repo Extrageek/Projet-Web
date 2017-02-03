@@ -137,14 +137,41 @@ export class Puzzle {
         this._puzzle = puzzleSeed;
     }
 
+    /// For future use : 
+    // isValidSquare3b3(firstRow: number, firstColumn: number): boolean {
+    //     let contained: number[];
+    //     for (let i = 0; i < 3; ++i) {
+    //         for (let j = 0; j < 3; ++j) {
+    //             if (contained.indexOf(this._puzzle[firstRow + i][firstColumn + j]._value) === -1) {
+    //                 contained.push(this._puzzle[firstRow + i][firstColumn + j]._value);
+    //             } else {
+    //                 return false;
+    //             }
+    //         }
+    //     }
+    //     return true;
+    // }
+
+    // isValidSudoku(): boolean {
+    //     for (let i = 0; i < MAX_ROW_SIZE; i + 3) {
+    //         for (let j = 0; j < MAX_COLUMN_SIZE; j + 3) {
+    //             if (!this.isValidSquare3b3(i, j)) {
+    //                 return false;
+    //             }
+    //         }
+    //     }
+    //     return true;
+    // }
+    ///
+
     public swapRow(rowA: number, rowB: number) {
-        for (let j = 0; j < MAX_ROW_SIZE; ++j) {
+        for (let j = 0; j < this._puzzle.length; ++j) {
             this._puzzle[rowA][j].swap(this._puzzle[rowB][j]);
         }
     }
 
     public swapColumn(columnA: number, columnB: number) {
-        for (let i = 0; i < MAX_COLUMN_SIZE; ++i) {
+        for (let i = 0; i < this._puzzle.length; ++i) {
             this._puzzle[i][columnA].swap(this._puzzle[i][columnB]);
         }
     }
@@ -161,35 +188,44 @@ export class Puzzle {
         }
     }
 
-    /**
-    *       Axis 0 :    [X] [ ] [ ]
-    *                   [ ] [X] [ ]
-    *                   [ ] [ ] [X]
-    *
-    *       Axis 1 :    [ ] [ ] [X]
-    *                   [ ] [X] [ ]
-    *                   [X] [ ] [ ]
-    */
     public diagonalSymmetry(axis: AxisDiagonal) {
         if (axis === AxisDiagonal.UP_LEFT_TO_DOWN_RIGHT) {
-            for (let i = 0; i < MAX_ROW_SIZE; ++i) {
-                for (let j = 0; j < MAX_COLUMN_SIZE; ++j) {
-                    this._puzzle[i][j].swap(this._puzzle[j][i]);
-                }
-            }
-        } else if (AxisDiagonal.DOWN_LEFT_TO_UP_RIGHT) {
-            for (let i = 0; i < MAX_ROW_SIZE; ++i) {
-                for (let j = 0; j < MAX_COLUMN_SIZE; ++j) {
-                    console.log(i, j, "swap", MAX_ROW_SIZE - j - 1, MAX_COLUMN_SIZE - i - 1);
-                    this._puzzle[i][j].swap(this._puzzle[MAX_ROW_SIZE - j - 1][MAX_COLUMN_SIZE - i - 1]);
-                }
-            }
+            this.horizontalSymmetry();
+            this.verticalSymmetry();
+        } else {
+            this.verticalSymmetry();
+            this.horizontalSymmetry();
         }
     }
+
+    // /**
+    // *       Axis 0 :    [X] [ ] [ ]
+    // *                   [ ] [X] [ ]
+    // *                   [ ] [ ] [X]
+    // *
+    // *       Axis 1 :    [ ] [ ] [X]
+    // *                   [ ] [X] [ ]
+    // *                   [X] [ ] [ ]
+    // */
+    // public diagonalSymmetry(axis: AxisDiagonal) {
+    //     if (axis === AxisDiagonal.UP_LEFT_TO_DOWN_RIGHT) {
+    //         for (let i = 0; i < MAX_ROW_SIZE; ++i) {
+    //             for (let j = 0; j < MAX_COLUMN_SIZE; ++j) {
+    //                 this._puzzle[i][j].swap(this._puzzle[j][i]);
+    //             }
+    //         }
+    //     } else if (AxisDiagonal.DOWN_LEFT_TO_UP_RIGHT) {
+    //         for (let i = 0; i < MAX_ROW_SIZE; ++i) {
+    //             for (let j = 0; j < MAX_COLUMN_SIZE; ++j) {
+    //                 console.log(i, j, "swap", MAX_ROW_SIZE - j - 1, MAX_COLUMN_SIZE - i - 1);
+    //                 this._puzzle[i][j].swap(this._puzzle[MAX_ROW_SIZE - j - 1][MAX_COLUMN_SIZE - i - 1]);
+    //             }
+    //         }
+    //     }
+    // }
 }
 
 export enum AxisDiagonal {
     UP_LEFT_TO_DOWN_RIGHT = 0,
     DOWN_LEFT_TO_UP_RIGHT = 1
 }
-
