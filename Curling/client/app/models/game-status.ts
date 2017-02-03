@@ -1,3 +1,6 @@
+import { Injectable } from '@angular/core';
+
+@Injectable()
 export class GameStatus {
     _scorePlayer: number;
     _scoreComputer: number;

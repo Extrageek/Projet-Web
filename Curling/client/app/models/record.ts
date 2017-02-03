@@ -1,8 +1,8 @@
+import { Injectable } from '@angular/core';
+
 import { Difficulty } from './user-setting';
 
-/**
- * name
- */
+@Injectable()
 export class Record {
     private _username: string;
     private _difficulty: Difficulty;

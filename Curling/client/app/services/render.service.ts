@@ -3,7 +3,6 @@ import { GameSettingsService } from './game-settings.service';
 
 @Injectable()
 export class RenderService {
-    private _gameSettings: GameSettingsService;
 
     private _scene: THREE.Scene;
     private _camera: THREE.PerspectiveCamera;
@@ -56,7 +55,7 @@ export class RenderService {
         this.loadFont();
         this.loadRink();
         this.loadArena();
-        if (this._gameSettings.getIsFirstPlayer() === true) {
+        if (this._gameSettingsService.getIsFirstPlayer() === true) {
             this.loadStoneRed();
         } else {
            this.loadStoneBlue();

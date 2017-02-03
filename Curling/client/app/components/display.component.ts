@@ -1,53 +1,53 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { GameStatus } from '../models/game-status';
-import { UserSetting, Difficulty } from '../models/user-setting';
+import { UserSetting } from '../models/user-setting';
 
 import { RestApiProxyService } from '../services/rest-api-proxy.service';
+import { UserSettingService } from '../services/user-setting.service';
+import { GameStatusService } from '../services/game-status.service';
 
 @Component({
     moduleId: module.id,
+    providers: [RestApiProxyService],
     selector: 'display-component',
     templateUrl: '../../assets/templates/display-component.html',
     styleUrls: ['../../assets/stylesheets/display.css', '../../assets/stylesheets/menu-hamburger.css']
 })
 export class DisplayComponent implements OnInit {
-    @Input() _userSetting: UserSetting;
-    @Input() _gameStatus: GameStatus;
+    _userSetting: UserSetting;
+    _gameStatus: GameStatus;
     _computerName: string;
 
-    constructor (private restApiProxyService : RestApiProxyService) {}
+    constructor (private router: Router,
+                private restApiProxyService : RestApiProxyService,
+                private userSettingService: UserSettingService,
+                private gameStatusService: GameStatusService) {}
 
     ngOnInit() {
-        this._gameStatus = new GameStatus();
+        this._userSetting = this.userSettingService.userSetting;
+        console.log(this.userSettingService.userSetting);
+        this._gameStatus = this.gameStatusService.gameStatus;
         let hamburger = document.querySelector(".hamburger");
         let overlay = document.querySelector(".overlay");
-
+        // open or close the overlay and animate the hamburger.
         hamburger.addEventListener("click", () => {
             hamburger.classList.toggle("is-active");
             overlay.classList.toggle("is-open-menu");
         });
-
-        window.addEventListener("launchGame", () => {
-            this._gameStatus.launchGame();
-        });
-
+        // Save the record before closing the game display window.
         window.addEventListener("beforeunload", () => {
-            if (this._gameStatus._isLaunched === true){
-                this.restApiProxyService.createGameRecord(this._userSetting, this._gameStatus);
-            }
+            this.restApiProxyService.createGameRecord(this._userSetting, this._gameStatus);
         });
     }
 
-    public showComputerName(): void {
-        if (this._userSetting._difficulty === Difficulty.NORMAL) {
-            this._computerName = "CPU Normal";
-        } else {
-            this._computerName = "CPU Difficile";
-        }
+    public getComputerName(): void {
+        this._computerName = this.userSettingService.getComputerName();
     }
 
     public gameOver(){
         this.restApiProxyService.createGameRecord(this._userSetting, this._gameStatus);
+        this.router.navigate(['/']);
     }
 }

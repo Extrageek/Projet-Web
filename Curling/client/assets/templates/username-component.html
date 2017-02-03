@@ -7,8 +7,8 @@
             <strong>Pseudonyme déjà existant.</strong> Essayez-en un autre!
         </div>
         <input id="loginInput" (change)="activateLoginNext()" class="shake" type='text' placeholder='Entrer votre pseudo...' 
-            [(ngModel)]="_userSetting._name" [ngModelOptions]="{standalone: true}" />
-        <button id="loginNext" type="submit" class="btn btn-secondary btn-lg" *ngIf="_isLoginNextActivated" (click)="verifyUsername()">
+            #username />
+        <button id="loginNext" type="submit" class="btn btn-secondary btn-lg" *ngIf="_isLoginNextActivated" (click)="verifyUsername(username.value)">
             <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
         </button>
         <div class="col-md-12">
@@ -16,21 +16,5 @@
                 <p><span class="glyphicon glyphicon-stats" aria-hidden="true"></span></p>
             </button>
         </div>
-    </div>
-
-    <div id="difficulty" class="form-group user-setting-content">
-        <div> Bonjour {{_userSetting._name}}, veuillez choisir le niveau de difficulte :</div>
-        <div class="radio">
-            <label>
-                <input type='radio' value='NORMAL' name='normal' [(ngModel)]='_userSetting._difficulty'> Normal 
-            </label>
-        </div>
-        <div class="radio">
-            <label>
-                <input type='radio' value='HARD' name='hard' [(ngModel)]='_userSetting._difficulty'> Difficile
-            </label>
-        </div>
-
-        <button type="submit" class="btn btn-secondary btn-lg" (click)='launchGame()'>Commencer la partie !</button>
     </div>
 </form>

@@ -1,27 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-
-import { GameStatus } from '../models/game-status';
-import { UserSetting } from '../models/user-setting';
+import { Component } from '@angular/core';
 
 @Component({
     moduleId: module.id,
     selector: 'mon-app',
-    templateUrl: "/assets/templates/app-component-template.html",
-    styleUrls: ['../../assets/stylesheets/display.css']
+    templateUrl: "/assets/templates/app-component.html"
 })
-export class AppComponent implements OnInit {
-    title = "Curling";
-    _gameStatus: GameStatus;
-    _userSetting: UserSetting;
-
-/**
- *
- */
-constructor() {
-   // TODO
-}
-    ngOnInit() {
-        this._userSetting = new UserSetting();
-        document.querySelector("display-component").classList.add("hidden");
-    }
+export class AppComponent {
 }

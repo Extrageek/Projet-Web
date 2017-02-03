@@ -19,8 +19,8 @@ export class RestApiProxyService {
         console.log("-- API createGameRecord --");
         return await this.http
         .post(this._urlAddUser + "game-over", JSON.stringify({
-                username : userSetting._name,
-                difficulty : userSetting._difficulty,
+                username : userSetting.name,
+                difficulty : userSetting.difficulty,
                 scorePlayer : gameStatus._scorePlayer,
                 scoreComputer : gameStatus._scoreComputer,
                 set : gameStatus._currentSet,
@@ -40,9 +40,9 @@ export class RestApiProxyService {
         });
     }
 
-    public async verifyUsername(userSetting : UserSetting): Promise<boolean>{
+    public async verifyUsername(username: string): Promise<boolean>{
         return await this.http
-        .post(this._urlAddUser + "login", JSON.stringify({username : userSetting._name}), {headers: this._headers})
+        .post(this._urlAddUser + "login", JSON.stringify({username : username}), {headers: this._headers})
         .toPromise()
         .then(response => {
             if (response.status === 200){
