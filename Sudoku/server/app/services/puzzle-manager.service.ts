@@ -63,14 +63,12 @@ module PuzzleManagerService {
                 } while (columnA === columnB || Math.floor(columnA / 3) * 3 !== Math.floor(columnB / 3) * 3);
                 // While the columns aren't in the same square (3x3) or while the columns are equal
                 newPuzzle.swapColumn(columnA, columnB);
-
+                
                 // Horizontal Symmetry
                 newPuzzle.horizontalSymmetry();
 
                 // Vertical Symmetry
                 newPuzzle.verticalSymmetry();
-                //     newPuzzle.diagonalSymmetry(AxisDiagonal.UP_LEFT_TO_DOWN_RIGHT);
-                //     newPuzzle.diagonalSymmetry(AxisDiagonal.DOWN_LEFT_TO_UP_RIGHT);
             }
             while (new Date().getTime() / 1000 < endTime) {
                 // Wait until five seconds
