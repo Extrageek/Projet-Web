@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { GameSettingsService } from './game-settings.service';
+import { GameStatusService } from './game-status.service';
 
 @Injectable()
 export class RenderService {
@@ -35,7 +35,7 @@ export class RenderService {
 
     private _created : THREE.Mesh[];
 
-    constructor(private _gameSettingsService: GameSettingsService) {
+    constructor(private _gameStatusService: GameStatusService) {
         this._scene = new THREE.Scene();
         this._wf = true;
          // Array to hold our created objects from the factory
@@ -55,7 +55,7 @@ export class RenderService {
         this.loadFont();
         this.loadRink();
         this.loadArena();
-        if (this._gameSettingsService.getIsFirstPlayer() === true) {
+        if (this._gameStatusService.randomFirstPlayer() === true) {
             this.loadStoneRed();
         } else {
            this.loadStoneBlue();

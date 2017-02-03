@@ -106,9 +106,6 @@ export class GridComponent implements OnInit {
 
     // Handle the directions key event by using the EventManager
     onKeyDownEventHandler(event: KeyboardEvent) {
-
-        // let currentInputId = jQuery("#" + inputElement.Id);
-
         this.puzzleEventManager.onKeyEventUpdateCurrentCursor(event);
     }
 
@@ -119,7 +116,12 @@ export class GridComponent implements OnInit {
         let rowIndex = Number(rowColIndex[PuzzleCommon.yPosition]);
         let colIndex = Number(rowColIndex[PuzzleCommon.xPosition]);
 
-        this.gridMangerService.validateEnteredNumber(this._newPuzzle, rowIndex, colIndex);
+        if (event.keyCode === PuzzleCommon.backspaceKeyCode) {
+            this.gridMangerService.deleteCurrentValue(rowIndex, colIndex);
+        }
+        else {
+            this.gridMangerService.validateEnteredNumber(this._newPuzzle, rowIndex, colIndex);
+        }
     }
 
     // Initialize the current grid

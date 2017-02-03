@@ -53,7 +53,8 @@ export class PuzzleEventManagerService {
     * @return true for a delete keypress
     */
     isDeleteKey(keyCode: number): boolean {
-        return (keyCode === PuzzleCommon.deleteKeyCode);
+        return (keyCode === PuzzleCommon.backspaceKeyCode
+            || keyCode === PuzzleCommon.deleteKeyCode);
     }
 
     /**
@@ -79,8 +80,6 @@ export class PuzzleEventManagerService {
 
         if (this.isDirection(keyCode)) {
             this.updateFocus(currentPositionXY, keyCode);
-        } else if (this.isDeleteKey(keyCode)) {
-            this.deleteCellContent(currentPositionXY);
         }
     }
 
@@ -160,18 +159,5 @@ export class PuzzleEventManagerService {
             this._newPositionX.toString(),
             currentPositionXY[PuzzleCommon.xPosition]
         ].join('');
-    }
-
-    /**
-    * The deleteCellContent function, delete the value in the selected cell of the grid.
-    *
-    * @class PuzzleEventManagerService
-    * @method deleteCellContent
-    */
-    deleteCellContent(currentPositionXY: string[]): void {
-        // Get the id of the current input id and delete it value
-        let inputId = INPUT_ID_PREFIX + currentPositionXY.join('');
-        jQuery(inputId).val("");
-        jQuery(inputId).css("background-color", "");
     }
 }

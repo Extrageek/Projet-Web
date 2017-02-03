@@ -1,5 +1,5 @@
 
- export class PuzzleCommon {
+export class PuzzleCommon {
 
     static leftArrowKeyCode = 37;
     static rightArrowKeyCode = 39;
@@ -7,7 +7,10 @@
     static downArrowKeyCode = 40;
 
     static deleteKeyCode = 46;
-    //static backspaceKeyCode = 8; // Delete keycode for mac /backspace
+
+    // Use backspace for Delete keycode on mac /backspace
+    // Need to be improved.
+    static backspaceKeyCode = 8;
 
     static oneKey = 49;
     static twoKey = 50;
