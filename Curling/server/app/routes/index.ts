@@ -6,62 +6,58 @@ module Route {
   export class RouteManager {
     _databaseManager: DatabaseManager;
 
-    public index(req: express.Request, res: express.Response, next: express.NextFunction) {
-        res.send('Hello world');
-    }
-
-    public async addUser(req: express.Request, res: express.Response, next: express.NextFunction) {
+    public async addUser(request: express.Request, response: express.Response, next: express.NextFunction) {
         try {
-            await DatabaseManager.addUser(req.body)
-            .then(response => {
-                if (response === true){
-                    res.sendStatus(HttpStatus.SUCCESS);
+            await DatabaseManager.addUser(request.body)
+            .then(result => {
+                if (result === true){
+                    response.sendStatus(HttpStatus.SUCCESS);
                 }
                 else{
-                    res.sendStatus(HttpStatus.ERROR);
+                    response.sendStatus(HttpStatus.ERROR);
                 }
             }).catch(error => {
                 console.log("--- ERROR ---", error);
-                res.sendStatus(HttpStatus.ERROR);
+                response.sendStatus(HttpStatus.ERROR);
             });
         } catch (error) {
-            res.sendStatus(HttpStatus.ERROR);
+            response.sendStatus(HttpStatus.ERROR);
         }
     }
 
-    public async getAllRecords(req: express.Request, res: express.Response, next: express.NextFunction) {
+    public async getAllRecords(request: express.Request, response: express.Response, next: express.NextFunction) {
         try {
             let records: Array<any> = await DatabaseManager.getAllRecords();
-            res.status(records === null ? HttpStatus.ERROR : HttpStatus.SUCCESS).send(records);
+            response.status(records === null ? HttpStatus.ERROR : HttpStatus.SUCCESS).send(records);
         } catch (error) {
-            res.status(HttpStatus.ERROR)
+            response.status(HttpStatus.ERROR)
             .send([{"error" : "Une erreur est survenue lors de la connexion a la base de donnees. (getAllRecords)"}]);
         }
     }
 
-    public async saveGameRecord(req: express.Request, res: express.Response, next: express.NextFunction) {
+    public async saveGameRecord(request: express.Request, response: express.Response, next: express.NextFunction) {
         try {
             console.log("-- INDEX saveGameRecord --");
-            await DatabaseManager.saveGameRecord(req.body)
-            .then(response => {
-                if (response === true){
+            await DatabaseManager.saveGameRecord(request.body)
+            .then(result => {
+                if (result === true){
                     console.log("-- INDEX saveGameRecord retour succes --");
-                    res.sendStatus(HttpStatus.SUCCESS);
+                    response.sendStatus(HttpStatus.SUCCESS);
                 }
                 else{
                     console.log("-- INDEX saveGameRecord retour echec--");
-                    res.sendStatus(HttpStatus.ERROR);
+                    response.sendStatus(HttpStatus.ERROR);
                 }
             }).catch(error => {
                 console.log("--- ERROR ---", error);
             });
         } catch (error) {
-            res.sendStatus(HttpStatus.ERROR);
+            response.sendStatus(HttpStatus.ERROR);
         }
     }
 
-    public glComponent(req: express.Request, res: express.Response, next: express.NextFunction) {
-      res.redirect('/glcomp');
+    public glComponent(request: express.Request, response: express.Response, next: express.NextFunction) {
+      response.redirect('/glcomp');
     }
   }
 }

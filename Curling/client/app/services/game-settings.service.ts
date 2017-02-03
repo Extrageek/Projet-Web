@@ -9,9 +9,9 @@ export class GameSettingsService {
     }
 
     private randomFirstPlayer(): void {
-        let qlq = Math.round(Math.random() * 100) % 2;
-        console.log("HASARD ", qlq);
-        if (qlq === 0){
+        let randomNumber = (Math.round(Math.random()) * 100) % 2;
+        //console.log("HASARD ", qlq);
+        if (randomNumber === 0){
             this._isFirstPlayer = true;
         }
         else{

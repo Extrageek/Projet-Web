@@ -77,7 +77,6 @@ export class Application {
         const index: indexRoute.RouteManager = new indexRoute.RouteManager();
 
         // REST - GET
-        router.get('/', index.index.bind(index.index));
         router.get('/game', index.glComponent.bind(index.glComponent));
         router.get('/api/records-all', index.getAllRecords.bind(index.getAllRecords));
 

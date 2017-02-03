@@ -1,7 +1,6 @@
 //import * as express from 'express';
 
 let MongoClient = require('mongodb').MongoClient;
-
 let url = 'mongodb://curling23:log2990-23@ds117859.mlab.com:17859/curling';
 
 export class DatabaseManager {
