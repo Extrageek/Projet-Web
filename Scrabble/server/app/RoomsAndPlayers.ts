@@ -6,7 +6,7 @@ export class RoomHandler {
 
     public constructor(connection: SocketIO.Server) {
         if (typeof(connection) === "undefined" || connection === null) {
-            throw new Error("Invalid socket server passed in parameter");
+            throw new Error("Invalid _socket server passed in parameter");
         }
         this._connection = connection;
         this._currentRooms = new Array<Room>();
@@ -168,8 +168,9 @@ class Room {
     }
 
     public removePlayer(player: Player) {
-        let index = this._players.findIndex((element, elementIndex, players) => {
-            return element === player;
+
+        let index = this._players.findIndex((element) => {
+            return (element === player);
         });
         if (index !== -1) {
             let playerRemoved = this._players.splice(index, 1);

@@ -95,7 +95,7 @@ describe("Room Handler tester", () => {
         expect(roomHandler.hasPlayerWithNameOrSocket(players[0])).to.equals(true);
     });
 
-    it("should not add two players with same name or same socket.", () => {
+    it("should not add two players with same name or same _socket.", () => {
         let addFirstPlayer = () => { roomHandler.addPlayertoARoom(players[0]); };
         let addSecondPlayer = () => { roomHandler.addPlayertoARoom(players[3]); };
         expect(addFirstPlayer).to.not.throw(Error);

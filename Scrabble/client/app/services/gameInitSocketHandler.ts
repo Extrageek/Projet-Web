@@ -1,5 +1,4 @@
-
-export class GameInitSocketHandler  {
+export class GameInitSocketHandler {
 
     public static invalidPlayerName() {
         alert("The username is invalid. The name can only contain alphanumeric characters.");
