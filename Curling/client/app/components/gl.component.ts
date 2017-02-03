@@ -9,7 +9,7 @@ import { RenderService } from '../services/render.service';
     styleUrls: ['../../assets/stylesheets/gl-component.css', '../../assets/stylesheets/menu-hamburger.css']
 })
 
-export class GlComponent implements OnInit{
+export class GlComponent implements OnInit {
     webgltext: string;
     xmodel: number;
     ymodel: number;
@@ -22,9 +22,9 @@ export class GlComponent implements OnInit{
         //console.log(this.trigger());
     }
     constructor(
-        private renderService : RenderService,
+        private renderService: RenderService,
         private snackbar: MdSnackBar
-    ){}
+    ) { }
 
     // private displaceX(): void{
     //     this.renderService.translateMesh(this.xmodel, 0);
@@ -38,7 +38,7 @@ export class GlComponent implements OnInit{
     //     this.renderService.translateCamera(0, 0, this.zCamera);
     // }
 
-   public showNotImplemented(): void {
-       this.snackbar.open('Sorry, this is not implemented yet. Would you do it for me? :)', 'Yes');
-   }
+    public showNotImplemented(): void {
+        this.snackbar.open('Sorry, this is not implemented yet. Would you do it for me? :)', 'Yes');
+    }
 }

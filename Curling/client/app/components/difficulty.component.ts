@@ -17,11 +17,11 @@ export class DifficultyComponent implements OnInit {
     _username: string;
     _difficulty: Difficulty;
 
-    constructor( private router: Router,
-                private restApiProxyService: RestApiProxyService,
-                private userSettingService: UserSettingService) { }
+    constructor(private router: Router,
+        private restApiProxyService: RestApiProxyService,
+        private userSettingService: UserSettingService) { }
 
-    ngOnInit(){
+    ngOnInit() {
         this._username = this.userSettingService.userSetting.name;
     }
 

@@ -20,10 +20,10 @@ export class DisplayComponent implements OnInit {
     _gameStatus: GameStatus;
     _computerName: string;
 
-    constructor (private router: Router,
-                private restApiProxyService : RestApiProxyService,
-                private userSettingService: UserSettingService,
-                private gameStatusService: GameStatusService) {}
+    constructor(private router: Router,
+        private restApiProxyService: RestApiProxyService,
+        private userSettingService: UserSettingService,
+        private gameStatusService: GameStatusService) { }
 
     ngOnInit() {
         this._userSetting = this.userSettingService.userSetting;
@@ -46,7 +46,7 @@ export class DisplayComponent implements OnInit {
         this._computerName = this.userSettingService.getComputerName();
     }
 
-    public gameOver(){
+    public gameOver() {
         this.restApiProxyService.createGameRecord(this._userSetting, this._gameStatus);
         this.router.navigate(['/']);
     }
