@@ -82,7 +82,7 @@ module.exports = function(config) {
     coverageReporter: {
         includeAllSources: true,
         reporters:[
-            {type: 'json', subdir: '.', file: 'coverage-final.json'}
+            {type: 'html', subdir: '.', file: 'coverage-final.html'}
         ]
     },
     
@@ -90,7 +90,7 @@ module.exports = function(config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Firefox'],
+    browsers: ['Chrome'],
     singleRun: false
   })
 }

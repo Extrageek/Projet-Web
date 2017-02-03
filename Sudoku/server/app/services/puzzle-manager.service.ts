@@ -5,7 +5,7 @@
  * @date 2017/01/22
  */
 
-import { Puzzle/*, AxisDiagonal */ } from './../models/puzzle';
+import { Puzzle } from './../models/puzzle';
 
 const NOMBRE_ITERATION = 1000;
 
@@ -69,8 +69,6 @@ module PuzzleManagerService {
 
                 // Vertical Symmetry
                 newPuzzle.verticalSymmetry();
-                //     newPuzzle.diagonalSymmetry(AxisDiagonal.UP_LEFT_TO_DOWN_RIGHT);
-                //     newPuzzle.diagonalSymmetry(AxisDiagonal.DOWN_LEFT_TO_UP_RIGHT);
             }
             while (new Date().getTime() / 1000 < endTime) {
                 // Wait until five seconds
