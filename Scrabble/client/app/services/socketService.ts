@@ -17,21 +17,24 @@ const SERVER_PORT_NUMBER = 3002;
 @Injectable()
 export class SocketService {
 
-    _socket: SocketIOClient.Socket;
+    static _socket: SocketIOClient.Socket = null;
 
     constructor () {
-            this._socket = io("http://localhost:" + String(SERVER_PORT_NUMBER));
-            this._socket.once("connect_error", () => {
+            if (SocketService._socket !== null) {
+                SocketService._socket.disconnect();
+            }
+            SocketService._socket = io("http://localhost:" + String(SERVER_PORT_NUMBER));
+            SocketService._socket.once("connect_error", () => {
                 alert("The server is offline, please run the server before starting the game");
             });
     }
 
     public sendNewDemandRequest(playerName: string, gameType: string, responseFunctions: Function[]) {
-        this._socket.emit(NEW_GAME_DEMAND, {name: playerName, gameType: Number.parseInt(gameType)});
-        this._socket.removeAllListeners();
-        this._socket.once(INVALID_NAME, responseFunctions[0]);
-        this._socket.once(INVALID_DEMAND, responseFunctions[1]);
-        this._socket.once(NAME_OR_SOCKET_ALREADY_EXISTS, responseFunctions[2]);
-        this._socket.once(PLAYERS_MISSING, responseFunctions[3]);
+        SocketService._socket.emit(NEW_GAME_DEMAND, {name: playerName, gameType: Number.parseInt(gameType)});
+        SocketService._socket.removeAllListeners();
+        SocketService._socket.once(INVALID_NAME, responseFunctions[0]);
+        SocketService._socket.once(INVALID_DEMAND, responseFunctions[1]);
+        SocketService._socket.once(NAME_OR_SOCKET_ALREADY_EXISTS, responseFunctions[2]);
+        SocketService._socket.once(PLAYERS_MISSING, responseFunctions[3]);
     }
 }
