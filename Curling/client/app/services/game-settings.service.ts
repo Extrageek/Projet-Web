@@ -8,9 +8,8 @@ export class GameSettingsService {
         this.randomFirstPlayer();
     }
 
-    private randomFirstPlayer(): void {
+    public randomFirstPlayer(): void {
         let randomNumber = (Math.round(Math.random()) * 100) % 2;
-        //console.log("HASARD ", qlq);
         if (randomNumber === 0){
             this._isFirstPlayer = true;
         }
