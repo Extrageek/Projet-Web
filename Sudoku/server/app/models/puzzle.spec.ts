@@ -1,147 +1,126 @@
 import { assert } from 'chai';
-declare var jQuery: any;
-import { Puzzle, PuzzleItem, puzzleSeed } from '../models/puzzle';
-describe('Puzzle', () => {
-    // Testing Puzzle item.
-    it("should create a PuzzleItem that contains 3 and is hidden", () => {
-        // Must be completed
-        let item: PuzzleItem = new PuzzleItem(3, true);
-        // Check the expected result
-        assert(item.isHidden === true, "Should be hidden");
-        assert(item._value === 3, "Should contain the number 3");
+
+import { Puzzle, PuzzleItem, puzzleSeed } from './puzzle';
+
+describe('PuzzleItem', () => {
+    it('should be hidden and contain 1', () => {
+        let item: PuzzleItem = new PuzzleItem(1, true);
+        assert(item.isHidden === true, "should be hidden");
+        assert(item._value === 1, "should contain 1");
     });
-    it("should create a PuzzleItem that contains 3 and is hidden", () => {
-        // Must be completed
+
+    it('should be shown and contain null', () => {
         let item: PuzzleItem = new PuzzleItem(null, false);
-        // Check the expected result
-        assert(item._hide === false, "Should not be hidden");
-        assert(item._value === null, "Should not contain a value");
+        assert(item.isHidden === false, "should be shown");
+        assert(item._value === null, "should contain null");
     });
-    it("should swap items right", () => {
-        // Must be completed
-        let item1: PuzzleItem = new PuzzleItem(6, true);
-        let item2: PuzzleItem = new PuzzleItem(3, false);
+
+    it('should swap and swap back', () => {
+        let item1: PuzzleItem = new PuzzleItem(1, true);
+        let item2: PuzzleItem = new PuzzleItem(2, false);
         item1.swap(item2);
-        // Check the expected result
-        assert(item1.isHidden === false, "Should not be hidden");
-        assert(item1._value === 3, "Should contain 3");
-        assert(item2.isHidden === true, "Should be hidden");
-        assert(item2._value === 6, "Should contain 6");
-        item2.swap(item1);
-        // Check the expected result
-        assert(item1.isHidden === true, "Should be hidden");
-        assert(item1._value === 6, "Should contain 6");
-        assert(item2.isHidden === false, "Should not be hidden");
-        assert(item2._value === 3, "Should contain 3");
+        assert(item1.isHidden === false, "should not be hidden");
+        assert(item1._value === 2, "should contain 2");
+        assert(item2.isHidden === true, "should be hidden");
+        assert(item2._value === 1, "should contain 1");
+        item1.swap(item2);
+        assert(item1.isHidden === true, "should be hidden");
+        assert(item1._value === 1, "should contain 1");
+        assert(item2.isHidden === false, "should not be hidden");
+        assert(item2._value === 2, "should contain 2");
     });
-    // Testing puzzle constructor
-    it("should initialize grid to puzzleSeed", () => {
+});
+
+describe('Puzzle', () => {
+    it('should initialize grid and contain puzzleSeed', () => {
         let puzzle: Puzzle = new Puzzle();
-        assert(puzzle._puzzle === puzzleSeed, "Error constructing puzzle");
+        assert(puzzle._puzzle === puzzleSeed, "should contain puzzleSeed");
     });
-    // Testing puzzle operations
-    it("should swap Columns 0 and 1", () => {
+
+    // Puzzle operations
+    it('should swap column 0 with 1', () => {
         let puzzle: Puzzle = new Puzzle();
-        let solutionGrid = [
+        puzzle._puzzle = [
             [
-                new PuzzleItem(1, true), new PuzzleItem(4, true), new PuzzleItem(5, true),
-                new PuzzleItem(6, true), new PuzzleItem(3, false), new PuzzleItem(8, true),
-                new PuzzleItem(9, true), new PuzzleItem(7, true), new PuzzleItem(2, false)
+                new PuzzleItem(1, true), new PuzzleItem(2, false)
             ],
             [
-                new PuzzleItem(6, false), new PuzzleItem(3, true), new PuzzleItem(2, false),
-                new PuzzleItem(4, false), new PuzzleItem(7, true), new PuzzleItem(9, true),
-                new PuzzleItem(1, true), new PuzzleItem(8, false), new PuzzleItem(5, true)
-            ],
-            [
-                new PuzzleItem(8, true), new PuzzleItem(7, false), new PuzzleItem(9, true),
-                new PuzzleItem(2, false), new PuzzleItem(1, true), new PuzzleItem(5, false),
-                new PuzzleItem(3, true), new PuzzleItem(6, true), new PuzzleItem(4, true)
-            ],
-            [
-                new PuzzleItem(2, true), new PuzzleItem(9, true), new PuzzleItem(6, false),
-                new PuzzleItem(3, true), new PuzzleItem(4, true), new PuzzleItem(1, true),
-                new PuzzleItem(7, true), new PuzzleItem(5, true), new PuzzleItem(8, false)
-            ],
-            [
-                new PuzzleItem(3, true), new PuzzleItem(1, true), new PuzzleItem(8, true),
-                new PuzzleItem(7, true), new PuzzleItem(5, true), new PuzzleItem(6, true),
-                new PuzzleItem(4, true), new PuzzleItem(2, true), new PuzzleItem(9, true)
-            ],
-            [
-                new PuzzleItem(7, false), new PuzzleItem(5, true), new PuzzleItem(4, true),
-                new PuzzleItem(9, true), new PuzzleItem(8, true), new PuzzleItem(2, true),
-                new PuzzleItem(6, true), new PuzzleItem(3, false), new PuzzleItem(1, true)
-            ],
-            [
-                new PuzzleItem(5, true), new PuzzleItem(2, false), new PuzzleItem(7, true),
-                new PuzzleItem(1, false), new PuzzleItem(6, true), new PuzzleItem(4, false),
-                new PuzzleItem(8, false), new PuzzleItem(9, true), new PuzzleItem(3, true)
-            ],
-            [
-                new PuzzleItem(4, true), new PuzzleItem(8, true), new PuzzleItem(3, true),
-                new PuzzleItem(5, false), new PuzzleItem(9, true), new PuzzleItem(7, true),
-                new PuzzleItem(2, true), new PuzzleItem(1, true), new PuzzleItem(6, true)
-            ],
-            [
-                new PuzzleItem(9, true), new PuzzleItem(6, true), new PuzzleItem(1, true),
-                new PuzzleItem(8, false), new PuzzleItem(2, false), new PuzzleItem(3, true),
-                new PuzzleItem(5, true), new PuzzleItem(4, true), new PuzzleItem(7, false)
+                new PuzzleItem(3, false), new PuzzleItem(4, true)
             ]
         ];
+        let cell00 = puzzle._puzzle[0][1]._value;
+        let cell01 = puzzle._puzzle[0][0]._value;
+        let cell10 = puzzle._puzzle[1][1]._value;
+        let cell11 = puzzle._puzzle[1][0]._value;
         puzzle.swapColumn(0, 1);
-        assert(puzzle._puzzle === solutionGrid, "Error swaping columns");
+        assert(puzzle._puzzle[0][0]._value === cell00, "should have swapped");
+        assert(puzzle._puzzle[0][1]._value === cell01, "should have swapped");
+        assert(puzzle._puzzle[1][0]._value === cell10, "should have swapped");
+        assert(puzzle._puzzle[1][1]._value === cell11, "should have swapped");
     });
-    it("should swap rows 0 and 1", () => {
+
+    it('should swap row 0 with 1', () => {
         let puzzle: Puzzle = new Puzzle();
-        let solutionGrid = [
+        puzzle._puzzle = [
             [
-                new PuzzleItem(3, true), new PuzzleItem(6, false), new PuzzleItem(2, false),
-                new PuzzleItem(4, false), new PuzzleItem(7, true), new PuzzleItem(9, true),
-                new PuzzleItem(1, true), new PuzzleItem(8, false), new PuzzleItem(5, true)
+                new PuzzleItem(1, true), new PuzzleItem(2, false)
             ],
             [
-                new PuzzleItem(4, true), new PuzzleItem(1, true), new PuzzleItem(5, true),
-                new PuzzleItem(6, true), new PuzzleItem(3, false), new PuzzleItem(8, true),
-                new PuzzleItem(9, true), new PuzzleItem(7, true), new PuzzleItem(2, false)
-            ],
-            [
-                new PuzzleItem(7, false), new PuzzleItem(8, true), new PuzzleItem(9, true),
-                new PuzzleItem(2, false), new PuzzleItem(1, true), new PuzzleItem(5, false),
-                new PuzzleItem(3, true), new PuzzleItem(6, true), new PuzzleItem(4, true)
-            ],
-            [
-                new PuzzleItem(9, true), new PuzzleItem(2, true), new PuzzleItem(6, false),
-                new PuzzleItem(3, true), new PuzzleItem(4, true), new PuzzleItem(1, true),
-                new PuzzleItem(7, true), new PuzzleItem(5, true), new PuzzleItem(8, false)
-            ],
-            [
-                new PuzzleItem(1, true), new PuzzleItem(3, true), new PuzzleItem(8, true),
-                new PuzzleItem(7, true), new PuzzleItem(5, true), new PuzzleItem(6, true),
-                new PuzzleItem(4, true), new PuzzleItem(2, true), new PuzzleItem(9, true)
-            ],
-            [
-                new PuzzleItem(5, true), new PuzzleItem(7, false), new PuzzleItem(4, true),
-                new PuzzleItem(9, true), new PuzzleItem(8, true), new PuzzleItem(2, true),
-                new PuzzleItem(6, true), new PuzzleItem(3, false), new PuzzleItem(1, true)
-            ],
-            [
-                new PuzzleItem(2, false), new PuzzleItem(5, true), new PuzzleItem(7, true),
-                new PuzzleItem(1, false), new PuzzleItem(6, true), new PuzzleItem(4, false),
-                new PuzzleItem(8, false), new PuzzleItem(9, true), new PuzzleItem(3, true)
-            ],
-            [
-                new PuzzleItem(8, true), new PuzzleItem(4, true), new PuzzleItem(3, true),
-                new PuzzleItem(5, false), new PuzzleItem(9, true), new PuzzleItem(7, true),
-                new PuzzleItem(2, true), new PuzzleItem(1, true), new PuzzleItem(6, true)
-            ],
-            [
-                new PuzzleItem(6, true), new PuzzleItem(9, true), new PuzzleItem(1, true),
-                new PuzzleItem(8, false), new PuzzleItem(2, false), new PuzzleItem(3, true),
-                new PuzzleItem(5, true), new PuzzleItem(4, true), new PuzzleItem(7, false)
+                new PuzzleItem(3, false), new PuzzleItem(4, true)
             ]
         ];
+
+        let cell00 = puzzle._puzzle[1][0]._value;
+        let cell01 = puzzle._puzzle[1][1]._value;
+        let cell10 = puzzle._puzzle[0][0]._value;
+        let cell11 = puzzle._puzzle[0][1]._value;
         puzzle.swapRow(0, 1);
-        assert(puzzle._puzzle === solutionGrid, "Error swaping rows");
+        assert(puzzle._puzzle[0][0]._value === cell00, "should have swapped");
+        assert(puzzle._puzzle[0][1]._value === cell01, "should have swapped");
+        assert(puzzle._puzzle[1][0]._value === cell10, "should have swapped");
+        assert(puzzle._puzzle[1][1]._value === cell11, "should have swapped");
+    });
+
+    it('should invert puzzle on horizontal axis', () => {
+        let puzzle: Puzzle = new Puzzle();
+        puzzle._puzzle = [
+            [
+                new PuzzleItem(1, true), new PuzzleItem(2, false)
+            ],
+            [
+                new PuzzleItem(3, false), new PuzzleItem(4, true)
+            ]
+        ];
+
+        let cell00 = puzzle._puzzle[1][0]._value;
+        let cell01 = puzzle._puzzle[1][1]._value;
+        let cell10 = puzzle._puzzle[0][0]._value;
+        let cell11 = puzzle._puzzle[0][1]._value;
+        puzzle.swapRow(0, 1);
+        assert(puzzle._puzzle[0][0]._value === cell00, "should have swapped");
+        assert(puzzle._puzzle[0][1]._value === cell01, "should have swapped");
+        assert(puzzle._puzzle[1][0]._value === cell10, "should have swapped");
+        assert(puzzle._puzzle[1][1]._value === cell11, "should have swapped");
+    });
+
+    it('should swap column 0 with 1', () => {
+        let puzzle: Puzzle = new Puzzle();
+        puzzle._puzzle = [
+            [
+                new PuzzleItem(1, true), new PuzzleItem(2, false)
+            ],
+            [
+                new PuzzleItem(3, false), new PuzzleItem(4, true)
+            ]
+        ];
+        let cell00 = puzzle._puzzle[0][1]._value;
+        let cell01 = puzzle._puzzle[0][0]._value;
+        let cell10 = puzzle._puzzle[1][1]._value;
+        let cell11 = puzzle._puzzle[1][0]._value;
+        puzzle.swapColumn(0, 1);
+        assert(puzzle._puzzle[0][0]._value === cell00, "should have swapped");
+        assert(puzzle._puzzle[0][1]._value === cell01, "should have swapped");
+        assert(puzzle._puzzle[1][0]._value === cell10, "should have swapped");
+        assert(puzzle._puzzle[1][1]._value === cell11, "should have swapped");
     });
 });

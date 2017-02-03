@@ -187,45 +187,4 @@ export class Puzzle {
             this.swapColumn(j, MAX_ROW_SIZE - j - 1);
         }
     }
-
-    public diagonalSymmetry(axis: AxisDiagonal) {
-        if (axis === AxisDiagonal.UP_LEFT_TO_DOWN_RIGHT) {
-            this.horizontalSymmetry();
-            this.verticalSymmetry();
-        } else {
-            this.verticalSymmetry();
-            this.horizontalSymmetry();
-        }
-    }
-
-    // /**
-    // *       Axis 0 :    [X] [ ] [ ]
-    // *                   [ ] [X] [ ]
-    // *                   [ ] [ ] [X]
-    // *
-    // *       Axis 1 :    [ ] [ ] [X]
-    // *                   [ ] [X] [ ]
-    // *                   [X] [ ] [ ]
-    // */
-    // public diagonalSymmetry(axis: AxisDiagonal) {
-    //     if (axis === AxisDiagonal.UP_LEFT_TO_DOWN_RIGHT) {
-    //         for (let i = 0; i < MAX_ROW_SIZE; ++i) {
-    //             for (let j = 0; j < MAX_COLUMN_SIZE; ++j) {
-    //                 this._puzzle[i][j].swap(this._puzzle[j][i]);
-    //             }
-    //         }
-    //     } else if (AxisDiagonal.DOWN_LEFT_TO_UP_RIGHT) {
-    //         for (let i = 0; i < MAX_ROW_SIZE; ++i) {
-    //             for (let j = 0; j < MAX_COLUMN_SIZE; ++j) {
-    //                 console.log(i, j, "swap", MAX_ROW_SIZE - j - 1, MAX_COLUMN_SIZE - i - 1);
-    //                 this._puzzle[i][j].swap(this._puzzle[MAX_ROW_SIZE - j - 1][MAX_COLUMN_SIZE - i - 1]);
-    //             }
-    //         }
-    //     }
-    // }
-}
-
-export enum AxisDiagonal {
-    UP_LEFT_TO_DOWN_RIGHT = 0,
-    DOWN_LEFT_TO_UP_RIGHT = 1
 }

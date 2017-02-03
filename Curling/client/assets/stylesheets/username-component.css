@@ -1,3 +1,11 @@
+#leaderboardBtn{
+    margin-top: 50px;
+}
+
+#leaderboardBtn p{
+    font-size: 16px;
+}
+
 .user-setting-content {
     position: relative;
     top: 25%; 
@@ -17,7 +25,6 @@
 }
 
 .user-setting-content .btn-secondary {
-    /*color: rgb(70,50,255);*/
     background-color: transparent;
 }
 

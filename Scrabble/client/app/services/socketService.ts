@@ -14,22 +14,24 @@ const PLAYERS_MISSING = "playersMissing";
 
 const SERVER_PORT_NUMBER = 3002;
 
-
 @Injectable()
 export class SocketService {
 
-    socket: SocketIOClient.Socket;
+    _socket: SocketIOClient.Socket;
 
     constructor () {
-        this.socket = io.connect("http://localhost:" + String(SERVER_PORT_NUMBER));
+            this._socket = io("http://localhost:" + String(SERVER_PORT_NUMBER));
+            this._socket.once("connect_error", () => {
+                alert("The server is offline, please run the server before starting the game");
+            });
     }
 
     public sendNewDemandRequest(playerName: string, gameType: string, responseFunctions: Function[]) {
-        this.socket.emit(NEW_GAME_DEMAND, {name: playerName, gameType: Number.parseInt(gameType)});
-        this.socket.removeAllListeners();
-        this.socket.once(INVALID_NAME, responseFunctions[0]);
-        this.socket.once(INVALID_DEMAND, responseFunctions[1]);
-        this.socket.once(NAME_OR_SOCKET_ALREADY_EXISTS, responseFunctions[2]);
-        this.socket.once(PLAYERS_MISSING, responseFunctions[3]);
+        this._socket.emit(NEW_GAME_DEMAND, {name: playerName, gameType: Number.parseInt(gameType)});
+        this._socket.removeAllListeners();
+        this._socket.once(INVALID_NAME, responseFunctions[0]);
+        this._socket.once(INVALID_DEMAND, responseFunctions[1]);
+        this._socket.once(NAME_OR_SOCKET_ALREADY_EXISTS, responseFunctions[2]);
+        this._socket.once(PLAYERS_MISSING, responseFunctions[3]);
     }
 }

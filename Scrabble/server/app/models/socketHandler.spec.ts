@@ -5,10 +5,10 @@ import { SocketCanalNames } from "./SocketCanalNames";
 import * as ioClient from "socket.io-client";
 
 const portNumber = 3000;
-const clientAdressConnection = "http://localhost:" + String(portNumber);
+const clientAddressConnection = "http://localhost:" + String(portNumber);
 let httpServer: http.Server;
 
-describe("create socket handler", () => {
+describe("create _socket handler", () => {
 
     before(() => {
         httpServer = http.createServer();
@@ -59,8 +59,8 @@ describe("messages received by the client", () => {
     });
 
     beforeEach(() => {
-        clientConnection1 = ioClient(clientAdressConnection);
-        clientConnection2 = ioClient(clientAdressConnection);
+        clientConnection1 = ioClient(clientAddressConnection);
+        clientConnection2 = ioClient(clientAddressConnection);
     });
 
     afterEach(() => {
@@ -106,7 +106,7 @@ describe("messages received by the client", () => {
         clientConnection1.emit(SocketCanalNames.NEW_GAME_DEMAND, {gameType: 2});
     });
 
-    it("should not accept two game demands from the same socket connection", done => {
+    it("should not accept two game demands from the same _socket connection", done => {
         let demandNumber = 0;
         clientConnection1.on(SocketCanalNames.PLAYERS_MISSING, () => {
             if (demandNumber !== 0) {

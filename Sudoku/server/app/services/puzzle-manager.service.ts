@@ -5,7 +5,7 @@
  * @date 2017/01/22
  */
 
-import { Puzzle/*, AxisDiagonal */ } from './../models/puzzle';
+import { Puzzle } from './../models/puzzle';
 
 const NOMBRE_ITERATION = 1000;
 
@@ -63,7 +63,7 @@ module PuzzleManagerService {
                 } while (columnA === columnB || Math.floor(columnA / 3) * 3 !== Math.floor(columnB / 3) * 3);
                 // While the columns aren't in the same square (3x3) or while the columns are equal
                 newPuzzle.swapColumn(columnA, columnB);
-                
+
                 // Horizontal Symmetry
                 newPuzzle.horizontalSymmetry();
 
@@ -72,7 +72,7 @@ module PuzzleManagerService {
             }
             while (new Date().getTime() / 1000 < endTime) {
                 // Wait until five seconds
-             }
+            }
             return newPuzzle;
         }
     }

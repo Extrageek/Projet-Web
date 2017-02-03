@@ -1,7 +1,8 @@
 import * as http from "http";
 import * as io from "socket.io";
 import { SocketCanalNames } from "./SocketCanalNames";
-import { RoomHandler, Player } from "./RoomsAndPlayers";
+import { RoomHandler } from "./RoomHandler";
+import { Player } from "./Player";
 
 export class IoConnection {
 
