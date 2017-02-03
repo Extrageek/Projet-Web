@@ -61,7 +61,6 @@ describe('PuzzleEventManagerService', () => {
             }))
     );
 
-
     it("isDirectionKey, Should return true, it's a direction key",
         inject([PuzzleEventManagerService],
             fakeAsync((eventManagerService: PuzzleEventManagerService) => {
@@ -80,6 +79,27 @@ describe('PuzzleEventManagerService', () => {
                 assert(eventManagerService.isDirection(fakeNumberKeyCode) === false,
                     "It's not a direction key");
             }))
+    );
+
+     it("isDirectionKey, Should return false , it's not a direction number",
+        inject([PuzzleEventManagerService],
+            fakeAsync((eventManagerService: PuzzleEventManagerService) => {
+                let fakeEvent = document.createEvent( "KeyboardEvent" ) ;
+
+        // fakeEvent.initKeyboardEvent(
+        //                 "keyup" // in DOMString typeArg
+        //                 , false // in boolean canBubbleArg
+        //                 , false // in boolean cancelableArg
+        //                 , global // in views::AbstractView viewArg
+        //                 , "+" // [test]in DOMString keyIdentifierArg | webkit event.keyIdentifier | IE9 event.key
+        //                 , 3 // [test]in unsigned long keyLocationArg | webkit event.keyIdentifier | IE9 event.location
+        //                 , true // [test]in boolean ctrlKeyArg | webkit event.shiftKey | old webkit event.ctrlKey | IE9 event.modifiersList
+        //                 , false // [test]shift | alt
+        //                 , true // [test]shift | alt
+        //                 , false // meta
+        //                 , false // altGraphKey
+        // );
+                    }))
     );
 
 });
