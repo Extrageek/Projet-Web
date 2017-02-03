@@ -18,11 +18,11 @@ export class UserSettingService {
         this._userSetting = value;
     }
 
-    public setName(username: string){
+    public setName(username: string) {
         this._userSetting.name = username;
     }
 
-    public setDifficulty(difficulty: Difficulty){
+    public setDifficulty(difficulty: Difficulty) {
         this._userSetting.difficulty = difficulty;
     }
 
