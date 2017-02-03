@@ -17,4 +17,14 @@ export class GameStatusService {
     public set gameStatus(value: GameStatus) {
         this._gameStatus = value;
     }
+
+    public randomFirstPlayer(): boolean {
+        let randomNumber = (Math.round(Math.random()) * 100) % 2;
+        if (randomNumber === 0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }
