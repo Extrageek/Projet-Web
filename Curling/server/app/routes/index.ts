@@ -31,7 +31,7 @@ module Route {
                 response.status(records === null ? HttpStatus.ERROR : HttpStatus.SUCCESS).send(records);
             } catch (error) {
                 response.status(HttpStatus.ERROR)
-                    .send([{ "error": "Une erreur est survenue lors de la connexion a la base de donnees. (getAllRecords)" }]);
+                    .send([{ "error": "Une erreur est survenue lors de la connexion a la base de donnees." }]);
             }
         }
 
