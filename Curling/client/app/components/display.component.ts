@@ -13,7 +13,7 @@ import { GameStatusService } from '../services/game-status.service';
     providers: [RestApiProxyService],
     selector: 'display-component',
     templateUrl: '../../assets/templates/display-component.html',
-    styleUrls: ['../../assets/stylesheets/display.css', '../../assets/stylesheets/menu-hamburger.css']
+    styleUrls: ['../../assets/stylesheets/display-component.css', '../../assets/stylesheets/menu-hamburger.css']
 })
 export class DisplayComponent implements OnInit {
     _userSetting: UserSetting;

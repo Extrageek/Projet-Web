@@ -1,4 +1,4 @@
-<form #f='ngForm' class="full-height">
+<form #f='ngForm' class="full-height user-setting">
     <div id="username" class="form-group user-setting-content">
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <button type="button" class="close" (click)="closeAlert()" aria-label="Close">
@@ -12,8 +12,8 @@
             <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
         </button>
         <div class="col-md-12">
-            <button type="button" class="btn btn-primary btn-lg" (click)='goToLeaderBoard()'>
-                <p><span class="glyphicon glyphicon-stats" aria-hidden="true"></span></p>
+            <button type="button" id="leaderboardBtn" class="btn btn-primary btn-lg" (click)='goToLeaderBoard()'>
+                <p>Tableau des scores <span class="glyphicon glyphicon-stats" aria-hidden="true"></span></p>
             </button>
         </div>
     </div>

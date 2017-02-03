@@ -7,7 +7,8 @@ import { Record } from '../models/record';
 
 @Component({
     selector: 'leaderboard-component',
-    templateUrl: '../../assets/templates/leaderboard-component.html'
+    templateUrl: '../../assets/templates/leaderboard-component.html',
+    styleUrls: ['../../assets/stylesheets/leaderboard-component.css']
 })
 export class LeaderboardComponent implements OnInit {
     private _records: Array<Record>;
@@ -18,6 +19,7 @@ export class LeaderboardComponent implements OnInit {
 
     public ngOnInit(): void {
         this.fetchRecords();
+        this.makeTableScroll();
     }
 
     public get records(): Array<Record> {
@@ -36,6 +38,12 @@ export class LeaderboardComponent implements OnInit {
             this._records = results;
         });
     }
+
+    public makeTableScroll() {
+            let height = window.innerHeight;
+            let wrapper = <HTMLElement>document.getElementById("leaderboard");
+            wrapper.style.height = (Math.round(height * 0.8)) + "px";
+        }
 
     public returnMainPage(): void {
         this.router.navigate(['/']);

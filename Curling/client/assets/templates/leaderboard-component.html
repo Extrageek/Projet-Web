@@ -1,21 +1,21 @@
-<nav>  </nav>
-
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>Pseudonyme</th>
-            <th>Score Joueur</th>
-            <th>Score CPU</th>
-            <th>Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let record of _records">
-            <td>{{record._username}}</td>
-            <td>{{record._scorePlayer}}</td>
-            <td>{{record._scoreComputer}}</td>
-            <td>{{record._date}}</td>
-        </tr>
-    </tbody>
-</table>
- <button type='submit' (click)='returnMainPage()'>Retour Menu principal</button>
+<button type='submit' class="btn btn-primary" (click)='returnMainPage()'>Retour Menu principal</button>
+<div id="leaderboard">
+    <table id="lead-table" class="table table-hover">
+        <thead>
+            <tr>
+                <th>Pseudonyme</th>
+                <th>Score Joueur</th>
+                <th>Score CPU</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let record of _records">
+                <td>{{record._username}}</td>
+                <td>{{record._scorePlayer}}</td>
+                <td>{{record._scoreComputer}}</td>
+                <td>{{record._date}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
