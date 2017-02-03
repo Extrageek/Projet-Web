@@ -22,6 +22,7 @@ export class TimerService {
         else if (this._minute === 60) {
             ++this._hour;
             this._minute = 0;
+            this._seconds = 0;
         }
     }
 

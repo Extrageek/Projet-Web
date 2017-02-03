@@ -10,11 +10,13 @@ import { ChatroomComponent } from "./components/chatroom.component";
 import { InformationPanelComponent } from "./components/information-panel.component";
 import { GameInitiationComponent } from "./components/game-initiation.component";
 import { GameComponent } from "./components/game-room.component";
+import { UserSettingsService} from "./services/userSettingService"
+
 
 const appRoutes: Routes = [
     { path: "", redirectTo: "/game-start", pathMatch: "full"},
-    { path: "game-start", component: GameInitiationComponent, data: {Username: "x", NumberOfPlayers: "3"}},
-    { path: "game-room", component: GameComponent},
+    { path: "game-start", component: GameInitiationComponent},
+    { path: "game-room", component: GameComponent, data: {id: ""}},
     ];
 
 @NgModule({
@@ -23,6 +25,7 @@ const appRoutes: Routes = [
       RouterModule.forRoot(appRoutes)],
   exports: [
       RouterModule],
+  providers: [ UserSettingsService ],
   declarations: [ AppComponent,
       EaselComponent,
       ScrabbleBoardComponent,

@@ -12,7 +12,7 @@ const INVALID_NAME = "errorInvalidName";
 //Message sent by the server when the number of missing players to begin the game has changed
 const PLAYERS_MISSING = "playersMissing";
 
-const PORT_NUMBER = 3002;
+const SERVER_PORT_NUMBER = 3002;
 
 
 @Injectable()
@@ -21,7 +21,7 @@ export class SocketService {
     socket: SocketIOClient.Socket;
 
     constructor () {
-        this.socket = io.connect("http://localhost:" + String(PORT_NUMBER));
+        this.socket = io.connect("http://localhost:" + String(SERVER_PORT_NUMBER));
     }
 
     public sendNewDemandRequest(playerName: string, gameType: string, responseFunctions: Function[]) {

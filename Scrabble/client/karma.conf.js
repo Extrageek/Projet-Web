@@ -100,7 +100,7 @@ module.exports = function(config) {
     coverageReporter: {
         includeAllSources: true,
         reporters:[
-            {type: 'json', subdir: '.', file: 'coverage-final.json'}
+            {type: 'html', subdir: '.', file: 'coverage-final.html'}
         ]
     },
     exclude: [],
