@@ -27,7 +27,9 @@ export class GridManagerService {
         if (isColumnValid && isRowValid && isSquareValid) {
             this.updateCurrentCellFormat(rowIndex, columnIndex, true);
         } else {
-            if (!isSquareValid || !isColumnValid || !isRowValid) {
+
+            if ((!isSquareValid || !isColumnValid || !isRowValid)
+             && grid[rowIndex][columnIndex]._value !== null) {
                 this.updateCurrentCellFormat(rowIndex, columnIndex);
             }
         }
@@ -86,14 +88,10 @@ export class GridManagerService {
 
     // Check if the square around the value is valid.
     isDuplicatedNumberInCurrentSquare(grid: PuzzleItem[][], rowIndex: number, columnIndex: number): boolean {
-        // TODO: remove number 3 and replace it by variable (squareSize) for better readeability
-        // TODO: Find a good way to avoid code duplication
         let squareMinRowIndex = Math.floor(rowIndex / 3) * 3;
         let squareMaxRowIndex = squareMinRowIndex + 2;
         let squareMinColumnIndex = Math.floor(columnIndex / 3) * 3;
         let squareMaxColumnIndex = squareMinColumnIndex + 2;
-
-        //let squareLimit = this.getSquareLimit(rowIndex, columnIndex);
 
         for (let rowId1 = squareMinRowIndex; rowId1 <= squareMaxRowIndex; ++rowId1) {
 
@@ -149,14 +147,6 @@ export class GridManagerService {
         }
         // Get the id of the current input id and delete it value
         let inputId = [CELL_ID_PREFIX, rowIndex, colIndex].join('');
-
-        //console.log(jQuery(inputId));
-
-        // if (jQuery(inputId) === undefined) {
-
-        //     console.log("jquery error");
-        //     throw new Error("Invalid Input element");
-        // }
 
         jQuery(inputId).val("");
         jQuery(inputId).css("background-color", "");

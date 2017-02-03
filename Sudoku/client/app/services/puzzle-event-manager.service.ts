@@ -53,11 +53,8 @@ export class PuzzleEventManagerService {
     * @return true for a delete keypress
     */
     isDeleteKey(keyCode: number): boolean {
-        console.log((keyCode === PuzzleCommon.deleteKeyCode
-            || keyCode === PuzzleCommon.backspaceKeyCode), "is delete");
-
         return (keyCode === PuzzleCommon.backspaceKeyCode
-        || keyCode === PuzzleCommon.deleteKeyCode);
+            || keyCode === PuzzleCommon.deleteKeyCode);
     }
 
     /**

@@ -1,8 +1,8 @@
+import { Injectable } from '@angular/core';
+
 import { Difficulty } from './user-setting';
 
-/**
- * name
- */
+@Injectable()
 export class Record {
     private _username: string;
     private _difficulty: Difficulty;
@@ -27,15 +27,15 @@ export class Record {
     }
 
     public get difficulty(): Difficulty {
-        return this.difficulty;
+        return this._difficulty;
     }
 
     public set difficulty(difficulty: Difficulty) {
-        this.difficulty = difficulty;
+        this._difficulty = difficulty;
     }
 
     public get scorePlayer(): number {
-        return this.difficulty;
+        return this._scorePlayer;
     }
 
     public set scorePlayer(scorePlayer: number) {

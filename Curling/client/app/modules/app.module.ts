@@ -7,20 +7,24 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from '../components/app.component';
 import { GlComponent } from '../components/gl.component';
-import { DashboardComponent } from '../components/dashboard.component';
-import { UserSettingComponent } from '../components/user-setting.component';
+import { LeaderboardComponent } from '../components/leaderboard.component';
+import { UsernameComponent } from '../components/username.component';
+import { DifficultyComponent } from '../components/difficulty.component';
 import { DisplayComponent } from '../components/display.component';
 
 import { ModifierDirective } from '../directives/modifier.directive';
 
 import { RenderService } from '../services/render.service';
+import { GameSettingsService } from '../services/game-settings.service';
 import { RestApiProxyService } from '../services/rest-api-proxy.service';
+import { UserSettingService } from '../services/user-setting.service';
+import { GameStatusService } from '../services/game-status.service';
 
 @NgModule({
   imports: [ BrowserModule, FormsModule, AppRoutingModule, MaterialModule.forRoot()],
-  declarations: [ AppComponent, GlComponent, DashboardComponent, ModifierDirective,
-                  UserSettingComponent, DisplayComponent],
-  providers: [ RenderService, RestApiProxyService ],
+  declarations: [ AppComponent, GlComponent, LeaderboardComponent, ModifierDirective,
+                  UsernameComponent, DifficultyComponent, DisplayComponent],
+  providers: [ RenderService, RestApiProxyService, UserSettingService, GameStatusService, GameSettingsService ],
   bootstrap: [ AppComponent ]
 })
 

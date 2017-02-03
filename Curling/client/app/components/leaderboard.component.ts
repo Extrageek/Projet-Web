@@ -6,14 +6,14 @@ import { RestApiProxyService } from '../services/rest-api-proxy.service';
 import { Record } from '../models/record';
 
 @Component({
-  selector: 'dashboard-component',
-  templateUrl: '../../assets/templates/dashboard-component.html'
+    selector: 'leaderboard-component',
+    templateUrl: '../../assets/templates/leaderboard-component.html'
 })
-export class DashboardComponent implements OnInit {
+export class LeaderboardComponent implements OnInit {
     private _records: Array<Record>;
 
-    public constructor( private router: Router,
-                        private restApi: RestApiProxyService) {
+    public constructor(private router: Router,
+        private restApi: RestApiProxyService) {
     }
 
     public ngOnInit(): void {
@@ -27,11 +27,11 @@ export class DashboardComponent implements OnInit {
         this._records = records;
     }
 
-    public addRecord(record: Record): void{
+    public addRecord(record: Record): void {
         this._records.push(record);
     }
 
-    public async fetchRecords(): Promise<void>{
+    public async fetchRecords(): Promise<void> {
         await this.restApi.getAllRecords().then(results => {
             this._records = results;
         });

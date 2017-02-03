@@ -1,7 +1,8 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 import { SocketService } from "../services/socketService";
-
+import { UserSettingsService } from "../services/userSettingService"
+import { GameInitSocketHandler } from "../services/gameInitSocketHandler"
 @Component({
     moduleId: module.id,
     providers: [SocketService],
@@ -10,35 +11,21 @@ import { SocketService } from "../services/socketService";
 })
 
 export class GameInitiationComponent {
-    constructor(private router: Router, private socketService: SocketService) {}
+    constructor(private router: Router, private socketService: SocketService,
+                private userSettings : UserSettingsService ) {}
 
     navigateToGameRoom(username: string, numberOfPlayers: string) {
-        //TODO : Send username & numberOfPlayers to server for validation
-        console.log("here");
         this.socketService.sendNewDemandRequest(username, numberOfPlayers,
-            [this.invalidPlayerName, this.invalidDemand, this.playerNameAlreadyExists, this.validRequest()]);
-        console.log("Username received:", username);
-        console.log("Number of players:", numberOfPlayers);
+            [GameInitSocketHandler.invalidPlayerName, GameInitSocketHandler.invalidDemand,
+                GameInitSocketHandler.playerNameAlreadyExists, this.validRequest(username)]);
     }
-
-    private invalidPlayerName() {
-        alert("Le nom donné n'est pas valide. Le nom ne peut contenir que des caractères alphanumériques.");
-    }
-
-    private invalidDemand() {
-        alert("La demande envoyée au serveur est invalide.");
-    }
-
-    private playerNameAlreadyExists() {
-        alert("Le nom du joueur a déjà été pris.");
-    }
-
-    private validRequest() {
+    validRequest(username:string) {
         let router = this.router;
         return (numberOfPlayersMissing: number) => {
-            alert("Demande réussie. Il manque encore " + String(numberOfPlayersMissing)
-                + " joueur(s) pour commencer la partie.");
-            router.navigate(["/game-room"]);
+            this.userSettings.userName = username;
+            alert("Valid username!. Please wait for " + String(numberOfPlayersMissing)
+                + " players(s) before starting the game.");
+            router.navigate(["/game-room", {id : username}]);
         };
     }
 }

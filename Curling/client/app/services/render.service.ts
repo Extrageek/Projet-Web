@@ -3,7 +3,6 @@ import { GameSettingsService } from './game-settings.service';
 
 @Injectable()
 export class RenderService {
-    private _gameSettings: GameSettingsService;
 
     private _scene: THREE.Scene;
     private _camera: THREE.PerspectiveCamera;
@@ -36,19 +35,17 @@ export class RenderService {
 
     private _created : THREE.Mesh[];
 
-    constructor() {
+    constructor(private _gameSettingsService: GameSettingsService) {
         this._scene = new THREE.Scene();
         this._wf = true;
          // Array to hold our created objects from the factory
         this._created = [];
         this._objectLoader = new THREE.ObjectLoader();
-        this._gameSettings = new GameSettingsService();
     }
 
     public init(container: HTMLElement) {
         //Part 1: Camera
         this.setUpCamera();
-        this.initializePlane();
 
         //Part 2: Scenery
         this.setUpLightning(); //Because lighting is everything
@@ -57,11 +54,12 @@ export class RenderService {
         //Part 3: Components
         this.loadFont();
         this.loadRink();
-        //if (this._gameSettings.getIsFirstPlayer() === true) {
+        this.loadArena();
+        if (this._gameSettingsService.getIsFirstPlayer() === true) {
             this.loadStoneRed();
-        //} else {
-        //    this.loadStoneBlue();
-        //}
+        } else {
+           this.loadStoneBlue();
+        }
 
         //Part 4: Service
         this.linkRenderServerToCanvas(container);
@@ -89,33 +87,56 @@ export class RenderService {
         this._renderer.setSize(window.innerWidth, window.innerHeight, true);
 
         this._camX = 0;
-        this._camY = 10;
-        this._camZ = 50;
-        this._camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 150);
+        this._camY = 9;
+        this._camZ = -27;
+        this._camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 10000);
+        this._camera.rotateX(Math.PI * 22 / 180);
+        this._camera.rotateY(Math.PI);
         this._camera.position.set(this._camX, this._camY, this._camZ);
     }
 
-    public initializePlane(): void {
-        let x: THREE.Mesh;
-        x = new THREE.Mesh(new THREE.SphereGeometry(150, 15, 15),
-                           new THREE.MeshBasicMaterial({wireframe: true}));
-
-        let plane: THREE.Mesh = new THREE.Mesh(
-        new THREE.CircleBufferGeometry( 1.83 , 32),
-            new THREE.MeshBasicMaterial( { color: 16711680, opacity: 1, transparent: false, wireframe: true})
-         );
-        plane.position.x = 0;
-        plane.position.z = 0;
-
-        this._scene.add(plane);
-    }
-
     public setUpLightning(): void {
-        this._scene.add(new THREE.AmbientLight(0x444444));
-        let dirLight = new THREE.DirectionalLight(0xeeeeee);
-        dirLight.position.set(0, 0, 1);
-        dirLight.position.normalize();
-        this._scene.add(dirLight);
+        let spotlightHouseNear = new THREE.SpotLight(0xffffff, 0.5, 0, 0.4);
+        spotlightHouseNear.penumbra = 0.34;
+        spotlightHouseNear.position.set(9, 10, -17);
+        spotlightHouseNear.target.position.set(0, 0, -17);
+        this._scene.add(spotlightHouseNear.target);
+        this._scene.add(spotlightHouseNear);
+
+        let spotlight1 = new THREE.SpotLight(0xffffff, 0.7, 0, 0.4);
+        spotlight1.penumbra = 0.39;
+        spotlight1.position.set(9, 10, -7);
+        spotlight1.target.position.set(0, 0, -10);
+        this._scene.add(spotlight1.target);
+        this._scene.add(spotlight1);
+
+        let spotlight2 = new THREE.SpotLight(0x3333cc, 0.8, 0, 0.2);
+        spotlight2.penumbra = 0.7;
+        spotlight2.position.set(-19, 10, 4);
+        spotlight2.target.position.set(0, 0, 0);
+        this._scene.add(spotlight2.target);
+        this._scene.add(spotlight2);
+
+        let spotlight3 = new THREE.SpotLight(0xff3333, 0.6, 0, 0.2);
+        spotlight3.penumbra = 0.45;
+        spotlight3.position.set(19, 10, 12);
+        spotlight3.target.position.set(0, 0, 8);
+        this._scene.add(spotlight3.target);
+        this._scene.add(spotlight3);
+
+        let spotlightHouseFar = new THREE.SpotLight(0xffffff, 0.8, 0, 0.4);
+        spotlightHouseFar.penumbra = 0.34;
+        spotlightHouseFar.position.set(-9, 10, 17);
+        spotlightHouseFar.target.position.set(0, 0, 17);
+        this._scene.add(spotlightHouseFar.target);
+        this._scene.add(spotlightHouseFar);
+
+        let spotlight4 = new THREE.SpotLight(0xffffff, 0.6, 0, 0.3);
+        spotlight4.penumbra = 0.8;
+        spotlight4.position.set(9, 10, 12);
+        spotlight4.target.position.set(0, 0, 23);
+        this._scene.add(spotlight4.target);
+        this._scene.add(spotlight4);
     }
 
      /**
@@ -155,7 +176,19 @@ export class RenderService {
     public loadRink(): void {
         this._objectLoader.load('/assets/models/json/curling-rink.json', obj => {
             obj.position.set(0, 0, 0);
-            obj.scale.set(2, 2, 2);
+            obj.scale.set(1, 1, 1);
+            this._mesh.add(obj);
+            (obj as THREE.Mesh).material = new THREE.MeshPhongMaterial({
+                wireframe: false,
+                shininess: 0.4,
+            });
+        });
+    }
+
+    public loadArena(): void {
+        this._objectLoader.load('/assets/models/json/arena.json', obj => {
+            obj.position.set(0, 0, 0);
+            obj.scale.set(1, 1, 1);
             this._mesh.add(obj);
             (obj as THREE.Mesh).material = new THREE.MeshPhongMaterial({
                 wireframe: false,
@@ -166,24 +199,24 @@ export class RenderService {
 
     public loadStoneRed(): void {
         this._objectLoader.load('/assets/models/json/curling-stone-red.json', obj => {
-            obj.position.set(0, 0, 25);
-            obj.scale.set(2, 2, 2);
+            obj.position.set(0, 0, -15);
+            obj.scale.set(1, 1, 1);
             this._mesh.add(obj);
             (obj as THREE.Mesh).material = new THREE.MeshPhongMaterial({
                 wireframe: false,
-                shininess: 0.2,
+                shininess: 0.7,
             });
         });
     }
 
     public loadStoneBlue(): void {
         this._objectLoader.load('/assets/models/json/curling-stone-blue.json', obj => {
-            obj.position.set(0, 0, -10);
-            obj.scale.set(2, 2, 2);
+            obj.position.set(0, 0, -15);
+            obj.scale.set(1, 1, 1);
             this._mesh.add(obj);
             (obj as THREE.Mesh).material = new THREE.MeshPhongMaterial({
                 wireframe: false,
-                shininess: 0.2,
+                shininess: 0.7,
             });
         });
     }

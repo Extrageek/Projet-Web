@@ -42,7 +42,6 @@ module.exports = function (config) {
       // Polyfills
       'node_modules/core-js/client/shim.js',
 
-
       // Jquery
       'https://code.jquery.com/jquery-1.11.2.min.js',
 
