@@ -18,6 +18,7 @@ const SERVER_PORT_NUMBER = 3002;
 export class SocketService {
 
     static _socket: SocketIOClient.Socket = null;
+    _socket: SocketIOClient.Socket;
 
     constructor () {
             if (SocketService._socket !== null) {

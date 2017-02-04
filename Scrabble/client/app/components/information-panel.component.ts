@@ -1,6 +1,5 @@
 import { Component, AfterViewInit } from "@angular/core";
 import { TimerService } from "../services/timerService";
-import { UserSettingsService } from "../services/userSettingService";
 
 const MAX_NUMBER_OF_LETTERS = 7;
 const ONE_SECOND = 1000;
@@ -12,19 +11,19 @@ const ONE_SECOND = 1000;
     templateUrl: "../../app/views/information-panel.html",
 })
 export class InformationPanelComponent implements AfterViewInit {
-    player : string;
+    player = "default";
     score : number;
     lettersOnEasel : number;
     seconds: number;
     minute: number;
     hour: number;
 
-    constructor(private timerService : TimerService, private userService : UserSettingsService) {
+    constructor(private timerService : TimerService) {
         this.seconds = 0; this.minute = 0; this.hour = 0;
-        this.player = this.userService.userName;
         this.score = 0;
         this.lettersOnEasel = MAX_NUMBER_OF_LETTERS;
     }
+
     ngAfterViewInit() {
         setInterval(() => {
             this.timerService.updateClock();

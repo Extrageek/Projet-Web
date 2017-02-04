@@ -4,7 +4,6 @@ import { TimerService } from "./timerService";
 let service : TimerService;
 const ONE_HOUR = 3600;
 const ONE_MINUTE = 60;
-const SEVEN_MINUTES = 420;
 describe("TimerService properties validation", () => {
 
     beforeEach(() => {

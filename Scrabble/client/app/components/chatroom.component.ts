@@ -14,12 +14,11 @@ export class ChatroomComponent implements AfterViewChecked {
     constructor() {
         this.messageArray = [];
     }
-
     submitMessage(message: HTMLInputElement) {
         if (message.value !== "") {
             this.messageArray.push(message.value);
         }
-            message.value = "";
+        message.value = "";
     }
 
     scrollToBottom() {

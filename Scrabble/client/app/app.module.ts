@@ -10,7 +10,6 @@ import { ChatroomComponent } from "./components/chatroom.component";
 import { InformationPanelComponent } from "./components/information-panel.component";
 import { GameInitiationComponent } from "./components/game-initiation.component";
 import { GameComponent } from "./components/game-room.component";
-import { UserSettingsService } from "./services/userSettingService";
 
 
 const appRoutes: Routes = [
@@ -25,7 +24,6 @@ const appRoutes: Routes = [
       RouterModule.forRoot(appRoutes)],
   exports: [
       RouterModule],
-  providers: [ UserSettingsService ],
   declarations: [ AppComponent,
       EaselComponent,
       ScrabbleBoardComponent,
