@@ -30,6 +30,6 @@ export class ChatroomComponent implements AfterViewChecked {
     }
 
     ngAfterViewChecked() {
-        this.scrollToBottom();
+        // this.scrollToBottom();
     }
 }

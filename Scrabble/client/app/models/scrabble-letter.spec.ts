@@ -24,6 +24,7 @@ describe("ScrabbleLetter letter validation", () => {
         expect(letter.imageSource).to.contain(".jpg");
     });
 
+
 });
 
 

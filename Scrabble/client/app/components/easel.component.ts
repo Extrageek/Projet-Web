@@ -14,7 +14,7 @@ export class EaselComponent {
     letters : ScrabbleLetter[];
 
     constructor(private easelGenerator : EaselGeneratorService) {
-    this.letters = easelGenerator.generatedEasel();
+        this.letters = easelGenerator.generatedEasel();
     }
 }
 
