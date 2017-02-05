@@ -41,6 +41,10 @@ module.exports = function(config) {
 
       // Polyfills
       'node_modules/core-js/client/shim.js',
+	  
+	  // Other 
+	  'node_modules/socket.io-client/dist/socket.io.js',
+	  'node_modules/socket.io-client/dist/socket.io.js',
 
       // zone.js
       'node_modules/zone.js/dist/zone.js',
@@ -112,4 +116,4 @@ module.exports = function(config) {
     browsers: ['Chrome'],
     singleRun: false
   })
-};;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+};
