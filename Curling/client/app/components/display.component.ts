@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { GameStatus } from '../models/game-status';
@@ -20,8 +20,17 @@ export class DisplayComponent implements OnInit {
     _gameStatus: GameStatus;
     _computerName: string;
 
+    @ViewChild("hamburger") hamburger: ElementRef;
+    @ViewChild("overlay") overlay: ElementRef;
+
+    @HostListener('window:beforeunload', ['$event'])
+    logout() {
+        this.api.createGameRecord(this._userSetting, this._gameStatus).then().catch();
+        this.api.removeUsername(this._userSetting.name).then().catch();
+    }
+
     constructor(private router: Router,
-        private restApiProxyService: RestApiProxyService,
+        private api: RestApiProxyService,
         private userSettingService: UserSettingService,
         private gameStatusService: GameStatusService) { }
 
@@ -29,18 +38,12 @@ export class DisplayComponent implements OnInit {
         this._userSetting = this.userSettingService.userSetting;
         console.log(this.userSettingService.userSetting);
         this._gameStatus = this.gameStatusService.gameStatus;
-        let hamburger = document.querySelector(".hamburger");
-        let overlay = document.querySelector(".overlay");
-        // open or close the overlay and animate the hamburger.
-        hamburger.addEventListener("click", () => {
-            hamburger.classList.toggle("is-active");
-            overlay.classList.toggle("is-open-menu");
-        });
-        // Save the record before closing the game display window.
-        window.addEventListener("beforeunload", () => {
-            this.restApiProxyService.createGameRecord(this._userSetting, this._gameStatus).then().catch();
-            this.restApiProxyService.removeUsername(this._userSetting.name).then().catch();
-        });
+    }
+
+
+    public toggleOverlay() {
+        this.hamburger.nativeElement.classList.toggle("is-active");
+        this.overlay.nativeElement.classList.toggle("is-open-menu");
     }
 
     public getComputerName(): void {
@@ -48,8 +51,8 @@ export class DisplayComponent implements OnInit {
     }
 
     public gameOver() {
-        this.restApiProxyService.createGameRecord(this._userSetting, this._gameStatus);
-        this.restApiProxyService.removeUsername(this._userSetting.name);
+        this.api.createGameRecord(this._userSetting, this._gameStatus);
+        this.api.removeUsername(this._userSetting.name);
         this.router.navigate(['/']);
     }
 }
