@@ -19,7 +19,7 @@ export class GameStatusService {
     }
 
     public randomFirstPlayer(): boolean {
-        let randomNumber = (Math.round(Math.random()) * 100) % 2;
+        let randomNumber = Math.round(Math.random() * 1000) % 2;
         if (randomNumber === 0){
             return true;
         }

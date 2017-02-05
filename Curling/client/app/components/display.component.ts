@@ -38,7 +38,8 @@ export class DisplayComponent implements OnInit {
         });
         // Save the record before closing the game display window.
         window.addEventListener("beforeunload", () => {
-            this.restApiProxyService.createGameRecord(this._userSetting, this._gameStatus);
+            this.restApiProxyService.createGameRecord(this._userSetting, this._gameStatus).then().catch();
+            this.restApiProxyService.removeUsername(this._userSetting.name).then().catch();
         });
     }
 
@@ -48,6 +49,7 @@ export class DisplayComponent implements OnInit {
 
     public gameOver() {
         this.restApiProxyService.createGameRecord(this._userSetting, this._gameStatus);
+        this.restApiProxyService.removeUsername(this._userSetting.name);
         this.router.navigate(['/']);
     }
 }

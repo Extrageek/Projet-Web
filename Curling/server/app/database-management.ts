@@ -28,6 +28,30 @@ export class DatabaseManager {
             return isInserted;
         }
     }
+    
+    static async removeUser(body: any): Promise<boolean> {
+        if (body.username === '') {
+            return false;
+        }
+        else {
+            console.log("-- DatabaseManager removeUser --");
+            let db = await MongoClient.connect(url);
+            let isRemoved = false;
+            try {
+                let collection = db.collection('username');
+                (await collection.deleteOne(body).then((result: any) => {
+                    if (result.deletedCount === 1) {
+                        isRemoved = true;
+                        console.log("-- user removed --");
+                    }
+                }));
+            } finally {
+                db.close();
+            }
+            console.log("-- isRemoved ", isRemoved);
+            return isRemoved;
+        }
+    }
 
     static async getAllRecords(): Promise<Array<any>> {
         try {

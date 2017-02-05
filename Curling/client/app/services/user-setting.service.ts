@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 
 import { UserSetting, Difficulty } from '../models/user-setting';
 
+import { RestApiProxyService } from '../services/rest-api-proxy.service';
+
 @Injectable()
 export class UserSettingService {
     private _userSetting: UserSetting;
 
-    constructor() {
+    constructor(private api: RestApiProxyService) {
         this._userSetting = new UserSetting();
     }
 
@@ -31,6 +33,38 @@ export class UserSettingService {
             return "CPU Normal";
         } else {
             return "CPU Difficile";
+        }
+    }
+
+    public activateButtonNextLogin(username: string): boolean {
+        if (username !== "") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public async verifyUsername(username: string): Promise<boolean> {
+        if (username !== '') {
+            let isValid: boolean;
+            await this.api.verifyUsername(username)
+                .then(result => {
+                    isValid = result;
+                })
+                .catch(error => {
+                    console.log(error);
+                    throw error;
+                });
+            if (isValid) {
+                this.setName(username);
+                return true;
+            } else {
+                return false;
+            }
+        }
+        else {
+            return false;
         }
     }
 }

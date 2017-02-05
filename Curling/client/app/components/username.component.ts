@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { RestApiProxyService } from '../services/rest-api-proxy.service';
@@ -15,6 +15,8 @@ export class UsernameComponent {
     _isLoginNextActivated = false;
     username: string;
 
+    @ViewChild("alertBox") alertBox: ElementRef;
+
     constructor(
         private router: Router,
         private restApiProxyService: RestApiProxyService,
@@ -22,25 +24,28 @@ export class UsernameComponent {
     }
 
     public async verifyUsername(username: string) {
-        if (username !== '') {
-            let isValid = await this.restApiProxyService.verifyUsername(username);
-            if (isValid.valueOf() === true) {
-                document.querySelector('.alert').classList.add("fade");
-                this.userSettingService.setName(username);
-                this.router.navigate(['/difficulty']);
-            } else {
-                document.querySelector('.alert').classList.remove("fade");
-            }
+        let isValid: boolean;
+        await this.restApiProxyService.verifyUsername(username)
+        .then(result => {
+            isValid = result;
+        })
+        .catch(error => {
+            console.log(error);
+            isValid = false;
+        });
+        if (isValid) {
+            this.alertBox.nativeElement.classList.add("fade");
+            this.userSettingService.setName(username);
+            this.router.navigate(["/difficulty"]);
         }
+        else {
+            this.alertBox.nativeElement.classList.remove("fade");
+        }
+
     }
 
     public activateLoginNext(username: string) {
-        if (username !== "") {
-            this._isLoginNextActivated = true;
-        }
-        else {
-            this._isLoginNextActivated = false;
-        }
+        this._isLoginNextActivated = this.userSettingService.activateButtonNextLogin(username);
     }
 
     public goToLeaderBoard() {
@@ -48,6 +53,6 @@ export class UsernameComponent {
     }
 
     public closeAlert() {
-        document.querySelector('.alert').classList.add("fade");
+        this.alertBox.nativeElement.classList.add("fade");
     }
 }

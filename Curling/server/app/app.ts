@@ -82,6 +82,7 @@ export class Application {
 
         // REST - POST
         router.post('/api/login', index.addUser.bind(index.addUser));
+        router.post('/api/logout', index.addUser.bind(index.removeUser));
         router.post('/api/game-over', index.saveGameRecord.bind(index.saveGameRecord));
 
         //use router middleware

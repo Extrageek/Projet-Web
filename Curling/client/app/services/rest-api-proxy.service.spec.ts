@@ -114,9 +114,13 @@ describe('RestApiProxyService - createGameRecord', () => {
 
                 let response: boolean;
                 // Make the fake call to the server
-                restApiProxyService.createGameRecord(userSetting, gameStatus).then(data => {
-                    response = data;
-                });
+                restApiProxyService.createGameRecord(userSetting, gameStatus)
+                    .then(data => {
+                        response = data;
+                    })
+                    .catch(error => {
+                        response = false;
+                    });
 
                 tick();
 
@@ -167,9 +171,13 @@ describe('RestApiProxyService - verifyUsername', () => {
 
                 let response: boolean;
                 // Make the fake call to the server
-                restApiProxyService.verifyUsername(userSetting.name).then(data => {
-                    response = data;
-                });
+                restApiProxyService.verifyUsername(userSetting.name)
+                    .then(data => {
+                        response = data;
+                    })
+                    .catch(error => {
+                        response = false;
+                    });
 
                 tick();
 
@@ -188,15 +196,19 @@ describe('RestApiProxyService - verifyUsername', () => {
                     // Send the fake data to the caller
                     connection.mockRespond(new Response(new ResponseOptions({
                         body: {},
-                        status: 400
+                        status: 504
                     })));
                 });
 
                 let response: boolean;
                 // Make the fake call to the server
-                restApiProxyService.verifyUsername(userSetting.name).then(data => {
-                    response = data;
-                });
+                restApiProxyService.verifyUsername(userSetting.name)
+                    .then(data => {
+                        response = data;
+                    })
+                    .catch(error => {
+                        response = false;
+                    });
 
                 tick();
 
@@ -217,9 +229,13 @@ describe('RestApiProxyService - verifyUsername', () => {
 
                 let response: boolean;
                 // Make the fake call to the server
-                restApiProxyService.verifyUsername(userSetting.name).then(data => {
-                    response = data;
-                });
+                restApiProxyService.verifyUsername(userSetting.name)
+                    .then(data => {
+                        response = data;
+                    })
+                    .catch(error => {
+                        response = false;
+                    });
 
                 tick();
 
@@ -337,9 +353,13 @@ describe('RestApiProxyService - getAllRecords', () => {
 
                 let response: Record[];
                 // Make the fake call to the server
-                restApiProxyService.getAllRecords().then(data => {
-                    response = data;
-                });
+                restApiProxyService.getAllRecords()
+                    .then(data => {
+                        response = data;
+                    })
+                    .catch(error => {
+                        response = new Array<Record>();
+                    });
 
                 tick();
 

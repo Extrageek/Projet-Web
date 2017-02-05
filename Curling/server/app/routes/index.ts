@@ -25,6 +25,25 @@ module Route {
             }
         }
 
+        public async removeUser(request: express.Request, response: express.Response, next: express.NextFunction) {
+            try {
+                await DatabaseManager.removeUser(request.body)
+                    .then(result => {
+                        if (result === true) {
+                            response.sendStatus(HttpStatus.SUCCESS);
+                        }
+                        else {
+                            response.sendStatus(HttpStatus.ERROR);
+                        }
+                    }).catch(error => {
+                        console.log("--- ERROR ---", error);
+                        response.sendStatus(HttpStatus.ERROR);
+                    });
+            } catch (error) {
+                response.sendStatus(HttpStatus.ERROR);
+            }
+        }
+
         public async getAllRecords(request: express.Request, response: express.Response, next: express.NextFunction) {
             try {
                 let records: Array<any> = await DatabaseManager.getAllRecords();

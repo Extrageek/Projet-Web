@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { RestApiProxyService } from '../services/rest-api-proxy.service';
@@ -12,6 +12,8 @@ import { Record } from '../models/record';
 })
 export class LeaderboardComponent implements OnInit {
     private _records: Array<Record>;
+
+    @ViewChild("leaderboard") leaderboard: ElementRef;
 
     public constructor(private router: Router,
         private restApi: RestApiProxyService) {
@@ -34,16 +36,19 @@ export class LeaderboardComponent implements OnInit {
     }
 
     public async fetchRecords(): Promise<void> {
-        await this.restApi.getAllRecords().then(results => {
-            this._records = results;
-        });
+        await this.restApi.getAllRecords()
+            .then(results => {
+                this._records = results;
+            })
+            .catch(error => {
+                this._records = new Array<Record>();
+            });
     }
 
     public makeTableScroll() {
-            let height = window.innerHeight;
-            let wrapper = <HTMLElement>document.getElementById("leaderboard");
-            wrapper.style.height = (Math.round(height * 0.8)) + "px";
-        }
+        let height = window.innerHeight;
+        this.leaderboard.nativeElement.style.height = (Math.round(height * 0.8)) + "px";
+    }
 
     public returnMainPage(): void {
         this.router.navigate(['/']);
