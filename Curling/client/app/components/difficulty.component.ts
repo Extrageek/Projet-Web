@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Difficulty } from '../models/user-setting';
 
 import { UserSettingService } from '../services/user-setting.service';
+import { RestApiProxyService } from '../services/rest-api-proxy.service';
 
 @Component({
     moduleId: module.id,
@@ -16,10 +17,16 @@ export class DifficultyComponent implements OnInit {
     _difficulty: Difficulty;
 
     constructor(private router: Router,
-        private userSettingService: UserSettingService) { }
+        private userSettingService: UserSettingService,
+        private api: RestApiProxyService) { }
 
     ngOnInit() {
         this._username = this.userSettingService.userSetting.name;
+    }
+
+    @HostListener('window:beforeunload', ['$event'])
+    logout() {
+        this.api.removeUsername(this._username).then().catch();
     }
 
     public launchGame() {
