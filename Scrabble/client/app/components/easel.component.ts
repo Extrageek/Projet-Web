@@ -7,9 +7,8 @@ import { OnInit } from "../../node_modules/@angular/core/src/metadata/lifecycle_
     moduleId: module.id,
     providers: [EaselGeneratorService],
     selector: "easel-selector",
-    // templateUrl: "../../app/views/easel.html",
-    // styleUrls: ["../../app/assets/easel.css"],
-    template: ``
+    templateUrl: "../../app/views/easel.html",
+    styleUrls: ["../../app/assets/easel.css"],
 })
 
 export class EaselComponent implements OnInit {

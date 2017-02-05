@@ -36,7 +36,7 @@ module Route {
                             response.sendStatus(HttpStatus.ERROR);
                         }
                     }).catch(error => {
-                        console.log("--- ERROR ---", error);
+                        console.log("--- ERROR removeUser ---", error);
                         response.sendStatus(HttpStatus.ERROR);
                     });
             } catch (error) {

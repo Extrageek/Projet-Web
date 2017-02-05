@@ -1,6 +1,6 @@
 
 <div class="menu-nav">
-    <button class="hamburger hamburger--elastic pull-right" type="button">
+    <button #hamburger (click)="toggleOverlay()" class="hamburger hamburger--elastic pull-right" type="button">
         <span class="hamburger-box">
             <span class="hamburger-inner"></span>
         </span>
@@ -9,7 +9,7 @@
 
 <my-gl class="col-sm-12"> </my-gl>
 
-<div id="display-component">
+<div id="display-component" (window:beforeunload)="logout()">
     <div class="col-sm-12">
         <div class="col-sm-4 pull-left">
             <div id="playerName" class="pull-left">
@@ -101,7 +101,7 @@
 </div>
 
 <!-- The overlay -->
-<div id="myNav" class="overlay">
+<div #overlay id="myNav" class="overlay">
     <div class="overlay-content">
         <p (click)="gameOver()"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Abandonner</p>
         <p (click)="_gameStatus.resetGameStatus()"><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span> Recommencer</p>
