@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { ScrabbleLetter }	from "../models/scrabble-letter";
 import { EaselGeneratorService } from "../services/easelGeneratorService";
+import { OnInit } from "../../node_modules/@angular/core/src/metadata/lifecycle_hooks";
 
 @Component({
     moduleId: module.id,
@@ -10,11 +11,14 @@ import { EaselGeneratorService } from "../services/easelGeneratorService";
     styleUrls: ["../../app/assets/easel.css"],
 })
 
-export class EaselComponent {
+export class EaselComponent implements OnInit {
     letters : ScrabbleLetter[];
 
     constructor(private easelGenerator : EaselGeneratorService) {
-        this.letters = easelGenerator.generatedEasel();
+    }
+
+    ngOnInit() {
+        this.letters = this.easelGenerator.generatedEasel();
     }
 }
 

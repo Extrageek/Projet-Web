@@ -7,7 +7,6 @@ export class EaselGeneratorService {
     private _lettersOnEasel : ScrabbleLetter[];
 
     generatedEasel() : ScrabbleLetter[] {
-
         this._lettersOnEasel = Array(7).fill(0);
         this._lettersOnEasel = this._lettersOnEasel.map(() => new ScrabbleLetter());
         return this._lettersOnEasel;
