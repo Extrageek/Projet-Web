@@ -2,7 +2,7 @@ import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular
 import { Router } from '@angular/router';
 
 import { GameStatus } from '../models/game-status';
-import { UserSetting } from '../models/user-setting';
+import { UserSetting, Difficulty } from '../models/user-setting';
 
 import { RestApiProxyService } from '../services/rest-api-proxy.service';
 import { UserSettingService } from '../services/user-setting.service';
@@ -24,9 +24,10 @@ export class DisplayComponent implements OnInit {
     @ViewChild("overlay") overlay: ElementRef;
 
     @HostListener('window:beforeunload', ['$event'])
-    logout() {
-        this.api.createGameRecord(this._userSetting, this._gameStatus).then().catch();
-        this.api.removeUsername(this._userSetting.name).then().catch();
+    saveAndLogout(event: Event) {
+        this.api.createGameRecord(this._userSetting, this._gameStatus);
+        this.api.removeUsername(this._userSetting.name);
+        event.stopImmediatePropagation();
     }
 
     constructor(private router: Router,
