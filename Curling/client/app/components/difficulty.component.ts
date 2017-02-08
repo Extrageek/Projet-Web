@@ -25,8 +25,9 @@ export class DifficultyComponent implements OnInit {
     }
 
     @HostListener('window:beforeunload', ['$event'])
-    logout() {
-        this.api.removeUsername(this._username).then().catch();
+    saveAndLogout(event: Event) {
+        this.api.removeUsername(this._username);
+        event.stopImmediatePropagation();
     }
 
     public launchGame() {
