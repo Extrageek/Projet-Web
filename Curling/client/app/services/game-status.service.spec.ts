@@ -1,6 +1,6 @@
 import { GameStatusService } from './game-status.service';
 import { GameStatus } from '../models/game-status';
-import { expect, assert } from "chai";
+import { expect } from "chai";
 
 let _gameStatusService: GameStatusService;
 

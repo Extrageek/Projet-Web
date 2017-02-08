@@ -1,11 +1,13 @@
-import { Injectable } from '@angular/core';
-import { GameStatusService } from './game-status.service';
+import { Injectable } from "@angular/core";
+import { GameStatusService } from "./game-status.service";
+import { CameraService } from "./cameras.service";
 
 @Injectable()
 export class RenderService {
 
     private _scene: THREE.Scene;
-    private _camera: THREE.PerspectiveCamera;
+    //private _camera: THREE.PerspectiveCamera;
+    private _currentCamera: THREE.PerspectiveCamera;
     private _renderer: THREE.Renderer;
     private _geometry: THREE.Geometry;
     //private _material: THREE.MeshBasicMaterial;
@@ -35,7 +37,7 @@ export class RenderService {
 
     private _created : THREE.Mesh[];
 
-    constructor(private _gameStatusService: GameStatusService) {
+    constructor(private _gameStatusService: GameStatusService, private _cameraService: CameraService) {
         this._scene = new THREE.Scene();
         this._wf = true;
          // Array to hold our created objects from the factory
@@ -46,6 +48,13 @@ export class RenderService {
     public init(container: HTMLElement) {
         //Part 1: Camera
         this.setUpCamera();
+        this._useAngle = false;
+        this._clock = new THREE.Clock();
+
+        this._renderer = new THREE.WebGLRenderer({antialias: true, devicePixelRatio: window.devicePixelRatio});
+        this._renderer.setSize(window.innerWidth, window.innerHeight, true);
+
+        this._currentCamera = this._cameraService.perspectiveCamera;
 
         //Part 2: Scenery
         this.setUpLightning(); //Because lighting is everything
@@ -80,19 +89,13 @@ export class RenderService {
         }
 
     public setUpCamera(): void {
-        this._useAngle = false;
-        this._clock = new THREE.Clock();
-
-        this._renderer = new THREE.WebGLRenderer({antialias: true, devicePixelRatio: window.devicePixelRatio});
-        this._renderer.setSize(window.innerWidth, window.innerHeight, true);
-
         this._camX = 0;
         this._camY = 9;
         this._camZ = -27;
-        this._camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 10000);
-        this._camera.rotateX(Math.PI * 22 / 180);
-        this._camera.rotateY(Math.PI);
-        this._camera.position.set(this._camX, this._camY, this._camZ);
+        this._currentCamera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 10000);
+        this._currentCamera.rotateX(Math.PI * 22 / 180);
+        this._currentCamera.rotateY(Math.PI);
+        this._currentCamera.position.set(this._camX, this._camY, this._camZ);
     }
 
     public setUpLightning(): void {
@@ -221,6 +224,11 @@ export class RenderService {
         });
     }
 
+    public switchCamera(): void {
+        this._currentCamera = this._cameraService.nextCamera();
+        this.onResize();
+    }
+
      animate(): void {
         window.requestAnimationFrame(_ => this.animate());
         this._dt = this._clock.getDelta();
@@ -240,14 +248,14 @@ export class RenderService {
         let newWidth: number = window.innerWidth * factor;
         let newHeight: number = window.innerHeight * factor;
 
-        this._camera.aspect = newWidth / newHeight;
-        this._camera.updateProjectionMatrix();
+        this._currentCamera.aspect = newWidth / newHeight;
+        this._currentCamera.updateProjectionMatrix();
 
         this._renderer.setSize(newWidth, newHeight);
     }
 
     render(): void {
-        this._renderer.render(this._scene, this._camera);
+        this._renderer.render(this._scene, this._currentCamera);
     }
 
     toggleWireFrame(): void {
@@ -264,8 +272,8 @@ export class RenderService {
         const width = window.innerWidth;
         const height = window.innerHeight;
 
-        this._camera.aspect = width / height;
-        this._camera.updateProjectionMatrix();
+        this._currentCamera.aspect = width / height;
+        this._currentCamera.updateProjectionMatrix();
 
         this._renderer.setSize(width, height);
     }
@@ -321,11 +329,12 @@ export class RenderService {
         this._mesh.position.x += x;
         this._mesh.position.y += y;
     }
-
+    /*
     public translateCamera(x: number, y: number, z: number): void {
         this._camera.position.x += x === undefined ? 0 : x ;
         this._camera.position.y += y === undefined ? 0 : y ;
         this._camera.position.z += z === undefined ? 0 : z ;
         this._camera.updateProjectionMatrix();
     }
+    */
 }

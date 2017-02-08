@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { MdSnackBar } from '@angular/material';
 
 import { RenderService } from '../services/render.service';
@@ -21,6 +21,14 @@ export class GlComponent implements OnInit {
         this.zCamera = 0;
         //console.log(this.trigger());
     }
+
+    @HostListener("window:keyup.space", ["$event"])
+    public spaceKeyPressed(event: KeyboardEvent) {
+        this.renderService.switchCamera();
+        //Return false to disable the default behavior of the space bar(scrolling).
+        return false;
+    }
+
     constructor(
         private renderService: RenderService,
         private snackbar: MdSnackBar
