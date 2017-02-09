@@ -75,7 +75,7 @@ export class RestApiProxyService {
     //         errMsg = error.message ? error.message : error.toString();
     //     }
 
-    //     // Use an new service to handle as a Logger,but we can keep the console for now
+    //     //TODO: Use an new service to handle as a Logger,but we can keep the console for now
     //     //console.error(errMsg);
 
     //     return Observable.throw(errMsg);

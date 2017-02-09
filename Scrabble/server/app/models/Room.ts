@@ -1,75 +1,130 @@
-import { Player } from "./Player";
-import { RoomHandler } from "./RoomHandler";
-import { SocketCanalNames } from "./SocketCanalNames";
+
+let uuid = require('node-uuid');
+
+import { Player } from "./player";
 
 export class Room {
 
-    private static socketRoomGeneratorId = 0;
+    private static roomIdCounter = 0;
 
-    private _players: Player[];
+    // The player of the room
+    private _players: Array<Player>;
+    public get players(): Array<Player> {
+        return this._players;
+    }
+    public set players(value: Array<Player>) {
+        this._players = value;
+    }
+
+    // The room capacity
     private _roomCapacity: number;
-    private _roomHandler: RoomHandler;
-    private _socketRoomId: string;
-    private _connection: SocketIO.Server;
+    public get roomCapacity(): number {
+        return this._roomCapacity;
+    }
+    public set roomCapacity(value: number) {
+        this._roomCapacity = value;
+    }
 
-    constructor(roomCapacity: number, connection: SocketIO.Server, roomHandler: RoomHandler) {
+    // The room unique id
+    private _roomId: string;
+    public get roomId(): string {
+        return this._roomId;
+    }
+    public set roomId(value: string) {
+        this._roomId = value;
+    }
+
+    // TODO: Can be removed, must be checked
+    private _roomNumber: number;
+    public get roomNumber(): number {
+        return this._roomNumber;
+    }
+    public set roomNumber(value: number) {
+        this._roomNumber = value;
+    }
+
+    // The constructor of the room
+    constructor(roomCapacity: number) {
         if (roomCapacity < 1 || roomCapacity > 4) {
             throw new RangeError("Invalid room capacity. Must be between 1 and 4.");
         }
+
+        ++Room.roomIdCounter;
         this._roomCapacity = roomCapacity;
         this._players = new Array<Player>();
-        this._roomHandler = roomHandler;
-        this._socketRoomId = String(Room.socketRoomGeneratorId);
-        this._connection = connection;
-        ++Room.socketRoomGeneratorId;
+        this._roomId = uuid.v1(); // Generate a v1 (time-based) id
+        this._roomNumber = Room.roomIdCounter;
     }
 
-    get roomCapacity(): number {
-        return this._roomCapacity;
-    }
-
-    get numberOfMissingPlayers(): number {
-        return this._roomCapacity - this._players.length;
-    }
-
+    // Check if the room is full or not
     public roomIsFull(): boolean {
         return this._players.length === this._roomCapacity;
     }
 
-    public addPlayer(player: Player) {
-        if (this.roomIsFull()) {
-            throw new Error("Room is already full.");
-        }
-        if (typeof(player) === "undefined" || player == null) {
+    // Add a new player to the current room
+    public addPlayer(player: Player): Boolean {
+
+        if (typeof (player) === "undefined" || player == null) {
             throw new Error("The player is undefined");
         }
-        this._players.push(player);
-        player.socket.join(this._socketRoomId);
-        this._connection.to(this._socketRoomId).emit(SocketCanalNames.PLAYERS_MISSING, this.numberOfMissingPlayers);
+
+        //TODO: remove not necessary statement
+        // Find a duplicated player name
+        if (this.isUsernameAvailable(player)) {
+            // console.log("---");
+            // console.log("added a  player");
+
+            this._players.push(player);
+
+            return true;
+
+        }
+
+        // console.log("---");
+        // console.log("player not added");
+        // console.log("---");
+
+        //console.log("Players list ", this._players);
+        return false;
     }
 
-    public removePlayer(player: Player) {
+    // Get the number of missing player before the game start
+    public numberOfMissingPlayers(): number {
+        return this._roomCapacity - this._players.length;
+    }
+
+    // Remove a player from the room
+    public removePlayer(player: Player): Player {
 
         let index = this._players.findIndex((element) => {
             return (element === player);
         });
+
         if (index !== -1) {
+
             let playerRemoved = this._players.splice(index, 1);
-            playerRemoved[0].socket.leave(this._socketRoomId);
-            if (this._players.length === 0) {
-                this._roomHandler.removeRoom(this);
-            }
-            else {
-                this._connection.to(this._socketRoomId).emit(
-                    SocketCanalNames.PLAYERS_MISSING, this.numberOfMissingPlayers);
-            }
+
+            console.log("The removed player: ", playerRemoved);
+
+            // TODO: remove the player from here
+            // And send a missing member event to the room members
+            return null;
         }
+
+        // TODO: Must return the removed player
+
+        return null;
     }
 
-    public hasPlayerWithNameOrSocket(player: Player): boolean {
-        let playerWithSameName = this._players.find((element: Player) => {
-            return element.name === player.name || element.socket === player.socket;
-        });
-        return typeof(playerWithSameName) !== "undefined";
+    // Check for a duplicated Player name
+    public isUsernameAvailable(player: Player): boolean {
+
+        let playerWithSameName = this._players.filter((element: Player) => element.username === player.username)[0];
+
+        if (playerWithSameName !== undefined) {
+
+            console.log("player with the same name", playerWithSameName.username);
+        }
+        return typeof (playerWithSameName) === "undefined";
     }
 }
