@@ -19,41 +19,51 @@ export class RoomHandler {
             throw new Error("Argument error: The player cannot be null");
         }
 
-        let availableRoom = this.findAvailableRoom(player.numberOfPlayers);
+        try {
 
-        //console.log("player is not null, available room", playerRoom);
-        if (availableRoom === null) {
+            let room = this.getAvailableRoom(player.numberOfPlayers);
 
-            // Create a new room if a room is not available
-            availableRoom = new Room(player.numberOfPlayers);
+            //console.log("player is not null, available room", playerRoom);
+            if (room === null) {
 
-            // Add the new player
-            if (!availableRoom.addPlayer(player)) {
-                return null;
+                // Create a new room if a room is not available
+                room = new Room(player.numberOfPlayers);
+
+                // Add the new player
+                room.addPlayer(player);
+
+                //console.log("in new room", playerRoom);
+                this._rooms.push(room);
+            }
+            else {
+                // Add the player to an existing room.
+                room.addPlayer(player);
             }
 
-            //console.log("in new room", playerRoom);
-            this._rooms.push(availableRoom);
-        }
-        else {
-            // Add the player to an existing room.
-            availableRoom.addPlayer(player);
-        }
+            return room;
 
-        return availableRoom;
+        } catch (error) {
+            throw new Error("An error occured when adding the player into the room");
+        }
     }
 
     // Remove a room from the list
     public removeRoom(room: Room) {
+        if (room === null) {
+            throw new Error("Argument error: The room cannot be null");
+        }
         // Exclude the current room of the list
         this._rooms = this._rooms.filter((element: Room) => { return element !== room; });
     }
 
     // Find an available room with the given capacity
-    public findAvailableRoom(roomCapacity: number): Room {
+    public getAvailableRoom(roomCapacity: number): Room {
 
+        if (roomCapacity < 0 && roomCapacity > 4) {
+            throw new Error("Out of range error: The room capacity must be between 1 and 4");
+        }
         let room = this._rooms.find((element) => {
-            return !element.roomIsFull() && element.roomCapacity === roomCapacity;
+            return !element.isFull() && element.roomCapacity === roomCapacity;
         });
 
         if (typeof (room) !== "undefined") {
@@ -64,28 +74,37 @@ export class RoomHandler {
     }
 
     // Find a player with the given socket TODO: By username
-    public findPlayerByUsername(username: string): Player {
+    public getPlayerByUsername(username: string): Player {
 
         if (username === null) {
-            throw new Error("Null argument error");
+            throw new Error("Argument error: the username cannot be null");
         }
+
+        let currentPlayer: Player;
+
+        console.log("All the room", this._rooms);
 
         // Look for a player in each room with the given socket
         this._rooms.forEach((room) => {
-            let currentPlayer = room.players.find((player) => (player.username === username));
+            currentPlayer = room.players.find((player) => (player.username === username));
+
             if (currentPlayer !== null) {
+
+                //console.log("the player", currentPlayer);
                 return currentPlayer;
             }
         });
 
+
+        //console.log("the player not found", currentPlayer);
         return null;
     }
 
     // Find a room with the givent socket TODO: By username
-    public findRoomByUsername(username: string): Room {
+    public getRoomByUsername(username: string): Room {
 
         if (username === null) {
-            throw new Error("Null argument error");
+            throw new Error("Argument error: the username cannot be null");
         }
 
         // Look for a room with a player that have the given socket
@@ -98,4 +117,6 @@ export class RoomHandler {
 
         return null;
     }
+
+
 }

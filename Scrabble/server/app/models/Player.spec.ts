@@ -1,69 +1,28 @@
-// import { expect } from "chai";
-// import { Player } from "./Player";
-// import { SocketCanalNames } from "./SocketCanalNames";
-// import * as io from "socket.io";
-// import * as ioClient from "socket.io-client";
+import { expect, assert } from "chai";
+import { Player } from "./Player";
 
-// const portNumber = 3000;
-// const clientAdressConnection = "http://localhost:" + String(portNumber);
-// const playerName = "Martin";
+const username = "Martin";
 
-// describe("test player class", () => {
+describe("Player", () => {
 
-//     let socketServer: SocketIO.Server = null;
+    it("should create a new player", () => {
+        let numberOfPlayer = 2;
+        let player = new Player(username, numberOfPlayer);
 
-//     beforeEach(() => {
-//         socketServer = io.listen(portNumber);
-//     });
+        expect(player).not.to.be.undefined;
+        expect(player.username).to.equals(username);
+        expect(player.numberOfPlayers).to.equals(numberOfPlayer);
+    });
 
-//     afterEach(() => {
-//         socketServer.close();
-//     });
+    it("should throw a null argument error", () => {
+        let invalidNumberOfPlayerWithLowValue = -1;
+        let invalidNumberOfPlayerWithHighValue = 5;
 
-//     it("should create a new player", done => {
-//         socketServer.on(SocketCanalNames.CONNECTION, (socket: SocketIO.Socket) => {
-//             let playerCreated = new Player(playerName, 3, socket);
-//             expect(playerCreated).to.be.instanceof(Player);
-//             done();
-//         });
-//         let socketListener = ioClient(clientAdressConnection);
-//         socketListener.close();
-//     });
-//     it("should not create a new player", done => {
-//         socketServer.on(SocketCanalNames.CONNECTION, (socket: SocketIO.Socket) => {
-//             let creation1 = function() {
-//                 new Player(null, 1, socket);
-//             };
-//             let creation2 = function() {
-//                 new Player(playerName, 0, socket);
-//             };
-//             let creation3 = function() {
-//                 new Player(playerName, 5, socket);
-//             };
-//             let creation4 = function() {
-//                 new Player(playerName, null, socket);
-//             };
-//             let creation5 = function() {
-//                 new Player(playerName, 2, null);
-//             };
-//             expect(creation1).to.throw(Error);
-//             expect(creation2).to.throw(Error);
-//             expect(creation3).to.throw(Error);
-//             expect(creation4).to.throw(Error);
-//             expect(creation5).to.throw(Error);
-//             done();
-//         });
-//         let socketListener = ioClient(clientAdressConnection);
-//         socketListener.close();
-//     });
-//     it("should return right values", done => {
-//         socketServer.on(SocketCanalNames.CONNECTION, (socket: SocketIO.Socket) => {
-//             let playerCreated = new Player(playerName, 3, socket);
-//             expect(playerCreated.name).to.equals(playerName);
-//             expect(playerCreated.numberOfPlayers).to.equals(3);
-//             done();
-//         });
-//         let socketListener = ioClient(clientAdressConnection);
-//         socketListener.close();
-//     });
-// });
+        assert.throw(() => new Player(null, 2), "Argument error: the username cannot be null");
+        assert.throw(() => new Player(username, invalidNumberOfPlayerWithLowValue),
+            "Argument error: the number of players must be between 1 and 4");
+
+        assert.throw(() => new Player(username, invalidNumberOfPlayerWithHighValue),
+            "Argument error: the number of players must be between 1 and 4");
+    });
+});

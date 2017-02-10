@@ -44,14 +44,15 @@ export class SocketConnectionHandler {
 
                 if (regularExpression.test(connectionInfos.username)) {
 
-                    let player = new Player(connectionInfos.username, connectionInfos.gameType, socket);
+                    // Check if the username is already taken or not
+                    if (this._roomHandler.getPlayerByUsername(connectionInfos.username) === null) {
 
-                    // TODO: Use the roomHandler to check if the username is available before trying to add the player
-                    let playerRoom = this._roomHandler.addPlayer(player);
+                        // Create a new player and return his new room.
+                        let player = new Player(connectionInfos.username, connectionInfos.gameType);
+                        let playerRoom = this._roomHandler.addPlayer(player);
 
-                    if (playerRoom !== null) {
-
-                        let roomMessage = {
+                        // Create a response for the room members
+                        let roomResponseMessage = {
                             username: player.username,
                             roomNumber: playerRoom.roomNumber,
                             numberOfMissingPlayers: playerRoom.numberOfMissingPlayers(),
@@ -60,26 +61,25 @@ export class SocketConnectionHandler {
                         };
 
                         //console.log(" Message - Session info: ", roomMessage);
-
+                        // Join the room
                         socket.join(playerRoom.roomId);
 
-                        console.log(socket.id, " joined room");
+                        //console.log(socket.id, " joined room");
 
-                        if (!playerRoom.roomIsFull()) {
-                            roomMessage.message = `${connectionInfos.username}` + ` join the room`;
+                        if (!playerRoom.isFull()) {
+                            roomResponseMessage.message = `${connectionInfos.username}` + ` join the room`;
 
                             // Emit to all the player in the room.
-                            this._socket.in(playerRoom.roomId).emit(SocketEventType.joinRoom, roomMessage);
+                            this._socket.in(playerRoom.roomId).emit(SocketEventType.joinRoom, roomResponseMessage);
 
                         } else {
-                            roomMessage.message = `${connectionInfos.username}` + ` join the room`;
+                            roomResponseMessage.message = `${connectionInfos.username}` + ` join the room`;
 
-                            // Emit to all the player in the room.
-                            this._socket.in(playerRoom.roomId).emit(SocketEventType.roomReady, roomMessage);
+                            // Emit a message to all the player in the room.
+                            this._socket.in(playerRoom.roomId).emit(SocketEventType.roomReady, roomResponseMessage);
                         }
                     }
                     else {
-
                         // Emit only to the sender
                         socket.emit(SocketEventType.usernameAlreadyExist);
                     }

@@ -19,19 +19,16 @@ export class Player {
     }
 
     // The constructor of a player
-    constructor(playerName: string, numberOfPlayers: number, socket: SocketIOClient.Socket) {
+    constructor(username: string, numberOfPlayers: number) {
 
-        if (playerName === null) {
-            throw new Error("Invalid parameters.");
+        if (username === null) {
+            throw new Error("Argument error: the username cannot be null");
+        }
+        if (numberOfPlayers < 1 || numberOfPlayers > 4) {
+            throw new RangeError("Argument error: the number of players must be between 1 and 4");
         }
 
-        let playerNameTrimed = playerName.trim();
-        if ((playerNameTrimed === "")
-            || numberOfPlayers < 1
-            || numberOfPlayers > 4) {
-            throw new Error("Invalid parameters.");
-        }
-        this._username = playerName;
+        this._username = username;
         this._numberOfPlayers = numberOfPlayers;
     }
 }

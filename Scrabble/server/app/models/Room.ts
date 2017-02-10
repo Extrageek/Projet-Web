@@ -1,7 +1,5 @@
-
-let uuid = require('node-uuid');
-
 import { Player } from "./player";
+let uuid = require('node-uuid');
 
 export class Room {
 
@@ -34,7 +32,7 @@ export class Room {
         this._roomId = value;
     }
 
-    // TODO: Can be removed, must be checked
+    // TODO: Can be removed, must be checked with the group before
     private _roomNumber: number;
     public get roomNumber(): number {
         return this._roomNumber;
@@ -46,7 +44,7 @@ export class Room {
     // The constructor of the room
     constructor(roomCapacity: number) {
         if (roomCapacity < 1 || roomCapacity > 4) {
-            throw new RangeError("Invalid room capacity. Must be between 1 and 4.");
+            throw new RangeError("Argument error: the number of players must be between 1 and 4.");
         }
 
         ++Room.roomIdCounter;
@@ -57,44 +55,38 @@ export class Room {
     }
 
     // Check if the room is full or not
-    public roomIsFull(): boolean {
+    public isFull(): boolean {
         return this._players.length === this._roomCapacity;
     }
 
     // Add a new player to the current room
-    public addPlayer(player: Player): Boolean {
+    public addPlayer(player: Player) {
 
         if (typeof (player) === "undefined" || player == null) {
             throw new Error("The player is undefined");
         }
 
-        //TODO: remove not necessary statement
-        // Find a duplicated player name
-        if (this.isUsernameAvailable(player)) {
-            // console.log("---");
-            // console.log("added a  player");
-
-            this._players.push(player);
-
-            return true;
-
+        if (this.isFull()) {
+            throw new Error("The room is full, cannot add a new player");
         }
 
-        // console.log("---");
-        // console.log("player not added");
-        // console.log("---");
+        if (this.usernameAlreadyExist(player.username)) {
+            throw new Error("The username already exist in this room");
+        }
 
-        //console.log("Players list ", this._players);
-        return false;
+        this._players.push(player);
     }
 
-    // Get the number of missing player before the game start
+    // Get the number of missing player before the game
     public numberOfMissingPlayers(): number {
         return this._roomCapacity - this._players.length;
     }
 
-    // Remove a player from the room
+    // Remove a player from the current room
     public removePlayer(player: Player): Player {
+        if (player === null || player === undefined) {
+            throw new Error("Argument error: the player cannot be null");
+        }
 
         let index = this._players.findIndex((element) => {
             return (element === player);
@@ -102,29 +94,21 @@ export class Room {
 
         if (index !== -1) {
 
-            let playerRemoved = this._players.splice(index, 1);
-
-            console.log("The removed player: ", playerRemoved);
-
-            // TODO: remove the player from here
-            // And send a missing member event to the room members
-            return null;
+            let playerRemoved = this._players.splice(index, 1)[0];
+            return playerRemoved;
         }
-
-        // TODO: Must return the removed player
 
         return null;
     }
 
-    // Check for a duplicated Player name
-    public isUsernameAvailable(player: Player): boolean {
-
-        let playerWithSameName = this._players.filter((element: Player) => element.username === player.username)[0];
-
-        if (playerWithSameName !== undefined) {
-
-            console.log("player with the same name", playerWithSameName.username);
+    // Check if the username of the player already exist in the current room
+    public usernameAlreadyExist(username: string): Boolean {
+        if (username === null) {
+            throw new Error("Argument error: the username cannot be null");
         }
-        return typeof (playerWithSameName) === "undefined";
+
+        let matchPlayer = this._players.filter((player) => (player.username === username))[0];
+
+        return (matchPlayer !== null && matchPlayer !== undefined) ? true : false;
     }
 }
