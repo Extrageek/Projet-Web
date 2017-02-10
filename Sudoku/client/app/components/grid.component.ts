@@ -77,9 +77,9 @@ import { Observable } from 'rxjs/Observable';
 })
 
 export class GridComponent implements OnInit {
-    _newPuzzle: Puzzle;
+    private _newPuzzle: Puzzle;
 
-    time : {
+    private time : {
         seconds : number;
         minute : number;
         hour : number;
@@ -87,7 +87,7 @@ export class GridComponent implements OnInit {
 
     hiddenClock : boolean;
 
-    constructor(private gridMangerService: GridManagerService,
+    constructor(private gridManagerService: GridManagerService,
         private puzzleEventManager: PuzzleEventManagerService,
         private restApiProxyService: RestApiProxyService,
         private stopwatchService : StopwatchService) {
@@ -105,12 +105,12 @@ export class GridComponent implements OnInit {
                 this._newPuzzle = this.extractTheNewPuzzle(puzzle);
             });
 
-        // Observable.timer(5000,1000).subscribe(() =>{
-        //     this.stopwatchService.updateClock();
-        //     this.time.seconds = this.stopwatchService.seconds;
-        //     this.time.minute = this.stopwatchService.minutes;
-        //     this.time.hour = this.stopwatchService.hours;
-        // });
+        Observable.timer(5000,1000).subscribe(() =>{
+            this.stopwatchService.updateClock();
+            this.time.seconds = this.stopwatchService.seconds;
+            this.time.minute = this.stopwatchService.minutes;
+            this.time.hour = this.stopwatchService.hours;
+        });
     }
 
     /**
@@ -146,10 +146,11 @@ export class GridComponent implements OnInit {
         let colIndex = Number(rowColIndex[PuzzleCommon.xPosition]);
 
         if (event.keyCode === PuzzleCommon.backspaceKeyCode) {
-            this.gridMangerService.deleteCurrentValue(rowIndex, colIndex);
+            this.gridManagerService.deleteCurrentValue(this._newPuzzle, rowIndex, colIndex);
         }
-        else {
-            this.gridMangerService.validateEnteredNumber(this._newPuzzle, rowIndex, colIndex);
+
+        else if (this.puzzleEventManager.isSudokuNumber(event.which)){
+            this.gridManagerService.validateEnteredNumber(this._newPuzzle, rowIndex, colIndex);
         }
     }
 
@@ -161,7 +162,7 @@ export class GridComponent implements OnInit {
             throw new Error("The initial grid cannot be null.");
         }
 
-        this.gridMangerService.initializeGrid(this._newPuzzle);
+        this.gridManagerService.initializeGrid(this._newPuzzle);
     }
 
     // Use to check if a value is a Sudoku number
