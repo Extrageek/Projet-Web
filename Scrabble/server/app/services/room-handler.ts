@@ -80,23 +80,15 @@ export class RoomHandler {
             throw new Error("Argument error: the username cannot be null");
         }
 
-        let currentPlayer: Player;
-
-        console.log("All the room", this._rooms);
-
         // Look for a player in each room with the given socket
         this._rooms.forEach((room) => {
-            currentPlayer = room.players.find((player) => (player.username === username));
+            let currentPlayer = room.players.find((player) => (player.username === username));
 
             if (currentPlayer !== null) {
-
-                //console.log("the player", currentPlayer);
                 return currentPlayer;
             }
         });
 
-
-        //console.log("the player not found", currentPlayer);
         return null;
     }
 
@@ -117,6 +109,4 @@ export class RoomHandler {
 
         return null;
     }
-
-
 }
