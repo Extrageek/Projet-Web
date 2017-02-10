@@ -1,36 +1,36 @@
 import { Injectable } from "@angular/core";
-
+const FIVE_SECOND_DELAY = 5000;
 @Injectable()
 export class StopwatchService {
-
+    private _startTime : number;
     private _seconds: number;
-    private _minute: number;
-    private _hour: number;
+    private _minutes: number;
+    private _hours: number;
 
     constructor() {
+        this._startTime = new Date().getTime();
         this._seconds = 0;
-        this._minute = 0;
-        this._hour = 0;
+        this._minutes = 0;
+        this._hours = 0;
     }
 
     public updateClock() {
-        ++this._seconds;
-        if (this._seconds === 60) {
-            ++this._minute;
-            this._seconds = 0;
-        }
-        else if (this._minute === 60) {
-            ++this._hour;
-            this._minute = 0;
-            this._seconds = 0;
-        }
+        let elapsedTime : number;
+        elapsedTime = new Date().getTime() - this._startTime;
+
+        elapsedTime = Math.floor(elapsedTime / 1000);
+        this._seconds = elapsedTime % 60;
+        elapsedTime = Math.floor(elapsedTime / 60);
+        this._minutes = elapsedTime % 60;
+        elapsedTime = Math.floor(elapsedTime / 60);
+        this._hours = elapsedTime % 60;
     }
 
-    get minute(): number {
-        return this._minute;
+    get minutes(): number {
+        return this._minutes;
     }
-    get hour(): number {
-        return this._hour;
+    get hours(): number {
+        return this._hours;
     }
     get seconds(): number {
         return this._seconds;

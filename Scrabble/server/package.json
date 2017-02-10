@@ -47,8 +47,8 @@
     "remap-istanbul": "^0.8.4",
     "rimraf": "^2.5.4",
     "socket.io-client": "^1.7.2",
-    "tslint": "^4.2.0",
+    "tslint": "^4.4.2",
     "tslint-eslint-rules": "^3.2.3",
-    "typescript": "^2.1.4"
+    "typescript": "^2.1.6"
   }
 }

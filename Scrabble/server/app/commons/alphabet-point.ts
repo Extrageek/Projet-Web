@@ -1,0 +1,29 @@
+export class AlphabetPoint {
+    static letterA = 1;
+    static letterB = 3;
+    static letterC = 3;
+    static letterD = 2;
+    static letterE = 1;
+    static letterF = 4;
+    static letterG = 2;
+    static letterH = 4;
+    static letterI = 1;
+    static letterJ = 8;
+    static letterK = 10;
+    static letterL = 1;
+    static letterM = 2;
+    static letterN = 1;
+    static letterO = 1;
+    static letterP = 3;
+    static letterQ = 8;
+    static letterR = 1;
+    static letterS = 1;
+    static letterT = 1;
+    static letterU = 1;
+    static letterV = 4;
+    static letterW = 10;
+    static letterX = 10;
+    static letterY = 10;
+    static letterZ = 10;
+    static blank = 0;
+}
