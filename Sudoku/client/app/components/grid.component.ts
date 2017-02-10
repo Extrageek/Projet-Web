@@ -9,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/interval';
+import 'rxjs/add/observable/timer';
 
 declare var jQuery: any;
 
@@ -62,7 +62,13 @@ import { Observable } from 'rxjs/Observable';
 
             <div class="col-md-5 menu-panel">
                 <button type="button" class="btn btn-primary" (click)="initializeCurrentGrid()">Initialize Game</button>
-                <p> {{time.hour}} : {{time.minute}} : {{time.seconds}}</p>
+                <h2 *ngIf="!hiddenClock">                
+                    {{time.hour}} : {{time.minute}} : {{time.seconds}}
+                    <span (click)="hideClock()"  class="glyphicon glyphicon-ban-circle" aria-hidden="true"> </span>                     
+                </h2>
+                <h2 *ngIf="hiddenClock"> 
+                    <span (click)="hideClock()" class="glyphicon glyphicon-time" aria-hidden="true"> </span>
+                </h2>
             </div>
         </div>
     `,
@@ -72,16 +78,21 @@ import { Observable } from 'rxjs/Observable';
 
 export class GridComponent implements OnInit {
     _newPuzzle: Puzzle;
+
     time : {
         seconds : number;
         minute : number;
         hour : number;
-    }
+    };
+
+    hiddenClock : boolean;
+
     constructor(private gridMangerService: GridManagerService,
         private puzzleEventManager: PuzzleEventManagerService,
         private restApiProxyService: RestApiProxyService,
         private stopwatchService : StopwatchService) {
             this.time = { 'seconds':0, 'minute':0, 'hour':0 };
+            this.hiddenClock = false;
     }
 
     // Initialization
@@ -94,12 +105,12 @@ export class GridComponent implements OnInit {
                 this._newPuzzle = this.extractTheNewPuzzle(puzzle);
             });
 
-        Observable.interval(1000).subscribe(() =>{
-            this.stopwatchService.updateClock();
-            this.time.seconds = this.stopwatchService.seconds;
-            this.time.minute = this.stopwatchService.minute;
-            this.time.hour = this.stopwatchService.hour;
-        });
+        // Observable.timer(5000,1000).subscribe(() =>{
+        //     this.stopwatchService.updateClock();
+        //     this.time.seconds = this.stopwatchService.seconds;
+        //     this.time.minute = this.stopwatchService.minutes;
+        //     this.time.hour = this.stopwatchService.hours;
+        // });
     }
 
     /**
@@ -164,4 +175,7 @@ export class GridComponent implements OnInit {
         }
     }
 
+    hideClock() {
+        this.hiddenClock = !this.hiddenClock;
+    }
 }
