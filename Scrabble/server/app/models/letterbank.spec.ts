@@ -14,13 +14,14 @@ describe("LetterBank should", () => {
     });
 
     it("construct a bank of letters correctly", () => {
-        expect(_letterBank.bank[3].alphabetLetter).to.be.equal(Alphabet.D);
-        expect(_letterBank.bank[3].point).to.be.equal(AlphabetPoint.letterD);
-        expect(_letterBank.bank[3].quantity).to.be.equal(AlphabetQuantity.letterD);
+        expect(_letterBank.bank[4].alphabetLetter).to.be.equal(Alphabet.D);
+        expect(_letterBank.bank[4].point).to.be.equal(AlphabetPoint.letterD);
+        expect(_letterBank.bank[4].quantity).to.be.equal(AlphabetQuantity.letterD);
     });
 
     it("get the bank of letters correctly", () => {
         let _fakeBank = new Array<Letter>();
+        _fakeBank.push(new Letter(Alphabet.BLANK, AlphabetPoint.blank, AlphabetQuantity.blank));
         _fakeBank.push(new Letter(Alphabet.A, AlphabetPoint.letterA, AlphabetQuantity.letterA));
         _fakeBank.push(new Letter(Alphabet.B, AlphabetPoint.letterB, AlphabetQuantity.letterB));
         _fakeBank.push(new Letter(Alphabet.C, AlphabetPoint.letterC, AlphabetQuantity.letterC));
@@ -47,7 +48,6 @@ describe("LetterBank should", () => {
         _fakeBank.push(new Letter(Alphabet.X, AlphabetPoint.letterX, AlphabetQuantity.letterX));
         _fakeBank.push(new Letter(Alphabet.Y, AlphabetPoint.letterY, AlphabetQuantity.letterY));
         _fakeBank.push(new Letter(Alphabet.Z, AlphabetPoint.letterZ, AlphabetQuantity.letterZ));
-        _fakeBank.push(new Letter(Alphabet.BLANK, AlphabetPoint.blank, AlphabetQuantity.blank));
         expect(_letterBank.bank).to.be.deep.equals(_fakeBank);
     });
 });
