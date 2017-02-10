@@ -2,6 +2,8 @@ import { expect } from "chai";
 import { CameraService } from "./cameras.service";
 import { PerspectiveCamera, Object3D, Vector3 } from "three";
 
+//The setTimeout function was used instead of the requestAnimationFrame because the
+//requestAnimationFrame is not triggered when the tests are re-executed.
 describe("Camera service should", () => {
 
     let cameraService: CameraService;
@@ -77,11 +79,11 @@ describe("Camera service should", () => {
             cameraService.update();
             ++frameNumber;
             if (frameNumber < numberOfFramesBefore) {
-                window.requestAnimationFrame(update);
+                setTimeout(update, 1);
             }
             else {
                 cameraService.stopPerspectiveCameraToFollowObjectOnZ();
-                window.requestAnimationFrame(updatePart2);
+                setTimeout(updatePart2, 1);
             }
         }
         function updatePart2() {
