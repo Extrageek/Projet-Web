@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+ import { Injectable } from '@angular/core';
 
 import { Puzzle, PuzzleItem } from '../models/puzzle';
 
@@ -140,7 +140,7 @@ export class GridManagerService {
     }
 
     // Delete the current value and update the cell format.
-    deleteCurrentValue(rowIndex: number, colIndex: number) {
+    deleteCurrentValue(puzzle: Puzzle, rowIndex: number, colIndex: number) {
 
         if (rowIndex < 0 || colIndex < 0) {
             throw new Error("A row or a column index cannot be less than (0)");
@@ -150,5 +150,7 @@ export class GridManagerService {
 
         jQuery(inputId).val("");
         jQuery(inputId).css("background-color", "");
+
+        puzzle._puzzle[rowIndex][colIndex]._value = null;
     }
 }

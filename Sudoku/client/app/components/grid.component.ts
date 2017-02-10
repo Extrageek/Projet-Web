@@ -9,16 +9,22 @@ import { Component, OnInit } from '@angular/core';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/timer';
 
 declare var jQuery: any;
 
 import { RestApiProxyService } from '../services/rest-api-proxy.service';
 import { GridManagerService } from '../services/grid-manager.service';
 import { PuzzleEventManagerService } from '../services/puzzle-event-manager.service';
+import { StopwatchService } from "../services/stopwatch.service";
 
 import { PuzzleCommon } from '../commons/puzzle-common';
 import { Puzzle } from '../models/puzzle';
 
+import { Observable } from 'rxjs/Observable';
+
+
+//noinspection TsLint
 @Component({
     moduleId: module.id,
     selector: 'sudoku-grid',
@@ -56,26 +62,41 @@ import { Puzzle } from '../models/puzzle';
 
             <div class="col-md-5 menu-panel">
                 <button type="button" class="btn btn-primary" (click)="initializeCurrentGrid()">Initialize Game</button>
+                <h2 *ngIf="!hiddenClock">                
+                    {{time.hour}} : {{time.minute}} : {{time.seconds}}
+                    <span (click)="hideClock()"  class="glyphicon glyphicon-ban-circle" aria-hidden="true"> </span>                     
+                </h2>
+                <h2 *ngIf="hiddenClock"> 
+                    <span (click)="hideClock()" class="glyphicon glyphicon-time" aria-hidden="true"> </span>
+                </h2>
             </div>
         </div>
     `,
     styleUrls: ['/app/assets/grid.component.css'],
-    providers: [GridManagerService, PuzzleEventManagerService, RestApiProxyService]
+    providers: [GridManagerService, PuzzleEventManagerService, RestApiProxyService, StopwatchService ]
 })
 
 export class GridComponent implements OnInit {
+    private _newPuzzle: Puzzle;
 
-    _newPuzzle: Puzzle;
+    private time : {
+        seconds : number;
+        minute : number;
+        hour : number;
+    };
 
-    constructor(private gridMangerService: GridManagerService,
+    hiddenClock : boolean;
+
+    constructor(private gridManagerService: GridManagerService,
         private puzzleEventManager: PuzzleEventManagerService,
-        private restApiProxyService: RestApiProxyService) {
-        // Defaut constructor
+        private restApiProxyService: RestApiProxyService,
+        private stopwatchService : StopwatchService) {
+            this.time = { 'seconds':0, 'minute':0, 'hour':0 };
+            this.hiddenClock = false;
     }
 
     // Initialization
     ngOnInit() {
-
         this.restApiProxyService.getNewPuzzle()
             .subscribe((puzzle) => {
                 // The puzzle to display when binding the model to the input box,
@@ -83,6 +104,13 @@ export class GridComponent implements OnInit {
                 // for the user.
                 this._newPuzzle = this.extractTheNewPuzzle(puzzle);
             });
+
+        Observable.timer(5000,1000).subscribe(() =>{
+            this.stopwatchService.updateClock();
+            this.time.seconds = this.stopwatchService.seconds;
+            this.time.minute = this.stopwatchService.minutes;
+            this.time.hour = this.stopwatchService.hours;
+        });
     }
 
     /**
@@ -118,10 +146,11 @@ export class GridComponent implements OnInit {
         let colIndex = Number(rowColIndex[PuzzleCommon.xPosition]);
 
         if (event.keyCode === PuzzleCommon.backspaceKeyCode) {
-            this.gridMangerService.deleteCurrentValue(rowIndex, colIndex);
+            this.gridManagerService.deleteCurrentValue(this._newPuzzle, rowIndex, colIndex);
         }
-        else {
-            this.gridMangerService.validateEnteredNumber(this._newPuzzle, rowIndex, colIndex);
+
+        else if (this.puzzleEventManager.isSudokuNumber(event.which)){
+            this.gridManagerService.validateEnteredNumber(this._newPuzzle, rowIndex, colIndex);
         }
     }
 
@@ -133,7 +162,7 @@ export class GridComponent implements OnInit {
             throw new Error("The initial grid cannot be null.");
         }
 
-        this.gridMangerService.initializeGrid(this._newPuzzle);
+        this.gridManagerService.initializeGrid(this._newPuzzle);
     }
 
     // Use to check if a value is a Sudoku number
@@ -145,5 +174,9 @@ export class GridComponent implements OnInit {
         if (!this.puzzleEventManager.isSudokuNumber(event.which)) {
             return false;
         }
+    }
+
+    hideClock() {
+        this.hiddenClock = !this.hiddenClock;
     }
 }

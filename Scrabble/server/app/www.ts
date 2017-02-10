@@ -3,11 +3,12 @@
  *
  * @authors Nicolas Richard, Emilio Riviera
  * @date 2017/01/09
+ *
  */
 
 import { Application } from './app';
 import * as http from 'http';
-import { IoConnection } from './models/socketHandler';
+import { SocketConnectionHandler } from './services/socket-handler';
 
 const application: Application = Application.bootstrap();
 
@@ -18,7 +19,7 @@ application.app.set('port', appPort);
 // Création du serveur HTTP.
 let server = http.createServer(application.app);
 
-new IoConnection(server);
+new SocketConnectionHandler(server);
 
 /**
  *  Écoute du traffic sur le port configuré.

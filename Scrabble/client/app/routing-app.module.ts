@@ -7,7 +7,7 @@ import { GameComponent } from "./components/game-room.component";
 const appRoutes: Routes = [
     { path: "", redirectTo: "/game-start", pathMatch: "full"},
     { path: "game-start", component: GameInitiationComponent},
-    { path: "game-room", component: GameComponent, data: {id: ""}},
+    { path: "game-room/:id", component: GameComponent, data: {id: ""}},
     ];
 
 @NgModule({

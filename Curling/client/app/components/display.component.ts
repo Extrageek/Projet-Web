@@ -2,7 +2,7 @@ import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular
 import { Router } from '@angular/router';
 
 import { GameStatus } from '../models/game-status';
-import { UserSetting, Difficulty } from '../models/user-setting';
+import { UserSetting } from '../models/user-setting';
 
 import { RestApiProxyService } from '../services/rest-api-proxy.service';
 import { UserSettingService } from '../services/user-setting.service';
