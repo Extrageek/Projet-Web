@@ -9,16 +9,22 @@ import { Component, OnInit } from '@angular/core';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/interval';
 
 declare var jQuery: any;
 
 import { RestApiProxyService } from '../services/rest-api-proxy.service';
 import { GridManagerService } from '../services/grid-manager.service';
 import { PuzzleEventManagerService } from '../services/puzzle-event-manager.service';
+import { StopwatchService } from "../services/stopwatch.service";
 
 import { PuzzleCommon } from '../commons/puzzle-common';
 import { Puzzle } from '../models/puzzle';
 
+import { Observable } from 'rxjs/Observable';
+
+
+//noinspection TsLint
 @Component({
     moduleId: module.id,
     selector: 'sudoku-grid',
@@ -56,26 +62,30 @@ import { Puzzle } from '../models/puzzle';
 
             <div class="col-md-5 menu-panel">
                 <button type="button" class="btn btn-primary" (click)="initializeCurrentGrid()">Initialize Game</button>
+                <p> {{time.hour}} : {{time.minute}} : {{time.seconds}}</p>
             </div>
         </div>
     `,
     styleUrls: ['/app/assets/grid.component.css'],
-    providers: [GridManagerService, PuzzleEventManagerService, RestApiProxyService]
+    providers: [GridManagerService, PuzzleEventManagerService, RestApiProxyService, StopwatchService ]
 })
 
 export class GridComponent implements OnInit {
-
     _newPuzzle: Puzzle;
-
+    time : {
+        seconds : number;
+        minute : number;
+        hour : number;
+    }
     constructor(private gridMangerService: GridManagerService,
         private puzzleEventManager: PuzzleEventManagerService,
-        private restApiProxyService: RestApiProxyService) {
-        // Defaut constructor
+        private restApiProxyService: RestApiProxyService,
+        private stopwatchService : StopwatchService) {
+            this.time = { 'seconds':0, 'minute':0, 'hour':0 };
     }
 
     // Initialization
     ngOnInit() {
-
         this.restApiProxyService.getNewPuzzle()
             .subscribe((puzzle) => {
                 // The puzzle to display when binding the model to the input box,
@@ -83,6 +93,13 @@ export class GridComponent implements OnInit {
                 // for the user.
                 this._newPuzzle = this.extractTheNewPuzzle(puzzle);
             });
+
+        Observable.interval(1000).subscribe(() =>{
+            this.stopwatchService.updateClock();
+            this.time.seconds = this.stopwatchService.seconds;
+            this.time.minute = this.stopwatchService.minute;
+            this.time.hour = this.stopwatchService.hour;
+        });
     }
 
     /**
@@ -146,4 +163,5 @@ export class GridComponent implements OnInit {
             return false;
         }
     }
+
 }

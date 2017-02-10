@@ -10,6 +10,7 @@ import { PuzzleEventManagerService } from './services/puzzle-event-manager.servi
 import { GridManagerService } from './services/grid-manager.service';
 
 import { RestApiProxyService } from './services/rest-api-proxy.service';
+import { StopwatchService } from "./services/stopwatch.service";
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import { RestApiProxyService } from './services/rest-api-proxy.service';
   providers: [
     RestApiProxyService,
     GridManagerService,
-    PuzzleEventManagerService],
-  bootstrap: [AppComponent, GridComponent]
+    PuzzleEventManagerService,
+    StopwatchService ],
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }
