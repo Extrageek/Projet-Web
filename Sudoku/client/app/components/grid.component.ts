@@ -9,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/timer';
+import 'rxjs/add/observable/interval';
 
 declare var jQuery: any;
 
@@ -28,76 +28,31 @@ import { Observable } from 'rxjs/Observable';
 @Component({
     moduleId: module.id,
     selector: 'sudoku-grid',
-
-    // TODO: Must be removed to an external html file
-    // Do it after a clean debug, remove all the reference
-    template: `
-        <div class="col-md-12">
-            <div class="col-md-7 grid-panel">
-                <div class="form-control" class="grid-box">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <tbody>
-                                <tr class="grid" *ngFor="let row of _newPuzzle?._puzzle , let i = index" 
-                                [attr.id]="'gridRowId' + i">
-                                    <td *ngFor="let cell of row, let j = index" [attr.id]="'cellId' + i + '' + j">
-                                        <input class="readOnlyCell" *ngIf="!cell._hide" readonly 
-                                        [attr.maxlength]="1" type="text" name="inputCell"
-                                        [attr.id]="i +''+ j" [ngModel]="cell._value"
-                                        (keydown)="onKeyDownEventHandler($event)">
-
-                                        <input class="readWriteCell" *ngIf="cell._hide" [attr.maxlength]="1" 
-                                        type="text" name="inputCell" 
-                                        [attr.id]="i +''+ j" [(ngModel)]="cell._value"
-                                        (keydown)="onKeyDownEventHandler($event)"
-                                        (keyup)="onValueChange($event)" 
-                                        (keypress)="validateInputValue($event)">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-5 menu-panel">
-                <button type="button" class="btn btn-primary" (click)="initializeCurrentGrid()">Initialize Game</button>
-                <h2 *ngIf="!hiddenClock">                
-                    {{time.hour}} : {{time.minute}} : {{time.seconds}}
-                    <span (click)="hideClock()"  class="glyphicon glyphicon-ban-circle" aria-hidden="true"> </span>                     
-                </h2>
-                <h2 *ngIf="hiddenClock"> 
-                    <span (click)="hideClock()" class="glyphicon glyphicon-time" aria-hidden="true"> </span>
-                </h2>
-            </div>
-        </div>
-    `,
-    styleUrls: ['/app/assets/grid.component.css'],
-    providers: [GridManagerService, PuzzleEventManagerService, RestApiProxyService, StopwatchService ]
+    templateUrl: "../../assets/html/grid.component.html",
+    styleUrls: ["../../assets/css/grid.component.css"],
+    providers: [GridManagerService, PuzzleEventManagerService, RestApiProxyService, StopwatchService]
 })
 
 export class GridComponent implements OnInit {
-    private _newPuzzle: Puzzle;
-
-    private time : {
-        seconds : number;
-        minute : number;
-        hour : number;
-    };
-
+    _newPuzzle: Puzzle;
+    _userSetting: UserSetting;
+    _time: Time;
     hiddenClock : boolean;
 
-    constructor(private gridManagerService: GridManagerService,
+    constructor(
+        private gridMangerService: GridManagerService,
         private puzzleEventManager: PuzzleEventManagerService,
-        private restApiProxyService: RestApiProxyService,
-        private stopwatchService : StopwatchService) {
-            this.time = { 'seconds':0, 'minute':0, 'hour':0 };
-            this.hiddenClock = false;
+        private userSettingService: UserSettingService,
+        private api: RestApiProxyService,
+        private stopwatchService: StopwatchService)
+        {
     }
 
     // Initialization
     ngOnInit() {
-        this.restApiProxyService.getNewPuzzle()
+        this._userSetting = this.userSettingService.userSetting;
+        this._time = new Time();
+        this.api.getNewPuzzle()
             .subscribe((puzzle) => {
                 // The puzzle to display when binding the model to the input box,
                 // must not contains the solution. We need to extract the new puzzle
@@ -107,10 +62,17 @@ export class GridComponent implements OnInit {
 
         Observable.timer(5000,1000).subscribe(() =>{
             this.stopwatchService.updateClock();
-            this.time.seconds = this.stopwatchService.seconds;
-            this.time.minute = this.stopwatchService.minutes;
-            this.time.hour = this.stopwatchService.hours;
+            this._time.seconds = this.stopwatchService.seconds;
+            this._time.minutes = this.stopwatchService.minute;
+            this._time.hours = this.stopwatchService.hour;
         });
+    }
+
+    @HostListener('window:beforeunload', ['$event'])
+    saveAndLogout(event: Event) {
+        this.api.createGameRecord(this._userSetting, this._time);
+        this.api.removeUsername(this._userSetting.name);
+        event.stopImmediatePropagation();
     }
 
     /**
@@ -120,7 +82,7 @@ export class GridComponent implements OnInit {
      * @method extractTheNewPuzzle
      * @return Puzzle
      */
-    extractTheNewPuzzle(puzzle: Puzzle) {
+    public extractTheNewPuzzle(puzzle: Puzzle) {
 
         if (puzzle === null) {
             throw new Error("The parameter cannot be null");
@@ -134,12 +96,12 @@ export class GridComponent implements OnInit {
     }
 
     // Handle the directions key event by using the EventManager
-    onKeyDownEventHandler(event: KeyboardEvent) {
+    public onKeyDownEventHandler(event: KeyboardEvent) {
         this.puzzleEventManager.onKeyEventUpdateCurrentCursor(event);
     }
 
     // Handle the input value changed event from grid
-    onValueChange(event: KeyboardEvent) {
+    public onValueChange(event: KeyboardEvent) {
 
         let rowColIndex = event.srcElement.id.split('');
         let rowIndex = Number(rowColIndex[PuzzleCommon.yPosition]);
@@ -155,7 +117,7 @@ export class GridComponent implements OnInit {
     }
 
     // Initialize the current grid
-    initializeCurrentGrid() {
+    public initializeCurrentGrid() {
 
         if (this._newPuzzle === null
             || this._newPuzzle._puzzle == null) {
@@ -166,7 +128,7 @@ export class GridComponent implements OnInit {
     }
 
     // Use to check if a value is a Sudoku number
-    validateInputValue(event: KeyboardEvent) {
+    public validateInputValue(event: KeyboardEvent) {
         if (event === null) {
             throw new Error("No event source is provided.");
         }

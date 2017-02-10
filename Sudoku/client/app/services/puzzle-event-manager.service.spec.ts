@@ -5,9 +5,9 @@ import {
     TestBed
 } from '@angular/core/testing';
 
-import { expect, assert } from 'chai';
-import { PuzzleEventManagerService } from '../services/puzzle-event-manager.service';
-import { GridManagerService } from '../services/grid-manager.service';
+import { assert } from 'chai';
+import { PuzzleEventManagerService } from './puzzle-event-manager.service';
+import { GridManagerService } from './grid-manager.service';
 import { PuzzleCommon } from '../commons/puzzle-common';
 
 describe('PuzzleEventManagerService', () => {
@@ -51,7 +51,7 @@ describe('PuzzleEventManagerService', () => {
             }))
     );
 
-     it("isSudokuNumber, Should return false , it's not a sudoku number",
+    it("isSudokuNumber, Should return false , it's not a sudoku number",
         inject([PuzzleEventManagerService],
             fakeAsync((eventManagerService: PuzzleEventManagerService) => {
 
@@ -71,7 +71,7 @@ describe('PuzzleEventManagerService', () => {
             }))
     );
 
-     it("isDirectionKey, Should return false , it's not a direction number",
+    it("isDirectionKey, Should return false , it's not a direction number",
         inject([PuzzleEventManagerService],
             fakeAsync((eventManagerService: PuzzleEventManagerService) => {
 
@@ -81,25 +81,25 @@ describe('PuzzleEventManagerService', () => {
             }))
     );
 
-     it("isDirectionKey, Should return false , it's not a direction number",
+    it("isDirectionKey, Should return false , it's not a direction number",
         inject([PuzzleEventManagerService],
             fakeAsync((eventManagerService: PuzzleEventManagerService) => {
-                let fakeEvent = document.createEvent( "KeyboardEvent" ) ;
+                let fakeEvent = document.createEvent("KeyboardEvent");
 
-        // fakeEvent.initKeyboardEvent(
-        //                 "keyup" // in DOMString typeArg
-        //                 , false // in boolean canBubbleArg
-        //                 , false // in boolean cancelableArg
-        //                 , global // in views::AbstractView viewArg
-        //                 , "+" // [test]in DOMString keyIdentifierArg | webkit event.keyIdentifier | IE9 event.key
-        //                 , 3 // [test]in unsigned long keyLocationArg | webkit event.keyIdentifier | IE9 event.location
-        //                 , true // [test]in boolean ctrlKeyArg | webkit event.shiftKey | old webkit event.ctrlKey | IE9 event.modifiersList
-        //                 , false // [test]shift | alt
-        //                 , true // [test]shift | alt
-        //                 , false // meta
-        //                 , false // altGraphKey
-        // );
-                    }))
+                // fakeEvent.initKeyboardEvent(
+                //                 "keyup" // in DOMString typeArg
+                //                 , false // in boolean canBubbleArg
+                //                 , false // in boolean cancelableArg
+                //                 , global // in views::AbstractView viewArg
+                //                 , "+" // [test]in DOMString keyIdentifierArg | webkit event.keyIdentifier | IE9 event.key
+                //                 , 3 // [test]in unsigned long keyLocationArg | webkit event.keyIdentifier | IE9 event.location
+                //                 , true // [test]in boolean ctrlKeyArg | webkit event.shiftKey | old webkit event.ctrlKey | IE9 event.modifiersList
+                //                 , false // [test]shift | alt
+                //                 , true // [test]shift | alt
+                //                 , false // meta
+                //                 , false // altGraphKey
+                // );
+            }))
     );
 
 });

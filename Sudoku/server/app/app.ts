@@ -85,11 +85,17 @@ export class Application {
     //create routes
     const routeManager: route.RouteManager = new route.RouteManager();
 
-    //home page
+    // REST - GET
     router.get('/', routeManager.index.bind(routeManager.index));
     router.get('/api/puzzle', routeManager.getNewPuzzle.bind(routeManager.getNewPuzzle));
+    router.get('/api/records-all', routeManager.getAllRecords.bind(routeManager.getAllRecords));
 
-    //use router middleware
+    // REST - POST
+    router.post('/api/login', routeManager.addUser.bind(routeManager.addUser));
+    router.post('/api/logout', routeManager.removeUser.bind(routeManager.removeUser));
+    router.post('/api/game-over', routeManager.saveGameRecord.bind(routeManager.saveGameRecord));
+
+    //use router middleware 
     this.app.use(router);
 
     // Gestion des erreurs

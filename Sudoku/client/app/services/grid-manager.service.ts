@@ -27,7 +27,6 @@ export class GridManagerService {
         if (isColumnValid && isRowValid && isSquareValid) {
             this.updateCurrentCellFormat(rowIndex, columnIndex, true);
         } else {
-
             if ((!isSquareValid || !isColumnValid || !isRowValid)
              && grid[rowIndex][columnIndex]._value !== null) {
                 this.updateCurrentCellFormat(rowIndex, columnIndex);
@@ -44,7 +43,7 @@ export class GridManagerService {
     }
 
     // Check if the row is valid.
-    isDuplicatedNumberInCurrentRow(grid: PuzzleItem[][], rowIndex: number, columnIndex: number): boolean {
+    isDuplicatedNumberInCurrentRow(grid: PuzzleItem[][], rowIndex: number, columnIndex?: number): boolean {
         // Check for duplicated number in the related row.
         for (let columnId1 = 0; columnId1 < grid.length; ++columnId1) {
             let item = Number(grid[rowIndex][columnId1]._value);
