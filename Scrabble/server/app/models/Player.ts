@@ -1,22 +1,7 @@
 export class Player {
 
-    // The player name
     private _username: string;
-    public get username(): string {
-        return this._username;
-    }
-    public set username(value: string) {
-        this._username = value;
-    }
-
-    // The number of player needed in the room
     private _numberOfPlayers: number;
-    public get numberOfPlayers(): number {
-        return this._numberOfPlayers;
-    }
-    public set numberOfPlayers(value: number) {
-        this._numberOfPlayers = value;
-    }
 
     // The constructor of a player
     constructor(username: string, numberOfPlayers: number) {
@@ -30,5 +15,23 @@ export class Player {
 
         this._username = username;
         this._numberOfPlayers = numberOfPlayers;
+    }
+
+
+    // The player name
+    public get username(): string {
+        return this._username;
+    }
+
+    public set username(value: string) {
+        this._username = value;
+    }
+
+    // The number of player needed in the room
+    public get numberOfPlayers(): number {
+        return this._numberOfPlayers;
+    }
+    public set numberOfPlayers(value: number) {
+        this._numberOfPlayers = value;
     }
 }

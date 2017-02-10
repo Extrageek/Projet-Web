@@ -3,47 +3,18 @@ let uuid = require('node-uuid');
 
 export class Room {
 
+    static roomMinCapacity = 1;
+    static roomMaxCapacity = 4;
+
     private static roomIdCounter = 0;
-
-    // The player of the room
     private _players: Array<Player>;
-    public get players(): Array<Player> {
-        return this._players;
-    }
-    public set players(value: Array<Player>) {
-        this._players = value;
-    }
-
-    // The room capacity
     private _roomCapacity: number;
-    public get roomCapacity(): number {
-        return this._roomCapacity;
-    }
-    public set roomCapacity(value: number) {
-        this._roomCapacity = value;
-    }
-
-    // The room unique id
     private _roomId: string;
-    public get roomId(): string {
-        return this._roomId;
-    }
-    public set roomId(value: string) {
-        this._roomId = value;
-    }
-
-    // TODO: Can be removed, must be checked with the group before
     private _roomNumber: number;
-    public get roomNumber(): number {
-        return this._roomNumber;
-    }
-    public set roomNumber(value: number) {
-        this._roomNumber = value;
-    }
 
     // The constructor of the room
     constructor(roomCapacity: number) {
-        if (roomCapacity < 1 || roomCapacity > 4) {
+        if (roomCapacity < Room.roomMinCapacity || roomCapacity > Room.roomMaxCapacity) {
             throw new RangeError("Argument error: the number of players must be between 1 and 4.");
         }
 
@@ -54,6 +25,39 @@ export class Room {
         this._roomNumber = Room.roomIdCounter;
     }
 
+    // The player of the room
+    public get players(): Array<Player> {
+        return this._players;
+    }
+    public set players(value: Array<Player>) {
+        this._players = value;
+    }
+
+    // The room unique id
+    public get roomId(): string {
+        return this._roomId;
+    }
+    public set roomId(value: string) {
+        this._roomId = value;
+    }
+
+    // TODO: Can be removed, must be checked with the group before
+    public get roomNumber(): number {
+        return this._roomNumber;
+    }
+    public set roomNumber(value: number) {
+        this._roomNumber = value;
+    }
+
+    // The room capacity
+    public get roomCapacity(): number {
+        return this._roomCapacity;
+    }
+    public set roomCapacity(value: number) {
+        this._roomCapacity = value;
+    }
+
+
     // Check if the room is full or not
     public isFull(): boolean {
         return this._players.length === this._roomCapacity;
@@ -63,7 +67,7 @@ export class Room {
     public addPlayer(player: Player) {
 
         if (typeof (player) === "undefined" || player == null) {
-            throw new Error("The player is undefined");
+            throw new Error("The player cannot be null");
         }
 
         if (this.isFull()) {

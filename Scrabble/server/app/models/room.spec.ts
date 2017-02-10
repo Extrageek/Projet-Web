@@ -48,17 +48,29 @@ describe("Room", () => {
     it("addPlayer, should not accept a new player", () => {
         let roomCapacity = 1;
         let room = new Room(roomCapacity);
+
         let fakeName1 = "testname1";
         let fakeName2 = "testname2";
+        let numberOfPlayers = 1;
 
-        let player1 = new Player(fakeName1, 1);
-        let player2 = new Player(fakeName2, 1);
+        let player1 = new Player(fakeName1, numberOfPlayers);
+        let player2 = new Player(fakeName2, numberOfPlayers);
 
         room.addPlayer(player1);
         assert(room.isFull() === true, "The room must be full at this state");
 
         let failToAddPlayer = () => room.addPlayer(player2);
         expect(failToAddPlayer).to.throw(Error, "The room is full, cannot add a new player");
+    });
+
+    it("addPlayer, should throw a null argument error", () => {
+        let roomCapacity = 1;
+        let room = new Room(roomCapacity);
+        let addNullArgumentPlayer = () => room.addPlayer(null);
+        let addUndefinedPlayer = () => room.addPlayer(undefined);
+
+        expect(addNullArgumentPlayer).to.throw(Error, "The player cannot be null");
+        expect(addUndefinedPlayer).to.throw(Error, "The player cannot be null");
     });
 
     it("playerWithDuplicatedUsername, should display a duplicated username error", () => {

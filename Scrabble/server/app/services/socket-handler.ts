@@ -8,7 +8,7 @@ import { Player } from "../models/Player";
 export class SocketConnectionHandler {
 
     private _roomHandler: RoomHandler;
-    private _socket: any;
+    private _socket: SocketIO.Server;
 
     constructor(server: http.Server) {
 
@@ -22,12 +22,16 @@ export class SocketConnectionHandler {
     }
 
     private onConnectionRequest() {
-        this._socket.sockets.on(SocketEventType.connection, (socket: SocketIOClient.Socket) => {
+        this._socket.sockets.on(SocketEventType.connection, (socket: SocketIO.Socket) => {
+
+            console.log("a new connection to the server");
+
             this.onNewGameRequest(socket);
+            this.onMessage(socket);
         });
     }
 
-    private onNewGameRequest(socket: any) {
+    private onNewGameRequest(socket: SocketIO.Socket) {
         socket.on(SocketEventType.newGameRequest, (connectionInfos: { username: string, gameType: number }) => {
 
             if (typeof (connectionInfos) !== "object"
@@ -54,13 +58,12 @@ export class SocketConnectionHandler {
                         // Create a response for the room members
                         let roomResponseMessage = {
                             username: player.username,
-                            roomNumber: playerRoom.roomNumber,
+                            roomId: playerRoom.roomId,
                             numberOfMissingPlayers: playerRoom.numberOfMissingPlayers(),
                             roomIsReady: false,
                             message: ""
                         };
 
-                        //console.log(" Message - Session info: ", roomMessage);
                         // Join the room
                         socket.join(playerRoom.roomId);
 
@@ -70,13 +73,14 @@ export class SocketConnectionHandler {
                             roomResponseMessage.message = `${connectionInfos.username}` + ` join the room`;
 
                             // Emit to all the player in the room.
-                            this._socket.in(playerRoom.roomId).emit(SocketEventType.joinRoom, roomResponseMessage);
+                            this._socket.to(playerRoom.roomId).emit(SocketEventType.joinRoom, roomResponseMessage);
 
                         } else {
                             roomResponseMessage.message = `${connectionInfos.username}` + ` join the room`;
+                            roomResponseMessage.roomIsReady = true;
 
                             // Emit a message to all the player in the room.
-                            this._socket.in(playerRoom.roomId).emit(SocketEventType.roomReady, roomResponseMessage);
+                            this._socket.to(playerRoom.roomId).emit(SocketEventType.roomReady, roomResponseMessage);
                         }
                     }
                     else {
@@ -88,6 +92,22 @@ export class SocketConnectionHandler {
                     socket.emit(SocketEventType.invalidUsername);
                 }
             }
+        });
+    }
+
+    private onMessage(socket: SocketIO.Socket) {
+        socket.on(SocketEventType.message, (chatMessage: { username: string, message: string }) => {
+            let currentRoom = this._roomHandler.getRoomByUsername(chatMessage.username);
+
+            console.log("Room message :", chatMessage);
+
+            if (currentRoom == null || currentRoom === undefined) {
+                // TODO: Maybe emit an error to the sender
+                throw new Error("");
+            }
+
+            this._socket.to(currentRoom.roomId).emit(SocketEventType.message, chatMessage);
+
         });
     }
 }

@@ -5,7 +5,7 @@ import { Player } from "../models/player";
 export class RoomHandler {
 
     // The current rooms of the game
-    private _rooms: Array<Room>;
+    _rooms: Array<Room>;
 
     // The constructor of the handler
     public constructor() {
@@ -15,32 +15,33 @@ export class RoomHandler {
     // Add a new player to the related room
     public addPlayer(player: Player): Room {
 
-        if (player === null) {
+        if (player === null || player === undefined) {
             throw new Error("Argument error: The player cannot be null");
         }
 
         try {
 
-            let room = this.getAvailableRoom(player.numberOfPlayers);
+            if (this.getPlayerByUsername(player.username) === null) {
 
-            //console.log("player is not null, available room", playerRoom);
-            if (room === null) {
+                // Find an available room
+                let room = this.getAvailableRoom(player.numberOfPlayers);
 
-                // Create a new room if a room is not available
-                room = new Room(player.numberOfPlayers);
+                if (room !== null && room !== undefined) {
+                    // Add the player to an existing room.
+                    room.addPlayer(player);
+                }
+                else {
+                    // Create a new room if a room is not available
+                    room = new Room(player.numberOfPlayers);
+                    room.addPlayer(player);
+                    this._rooms.push(room);
+                }
 
-                // Add the new player
-                room.addPlayer(player);
+                return room;
 
-                //console.log("in new room", playerRoom);
-                this._rooms.push(room);
+            } else {
+                return null;
             }
-            else {
-                // Add the player to an existing room.
-                room.addPlayer(player);
-            }
-
-            return room;
 
         } catch (error) {
             throw new Error("An error occured when adding the player into the room");
@@ -59,18 +60,14 @@ export class RoomHandler {
     // Find an available room with the given capacity
     public getAvailableRoom(roomCapacity: number): Room {
 
-        if (roomCapacity < 0 && roomCapacity > 4) {
-            throw new Error("Out of range error: The room capacity must be between 1 and 4");
+        if (roomCapacity < Room.roomMinCapacity || roomCapacity > Room.roomMaxCapacity) {
+            throw new RangeError("Out of range error: The capacity of the room should be between 1 and 4");
         }
+
         let room = this._rooms.find((element) => {
             return !element.isFull() && element.roomCapacity === roomCapacity;
         });
-
-        if (typeof (room) !== "undefined") {
-            return room;
-        }
-
-        return null;
+        return (typeof (room) !== "undefined") ? room : null;
     }
 
     // Find a player with the given socket TODO: By username
@@ -80,16 +77,14 @@ export class RoomHandler {
             throw new Error("Argument error: the username cannot be null");
         }
 
+        let currentPlayer: Player;
+
         // Look for a player in each room with the given socket
         this._rooms.forEach((room) => {
-            let currentPlayer = room.players.find((player) => (player.username === username));
-
-            if (currentPlayer !== null) {
-                return currentPlayer;
-            }
+            currentPlayer = room.players.filter((player) => (player.username === username))[0];
         });
 
-        return null;
+        return (typeof (currentPlayer) !== "undefined") ? currentPlayer : null;
     }
 
     // Find a room with the givent socket TODO: By username
@@ -99,14 +94,16 @@ export class RoomHandler {
             throw new Error("Argument error: the username cannot be null");
         }
 
-        // Look for a room with a player that have the given socket
+        let availableRoom: Room;
+
         this._rooms.forEach((room) => {
             let currentPlayer = room.players.filter((player) => (player.username === username))[0];
-            if (currentPlayer !== null) {
-                return room;
+
+            if (currentPlayer !== null && currentPlayer !== undefined) {
+                availableRoom = room;
             }
         });
 
-        return null;
+        return (typeof (availableRoom) !== "undefined") ? availableRoom : null;
     }
 }

@@ -11,13 +11,13 @@ import { SocketEventType } from '../commons/socket-eventType';
     templateUrl: "../../app/views/game-initiation.html",
 })
 
-export class GameInitiationComponent implements OnInit {
+export class GameInitiationComponent {
 
     private username = "";
 
-    constructor(private router: Router, private socketService: SocketService) { }
+    constructor(private router: Router, private socketService: SocketService) {
+        this.username = "";
 
-    ngOnInit(): void {
         this.socketService.removeAllListeners();
         this.socketService.suscribeToEvent(SocketEventType.connectError, this.onConnectionError);
         this.socketService.suscribeToEvent(SocketEventType.connected, this.onConnected);
@@ -27,6 +27,9 @@ export class GameInitiationComponent implements OnInit {
         // TODO: Check how to make validation of the username instead of sending it to the server.
         this.socketService.suscribeToEvent(SocketEventType.invalidUsername, this.onInvalidUsername);
         this.socketService.suscribeToEvent(SocketEventType.usernameAlreadyExist, this.onUsernameAlreadyExists);
+    }
+
+    ngOnInit(): void {
     }
 
     // A callback function when the username is not valid.
@@ -57,7 +60,7 @@ export class GameInitiationComponent implements OnInit {
     // A callback when the player join a room
     public onJoinedRoom(roomMessage: {
         username: string,
-        roomNumber: number,
+        roomId: string,
         numberOfMissingPlayers: number,
         roomIsReady: boolean,
         message: string
@@ -65,7 +68,7 @@ export class GameInitiationComponent implements OnInit {
 
         console.log("test: from the server:", roomMessage);
 
-        console.log(roomMessage.message, roomMessage.roomNumber,
+        console.log(roomMessage.message, roomMessage.roomId,
             " RoomReadyState", roomMessage.roomIsReady,
             " missing players", roomMessage.numberOfMissingPlayers);
     }
@@ -74,14 +77,14 @@ export class GameInitiationComponent implements OnInit {
     public onRoomReady(
         roomMessage: {
             username: string,
-            roomNumber: number,
+            roomId: string,
             numberOfMissingPlayers: number,
             roomIsReady: boolean,
             message: string
         }): void {
 
 
-        console.log(roomMessage.message, roomMessage.roomNumber,
+        console.log(roomMessage.message, roomMessage.roomId,
             " RoomReadyState", roomMessage.roomIsReady,
             " missing players", roomMessage.numberOfMissingPlayers);
 
@@ -92,6 +95,7 @@ export class GameInitiationComponent implements OnInit {
     // A callback function when the user ask for a new game.
     public sendNewGameRequest(username: string, numberOfPlayers: string) {
         this.socketService.addNewPlayer(username, numberOfPlayers);
+        this.router.navigate(["/game-room", username ]);
     }
 
 
