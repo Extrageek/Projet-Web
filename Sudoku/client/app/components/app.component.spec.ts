@@ -9,7 +9,7 @@ import { HttpModule } from '@angular/http';
 
 import { expect } from 'chai';
 
-import { GridComponent } from './components/grid.component';
+import { GridComponent } from '../components/grid.component';
 
 describe('AppComponent', function () {
   let de: DebugElement;

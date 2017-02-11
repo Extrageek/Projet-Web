@@ -8,7 +8,7 @@ const ONE_SECOND = 1000;
     moduleId: module.id,
     providers: [TimerService],
     selector: "info-panel-selector",
-    templateUrl: "../../app/views/information-panel.html",
+    templateUrl: "../../assets/templates/information-panel.html",
 })
 export class InformationPanelComponent implements AfterViewInit {
     player = "default";

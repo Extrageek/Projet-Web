@@ -4,8 +4,8 @@ import { ScrabbleBoardService } from "../services/scrabbleBoardService";
     moduleId: module.id,
     providers: [ScrabbleBoardService],
     selector: "scrabble-main-board-selector",
-    templateUrl: "../../app/views/scrabble.html",
-    styleUrls: ["../../app/assets/scrabble-board.css"]
+    templateUrl: "../../assets/templates/scrabble.html",
+    styleUrls: ["../../assets/stylesheets/scrabble-board.css"]
 })
 
 export class ScrabbleBoardComponent {

@@ -8,7 +8,7 @@ import { SocketEventType } from '../commons/socket-eventType';
     moduleId: module.id,
     providers: [SocketService],
     selector: "game-initiation-selector",
-    templateUrl: "../../app/views/game-initiation.html",
+    templateUrl: "../../assets/templates/game-initiation.html",
 })
 
 export class GameInitiationComponent implements OnInit {

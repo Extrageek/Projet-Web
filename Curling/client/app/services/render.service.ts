@@ -5,8 +5,10 @@ import { CameraService } from "./cameras.service";
 @Injectable()
 export class RenderService {
 
+    private static readonly PATH_TO_RED_STONE = "/assets/models/json/curling-stone-red.json";
+    private static readonly PATH_TO_BLUE_STONE = "/assets/models/json/curling-stone-blue.json";
+
     private _scene: THREE.Scene;
-    //private _camera: THREE.PerspectiveCamera;
     private _currentCamera: THREE.PerspectiveCamera;
     private _renderer: THREE.Renderer;
     private _geometry: THREE.Geometry;
@@ -15,10 +17,6 @@ export class RenderService {
     private _mesh: THREE.Mesh;
     //private controls: THREE.OrbitControls;
 
-    private _useAngle: boolean;
-    private _camX: number;
-    private _camY: number;
-    private _camZ: number;
     private _wf: boolean;
     private _clock: THREE.Clock;
     private _dt: number;
@@ -46,9 +44,6 @@ export class RenderService {
     }
 
     public init(container: HTMLElement) {
-        //Part 1: Camera
-        this.setUpCamera();
-        this._useAngle = false;
         this._clock = new THREE.Clock();
 
         this._renderer = new THREE.WebGLRenderer({antialias: true, devicePixelRatio: window.devicePixelRatio});
@@ -65,9 +60,10 @@ export class RenderService {
         this.loadRink();
         this.loadArena();
         if (this._gameStatusService.randomFirstPlayer() === true) {
-            this.loadStoneRed();
-        } else {
-           this.loadStoneBlue();
+            this.loadStone(RenderService.PATH_TO_RED_STONE);
+        }
+        else {
+           this.loadStone(RenderService.PATH_TO_BLUE_STONE);
         }
 
         //Part 4: Service
@@ -78,7 +74,7 @@ export class RenderService {
         window.addEventListener('resize', _ => this.onResize());
     }
 
-    public linkRenderServerToCanvas(container: HTMLElement): void{
+    public linkRenderServerToCanvas(container: HTMLElement) {
         // Inser the canvas into the DOM
         //var container = document.getElementById("glContainer");
         if (container.getElementsByTagName('canvas').length === 0) {
@@ -86,19 +82,9 @@ export class RenderService {
         }
         this._clock.start();
         this.animate();
-        }
-
-    public setUpCamera(): void {
-        this._camX = 0;
-        this._camY = 9;
-        this._camZ = -27;
-        this._currentCamera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 10000);
-        this._currentCamera.rotateX(Math.PI * 22 / 180);
-        this._currentCamera.rotateY(Math.PI);
-        this._currentCamera.position.set(this._camX, this._camY, this._camZ);
     }
 
-    public setUpLightning(): void {
+    public setUpLightning() {
         let spotlightHouseNear = new THREE.SpotLight(0xffffff, 0.5, 0, 0.4);
         spotlightHouseNear.penumbra = 0.34;
         spotlightHouseNear.position.set(9, 10, -17);
@@ -145,7 +131,7 @@ export class RenderService {
      /**
      * See : http://danni-three.blogspot.ca/2013/09/threejs-skybox.html
      */
-    public generateSkybox(): void{
+    public generateSkybox() {
         let imagePrefix = "../../assets/images/frozen_";
         let directions = ["rt", "lf", "up", "dn", "ft", "bk"];
         let imageSuffix = ".jpg";
@@ -163,7 +149,7 @@ export class RenderService {
     }
 
     // Load the font
-    public loadFont(): void{
+    public loadFont() {
         this._fontLoader = new THREE.FontLoader();
         this._textMaterial = new THREE.MultiMaterial([
             new THREE.MeshPhongMaterial({shading: THREE.FlatShading}), // front
@@ -176,7 +162,7 @@ export class RenderService {
         this._fontName = 'helvetiker_regular';
     }
 
-    public loadRink(): void {
+    public loadRink() {
         this._objectLoader.load('/assets/models/json/curling-rink.json', obj => {
             obj.position.set(0, 0, 0);
             obj.scale.set(1, 1, 1);
@@ -188,7 +174,7 @@ export class RenderService {
         });
     }
 
-    public loadArena(): void {
+    public loadArena() {
         this._objectLoader.load('/assets/models/json/arena.json', obj => {
             obj.position.set(0, 0, 0);
             obj.scale.set(1, 1, 1);
@@ -200,8 +186,8 @@ export class RenderService {
         });
     }
 
-    public loadStoneRed(): void {
-        this._objectLoader.load('/assets/models/json/curling-stone-red.json', obj => {
+    public loadStone(pathToStone: string) {
+        this._objectLoader.load(pathToStone, obj => {
             obj.position.set(0, 0, -15);
             obj.scale.set(1, 1, 1);
             this._mesh.add(obj);
@@ -212,30 +198,15 @@ export class RenderService {
         });
     }
 
-    public loadStoneBlue(): void {
-        this._objectLoader.load('/assets/models/json/curling-stone-blue.json', obj => {
-            obj.position.set(0, 0, -15);
-            obj.scale.set(1, 1, 1);
-            this._mesh.add(obj);
-            (obj as THREE.Mesh).material = new THREE.MeshPhongMaterial({
-                wireframe: false,
-                shininess: 0.7,
-            });
-        });
-    }
-
-    public switchCamera(): void {
+    public switchCamera() {
         this._currentCamera = this._cameraService.nextCamera();
         this.onResize();
     }
 
-     animate(): void {
+     animate() {
         window.requestAnimationFrame(_ => this.animate());
         this._dt = this._clock.getDelta();
-
         this.avancer(this._dt);
-
-        //this.mesh.rotation.y += 0.01;
         let tp: THREE.Object3D = this._scene.getObjectByName('Teapot001');
         if (tp !== undefined) {
             (tp as THREE.Mesh).rotateZ(this._dt);
@@ -254,17 +225,17 @@ export class RenderService {
         this._renderer.setSize(newWidth, newHeight);
     }
 
-    render(): void {
+    render() {
         this._renderer.render(this._scene, this._currentCamera);
     }
 
-    toggleWireFrame(): void {
+    toggleWireFrame() {
          this._wf = !this._wf;
          //this._material.wireframe = this._wf;
          this._material.needsUpdate = true;
      }
 
-    avancer(deltaT: number): void {
+    avancer(deltaT: number) {
         //deltaT = deltaT + 1;
     }
 
@@ -311,20 +282,20 @@ export class RenderService {
         });
     }
 
-    private refreshText(): void {
+    private refreshText() {
         this.slowCreateText();
     }
 
-    public setText(newText: string): void {
+    public setText(newText: string) {
         this._text = newText;
         this.refreshText();
     }
 
-    public print(): void {
+    public print() {
         console.log(this);
     }
 
-    public translateMesh(x: number, y: number): void {
+    public translateMesh(x: number, y: number) {
         print();
         this._mesh.position.x += x;
         this._mesh.position.y += y;

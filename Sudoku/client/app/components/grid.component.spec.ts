@@ -23,9 +23,10 @@ import 'rxjs/add/observable/of';
 
 declare var jQuery: any;
 
-import { AppComponent } from '../app.component';
+import { AppComponent } from './app.component';
 import { GridComponent } from './grid.component';
 import { Puzzle } from '../models/puzzle';
+
 import { RestApiProxyService } from '../services/rest-api-proxy.service';
 import { GridManagerService } from '../services/grid-manager.service';
 import { FAKE_PUZZLE_FEED, INITIAL_PUZZLE_SEED } from '../services/mock-data';
@@ -34,7 +35,7 @@ import { PuzzleEventManagerService } from '../services/puzzle-event-manager.serv
 // Mock the REST API Service to give a fake result after a request.
 @Injectable()
 class MockRestApiService extends RestApiProxyService {
-    _newPuzzleUrl: 'http://localhost:3002/api/puzzle';
+    protected _urlApi: 'http://localhost:3002/api/';
 
     getNewPuzzle(): Observable<Puzzle> {
         return Observable.of(new Puzzle(FAKE_PUZZLE_FEED));

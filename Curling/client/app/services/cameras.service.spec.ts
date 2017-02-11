@@ -1,8 +1,10 @@
 import { expect } from "chai";
 import { CameraService } from "./cameras.service";
-import { PerspectiveCamera } from "three";
+import { PerspectiveCamera, Object3D, Vector3 } from "three";
 
-describe("Testing behavior of camera service", () => {
+//The setTimeout function was used instead of the requestAnimationFrame because the
+//requestAnimationFrame is not triggered when the tests are re-executed.
+describe("Camera service should", () => {
 
     let cameraService: CameraService;
 
@@ -10,30 +12,93 @@ describe("Testing behavior of camera service", () => {
         cameraService = new CameraService();
     });
 
-    it("should create a new camera service with valid cameras", () => {
-        let cameraService = new CameraService();
+    it("create a new camera service with valid cameras", () => {
         expect(cameraService.perspectiveCamera).to.be.instanceof(PerspectiveCamera);
         expect(cameraService.topViewCamera).to.be.instanceof(PerspectiveCamera);
     });
 
-    it("should get perspective camera", () => {
+    it("get perspective camera", () => {
         expect(cameraService.perspectiveCamera).to.be.instanceof(PerspectiveCamera);
     });
 
-    it("should get topView camera", () => {
+    it("get topView camera", () => {
         expect(cameraService.topViewCamera).to.be.instanceof(PerspectiveCamera);
     });
 
-    it("should get perspective camera than topView camera", () => {
+    it("get perspective camera than topView camera", () => {
         expect(cameraService.perspectiveCamera).to.be.instanceof(PerspectiveCamera);
         expect(cameraService.topViewCamera).to.be.instanceof(PerspectiveCamera);
     });
 
-    it("should get perspective, topView and perspective camera again", () => {
+    it("get perspective, topView and perspective camera again", () => {
         let perspectiveCamera = cameraService.nextCamera();
         let topViewCamera = cameraService.nextCamera();
         let perspectiveCameraAgain = cameraService.nextCamera();
         expect(perspectiveCamera).to.equals(perspectiveCameraAgain);
         expect(perspectiveCamera).to.not.equals(topViewCamera);
+    });
+
+    it("follow object", done => {
+        const displacementByFrame = 0.02;
+        const numberOfFrames = 80;
+        let objectFollowed = new Object3D();
+        let perspectiveCamera = cameraService.perspectiveCamera;
+        let displacementVector = new Vector3(0, 0, displacementByFrame * numberOfFrames);
+        let expectedPosition = perspectiveCamera.position.add(displacementVector);
+        cameraService.movePerspectiveCameraToFollowObjectOnZ(objectFollowed);
+        let frameNumber = 0;
+        function update() {
+            objectFollowed.position.addScalar(displacementByFrame);
+            cameraService.update();
+            ++frameNumber;
+            if (frameNumber < numberOfFrames) {
+                setTimeout(update, 1);
+            }
+            else {
+                expect(perspectiveCamera.position.x).to.equals(expectedPosition.x);
+                expect(perspectiveCamera.position.y).to.equals(expectedPosition.y);
+                expect(perspectiveCamera.position.z).to.equals(expectedPosition.z);
+                done();
+            }
+        }
+        setTimeout(update, 1);
+    });
+
+    it("stop follow object", done => {
+        const displacementByFrame = 0.02;
+        const numberOfFramesBefore = 80;
+        const numberOfFramesAfter = 20;
+        let objectFollowed = new Object3D();
+        let perspectiveCamera = cameraService.perspectiveCamera;
+        let displacementVector = new Vector3(0, 0, displacementByFrame * numberOfFramesBefore);
+        let expectedPosition = perspectiveCamera.position.add(displacementVector);
+        cameraService.movePerspectiveCameraToFollowObjectOnZ(objectFollowed);
+        let frameNumber = 0;
+        function update() {
+            objectFollowed.position.addScalar(displacementByFrame);
+            cameraService.update();
+            ++frameNumber;
+            if (frameNumber < numberOfFramesBefore) {
+                setTimeout(update, 1);
+            }
+            else {
+                cameraService.stopPerspectiveCameraToFollowObjectOnZ();
+                setTimeout(updatePart2, 1);
+            }
+        }
+        function updatePart2() {
+            objectFollowed.position.addScalar(displacementByFrame);
+            ++frameNumber;
+            if (frameNumber < numberOfFramesAfter) {
+                setTimeout(update, 1);
+            }
+            else {
+                expect(perspectiveCamera.position.x).to.equals(expectedPosition.x);
+                expect(perspectiveCamera.position.y).to.equals(expectedPosition.y);
+                expect(perspectiveCamera.position.z).to.equals(expectedPosition.z);
+                done();
+            }
+        }
+        setTimeout(update, 1);
     });
 });

@@ -1,0 +1,17 @@
+<form #f='ngForm' class="full-height user-setting">
+    <div id="difficulty" class="form-group user-setting-content">
+        <div> Bonjour {{_username}}, veuillez choisir le niveau de difficulte :</div>
+        <div class="radio">
+            <label>
+                <input type='radio' value='NORMAL' name='normal' [(ngModel)]='_difficulty'> Normal 
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type='radio' value='HARD' name='hard' [(ngModel)]='_difficulty'> Difficile
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-secondary btn-lg" (click)='launchGame()'>Commencer la partie !</button>
+    </div>
+</form>
