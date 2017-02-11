@@ -6,11 +6,11 @@
                     <tbody>
                         <tr class="grid" *ngFor="let row of _newPuzzle?._puzzle , let i = index" [attr.id]="'gridRowId' + i">
                             <td *ngFor="let cell of row, let j = index" [attr.id]="'cellId' + i + '' + j">
-                                <input class="readOnlyCell" *ngIf="!cell._hide" readonly [attr.maxlength]="1" type="text" name="inputCell" [attr.id]="i +''+ j"
-                                    [ngModel]="cell._value" (keydown)="onKeyDownEventHandler($event)">
+                                <input #attrRead class="readOnlyCell" *ngIf="!cell._hide" readonly maxlength="1" type="text" name="inputCell" id="{{i}}{{j}}"
+                                    [ngModel]="cell._value" (keydown)="onKeyDownEventHandler($event, attrRead.id)">
 
-                                    <input class="readWriteCell" *ngIf="cell._hide" [attr.maxlength]="1" type="text" name="inputCell" [attr.id]="i +''+ j" [(ngModel)]="cell._value"
-                                        (keydown)="onKeyDownEventHandler($event)" (keyup)="onValueChange($event)" (keypress)="validateInputValue($event)">
+                                    <input #attrWrite class="readWriteCell" *ngIf="cell._hide" maxlength="1" type="text" name="inputCell" id="{{i}}{{j}}" [(ngModel)]="cell._value"
+                                        (keydown)="onKeyDownEventHandler($event, attrWrite.id)" (keyup)="onValueChange($event, attrWrite.id)" (keypress)="validateInputValue($event)">
                             </td>
                         </tr>
                     </tbody>
@@ -20,6 +20,12 @@
     </div>
     <div class="col-md-5 menu-panel">
         <button type="button" class="btn btn-primary" (click)="initializeCurrentGrid()">Initialize Game</button>
-        <p> {{_time.hour}} : {{_time.minute}} : {{_time.seconds}}</p>
+        <h2 *ngIf="!_hiddenClock">
+            {{_time.hours}} : {{_time.minutes}} : {{_time.seconds}}
+            <span (click)="hideClock()"  class="glyphicon glyphicon-ban-circle" aria-hidden="true"> </span>
+        </h2>
+        <h2 *ngIf="_hiddenClock">
+            <span (click)="hideClock()" class="glyphicon glyphicon-time" aria-hidden="true"> </span>
+        </h2>
     </div>
 </div>

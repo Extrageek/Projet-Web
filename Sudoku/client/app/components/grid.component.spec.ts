@@ -109,18 +109,6 @@ describe('GridComponent', () => {
             expect(comp._newPuzzle).to.deep.equal(FAKE_INITIAL_PUZZLE);
         }));
 
-    //test the method extractThenewPuzzle of the component with a null argument.
-    it('extractTheNewPuzzle should throw a null argument error', () => {
-        assert.throws(() => comp.extractTheNewPuzzle(null), Error, "The parameter cannot be null");
-    });
-
-    //test the method extractThenewPuzzle of the component with a valid grid.
-    it("extractTheNewPuzzle should return a valid puzzle",
-        inject([GridManagerService], (gridManagerService: GridManagerService) => {
-            let newPuzzle = comp.extractTheNewPuzzle(FAKE_INITIAL_PUZZLE)._puzzle;
-            expect(newPuzzle).to.deep.equal(INITIAL_PUZZLE_SEED);
-        }));
-
     it("validateInputValue, should throw a null argument error", () => {
         assert.throws(() => comp.validateInputValue(null), Error, "No event source is provided.");
     });

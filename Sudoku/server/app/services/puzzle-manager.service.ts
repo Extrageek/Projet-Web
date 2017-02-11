@@ -73,7 +73,27 @@ module PuzzleManagerService {
             while (new Date().getTime() / 1000 < endTime) {
                 // Wait until five seconds
             }
-            return newPuzzle;
+            return this.createPuzzleHoles(newPuzzle);
+        }
+
+        /**
+         * The extractNewPuzzle function, extract the new puzzle without the solution.
+         *
+         * @class PuzzleManagerService
+         * @method createPuzzleHoles
+         * @return Puzzle
+         */
+        private createPuzzleHoles(puzzle: Puzzle) {
+
+            if (puzzle === null) {
+                throw new Error("The parameter cannot be null");
+            }
+            puzzle._puzzle.forEach((puzzleItems) => {
+                puzzleItems.forEach((puzzleItem) => {
+                    puzzleItem._value = (puzzleItem._hide) ? null : puzzleItem._value;
+                });
+            });
+            return puzzle;
         }
     }
 }

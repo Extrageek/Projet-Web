@@ -11,8 +11,14 @@ export const CSS_BACKGROUND_INIT = "";
 
 @Injectable()
 export class GridManagerService {
+    private _cellsToBeCompleted = 0;
+
     constructor() {
         //Default constructor
+    }
+
+    get cellsToBeCompleted(): number {
+        return this._cellsToBeCompleted;
     }
 
     //  Check if the value is valid
@@ -32,7 +38,7 @@ export class GridManagerService {
                 this.updateCurrentCellFormat(rowIndex, columnIndex);
             }
         }
-
+        this._cellsToBeCompleted--;
         return (isRowValid && isColumnValid && isSquareValid);
     }
 
@@ -125,6 +131,7 @@ export class GridManagerService {
             || puzzle._puzzle === null) {
             throw new Error("The initial grid cannot be null");
         }
+        this._cellsToBeCompleted = 0;
 
         for (let row = 0; row < puzzle._puzzle.length; ++row) {
 
@@ -132,6 +139,7 @@ export class GridManagerService {
 
                 if (puzzle._puzzle[row][column]._hide) {
                     puzzle._puzzle[row][column]._value = null;
+                    this._cellsToBeCompleted++;
                 }
                 this.updateCurrentCellFormat(row, column, true);
             }
@@ -151,5 +159,17 @@ export class GridManagerService {
         jQuery(inputId).css("background-color", "");
 
         puzzle._puzzle[rowIndex][colIndex]._value = null;
+        this._cellsToBeCompleted++;
+    }
+
+    countFilledCell(puzzle: Puzzle){
+        this._cellsToBeCompleted = 0;
+        puzzle._puzzle.forEach((puzzleItems) => {
+            puzzleItems.forEach((puzzleItem) => {
+                if (puzzleItem._hide){
+                    this._cellsToBeCompleted++;
+                }
+            });
+        });
     }
 }
