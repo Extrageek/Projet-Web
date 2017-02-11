@@ -60,7 +60,7 @@ export class GridComponent implements OnInit {
                 this._newPuzzle = puzzle;
                 this.gridManagerService.countFilledCell(puzzle);
             });
-        Observable.timer(5000,1000).subscribe(() =>{
+        Observable.timer(0,1000).subscribe(() =>{
             this.stopwatchService.updateClock();
             this._time.seconds = this.stopwatchService.seconds;
             this._time.minutes = this.stopwatchService.minutes;
