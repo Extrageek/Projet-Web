@@ -5,23 +5,26 @@
  * @date 2017/01/22
  */
 
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, HostListener} from '@angular/core';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/interval';
+import 'rxjs/add/observable/timer';
 
 declare var jQuery: any;
 
 import { RestApiProxyService } from '../services/rest-api-proxy.service';
 import { GridManagerService } from '../services/grid-manager.service';
+import { UserSettingService } from '../services/user-setting.service';
 import { PuzzleEventManagerService } from '../services/puzzle-event-manager.service';
 import { StopwatchService } from "../services/stopwatch.service";
 
 import { PuzzleCommon } from '../commons/puzzle-common';
 import { Puzzle } from '../models/puzzle';
+import { UserSetting} from '../models/user-setting';
 
 import { Observable } from 'rxjs/Observable';
+import {Time} from "../models/time";
 
 
 //noinspection TsLint
@@ -37,10 +40,10 @@ export class GridComponent implements OnInit {
     _newPuzzle: Puzzle;
     _userSetting: UserSetting;
     _time: Time;
-    hiddenClock : boolean;
+    _hiddenClock : boolean;
 
     constructor(
-        private gridMangerService: GridManagerService,
+        private gridManagerService: GridManagerService,
         private puzzleEventManager: PuzzleEventManagerService,
         private userSettingService: UserSettingService,
         private api: RestApiProxyService,
@@ -54,17 +57,14 @@ export class GridComponent implements OnInit {
         this._time = new Time();
         this.api.getNewPuzzle()
             .subscribe((puzzle) => {
-                // The puzzle to display when binding the model to the input box,
-                // must not contains the solution. We need to extract the new puzzle
-                // for the user.
-                this._newPuzzle = this.extractTheNewPuzzle(puzzle);
+                this._newPuzzle = puzzle;
+                this.gridManagerService.countFilledCell(puzzle);
             });
-
         Observable.timer(5000,1000).subscribe(() =>{
             this.stopwatchService.updateClock();
             this._time.seconds = this.stopwatchService.seconds;
-            this._time.minutes = this.stopwatchService.minute;
-            this._time.hours = this.stopwatchService.hour;
+            this._time.minutes = this.stopwatchService.minutes;
+            this._time.hours = this.stopwatchService.hours;
         });
     }
 
@@ -75,40 +75,23 @@ export class GridComponent implements OnInit {
         event.stopImmediatePropagation();
     }
 
-    /**
-     * The extractNewPuzzle function, extract the new puzzle without the solution.
-     *
-     * @class GridComponent
-     * @method extractTheNewPuzzle
-     * @return Puzzle
-     */
-    public extractTheNewPuzzle(puzzle: Puzzle) {
-
-        if (puzzle === null) {
-            throw new Error("The parameter cannot be null");
-        }
-        puzzle._puzzle.forEach(function (puzzleItems) {
-            puzzleItems.forEach(function (puzzleItem) {
-                puzzleItem._value = (puzzleItem._hide) ? null : puzzleItem._value;
-            });
-        });
-        return puzzle;
-    }
 
     // Handle the directions key event by using the EventManager
-    public onKeyDownEventHandler(event: KeyboardEvent) {
-        this.puzzleEventManager.onKeyEventUpdateCurrentCursor(event);
+    public onKeyDownEventHandler(event: KeyboardEvent, id: string) {
+        this.puzzleEventManager.onKeyEventUpdateCurrentCursor(event, id);
     }
 
     // Handle the input value changed event from grid
-    public onValueChange(event: KeyboardEvent) {
+    public onValueChange(event: KeyboardEvent, id: string) {
 
-        let rowColIndex = event.srcElement.id.split('');
+        let rowColIndex = id.split('');
         let rowIndex = Number(rowColIndex[PuzzleCommon.yPosition]);
         let colIndex = Number(rowColIndex[PuzzleCommon.xPosition]);
 
         if (event.keyCode === PuzzleCommon.backspaceKeyCode) {
-            this.gridManagerService.deleteCurrentValue(this._newPuzzle, rowIndex, colIndex);
+            if(this._newPuzzle._puzzle[rowIndex][colIndex]._value !== null){
+                this.gridManagerService.deleteCurrentValue(this._newPuzzle, rowIndex, colIndex);
+            }
         }
 
         else if (this.puzzleEventManager.isSudokuNumber(event.which)){
@@ -119,6 +102,7 @@ export class GridComponent implements OnInit {
     // Initialize the current grid
     public initializeCurrentGrid() {
 
+        // TODO: disabled button during loading
         if (this._newPuzzle === null
             || this._newPuzzle._puzzle == null) {
             throw new Error("The initial grid cannot be null.");
@@ -139,6 +123,6 @@ export class GridComponent implements OnInit {
     }
 
     hideClock() {
-        this.hiddenClock = !this.hiddenClock;
+        this._hiddenClock = !this._hiddenClock;
     }
 }

@@ -74,8 +74,8 @@ export class PuzzleEventManagerService {
      * @class PuzzleEventManagerService
      * @method onKeyEventUpdateCurrentCursor
      */
-    onKeyEventUpdateCurrentCursor(event: KeyboardEvent): void {
-        let currentPositionXY = event.srcElement.id.split('');
+    onKeyEventUpdateCurrentCursor(event: KeyboardEvent, id: string): void {
+        let currentPositionXY = id.split('');
         let keyCode = event.which;
 
         if (this.isDirection(keyCode)) {
