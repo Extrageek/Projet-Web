@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 
 
-    const STAR = 'app/scrabbleImages/starTile.jpg';
-    const NORMAL = 'app/scrabbleImages/ordinaryTile.jpg';
-    const DOUBLE_LETTER_SCORE = 'app/scrabbleImages/doubleLetterScore.jpg';
-    const DOUBLE_WORD_SCORE = 'app/scrabbleImages/doubleWordScore.jpg';
-    const TRIPLE_LETTER_SCORE = 'app/scrabbleImages/tripleLetterScore.jpg';
-    const TRIPLE_WORD_SCORE = 'app/scrabbleImages/tripleWordScore.jpg';
+    const STAR = '/starTile.jpg';
+    const NORMAL = '/ordinaryTile.jpg';
+    const DOUBLE_LETTER_SCORE = '/doubleLetterScore.jpg';
+    const DOUBLE_WORD_SCORE = '/doubleWordScore.jpg';
+    const TRIPLE_LETTER_SCORE = '/tripleLetterScore.jpg';
+    const TRIPLE_WORD_SCORE = '/tripleWordScore.jpg';
 
     const ROW_0 = [TRIPLE_WORD_SCORE, NORMAL, NORMAL, DOUBLE_LETTER_SCORE, NORMAL,
        NORMAL, NORMAL, TRIPLE_WORD_SCORE, NORMAL, NORMAL,

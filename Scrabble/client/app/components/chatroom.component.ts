@@ -6,32 +6,15 @@ import { SocketEventType } from '../commons/socket-eventType';
 @Component({
     moduleId: module.id,
     selector: "scrabble-chatroom-selector",
-    templateUrl: "../../app/views/chatroom.html",
-    styleUrls: ["../../app/assets/chatroom.css"],
-
-    /*FOR TESTING PURPOSES ONLY*/
-    //         template: `
-    //     <div class = "chatContainer">
-    //         <div class = "chatTitle">Chat Room</div>
-    //         <div #scroll class = "chatMessageBox">
-    //             <div class= "individualMessages" *ngFor="let message of messageArray">{{message}}</div>
-    //         </div>
-    //             <div class = "chatTextBox">
-    //             <form autocomplete="off">
-    //                 <input #message (keyup.enter) = "submitMessage(message)"
-    //                 id="inputMessage" type="text" placeholder="Enter your message" />
-    //                 <input (mousedown) = "submitMessage(message)" id="submitMessage" type="submit" value="Send"/>
-    //             </form>
-    //         </div>
-    //     </div>`
-
+    templateUrl: "../../assets/templates/chatroom.html",
+    styleUrls: ["../../assets/stylesheets/chatroom.css"],
     providers: [SocketService]
 })
 
 export class ChatroomComponent implements AfterViewChecked, OnInit {
     messageArray: string[];
     username: string;
-    
+
     @ViewChild("scroll") private myScrollContainer: ElementRef;
 
     constructor(private route: ActivatedRoute, private socketService: SocketService) {

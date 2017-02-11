@@ -1,7 +1,7 @@
-<div class="mainBoard" >
+<div class="mainBoard">
     <div style="background-color: #916a32" *ngFor="let currentRow of currentRows; let myIndex =index">
         <ng-container class="imageContainer" *ngFor="let row of scrabbleGrid[myIndex]">
-            <img class="cell" src="../{{ row }}" alt="{{ row }}">
+            <img class="cell" src="../../assets/images/{{ row }}" alt="../../assets/images/{{ row }}">
         </ng-container>
     </div>
 </div>
