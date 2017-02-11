@@ -31,7 +31,7 @@ import { SocketEventType } from '../commons/socket-eventType';
 export class ChatroomComponent implements AfterViewChecked, OnInit {
     messageArray: string[];
     username: string;
-    
+
     @ViewChild("scroll") private myScrollContainer: ElementRef;
 
     constructor(private route: ActivatedRoute, private socketService: SocketService) {
@@ -42,7 +42,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit {
         this.messageArray = [];
 
         this.route.params.subscribe(params => {
-            this.username =params['id'];
+            this.username = params['id'];
         });
 
         this.socketService.removeAllListeners();

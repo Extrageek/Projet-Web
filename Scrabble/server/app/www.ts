@@ -8,7 +8,7 @@
 
 import { Application } from './app';
 import * as http from 'http';
-import { SocketConnectionHandler } from './services/socket-handler';
+import { SocketConnectionHandler } from './services/socket-connection-handler';
 
 const application: Application = Application.bootstrap();
 

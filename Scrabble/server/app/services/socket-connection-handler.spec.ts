@@ -1,34 +1,46 @@
-// import { expect } from "chai";
-// import * as http from "http";
-// import { IoConnection } from "./socketHandler";
-// import { SocketCanalNames } from "./SocketCanalNames";
-// import * as ioClient from "socket.io-client";
+import { expect } from "chai";
+import * as http from "http";
+import { SocketConnectionHandler } from "./socket-connection-handler";
+import { SocketEventType } from "../commons/socket-eventType";
+import * as ioClient from "socket.io-client";
 
-// const portNumber = 3000;
-// const clientAddressConnection = "http://localhost:" + String(portNumber);
-// let httpServer: http.Server;
+const portNumber = 3000;
+const clientAddressConnection = "http://localhost:" + `${portNumber}`;
+let httpServer: http.Server;
 
-// describe("create _socket handler", () => {
+describe("Socket Connection Handler", () => {
+    let socketHandler: SocketConnectionHandler;
 
-//     before(() => {
-//         httpServer = http.createServer();
-//         httpServer.listen(portNumber);
-//     });
+    before(() => {
+        httpServer = http.createServer();
+        httpServer.listen(portNumber);
+        socketHandler = new SocketConnectionHandler(httpServer);
+    });
 
-//     it("should create socketHandler", () => {
-//         let socketHandler = new IoConnection(httpServer);
-//         expect(socketHandler).to.be.instanceof(IoConnection);
-//     });
+    after(() => {
+        httpServer.close();
+        httpServer = null;
+    });
 
-//     it("should not create socketHandler", () => {
-//         expect(IoConnection.bind(null)).to.throw(Error);
-//     });
+    it("SocketConnectionHandler, should create SocketHandler", () => {
+        let socketHandler = new SocketConnectionHandler(httpServer);
+        expect(socketHandler).to.be.instanceof(SocketConnectionHandler);
+    });
 
-//     after(() => {
-//         httpServer.close();
-//         httpServer = null;
-//     });
-// });
+    it("SocketConnectionHandler, should throw a null argument error", () => {
+        let instance = () => new SocketConnectionHandler(null);
+        expect(instance).throw(Error, "Invalid server parameter.");
+    });
+
+    it("onConnectionRequest, should throw a null argument error", () => {
+        
+    });
+
+
+    //onConnectionRequest
+    //onNewGameRequest
+    //onMessage
+    //sendWelcomeMessageOnPlayerJoinedRoom
 
 // describe("messages received by the client", () => {
 
@@ -125,4 +137,4 @@
 //         clientConnection1.emit(SocketCanalNames.NEW_GAME_DEMAND, {name: playerName, gameType: 2});
 //         clientConnection1.emit(SocketCanalNames.NEW_GAME_DEMAND, {name: playerName2, gameType: 2});
 //     });
-// });
+});
