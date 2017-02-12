@@ -24,7 +24,7 @@ module GridValidationService {
         }
 
         public validateColumns(puzzle: PuzzleItem[][]): boolean {
-            for (let j = 0; j < N_COLUMNS; ++j) {
+           for (let j = 0; j < N_COLUMNS; ++j) {
                 if (!this.isColumnValid(puzzle, j)) {
                     return false;
                 }
@@ -45,8 +45,10 @@ module GridValidationService {
 
         public isRowValid(grid: PuzzleItem[][], rowIndex: number): boolean {
             let contained = new Array<number>();
-
             for (let j = 0; j < N_COLUMNS; ++j) {
+                if (grid[rowIndex][j]._value === null) {
+                    return false;
+                }
                 if (contained.indexOf(grid[rowIndex][j]._value) === -1) {
                     contained.push(grid[rowIndex][j]._value);
                 } else {
@@ -58,8 +60,10 @@ module GridValidationService {
 
         public isColumnValid(grid: PuzzleItem[][], columnIndex: number): boolean {
             let contained = new Array<number>();
-
             for (let i = 0; i < N_ROWS; ++i) {
+                if (grid[columnIndex][i]._value === null) {
+                    return false;
+                }
                 if (contained.indexOf(grid[i][columnIndex]._value) === -1) {
                     contained.push(grid[i][columnIndex]._value);
                 } else {
@@ -79,6 +83,9 @@ module GridValidationService {
             let contained = new Array<number>();
             for (let rowId1 = squareMinRowIndex; rowId1 <= squareMaxRowIndex; ++rowId1) {
                 for (let columnId1 = squareMinColumnIndex; columnId1 <= squareMaxColumnIndex; ++columnId1) {
+                    if (grid[rowId1][columnId1]._value === null) {
+                        return false;
+                    }
                     if (contained.indexOf(grid[rowId1][columnId1]._value) === -1) {
                         contained.push(grid[rowId1][columnId1]._value);
                     } else {

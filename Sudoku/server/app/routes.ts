@@ -116,12 +116,17 @@ module Route {
 
         public validateGrid(request: express.Request, response: express.Response, next: express.NextFunction) {
             let gridValidationManager = new GridValidationService.GridValidationManager();
-            let isGridValid = gridValidationManager.validateGrid(request.body);
+            let isGridValid: boolean;
+            try {
+                isGridValid = gridValidationManager.validateGrid(request.body.puzzle);
+            } catch (error) {
+                isGridValid = false;
+            }
             if (isGridValid) {
-                response.sendStatus(HttpStatus.SUCCESS);
+                response.send({ validity: "valid" });
             }
             else {
-                response.sendStatus(HttpStatus.ERROR);
+                response.send({ validity: "invalid" });
             }
         }
     }

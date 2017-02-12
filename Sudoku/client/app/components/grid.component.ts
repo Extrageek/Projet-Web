@@ -5,7 +5,7 @@
  * @date 2017/01/22
  */
 
-import {Component, OnInit, HostListener} from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -21,10 +21,10 @@ import { StopwatchService } from "../services/stopwatch.service";
 
 import { PuzzleCommon } from '../commons/puzzle-common';
 import { Puzzle } from '../models/puzzle';
-import { UserSetting} from '../models/user-setting';
+import { UserSetting } from '../models/user-setting';
 
 import { Observable } from 'rxjs/Observable';
-import {Time} from "../models/time";
+import { Time } from "../models/time";
 
 
 //noinspection TsLint
@@ -40,7 +40,7 @@ export class GridComponent implements OnInit {
     _newPuzzle: Puzzle;
     _userSetting: UserSetting;
     _time: Time;
-    _hiddenClock : boolean;
+    _hiddenClock: boolean;
 
 
     constructor(
@@ -48,8 +48,7 @@ export class GridComponent implements OnInit {
         private puzzleEventManager: PuzzleEventManagerService,
         private userSettingService: UserSettingService,
         private api: RestApiProxyService,
-        private stopwatchService: StopwatchService)
-        {
+        private stopwatchService: StopwatchService) {
     }
 
     // Initialization
@@ -61,7 +60,7 @@ export class GridComponent implements OnInit {
                 this._newPuzzle = puzzle;
                 this.gridManagerService.countFilledCell(puzzle);
             });
-        Observable.timer(0,1000).subscribe(() =>{
+        Observable.timer(0, 1000).subscribe(() => {
             this.stopwatchService.updateClock();
             this._time.seconds = this.stopwatchService.seconds;
             this._time.minutes = this.stopwatchService.minutes;
@@ -90,13 +89,16 @@ export class GridComponent implements OnInit {
         let colIndex = Number(rowColIndex[PuzzleCommon.xPosition]);
 
         if (event.keyCode === PuzzleCommon.backspaceKeyCode) {
-            if(this._newPuzzle._puzzle[rowIndex][colIndex]._value !== null){
+            if (this._newPuzzle._puzzle[rowIndex][colIndex]._value !== null) {
                 this.gridManagerService.deleteCurrentValue(this._newPuzzle, rowIndex, colIndex);
             }
         }
 
-        else if (this.puzzleEventManager.isSudokuNumber(event.which)){
+        else if (this.puzzleEventManager.isSudokuNumber(event.which)) {
             this.gridManagerService.validateEnteredNumber(this._newPuzzle, rowIndex, colIndex);
+            if (this.gridManagerService.cellsToBeCompleted === 0) {
+                console.log(this.api.verifyGrid(this._newPuzzle));
+            }
         }
     }
 
