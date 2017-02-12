@@ -15,7 +15,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
 import { Puzzle } from '../models/puzzle';
-import { UserSetting } from '../models/user-setting';
+import { UserSetting, Difficulty } from '../models/user-setting';
 import { Time } from '../models/time';
 import { Record } from '../models/record';
 
@@ -43,8 +43,8 @@ export class RestApiProxyService {
      * @returns an Observable with a newPuzzle json data
      * TODO: Must be checked if we need to convert to an object.
      */
-    getNewPuzzle(): Observable<Puzzle> {
-        return this.http.get(this._urlApi + "puzzle")
+    getNewPuzzle(difficulty: Difficulty): Observable<Puzzle> {
+        return this.http.get(this._urlApi + "puzzle?difficulty=" + difficulty)
             .map(this.retrieveDataFromHttpResponse)
             .catch((error) => {
                 return Observable.throw("Error when getting a new puzzle : " + error);

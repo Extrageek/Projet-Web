@@ -39,8 +39,9 @@ module Route {
          */
         public getNewPuzzle(req: express.Request, res: express.Response, next: express.NextFunction) {
             // Get a new puzzle from the PuzzleManger service.
-            let puzzle = new GridGenerationService.GridGenerationManager();
-            let newPuzzle = puzzle.getNewPuzzle();
+            let difficulty = req.params.difficulty;
+            let gridManager = new GridGenerationService.GridGenerationManager();
+            let newPuzzle = gridManager.getNewPuzzle(difficulty);
 
             res.send(newPuzzle);
         }
