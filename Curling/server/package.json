@@ -31,8 +31,10 @@
     "morgan": "~1.6.1",
     "nodemon": "^1.11.0",
     "pug": "^2.0.0-alpha6",
+    "rewire": "^2.5.2",
     "serve-favicon": "~2.3.0",
-    "systemjs": "0.19.39"
+    "systemjs": "0.19.39",
+    "tslint": "^4.4.2"
   },
   "devDependencies": {
     "@types/chai": "^3.4.34",

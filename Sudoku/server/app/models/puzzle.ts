@@ -178,7 +178,7 @@ export class Puzzle {
 
     public horizontalSymmetry() {
         for (let i = 0; i < MID_COLUMN_INDEX; ++i) {
-                this.swapRow(i, MAX_COLUMN_SIZE - i - 1);
+            this.swapRow(i, MAX_COLUMN_SIZE - i - 1);
         }
     }
 

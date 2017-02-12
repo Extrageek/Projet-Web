@@ -52,4 +52,11 @@ describe("BankLetterHandler should", () => {
         expect(newEasel.length).to.be.equal(0);
         expect(_bankHandler.bank.numberOfLettersInBank).to.be.equal(1);
     });
+
+    it("refill a player's easel after when letters are missing", () => {
+        let numberOfLetersPlaced = 3;
+        let newEasel = new Array<Letter>();
+        newEasel = _bankHandler.refillEasel(numberOfLetersPlaced);
+        expect(newEasel.length).to.be.equal(numberOfLetersPlaced);
+    });
 });

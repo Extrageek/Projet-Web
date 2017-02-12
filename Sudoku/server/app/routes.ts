@@ -1,50 +1,49 @@
 import * as express from 'express';
 
-import * as puzzleManagerService from './services/puzzle-manager.service';
+import * as GridGenerationService from './services/grid-generation.service';
+import * as GridValidationService from './services/grid-validation.service';
 import { DatabaseManager } from './database-management';
 
 module Route {
 
-  export class RouteManager {
-    puzzleManagerService : puzzleManagerService.PuzzleManager;
-    _databaseManager: DatabaseManager;
+    export class RouteManager {
+        _databaseManager: DatabaseManager;
 
-    /**
-     * The default constructor
-     *
-     * @class RouteManager
-     */
-    constructor() {
-      // Default constructor
-    }
+        /**
+         * The default constructor
+         *
+         * @class RouteManager
+         */
+        constructor() {
+            // Default constructor
+        }
 
-     /**
-     * The index function to render the main access page of the server ui.
-     *
-     * @class RouteManager
-     * @method index
-     * @return Server side main page
-     */
-    public index(req: express.Request, res: express.Response, next: express.NextFunction) {
-      //res.sendFile(path.join(__dirname, '../dist/index.html'));
-      res.send("Server Side Control Panel");
-    }
+        /**
+         * The index function to render the main access page of the server ui.
+         *
+         * @class RouteManager
+         * @method index
+         * @return Server side main page
+         */
+        public index(req: express.Request, res: express.Response, next: express.NextFunction) {
+            //res.sendFile(path.join(__dirname, '../dist/index.html'));
+            res.send("Server Side Control Panel");
+        }
 
-    /**
-     * The getNewPuzzle function, use the puzzle service to return a new puzzle.
-     *
-     * @class RouteManager
-     * @method getNewPuzzle
-     * @return newPuzzle
-     */
-    public getNewPuzzle(req: express.Request, res: express.Response, next: express.NextFunction) {
+        /**
+         * The getNewPuzzle function, use the puzzle service to return a new puzzle.
+         *
+         * @class RouteManager
+         * @method getNewPuzzle
+         * @return newPuzzle
+         */
+        public getNewPuzzle(req: express.Request, res: express.Response, next: express.NextFunction) {
+            // Get a new puzzle from the PuzzleManger service.
+            let puzzle = new GridGenerationService.GridGenerationManager();
+            let newPuzzle = puzzle.getNewPuzzle();
 
-        // Get a new puzzle from the PuzzleManger service.
-        let puzzleManager = new puzzleManagerService.PuzzleManager();
-        let newPuzzle = puzzleManager.getNewPuzzle();
-
-        res.send(newPuzzle);
-    }
+            res.send(newPuzzle);
+        }
 
         public async addUser(request: express.Request, response: express.Response, next: express.NextFunction) {
             try {
@@ -111,6 +110,17 @@ module Route {
                         console.log("--- ERROR ---", error);
                     });
             } catch (error) {
+                response.sendStatus(HttpStatus.ERROR);
+            }
+        }
+
+        public validateGrid(request: express.Request, response: express.Response, next: express.NextFunction) {
+            let gridValidationManager = new GridValidationService.GridValidationManager();
+            let isGridValid = gridValidationManager.validateGrid(request.body);
+            if (isGridValid) {
+                response.sendStatus(HttpStatus.SUCCESS);
+            }
+            else {
                 response.sendStatus(HttpStatus.ERROR);
             }
         }

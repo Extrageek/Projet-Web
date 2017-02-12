@@ -1,11 +1,11 @@
 import { expect } from "chai";
 import * as http from "http";
 import { SocketConnectionHandler } from "./socket-connection-handler";
-import { SocketEventType } from "../commons/socket-eventType";
-import * as ioClient from "socket.io-client";
+//import { SocketEventType } from "../commons/socket-eventType";
+//import * as ioClient from "socket.io-client";
 
 const portNumber = 3000;
-const clientAddressConnection = "http://localhost:" + `${portNumber}`;
+//const clientAddressConnection = "http://localhost:" + `${portNumber}`;
 let httpServer: http.Server;
 
 describe("Socket Connection Handler", () => {
@@ -33,7 +33,7 @@ describe("Socket Connection Handler", () => {
     });
 
     it("onConnectionRequest, should throw a null argument error", () => {
-        
+        //
     });
 
 

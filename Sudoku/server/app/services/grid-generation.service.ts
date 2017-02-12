@@ -16,12 +16,12 @@ function getRandomInRange(min: number, max: number) {
     };
 }
 
-module PuzzleManagerService {
+module GridGenerationService {
 
-    export class PuzzleManager {
+    export class GridGenerationManager {
 
-        _easySudoku: Array<Puzzle>;
-        _hardSudoku: Array<Puzzle>;
+        private _easySudoku: Array<Puzzle>;
+        private _hardSudoku: Array<Puzzle>;
 
         getNewPuzzle(): Puzzle {
             //this._easySudoku.push(this.generateNewPuzzle());
@@ -37,7 +37,7 @@ module PuzzleManagerService {
          * @return newPuzzle
          */
         public generateNewPuzzle() {
-            let endTime = new Date().getTime() / 1000 + 5 ;
+            let endTime = new Date().getTime() / 1000 + 5;
             let getRandomSudoku = getRandomInRange(1, 9);
             let newPuzzle: Puzzle = new Puzzle();
 
@@ -98,4 +98,4 @@ module PuzzleManagerService {
     }
 }
 
-export = PuzzleManagerService;
+export = GridGenerationService;

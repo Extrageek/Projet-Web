@@ -7,10 +7,10 @@
                         <tr class="grid" *ngFor="let row of _newPuzzle?._puzzle , let i = index" [attr.id]="'gridRowId' + i">
                             <td *ngFor="let cell of row, let j = index" [attr.id]="'cellId' + i + '' + j">
                                 <input #attrRead class="readOnlyCell" *ngIf="!cell._hide" readonly maxlength="1" type="text" name="inputCell" id="{{i}}{{j}}"
-                                    [ngModel]="cell._value" (keydown)="onKeyDownEventHandler($event, attrRead.id)">
-
-                                    <input #attrWrite class="readWriteCell" *ngIf="cell._hide" maxlength="1" type="text" name="inputCell" id="{{i}}{{j}}" [(ngModel)]="cell._value"
-                                        (keydown)="onKeyDownEventHandler($event, attrWrite.id)" (keyup)="onValueChange($event, attrWrite.id)" (keypress)="validateInputValue($event)">
+                                    [ngModel]="cell._value" (keydown)="onKeyDownEventHandler($event, attrRead.id)"/>
+                                <input #attrWrite class="readWriteCell" *ngIf="cell._hide" maxlength="1" type="text" name="inputCell" id="{{i}}{{j}}" [(ngModel)]="cell._value"
+                                    (keydown)="onKeyDownEventHandler($event, attrWrite.id)" (keyup)="onValueChange($event, attrWrite.id)"
+                                    (keypress)="validateInputValue($event)"/>
                             </td>
                         </tr>
                     </tbody>
@@ -22,7 +22,7 @@
         <button type="button" class="btn btn-primary" (click)="initializeCurrentGrid()">Initialize Game</button>
         <h2 *ngIf="!_hiddenClock" >
             {{_time.hours}} : {{_time.minutes}} : {{_time.seconds}}
-            <span (click)="hideClock()"  class="glyphicon glyphicon-ban-circle" aria-hidden="true"> </span>
+            <span (click)="hideClock()" class="glyphicon glyphicon-ban-circle" aria-hidden="true"> </span>
         </h2>
         <h2 *ngIf="_hiddenClock">
             <span (click)="hideClock()" class="glyphicon glyphicon-time" aria-hidden="true"> </span>
