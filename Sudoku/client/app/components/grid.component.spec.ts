@@ -71,7 +71,7 @@ describe('GridComponent', () => {
                 BaseRequestOptions
             ]
         })
-            .compileComponents()  // compile template and css;
+            .compileComponents()  // compile template and stylesheets;
             .then(() => {
                 fixture = TestBed.createComponent(GridComponent);
                 comp = fixture.componentInstance;

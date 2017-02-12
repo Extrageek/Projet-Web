@@ -31,8 +31,8 @@ import { Time } from "../models/time";
 @Component({
     moduleId: module.id,
     selector: 'sudoku-grid',
-    templateUrl: "../../assets/html/grid.component.html",
-    styleUrls: ["../../assets/css/grid.component.css"],
+    templateUrl: "/assets/templates/grid.component.html",
+    styleUrls: ["../../assets/stylesheets/grid.component.css"],
     providers: [GridManagerService, PuzzleEventManagerService, RestApiProxyService, StopwatchService]
 })
 
