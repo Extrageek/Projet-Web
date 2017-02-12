@@ -11,7 +11,7 @@
     "sourceRoot": "app",
     "removeComments": false,
     "noImplicitAny": true,
-	   "noImplicitThis": true,
+    "noImplicitThis": true,
     "suppressImplicitAnyIndexErrors": true
   }
 }
