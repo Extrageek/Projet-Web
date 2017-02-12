@@ -9,7 +9,7 @@ export class Record {
     private _difficulty: Difficulty;
     private _time : Time;
 
-    constructor(username: string, difficulty: Difficulty, scorePlayer: number, scoreComputer: number, time: Time) {
+    constructor(username: string, difficulty: Difficulty, time: Time) {
         this._username = username;
         this._difficulty = difficulty;
         this._time = time;

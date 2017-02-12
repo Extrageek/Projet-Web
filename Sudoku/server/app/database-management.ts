@@ -60,14 +60,15 @@ export class DatabaseManager {
         }
     }
 
-    public static async getAllRecords(): Promise<Array<any>> {
+    public static async getTopRecords(): Promise<Array<Array<any>>> {
         try {
-            console.log("-- DatabaseManager getAllRecords --");
+            console.log("-- DatabaseManager getTopRecords --");
             let db = await MongoClient.connect(url);
-            let docs: Array<any>;
+            let docs = new Array<any>();
             try {
                 let collection = db.collection('leaderboard');
-                docs = (await collection.find().toArray());
+                docs.push(await collection.find({difficulty: "NORMAL"}).sort({time: 1}).limit(3).toArray());
+                docs.push(await collection.find({difficulty: "HARD"}).sort({time: 1}).limit(3).toArray());
             } finally {
                 db.close();
             }

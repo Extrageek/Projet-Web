@@ -119,20 +119,23 @@ export class RestApiProxyService {
             });
     }
 
-    public async getAllRecords(): Promise<Array<Record>> {
-        let records: Array<Record> = new Array<Record>();
-        await this.http.get(this._urlApi + "records-all").toPromise()
+    public async getTopRecords(): Promise<Array<Array<Record>>> {
+        let records = new Array<Array<Record>>();
+        await this.http.get(this._urlApi + "top-records").toPromise()
             .then(response => {
                 console.log(response);
                 if (response.status === 200) {
-                    let arrObj: Array<any> = response.json();
-                    arrObj.forEach(element => {
-                        records.push(new Record(element.username,
-                            element.difficulty,
-                            element.scorePlayer,
-                            element.scoreComputer,
-                            element.date));
-                    });
+                    let arrObj: Array<Array<any>> = response.json();
+                    for (let i = 0; i < arrObj.length; ++i) {
+                        let tempRecords = new Array<Record>();
+                        arrObj[i].forEach(record => {
+                            tempRecords.push(new Record(record.username,
+                                record.difficulty,
+                                record.time
+                            ));
+                        });
+                        records.push(tempRecords);
+                    }
                 }
             })
             .catch(error => {
@@ -146,7 +149,7 @@ export class RestApiProxyService {
     public async verifyGrid(puzzle: Puzzle): Promise<boolean> {
         return await this.http
             .post(this._urlApi + "grid-validation", JSON.stringify({ puzzle: puzzle._puzzle }),
-                    { headers: this._headers })
+            { headers: this._headers })
             .toPromise()
             .then(response => {
                 let body = response.json();

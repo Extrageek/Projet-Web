@@ -84,9 +84,9 @@ module Route {
             }
         }
 
-        public async getAllRecords(request: express.Request, response: express.Response, next: express.NextFunction) {
+        public async getTopRecords(request: express.Request, response: express.Response, next: express.NextFunction) {
             try {
-                let records: Array<any> = await DatabaseManager.getAllRecords();
+                let records: Array<Array<any>> = await DatabaseManager.getTopRecords();
                 response.status(records === null ? HttpStatus.ERROR : HttpStatus.SUCCESS).send(records);
             } catch (error) {
                 response.status(HttpStatus.ERROR)

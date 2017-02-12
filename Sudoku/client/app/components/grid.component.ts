@@ -21,6 +21,7 @@ import { StopwatchService } from "../services/stopwatch.service";
 
 import { PuzzleCommon } from '../commons/puzzle-common';
 import { Puzzle } from '../models/puzzle';
+import { Record } from '../models/record';
 import { UserSetting, Difficulty } from '../models/user-setting';
 
 import { Observable } from 'rxjs/Observable';
@@ -41,6 +42,8 @@ export class GridComponent implements OnInit {
     _userSetting: UserSetting;
     _time: Time;
     _hiddenClock: boolean;
+    _easyRecords: Array<Record>;
+    _hardRecords: Array<Record>;
 
 
     constructor(
@@ -62,22 +65,23 @@ export class GridComponent implements OnInit {
             this._time.minutes = this.stopwatchService.minutes;
             this._time.hours = this.stopwatchService.hours;
         });
+        this._easyRecords = new Array<Record>();
+        this._hardRecords = new Array<Record>();
     }
 
     @HostListener('window:beforeunload', ['$event'])
     saveAndLogout(event: Event) {
-        this.api.createGameRecord(this._userSetting, this._time);
         this.api.removeUsername(this._userSetting.name);
         event.stopImmediatePropagation();
     }
 
-    public getNewPuzzle(difficulty: Difficulty){
+    public getNewPuzzle(difficulty: Difficulty) {
         this.api.getNewPuzzle(difficulty)
-        .subscribe((puzzle: Puzzle) => {
-            this._newPuzzle = puzzle;
-            this._userSetting.difficulty = difficulty;
-            this.gridManagerService.countFilledCell(puzzle);
-        });
+            .subscribe((puzzle: Puzzle) => {
+                this._newPuzzle = puzzle;
+                this._userSetting.difficulty = difficulty;
+                this.gridManagerService.countFilledCell(puzzle);
+            });
     }
 
     // Handle the directions key event by using the EventManager
@@ -86,7 +90,7 @@ export class GridComponent implements OnInit {
     }
 
     // Handle the input value changed event from grid
-    public onValueChange(event: KeyboardEvent, id: string) {
+    public async onValueChange(event: KeyboardEvent, id: string) {
 
         let rowColIndex = id.split('');
         let rowIndex = Number(rowColIndex[PuzzleCommon.yPosition]);
@@ -100,8 +104,19 @@ export class GridComponent implements OnInit {
 
         else if (this.puzzleEventManager.isSudokuNumber(event.which)) {
             this.gridManagerService.validateEnteredNumber(this._newPuzzle, rowIndex, colIndex);
-            if (this.gridManagerService.cellsToBeCompleted === 0) {
-                console.log(this.api.verifyGrid(this._newPuzzle));
+            // TODO: replace 59 by 0
+            if (this.gridManagerService.cellsToBeCompleted === 59) {
+                if (this.api.verifyGrid(this._newPuzzle)) {
+                    //TODO: add modal with table to populate
+                    //TODO: show modal when grid is valid
+                    await this.api.getTopRecords().then(topRecords => {
+                        this._easyRecords = topRecords[0];
+                        this._hardRecords = topRecords[1];
+                    }).catch(error => {
+                        console.log(error);
+                    });
+                    this.api.createGameRecord(this._userSetting, this._time);
+                }
             }
         }
     }

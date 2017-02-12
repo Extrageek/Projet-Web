@@ -7,10 +7,10 @@
                         <tr class="grid" *ngFor="let row of _newPuzzle?._puzzle , let i = index" [attr.id]="'gridRowId' + i">
                             <td *ngFor="let cell of row, let j = index" [attr.id]="'cellId' + i + '' + j">
                                 <input #attrRead class="readOnlyCell" *ngIf="!cell._hide" readonly maxlength="1" type="text" name="inputCell" id="{{i}}{{j}}"
-                                    [ngModel]="cell._value" (keydown)="onKeyDownEventHandler($event, attrRead.id)"/>
+                                    [ngModel]="cell._value" (keydown)="onKeyDownEventHandler($event, attrRead.id)" />
                                 <input #attrWrite class="readWriteCell" *ngIf="cell._hide" maxlength="1" type="text" name="inputCell" id="{{i}}{{j}}" [(ngModel)]="cell._value"
                                     (keydown)="onKeyDownEventHandler($event, attrWrite.id)" (keyup)="onValueChange($event, attrWrite.id)"
-                                    (keypress)="validateInputValue($event)"/>
+                                    (keypress)="validateInputValue($event)" />
                             </td>
                         </tr>
                     </tbody>
@@ -20,7 +20,7 @@
     </div>
     <div class="col-md-5 menu-panel">
         <button type="button" class="btn btn-primary" (click)="initializeCurrentGrid()">Reset</button>
-        <h2 *ngIf="!_hiddenClock" >
+        <h2 *ngIf="!_hiddenClock">
             {{_time.hours}} : {{_time.minutes}} : {{_time.seconds}}
             <span (click)="hideClock()" class="glyphicon glyphicon-ban-circle" aria-hidden="true"> </span>
         </h2>
@@ -29,7 +29,45 @@
         </h2>
         <h2>{{_userSetting.name}}</h2>
         <h2>{{_userSetting.difficulty}}</h2>
-         <button type="button" class="btn btn-primary" (click)="getNewPuzzle(0)">Facile</button>
-         <button type="button" class="btn btn-primary" (click)="getNewPuzzle(1)">Difficile</button>
+        <button type="button" class="btn btn-primary" (click)="getNewPuzzle(0)">Facile</button>
+        <button type="button" class="btn btn-primary" (click)="getNewPuzzle(1)">Difficile</button>
+
+        <div #leaderboardEasy>
+            <table id="lead-table" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Pseudonyme</th>
+                        <th>Niveau</th>
+                        <th>Temps</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let record of _easyRecords">
+                        <td>{{record._username}}</td>
+                        <td>{{record._difficulty}}</td>
+                        <td>{{record._time._hours}} : {{record._time._minutes}} : {{record._time._seconds}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div #leaderboardHard>
+            <table id="lead-table" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Pseudonyme</th>
+                        <th>Niveau</th>
+                        <th>Temps</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let record of _hardRecords">
+                        <td>{{record._username}}</td>
+                        <td>{{record._difficulty}}</td>
+                        <td>{{record._time._hours}} : {{record._time._minutes}} : {{record._time._seconds}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
