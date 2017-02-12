@@ -145,10 +145,12 @@ export class RestApiProxyService {
 
     public async verifyGrid(puzzle: Puzzle): Promise<boolean> {
         return await this.http
-            .post(this._urlApi + "grid-validation", JSON.stringify({ puzzle: Puzzle }), { headers: this._headers })
+            .post(this._urlApi + "grid-validation", JSON.stringify({ puzzle: puzzle._puzzle }),
+                    { headers: this._headers })
             .toPromise()
             .then(response => {
-                if (response.status === 200) {
+                let body = response.json();
+                if (body.validity === "valid") {
                     return true;
                 }
                 else {
@@ -156,7 +158,8 @@ export class RestApiProxyService {
                 }
             })
             .catch(error => {
-                throw new Error("RestApiProxyService - An error occured during the grid validation.");
+                console.log("RestApiProxyService - An error occured during the grid validation.");
+                return false;
             });
     }
 
