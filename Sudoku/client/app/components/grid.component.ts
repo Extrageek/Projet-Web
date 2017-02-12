@@ -42,6 +42,7 @@ export class GridComponent implements OnInit {
     _time: Time;
     _hiddenClock : boolean;
 
+
     constructor(
         private gridManagerService: GridManagerService,
         private puzzleEventManager: PuzzleEventManagerService,

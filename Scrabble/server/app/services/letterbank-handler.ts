@@ -34,6 +34,11 @@ export class LetterBankHandler {
         return newLetters;
     }
 
+    public refillEasel(numberOfLetters: number): Array<Letter> {
+        let newLetters = new Array<Letter>();
+        return newLetters = this.getLetterFromBank(numberOfLetters);
+    }
+
     private getLetterFromBank(numberOfLetters: number): Array<Letter> {
         let newEasel = new Array<Letter>();
         let randomLetter: Letter;
