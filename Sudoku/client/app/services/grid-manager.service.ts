@@ -8,7 +8,7 @@ export const CELL_ID_PREFIX = "#";
 export const CSS_BACKGROUND_PROPERTY = "background-color";
 export const CSS_BACKGROUND_VALUE = "#E57373 ";
 export const CSS_BACKGROUND_INIT = "";
-
+const SUDOKU_LENGTH = 9;
 @Injectable()
 export class GridManagerService {
     private _cellsToBeCompleted = 0;
@@ -26,8 +26,8 @@ export class GridManagerService {
 
         let grid = puzzle._puzzle;
 
-        let isColumnValid = this.isDuplicatedNumberInCurrentColumn(grid, rowIndex, columnIndex);
-        let isRowValid = this.isDuplicatedNumberInCurrentRow(grid, rowIndex, columnIndex);
+        let isColumnValid = !(this.isDuplicatedNumberInCurrentColumn(grid, rowIndex, columnIndex));
+        let isRowValid = !(this.isDuplicatedNumberInCurrentRow(grid, rowIndex, columnIndex));
         let isSquareValid = this.isDuplicatedNumberInCurrentSquare(grid, rowIndex, columnIndex);
 
         if (isColumnValid && isRowValid && isSquareValid) {
@@ -48,51 +48,34 @@ export class GridManagerService {
         jQuery(cellId).css(CSS_BACKGROUND_PROPERTY, borderPropertyValue);
     }
 
-    // Check if the row is valid.
-    isDuplicatedNumberInCurrentRow(grid: PuzzleItem[][], rowIndex: number, columnIndex?: number): boolean {
-        // Check for duplicated number in the related row.
-        for (let columnId1 = 0; columnId1 < grid.length; ++columnId1) {
-            let item = Number(grid[rowIndex][columnId1]._value);
+    private isDuplicatedNumberInCurrentRow(grid: PuzzleItem[][], rowIndex: number, columnIndex: number): boolean {
 
-            if (item != null) {
-                for (let columnId2 = 0; columnId2 < grid.length; ++columnId2) {
-                    if (Number(grid[rowIndex][columnId2]._value) === item
-                        && (Number(grid[rowIndex][columnId2]._value) !== 0)
-                        && (columnId1 !== columnId2)) {
-                        return false;
-                    }
-                }
+        let puzzleItem = Number(grid[rowIndex][columnIndex]._value);
+
+        for (let columnId = 0; columnId < SUDOKU_LENGTH ; ++columnId) {
+            if (puzzleItem === Number(grid[rowIndex][columnId]._value)
+                && columnId !== columnIndex) {
+                return true;
             }
         }
-
-        // The row is valid if a duplicated number is not found.
-        return true;
+        return false;
     }
 
-    // Check if the column is valid.
-    isDuplicatedNumberInCurrentColumn(grid: PuzzleItem[][], rowIndex: number, columnIndex: number): boolean {
+    private isDuplicatedNumberInCurrentColumn(grid: PuzzleItem[][], rowIndex: number, columnIndex: number): boolean {
 
-        // Check for duplicated number in the related column.
-        for (let row1 = 0; row1 < grid.length; ++row1) {
-            let item = Number(grid[row1][columnIndex]._value);
+        let puzzleItem = Number(grid[rowIndex][columnIndex]._value);
 
-            if (item != null) {
-                for (let row2 = 0; row2 < grid.length; ++row2) {
-                    if (Number(grid[row2][columnIndex]._value) === item
-                        && (Number(grid[row2][columnIndex]._value) !== 0)
-                        && (row1 !== row2)) {
-                        return false;
-                    }
-                }
+        for (let rowId = 0; rowId < SUDOKU_LENGTH ; ++rowId) {
+            if (puzzleItem === Number(grid[rowId][columnIndex]._value)
+                && rowId !== rowIndex) {
+                return true;
             }
         }
-
-        // return true if a duplicated number is not found.
-        return true;
+        return false;
     }
 
     // Check if the square around the value is valid.
-    isDuplicatedNumberInCurrentSquare(grid: PuzzleItem[][], rowIndex: number, columnIndex: number): boolean {
+    private isDuplicatedNumberInCurrentSquare(grid: PuzzleItem[][], rowIndex: number, columnIndex: number): boolean {
         let squareMinRowIndex = Math.floor(rowIndex / 3) * 3;
         let squareMaxRowIndex = squareMinRowIndex + 2;
         let squareMinColumnIndex = Math.floor(columnIndex / 3) * 3;

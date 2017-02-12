@@ -20,12 +20,14 @@
     </div>
     <div class="col-md-5 menu-panel">
         <button type="button" class="btn btn-primary" (click)="initializeCurrentGrid()">Initialize Game</button>
-        <h2 *ngIf="!_hiddenClock">
+        <h2 *ngIf="!_hiddenClock" >
             {{_time.hours}} : {{_time.minutes}} : {{_time.seconds}}
             <span (click)="hideClock()"  class="glyphicon glyphicon-ban-circle" aria-hidden="true"> </span>
         </h2>
         <h2 *ngIf="_hiddenClock">
             <span (click)="hideClock()" class="glyphicon glyphicon-time" aria-hidden="true"> </span>
         </h2>
+        <h2>{{_userSetting.name}}</h2>
+        <h2>{{_userSetting.difficulty}}</h2>
     </div>
 </div>

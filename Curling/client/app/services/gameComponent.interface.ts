@@ -1,0 +1,3 @@
+interface GameComponent {
+    update(): void;
+}
