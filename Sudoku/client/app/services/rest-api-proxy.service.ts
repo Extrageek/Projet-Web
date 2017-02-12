@@ -12,6 +12,7 @@ import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/throw';
 
 import { Puzzle } from '../models/puzzle';
 import { UserSetting } from '../models/user-setting';
@@ -45,8 +46,8 @@ export class RestApiProxyService {
     getNewPuzzle(): Observable<Puzzle> {
         return this.http.get(this._urlApi + "puzzle")
             .map(this.retrieveDataFromHttpResponse)
-            .catch(() => {
-                return Observable.throw("errMsg");
+            .catch((error) => {
+                return Observable.throw("Error when getting a new puzzle : " + error);
             });
     }
 
@@ -140,6 +141,23 @@ export class RestApiProxyService {
             });
         console.log(records);
         return records;
+    }
+
+    public async verifyGrid(puzzle: Puzzle): Promise<boolean> {
+        return await this.http
+            .post(this._urlApi + "grid-validation", JSON.stringify({ puzzle: Puzzle }), { headers: this._headers })
+            .toPromise()
+            .then(response => {
+                if (response.status === 200) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            })
+            .catch(error => {
+                throw new Error("RestApiProxyService - An error occured during the grid validation.");
+            });
     }
 
     // /**
