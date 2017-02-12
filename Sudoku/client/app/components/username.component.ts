@@ -8,8 +8,8 @@ import { UserSettingService } from '../services/user-setting.service';
     moduleId: module.id,
     providers: [RestApiProxyService],
     selector: 'username-component',
-    templateUrl: '../../assets/html/username.component.html',
-    styleUrls: ['../../assets/css/username.component.css']
+    templateUrl: "/assets/templates/username.component.html",
+    styleUrls: ["../../assets/stylesheets/username.component.css"]
 })
 export class UsernameComponent {
     _isLoginNextActivated = false;

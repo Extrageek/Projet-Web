@@ -3,14 +3,15 @@ import { Router } from '@angular/router';
 
 import { Difficulty } from '../models/user-setting';
 
+
 import { UserSettingService } from '../services/user-setting.service';
 import { RestApiProxyService } from '../services/rest-api-proxy.service';
 
 @Component({
     moduleId: module.id,
     selector: 'difficulty-component',
-    templateUrl: '../../assets/html/difficulty.component.html',
-    styleUrls: ['../../assets/css/username.component.css']
+    templateUrl: "/assets/templates/difficulty.component.html",
+    styleUrls: ["../../assets/stylesheets/username.component.css"]
 })
 export class DifficultyComponent implements OnInit {
     _username: string;

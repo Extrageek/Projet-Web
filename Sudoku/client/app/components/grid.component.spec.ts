@@ -31,6 +31,7 @@ import { RestApiProxyService } from '../services/rest-api-proxy.service';
 import { GridManagerService } from '../services/grid-manager.service';
 import { FAKE_PUZZLE_FEED, INITIAL_PUZZLE_SEED } from '../services/mock-data';
 import { PuzzleEventManagerService } from '../services/puzzle-event-manager.service';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 // Mock the REST API Service to give a fake result after a request.
 @Injectable()
@@ -52,6 +53,7 @@ describe('GridComponent', () => {
 
     beforeEach(async () => {
         TestBed.configureTestingModule({
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             declarations: [GridComponent, AppComponent], // declare the test component
             imports: [FormsModule, HttpModule],
             providers: [
@@ -71,7 +73,7 @@ describe('GridComponent', () => {
                 BaseRequestOptions
             ]
         })
-            .compileComponents()  // compile template and css;
+            .compileComponents()  // compile template and stylesheets;
             .then(() => {
                 fixture = TestBed.createComponent(GridComponent);
                 comp = fixture.componentInstance;

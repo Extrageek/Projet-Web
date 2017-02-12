@@ -26,7 +26,7 @@ module Route {
          * @return Server side main page
          */
         public index(req: express.Request, res: express.Response, next: express.NextFunction) {
-            //res.sendFile(path.join(__dirname, '../dist/index.html'));
+            //res.sendFile(path.join(__dirname, '../dist/index.templates'));
             res.send("Server Side Control Panel");
         }
 
