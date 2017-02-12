@@ -19,7 +19,7 @@
         </div>
     </div>
     <div class="col-md-5 menu-panel">
-        <button type="button" class="btn btn-primary" (click)="initializeCurrentGrid()">Initialize Game</button>
+        <button type="button" class="btn btn-primary" (click)="initializeCurrentGrid()">Reset</button>
         <h2 *ngIf="!_hiddenClock" >
             {{_time.hours}} : {{_time.minutes}} : {{_time.seconds}}
             <span (click)="hideClock()" class="glyphicon glyphicon-ban-circle" aria-hidden="true"> </span>
@@ -29,5 +29,7 @@
         </h2>
         <h2>{{_userSetting.name}}</h2>
         <h2>{{_userSetting.difficulty}}</h2>
+         <button type="button" class="btn btn-primary" (click)="getNewPuzzle(0)">Facile</button>
+         <button type="button" class="btn btn-primary" (click)="getNewPuzzle(1)">Difficile</button>
     </div>
 </div>

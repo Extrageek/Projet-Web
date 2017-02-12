@@ -18,15 +18,20 @@ function getRandomInRange(min: number, max: number) {
 
 module GridGenerationService {
 
+    export enum Difficulty {
+        NORMAL,
+        HARD
+    }
+
     export class GridGenerationManager {
 
         private _easySudoku: Array<Puzzle>;
         private _hardSudoku: Array<Puzzle>;
 
-        getNewPuzzle(): Puzzle {
+        getNewPuzzle(difficulty: Difficulty): Puzzle {
             //this._easySudoku.push(this.generateNewPuzzle());
             //return this._easySudoku.pop();
-            return this.generateNewPuzzle();
+            return this.generateNewPuzzle(difficulty);
         }
 
         /**
@@ -36,11 +41,10 @@ module GridGenerationService {
          * @method getNewPuzzle
          * @return newPuzzle
          */
-        public generateNewPuzzle() {
+        public generateNewPuzzle(difficulty: Difficulty) {
             let endTime = new Date().getTime() / 1000 + 5;
             let getRandomSudoku = getRandomInRange(1, 9);
             let newPuzzle: Puzzle = new Puzzle();
-
             let deltaIteration: number = Math.round(NOMBRE_ITERATION * Math.random());
 
             for (let it = 0; it < NOMBRE_ITERATION + deltaIteration; ++it) {

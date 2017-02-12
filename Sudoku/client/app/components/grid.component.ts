@@ -21,7 +21,7 @@ import { StopwatchService } from "../services/stopwatch.service";
 
 import { PuzzleCommon } from '../commons/puzzle-common';
 import { Puzzle } from '../models/puzzle';
-import { UserSetting } from '../models/user-setting';
+import { UserSetting, Difficulty } from '../models/user-setting';
 
 import { Observable } from 'rxjs/Observable';
 import { Time } from "../models/time";
@@ -55,11 +55,7 @@ export class GridComponent implements OnInit {
     ngOnInit() {
         this._userSetting = this.userSettingService.userSetting;
         this._time = new Time();
-        this.api.getNewPuzzle()
-            .subscribe((puzzle) => {
-                this._newPuzzle = puzzle;
-                this.gridManagerService.countFilledCell(puzzle);
-            });
+        this.getNewPuzzle(this._userSetting.difficulty);
         Observable.timer(0, 1000).subscribe(() => {
             this.stopwatchService.updateClock();
             this._time.seconds = this.stopwatchService.seconds;
@@ -75,6 +71,14 @@ export class GridComponent implements OnInit {
         event.stopImmediatePropagation();
     }
 
+    public getNewPuzzle(difficulty: Difficulty){
+        this.api.getNewPuzzle(difficulty)
+        .subscribe((puzzle: Puzzle) => {
+            this._newPuzzle = puzzle;
+            this._userSetting.difficulty = difficulty;
+            this.gridManagerService.countFilledCell(puzzle);
+        });
+    }
 
     // Handle the directions key event by using the EventManager
     public onKeyDownEventHandler(event: KeyboardEvent, id: string) {
