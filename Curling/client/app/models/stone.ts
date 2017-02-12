@@ -1,4 +1,3 @@
-import { Injectable } from "@angular/core";
 import { ObjectLoader, Object3D, Scene } from "three";
 
 export enum StoneColor {
@@ -6,7 +5,6 @@ export enum StoneColor {
     Blue
 }
 
-@Injectable()
 export class Stone implements GameComponent {
 
     private static readonly STONES_PATH =

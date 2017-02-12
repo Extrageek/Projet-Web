@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { ObjectLoader, Scene } from "three";
-import { Stone, StoneColor } from "./stone.service";
+import { Stone, StoneColor } from "./stone";
 
 describe("Stone tester should", () => {
 
