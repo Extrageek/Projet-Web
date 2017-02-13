@@ -1,6 +1,8 @@
 import { expect, assert } from "chai";
 import { Room } from "./room";
-import { Player } from "./player";
+import { Player } from "../players/player";
+
+let fakeSocketId = "fakeId@33md401";
 
 describe("Room", () => {
 
@@ -33,8 +35,8 @@ describe("Room", () => {
         let fakeName2 = "testname2";
         let numberOfPlayers = 2;
 
-        let player1 = new Player(fakeName1, numberOfPlayers);
-        let player2 = new Player(fakeName2, numberOfPlayers);
+        let player1 = new Player(fakeName1, numberOfPlayers, fakeSocketId);
+        let player2 = new Player(fakeName2, numberOfPlayers, fakeSocketId);
 
         room.addPlayer(player1);
         room.addPlayer(player2);
@@ -53,8 +55,8 @@ describe("Room", () => {
         let fakeName2 = "testname2";
         let numberOfPlayers = 1;
 
-        let player1 = new Player(fakeName1, numberOfPlayers);
-        let player2 = new Player(fakeName2, numberOfPlayers);
+        let player1 = new Player(fakeName1, numberOfPlayers, fakeSocketId);
+        let player2 = new Player(fakeName2, numberOfPlayers, fakeSocketId);
 
         room.addPlayer(player1);
         assert(room.isFull() === true, "The room must be full at this state");
@@ -79,8 +81,8 @@ describe("Room", () => {
 
         let fakeName = "fakename";
         let numberOfPlayers = 2;
-        let player1 = new Player(fakeName, numberOfPlayers);
-        let player2 = new Player(fakeName, numberOfPlayers);
+        let player1 = new Player(fakeName, numberOfPlayers, fakeSocketId);
+        let player2 = new Player(fakeName, numberOfPlayers, fakeSocketId);
 
         room.addPlayer(player1);
         let playerWithDuplicatedUsername = () => room.addPlayer(player2);
@@ -94,12 +96,12 @@ describe("Room", () => {
 
         let fakeName = "fakename";
         let numberOfPlayers = 2;
-        let player1 = new Player(fakeName, numberOfPlayers);
-        let player2 = new Player(fakeName, numberOfPlayers);
+        let player1 = new Player(fakeName, numberOfPlayers, fakeSocketId);
+        let player2 = new Player(fakeName, numberOfPlayers, fakeSocketId);
 
         room.addPlayer(player1);
 
-        assert(room.usernameAlreadyExist(player2.username) === true);
+        assert(room.isUsernameAlreadyExist(player2.username) === true);
     });
 
     it("usernameAlreadyExist, should throw a null argument error", () => {
@@ -108,18 +110,18 @@ describe("Room", () => {
 
         let fakeName = "fakename";
         let numberOfPlayers = 2;
-        let player1 = new Player(fakeName, numberOfPlayers);
+        let player1 = new Player(fakeName, numberOfPlayers, fakeSocketId);
 
         room.addPlayer(player1);
 
-        expect(() => room.usernameAlreadyExist(null)).to.throw(Error, "Argument error: the username cannot be null");
+        expect(() => room.isUsernameAlreadyExist(null)).to.throw(Error, "Argument error: the username cannot be null");
     });
 
     it("isFull, should be true", () => {
 
         let fakeName = "fakename";
         let numberOfPlayers = 2;
-        let player1 = new Player(fakeName, numberOfPlayers);
+        let player1 = new Player(fakeName, numberOfPlayers, fakeSocketId);
 
         let roomCapacity = 2;
         let room = new Room(roomCapacity);
@@ -133,8 +135,8 @@ describe("Room", () => {
         let fakeName1 = "testname1";
         let fakeName2 = "testname2";
         let numberOfPlayers = 2;
-        let player1 = new Player(fakeName1, numberOfPlayers);
-        let player2 = new Player(fakeName2, numberOfPlayers);
+        let player1 = new Player(fakeName1, numberOfPlayers, fakeSocketId);
+        let player2 = new Player(fakeName2, numberOfPlayers, fakeSocketId);
 
         let roomCapacity = 2;
         let room = new Room(roomCapacity);
@@ -156,7 +158,7 @@ describe("Room", () => {
 
         let fakeName = "testname1";
         let numberOfPlayers = 1;
-        let player = new Player(fakeName, numberOfPlayers);
+        let player = new Player(fakeName, numberOfPlayers, fakeSocketId);
 
         let roomCapacity = 1;
         let room = new Room(roomCapacity);

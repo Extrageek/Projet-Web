@@ -1,6 +1,6 @@
 
-import { Room } from "../models/room";
-import { Player } from "../models/player";
+import { Room } from "../../models/rooms/room";
+import { Player } from "../../models/players/player";
 
 export class RoomHandler {
 
@@ -87,7 +87,7 @@ export class RoomHandler {
         return (typeof (currentPlayer) !== "undefined") ? currentPlayer : null;
     }
 
-    // Find a room with the givent socket TODO: By username
+    // Find a room with the given username
     public getRoomByUsername(username: string): Room {
 
         if (username === null) {
@@ -105,5 +105,25 @@ export class RoomHandler {
         });
 
         return (typeof (availableRoom) !== "undefined") ? availableRoom : null;
+    }
+
+     // Find a player with the given username
+    public getPlayerBySocketId(socketId: string): Player {
+
+        if (socketId === null) {
+            throw new Error("Argument error: the socketId cannot be null");
+        }
+
+        let availablePlayer: Player;
+
+        this._rooms.forEach((room) => {
+            let currentPlayer = room.players.filter((player) => (player.socketId === socketId))[0];
+
+            if (currentPlayer !== null && currentPlayer !== undefined) {
+                availablePlayer = currentPlayer;
+            }
+        });
+
+        return (typeof (availablePlayer) !== "undefined") ? availablePlayer : null;
     }
 }

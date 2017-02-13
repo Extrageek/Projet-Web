@@ -6,7 +6,7 @@
     "start": "tsc && concurrently --kill-others \"tsc -w \" \"nodemon out/www.js\" ",
     "lint": "tslint app/**/*.ts app/*.ts --force -t verbose",
     "test": "nodemon --watch app -e ts --exec \"npm run test-once\"",
-    "test-once": "tsc && mocha out/*.spec.js && mocha out/models/*.spec.js && mocha out/services/*.spec.js",
+    "test-once": "tsc && mocha out/*.spec.js && mocha out/models/*/*.spec.js && mocha out/services/*/*.spec.js",
     "coverage": "remap-istanbul -i coverage/coverage-final.json -o coverage -t html",
     "tsc": "tsc",
     "tsc:w": "tsc -w",

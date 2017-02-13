@@ -1,4 +1,4 @@
-import { Player } from "./player";
+import { Player } from "../players/player";
 let uuid = require('node-uuid');
 
 export class Room {
@@ -74,7 +74,7 @@ export class Room {
             throw new Error("The room is full, cannot add a new player");
         }
 
-        if (this.usernameAlreadyExist(player.username)) {
+        if (this.isUsernameAlreadyExist(player.username)) {
             throw new Error("The username already exist in this room");
         }
 
@@ -106,7 +106,7 @@ export class Room {
     }
 
     // Check if the username of the player already exist in the current room
-    public usernameAlreadyExist(username: string): Boolean {
+    public isUsernameAlreadyExist(username: string): Boolean {
         if (username === null) {
             throw new Error("Argument error: the username cannot be null");
         }

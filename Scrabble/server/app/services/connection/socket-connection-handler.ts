@@ -1,11 +1,13 @@
 import * as http from "http";
 import * as io from "socket.io";
 
-import { Room } from '../models/room';
+import { SocketEventType } from '../../commons/socket-eventType';
+import { Room } from '../../models/rooms/room';
+import { RoomMessage } from '../../models/rooms/room-message';
+import { RoomHandler } from "../../services/rooms/room-handler";
+import { Player } from "../../models/players/Player";
 
-import { SocketEventType } from '../commons/socket-eventType';
-import { RoomHandler } from "../services/room-handler";
-import { Player } from "../models/Player";
+let fakeSocketId = "fakeId@33md401";
 
 export class SocketConnectionHandler {
 
@@ -13,6 +15,7 @@ export class SocketConnectionHandler {
     private _socket: SocketIO.Server;
 
     constructor(server: http.Server) {
+
 
         if (server === null || typeof (server) === "undefined") {
             throw new Error("Invalid server parameter.");
@@ -26,7 +29,7 @@ export class SocketConnectionHandler {
     private onConnectionRequest() {
         this._socket.sockets.on(SocketEventType.connection, (socket: SocketIO.Socket) => {
 
-            console.log("a new connection to the server");
+            console.log("a new connection to the server", socket.id);
 
             this.onNewGameRequest(socket);
             this.onMessage(socket);
@@ -35,6 +38,8 @@ export class SocketConnectionHandler {
 
     private onNewGameRequest(socket: SocketIO.Socket) {
         socket.on(SocketEventType.newGameRequest, (connectionInfos: { username: string, gameType: number }) => {
+
+            console.log("Test", connectionInfos);
 
             if (typeof (connectionInfos) !== "object"
                 || typeof (connectionInfos.username) !== "string"
@@ -48,7 +53,7 @@ export class SocketConnectionHandler {
                 if (this._roomHandler.getPlayerByUsername(connectionInfos.username) === null) {
 
                     // Create a new player and return his new room.
-                    let player = new Player(connectionInfos.username, connectionInfos.gameType);
+                    let player = new Player(connectionInfos.username, connectionInfos.gameType, fakeSocketId);
                     let playerRoom = this._roomHandler.addPlayer(player);
 
                     // Join the room
@@ -77,33 +82,34 @@ export class SocketConnectionHandler {
             }
 
             this._socket.to(currentRoom.roomId).emit(SocketEventType.message, chatMessage);
-
         });
     }
 
     private sendWelcomeMessageOnPlayerJoinedRoom(username: string, room: Room) {
 
+        let roomJoinedMessage = `${username}` + ` join the room`;
+        let missingMembers = room.numberOfMissingPlayers();
+
         // Create a response for the room members
-        let roomResponseMessage = {
-            username: username,
-            roomId: room.roomId,
-            numberOfMissingPlayers: room.numberOfMissingPlayers(),
-            roomIsReady: false,
-            message: ""
-        };
+        let roomResponseMessage = new RoomMessage(username, room.roomId, missingMembers, false, roomJoinedMessage);
+
 
         if (!room.isFull()) {
-            roomResponseMessage.message = `${username}` + ` join the room`;
-
             // Emit to all the player in the room.
             this._socket.to(room.roomId).emit(SocketEventType.joinRoom, roomResponseMessage);
 
         } else {
-            roomResponseMessage.message = `${username}` + ` join the room`;
             roomResponseMessage.roomIsReady = true;
 
             // Emit a message to all the player in the room.
             this._socket.to(room.roomId).emit(SocketEventType.roomReady, roomResponseMessage);
         }
+    }
+
+    private onDisconnect(socket: SocketIO.Socket) {
+
+        socket.on(SocketEventType.disconnect, () => {
+
+        });
     }
 }

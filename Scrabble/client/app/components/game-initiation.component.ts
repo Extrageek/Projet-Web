@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 
 import { SocketService } from "../services/socket-service";
 import { SocketEventType } from '../commons/socket-eventType';
+import { RoomMessage } from '../models/room-message';
 
 @Component({
     moduleId: module.id,
@@ -57,32 +58,14 @@ export class GameInitiationComponent implements OnInit {
     }
 
     // A callback when the player join a room
-    public onJoinedRoom(roomMessage: {
-        username: string,
-        roomId: string,
-        numberOfMissingPlayers: number,
-        roomIsReady: boolean,
-        message: string
-    }): void {
-
-        console.log("test: from the server:", roomMessage);
-
+    public onJoinedRoom(roomMessage: RoomMessage): void {
         console.log(roomMessage.message, roomMessage.roomId,
             " RoomReadyState", roomMessage.roomIsReady,
             " missing players", roomMessage.numberOfMissingPlayers);
     }
 
     // A callback function when the room of the user is full and the game is ready to be started
-    public onRoomReady(
-        roomMessage: {
-            username: string,
-            roomId: string,
-            numberOfMissingPlayers: number,
-            roomIsReady: boolean,
-            message: string
-        }): void {
-
-
+    public onRoomReady(roomMessage: RoomMessage): void {
         console.log(roomMessage.message, roomMessage.roomId,
             " RoomReadyState", roomMessage.roomIsReady,
             " missing players", roomMessage.numberOfMissingPlayers);

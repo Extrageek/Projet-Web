@@ -1,7 +1,11 @@
 import { expect, assert } from "chai";
-import { Room } from "../models/room";
+import { Room } from "../../models/rooms/room";
 import { RoomHandler } from "./room-handler";
-import { Player } from "../models/player";
+import { Player } from "../../models/players/player";
+
+let fakeSocketId1 = "fakevmTOF4T3yXo5dAjvAAAF";
+
+let fakeSocketId2 = "fake6mT5F003ffff00000000";
 
 describe("Room Handler", () => {
 
@@ -14,8 +18,8 @@ describe("Room Handler", () => {
 
     beforeEach(() => {
         fakeRoomHandler = new RoomHandler();
-        player1 = new Player(fakeName1, numberOfPlayers);
-        player2 = new Player(fakeName2, numberOfPlayers);
+        player1 = new Player(fakeName1, numberOfPlayers, fakeSocketId1);
+        player2 = new Player(fakeName2, numberOfPlayers, fakeSocketId2);
     });
 
     it("RoomHandler, should create a new room handler", () => {
@@ -209,4 +213,27 @@ describe("Room Handler", () => {
         assert(fakeRoomHandler._rooms.length === 1);
     });
 
+    it("getPlayerBySocketId, should return a null value", () => {
+        fakeRoomHandler._rooms = new Array<Room>();
+        let notExistingSocketId = "socketIdNotExist";
+        fakeRoomHandler.addPlayer(player1);
+
+        expect(fakeRoomHandler.getPlayerBySocketId(notExistingSocketId)).to.be.null;
+    });
+
+    it("getPlayerBySocketId, should return a player", () => {
+        
+        fakeRoomHandler.addPlayer(player1);
+        fakeRoomHandler.addPlayer(player2);
+
+        expect(fakeRoomHandler.getPlayerBySocketId(player1.socketId)).to.be.deep.equals(player1);
+    });
+
+    it("getPlayerBySocketId, should return a player", () => {
+
+        fakeRoomHandler.addPlayer(player1);
+        fakeRoomHandler.addPlayer(player2);
+
+        expect(fakeRoomHandler.getPlayerBySocketId(player2.socketId)).to.be.deep.equals(player2);
+    });
 });
