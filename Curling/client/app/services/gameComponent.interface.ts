@@ -1,3 +1,3 @@
-interface GameComponent {
+export interface GameComponent {
     update(): void;
 }
