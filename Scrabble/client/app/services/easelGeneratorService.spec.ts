@@ -1,9 +1,9 @@
 import { expect } from "chai";
 import { EaselGeneratorService } from "./easelGeneratorService";
-import { ScrabbleLetter } from "../models/scrabble-letter";
+import { ScrabbleLetter } from "../models/letter/scrabble-letter";
 
-let service : EaselGeneratorService;
-let easelStub : ScrabbleLetter[];
+let service: EaselGeneratorService;
+let easelStub: ScrabbleLetter[];
 
 describe("Easel made out of Scrabble Letters validation", () => {
 
@@ -46,5 +46,3 @@ describe("Easel made out of Scrabble Letters validation", () => {
         expect(easelStub).to.not.deep.equal(secondEaselStub);
     });
 });
-
-
