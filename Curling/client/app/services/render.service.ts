@@ -8,7 +8,7 @@ import { Arena } from "../models/arena";
 import { Rink } from "../models/rink";
 import { Stone, StoneColor } from "../models/stone";
 import { RinkInfo } from "../models/rinkInfo.interface";
-import { StoneHandler } from "../models/StoneHandler";
+import { StoneHandler } from "../models/stoneHandler";
 
 @Injectable()
 export class RenderService {
