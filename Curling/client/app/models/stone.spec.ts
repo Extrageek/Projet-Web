@@ -1,39 +1,27 @@
 import { expect } from "chai";
-import { ObjectLoader, Scene } from "three";
+import { ObjectLoader, Vector3 } from "three";
 import { Stone, StoneColor } from "./stone";
 
 describe("Stone tester should", () => {
 
-    let loader: ObjectLoader;
+    let objectLoader: ObjectLoader;
 
     before(() => {
-        loader = new ObjectLoader();
-    });
-
-    it("load blue stone", done => {
-        new Stone(StoneColor.Blue, loader, () => { done(); });
+        objectLoader = new ObjectLoader();
     });
 
     it("load red stone", done => {
-        new Stone(StoneColor.Red, loader, () => { done(); });
-    });
-
-    it("add stone to scene", done => {
-        let scene = new Scene();
-        let stone = new Stone(StoneColor.Red, loader, () => {
-            stone.addToScene(scene);
-            expect(scene.children.length).to.equals(1);
+        Stone.createStone(objectLoader, StoneColor.Red, new Vector3(0, 0, 0)).then((stone: Stone) => {
+            expect(stone).to.be.instanceof(Stone);
+            expect(stone.stoneColor).to.equals(StoneColor.Red);
             done();
         });
     });
 
-    it("remove stone from scene", done => {
-        let scene = new Scene();
-        let stone = new Stone(StoneColor.Red, loader, () => {
-            stone.addToScene(scene);
-            expect(scene.children.length).to.equals(1);
-            stone.removeFromScene(scene);
-            expect(scene.children.length).to.equals(0);
+    it("load blue stone", done => {
+        Stone.createStone(objectLoader, StoneColor.Blue, new Vector3(0, 0, 0)).then((stone: Stone) => {
+            expect(stone).to.be.instanceof(Stone);
+            expect(stone.stoneColor).to.equals(StoneColor.Blue);
             done();
         });
     });

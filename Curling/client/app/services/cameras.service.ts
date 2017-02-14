@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Object3D, PerspectiveCamera, Vector3 } from "three";
-import { GameComponent } from "./gameComponent.interface";
+import { GameComponent } from "../models/gameComponent.interface";
 
 interface FollowInformation {
     objectToFollow: Object3D;
