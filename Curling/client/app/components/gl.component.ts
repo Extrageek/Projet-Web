@@ -22,11 +22,14 @@ export class GlComponent implements OnInit {
         //console.log(this.trigger());
     }
 
+    @HostListener("window:keydown.space", ["$event"])
+    public disableScrollingWithSpace(event: KeyboardEvent) {
+        event.preventDefault();
+    }
+
     @HostListener("window:keyup.space", ["$event"])
     public spaceKeyPressed(event: KeyboardEvent) {
         this.renderService.switchCamera();
-        //Return false to disable the default behavior of the space bar(scrolling).
-        return false;
     }
 
     constructor(
