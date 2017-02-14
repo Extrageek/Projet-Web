@@ -1,52 +1,56 @@
 import { Injectable } from "@angular/core";
+import { Scene, PerspectiveCamera, WebGLRenderer, Renderer, ObjectLoader, FontLoader, Geometry, CubeGeometry,
+    TextGeometry, MeshBasicMaterial, MeshFaceMaterial, MeshPhongMaterial, MultiMaterial, Mesh, SpotLight, Group,
+    Object3D, Font, ImageUtils, BackSide, FlatShading, SmoothShading, Clock } from "three";
 import { GameStatusService } from "./game-status.service";
 import { CameraService } from "./cameras.service";
+import { Arena } from "../models/arena";
+import { Rink } from "../models/rink";
+import { Stone, StoneColor } from "../models/stone";
+import { RinkInfo } from "../models/rinkInfo.interface";
+import { StoneHandler } from "../models/StoneHandler";
 
 @Injectable()
 export class RenderService {
 
-    private static readonly PATH_TO_RED_STONE = "/assets/models/json/curling-stone-red.json";
-    private static readonly PATH_TO_BLUE_STONE = "/assets/models/json/curling-stone-blue.json";
+    private static readonly NUMBER_OF_MODELS_TO_LOAD = 3;
 
-    private _scene: THREE.Scene;
-    private _currentCamera: THREE.PerspectiveCamera;
-    private _renderer: THREE.Renderer;
-    private _geometry: THREE.Geometry;
-    //private _material: THREE.MeshBasicMaterial;
-    private _material: THREE.MeshFaceMaterial;
-    private _mesh: THREE.Mesh;
-    //private controls: THREE.OrbitControls;
+    private _numberOfModelsLoaded: number;
+    private _scene: Scene;
+    private _currentCamera: PerspectiveCamera;
+    private _renderer: Renderer;
+    private _geometry: Geometry;
+    private _material: MeshFaceMaterial;
+    private _mesh: Mesh;
 
-    private _wf: boolean;
-    private _clock: THREE.Clock;
+    private _clock: Clock;
     private _dt: number;
 
-    private _font: THREE.Font;
+    private _font: Font;
     private _text: string;
-    private _textMaterial: THREE.MultiMaterial;
-    private _textGroup: THREE.Group;
-    private _fontLoader: THREE.FontLoader;
-    private _textMesh: THREE.Mesh;
+    private _textMaterial: MultiMaterial;
+    private _textGroup: Group;
+    private _fontLoader: FontLoader;
+    private _textMesh: Mesh;
     private _fontName: string;
 
-    private _objectLoader: THREE.ObjectLoader;
-    //private bbHelper: THREE.BoxHelper;
-    //private updateBbHelper: boolean;
+    private _rinkInfo: RinkInfo;
+    private _stoneHandler: StoneHandler;
 
-    private _created : THREE.Mesh[];
+    private _objectLoader: ObjectLoader;
+    private _animationStarted: boolean;
 
     constructor(private _gameStatusService: GameStatusService, private _cameraService: CameraService) {
-        this._scene = new THREE.Scene();
-        this._wf = true;
-         // Array to hold our created objects from the factory
-        this._created = [];
-        this._objectLoader = new THREE.ObjectLoader();
+        this._scene = new Scene();
+        this._animationStarted = false;
+        this._numberOfModelsLoaded = 0;
+        this._objectLoader = new ObjectLoader();
     }
 
     public init(container: HTMLElement) {
-        this._clock = new THREE.Clock();
+        this._clock = new Clock();
 
-        this._renderer = new THREE.WebGLRenderer({antialias: true, devicePixelRatio: window.devicePixelRatio});
+        this._renderer = new WebGLRenderer({antialias: true, devicePixelRatio: window.devicePixelRatio});
         this._renderer.setSize(window.innerWidth, window.innerHeight, true);
 
         this._currentCamera = this._cameraService.perspectiveCamera;
@@ -59,12 +63,6 @@ export class RenderService {
         this.loadFont();
         this.loadRink();
         this.loadArena();
-        if (this._gameStatusService.randomFirstPlayer() === true) {
-            this.loadStone(RenderService.PATH_TO_RED_STONE);
-        }
-        else {
-           this.loadStone(RenderService.PATH_TO_BLUE_STONE);
-        }
 
         //Part 4: Service
         this.linkRenderServerToCanvas(container);
@@ -81,46 +79,46 @@ export class RenderService {
             container.appendChild(this._renderer.domElement);
         }
         this._clock.start();
-        this.animate();
+        //this.animate();
     }
 
     public setUpLightning() {
-        let spotlightHouseNear = new THREE.SpotLight(0xffffff, 0.5, 0, 0.4);
+        let spotlightHouseNear = new SpotLight(0xffffff, 0.5, 0, 0.4);
         spotlightHouseNear.penumbra = 0.34;
         spotlightHouseNear.position.set(9, 10, -17);
         spotlightHouseNear.target.position.set(0, 0, -17);
         this._scene.add(spotlightHouseNear.target);
         this._scene.add(spotlightHouseNear);
 
-        let spotlight1 = new THREE.SpotLight(0xffffff, 0.7, 0, 0.4);
+        let spotlight1 = new SpotLight(0xffffff, 0.7, 0, 0.4);
         spotlight1.penumbra = 0.39;
         spotlight1.position.set(9, 10, -7);
         spotlight1.target.position.set(0, 0, -10);
         this._scene.add(spotlight1.target);
         this._scene.add(spotlight1);
 
-        let spotlight2 = new THREE.SpotLight(0x3333cc, 0.8, 0, 0.2);
+        let spotlight2 = new SpotLight(0x3333cc, 0.8, 0, 0.2);
         spotlight2.penumbra = 0.7;
         spotlight2.position.set(-19, 10, 4);
         spotlight2.target.position.set(0, 0, 0);
         this._scene.add(spotlight2.target);
         this._scene.add(spotlight2);
 
-        let spotlight3 = new THREE.SpotLight(0xff3333, 0.6, 0, 0.2);
+        let spotlight3 = new SpotLight(0xff3333, 0.6, 0, 0.2);
         spotlight3.penumbra = 0.45;
         spotlight3.position.set(19, 10, 12);
         spotlight3.target.position.set(0, 0, 8);
         this._scene.add(spotlight3.target);
         this._scene.add(spotlight3);
 
-        let spotlightHouseFar = new THREE.SpotLight(0xffffff, 0.8, 0, 0.4);
+        let spotlightHouseFar = new SpotLight(0xffffff, 0.8, 0, 0.4);
         spotlightHouseFar.penumbra = 0.34;
         spotlightHouseFar.position.set(-9, 10, 17);
         spotlightHouseFar.target.position.set(0, 0, 17);
         this._scene.add(spotlightHouseFar.target);
         this._scene.add(spotlightHouseFar);
 
-        let spotlight4 = new THREE.SpotLight(0xffffff, 0.6, 0, 0.3);
+        let spotlight4 = new SpotLight(0xffffff, 0.6, 0, 0.3);
         spotlight4.penumbra = 0.8;
         spotlight4.position.set(9, 10, 12);
         spotlight4.target.position.set(0, 0, 23);
@@ -137,64 +135,64 @@ export class RenderService {
         let imageSuffix = ".jpg";
         let materialArray = [];
         for (let i = 0; i < 6; i++) {
-            materialArray.push( new THREE.MeshBasicMaterial({
-            map: THREE.ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
-            side: THREE.BackSide
+            materialArray.push( new MeshBasicMaterial({
+            map: ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
+            side: BackSide
             }));
         }
-        this._geometry = new THREE.CubeGeometry( 200, 200, 200);
-        this._material = new THREE.MeshFaceMaterial( materialArray );
-        this._mesh = new THREE.Mesh( this._geometry, this._material );
+        this._geometry = new CubeGeometry( 200, 200, 200);
+        this._material = new MeshFaceMaterial( materialArray );
+        this._mesh = new Mesh( this._geometry, this._material );
         this._scene.add( this._mesh );
     }
 
     // Load the font
     public loadFont() {
-        this._fontLoader = new THREE.FontLoader();
-        this._textMaterial = new THREE.MultiMaterial([
-            new THREE.MeshPhongMaterial({shading: THREE.FlatShading}), // front
-            new THREE.MeshPhongMaterial({shading: THREE.SmoothShading})
+        this._fontLoader = new FontLoader();
+        this._textMaterial = new MultiMaterial([
+            new MeshPhongMaterial({shading: FlatShading}), // front
+            new MeshPhongMaterial({shading: SmoothShading})
             ]
         );
-        this._textGroup = new THREE.Group();
+        this._textGroup = new Group();
         this._textGroup.position.y = 100;
         this._scene.add(this._textGroup);
         this._fontName = 'helvetiker_regular';
     }
 
     public loadRink() {
-        this._objectLoader.load('/assets/models/json/curling-rink.json', obj => {
-            obj.position.set(0, 0, 0);
-            obj.scale.set(1, 1, 1);
-            this._mesh.add(obj);
-            (obj as THREE.Mesh).material = new THREE.MeshPhongMaterial({
-                wireframe: false,
-                shininess: 0.4,
-            });
+        Rink.createRink(this._objectLoader).then((rink: Rink) => {
+            this._rinkInfo = rink;
+            this._mesh.add(rink);
+            this.onFinishedLoadingModel();
+            this.loadStoneHandler();
+            this.loadStone();
         });
     }
 
     public loadArena() {
-        this._objectLoader.load('/assets/models/json/arena.json', obj => {
-            obj.position.set(0, 0, 0);
-            obj.scale.set(1, 1, 1);
-            this._mesh.add(obj);
-            (obj as THREE.Mesh).material = new THREE.MeshPhongMaterial({
-                wireframe: false,
-                shininess: 0.2,
-            });
+        Arena.createArena(this._objectLoader).then((arena: Arena) => {
+            this._mesh.add(arena);
+            this.onFinishedLoadingModel();
         });
     }
 
-    public loadStone(pathToStone: string) {
-        this._objectLoader.load(pathToStone, obj => {
-            obj.position.set(0, 0, -15);
-            obj.scale.set(1, 1, 1);
-            this._mesh.add(obj);
-            (obj as THREE.Mesh).material = new THREE.MeshPhongMaterial({
-                wireframe: false,
-                shininess: 0.7,
-            });
+    //Must be called after the rinkinfo is initialised.
+    public loadStoneHandler() {
+        let stoneColor: StoneColor;
+        if (this._gameStatusService.randomFirstPlayer() === true) {
+            stoneColor = StoneColor.Red;
+        }
+        else {
+           stoneColor = StoneColor.Blue;
+        }
+        this._stoneHandler = new StoneHandler(this._objectLoader, this._rinkInfo, stoneColor);
+    }
+
+    public loadStone() {
+        this._stoneHandler.generateNewStone().then((stone: Stone) => {
+            this._scene.add(stone);
+            this.onFinishedLoadingModel();
         });
     }
 
@@ -203,13 +201,22 @@ export class RenderService {
         this.onResize();
     }
 
+    private onFinishedLoadingModel() {
+        ++this._numberOfModelsLoaded;
+        if (!this._animationStarted && this._numberOfModelsLoaded >= RenderService.NUMBER_OF_MODELS_TO_LOAD) {
+            this._animationStarted = true;
+            console.log("beginning animation.");
+            this.animate();
+        }
+    }
+
      animate() {
         window.requestAnimationFrame(_ => this.animate());
         this._dt = this._clock.getDelta();
         this.avancer(this._dt);
-        let tp: THREE.Object3D = this._scene.getObjectByName('Teapot001');
+        let tp: Object3D = this._scene.getObjectByName('Teapot001');
         if (tp !== undefined) {
-            (tp as THREE.Mesh).rotateZ(this._dt);
+            (tp as Mesh).rotateZ(this._dt);
         }
         this.render();
     }
@@ -228,12 +235,6 @@ export class RenderService {
     render() {
         this._renderer.render(this._scene, this._currentCamera);
     }
-
-    toggleWireFrame() {
-         this._wf = !this._wf;
-         //this._material.wireframe = this._wf;
-         this._material.needsUpdate = true;
-     }
 
     avancer(deltaT: number) {
         //deltaT = deltaT + 1;
@@ -255,11 +256,11 @@ export class RenderService {
         this._fontLoader.load('/assets/fonts/helvetiker_regular.typeface.json', r => {
             this._scene.remove(this._textGroup);
             this._textGroup.remove(this._textMesh);
-            this._font = new THREE.Font(r);
+            this._font = new Font(r);
             let f = Object(r);
 
-            let textGeo: THREE.TextGeometry = new THREE.TextGeometry( this._text, {
-                font: f as THREE.Font,
+            let textGeo: TextGeometry = new TextGeometry( this._text, {
+                font: f as Font,
                 size: 20,
                 height: 20,
                 curveSegments: 4,
@@ -271,7 +272,7 @@ export class RenderService {
             textGeo.computeVertexNormals();
 
             let centerOffset = -0.5 * ( textGeo.boundingBox.max.x - textGeo.boundingBox.min.x );
-            this._textMesh = new THREE.Mesh( textGeo, this._textMaterial );
+            this._textMesh = new Mesh( textGeo, this._textMaterial );
             this._textMesh.position.x = centerOffset;
             this._textMesh.position.y = 50;
             this._textMesh.position.z = 0;
