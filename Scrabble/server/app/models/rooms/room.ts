@@ -1,4 +1,6 @@
 import { Player } from "../players/player";
+import { Letter } from '../../models/lettersBank/letter';
+import { LetterBankHandler } from '../../services/lettersBank/letterbank-handler';
 let uuid = require('node-uuid');
 
 export class Room {
@@ -8,6 +10,7 @@ export class Room {
 
     private static roomIdCounter = 0;
     private _players: Array<Player>;
+    private _letterBankHandler: LetterBankHandler;
     private _roomCapacity: number;
     private _roomId: string;
     private _roomNumber: number;
@@ -21,6 +24,7 @@ export class Room {
         ++Room.roomIdCounter;
         this._roomCapacity = roomCapacity;
         this._players = new Array<Player>();
+        this._letterBankHandler = new LetterBankHandler();
         this._roomId = uuid.v1(); // Generate a v1 (time-based) id
         this._roomNumber = Room.roomIdCounter;
     }
@@ -31,6 +35,10 @@ export class Room {
     }
     public set players(value: Array<Player>) {
         this._players = value;
+    }
+
+    public get letterBankHandler(): LetterBankHandler {
+        return this._letterBankHandler;
     }
 
     // The room unique id
@@ -56,7 +64,6 @@ export class Room {
     public set roomCapacity(value: number) {
         this._roomCapacity = value;
     }
-
 
     // Check if the room is full or not
     public isFull(): boolean {
@@ -114,5 +121,13 @@ export class Room {
         let matchPlayer = this._players.filter((player) => (player.username === username))[0];
 
         return (matchPlayer !== null && matchPlayer !== undefined) ? true : false;
+    }
+
+    // Use to exchange letters from the a player easel
+    public exchangeThePlayerLetters(letterToBeExchange: Array<string>): Array<Letter> {
+
+        // TODO: change to match the convention (Enum or string )after a meeting with RAMI
+        let letters = this._letterBankHandler.getLetterByAlphabet(letterToBeExchange);
+        return this._letterBankHandler.exchangeLetters(letters);
     }
 }

@@ -1,5 +1,5 @@
-
 import { Room } from "../../models/rooms/room";
+import { Letter } from '../../models/lettersBank/letter';
 import { Player } from "../../models/players/player";
 
 export class RoomHandler {
@@ -107,7 +107,27 @@ export class RoomHandler {
         return (typeof (availableRoom) !== "undefined") ? availableRoom : null;
     }
 
-     // Find a player with the given username
+    // Find the room of a player with the given socket id
+    public getRoomBySocketId(socketId: string): Room {
+
+        if (socketId === null) {
+            throw new Error("Argument error: the socket id cannot be null");
+        }
+
+        let availableRoom: Room;
+
+        this._rooms.forEach((room) => {
+            let currentPlayer = room.players.filter((player) => (player.socketId === socketId))[0];
+
+            if (currentPlayer !== null && currentPlayer !== undefined) {
+                availableRoom = room;
+            }
+        });
+
+        return (typeof (availableRoom) !== "undefined") ? availableRoom : null;
+    }
+
+    // Find a player with the given username
     public getPlayerBySocketId(socketId: string): Player {
 
         if (socketId === null) {
@@ -125,5 +145,23 @@ export class RoomHandler {
         });
 
         return (typeof (availablePlayer) !== "undefined") ? availablePlayer : null;
+    }
+
+    public exchangeLetterOfCurrentPlayer(socketId: string, lettersToBeExchange: Array<string>): Array<Letter> {
+
+        if (socketId === null) {
+            throw new Error("The socket value cannot be null.");
+        }
+        if (lettersToBeExchange === null) {
+            throw new Error("The list of letters to be exchanged cannot cannot be null.");
+        }
+
+        let playerRoom = this.getRoomBySocketId(socketId);
+
+        if (playerRoom !== null) {
+            return playerRoom.exchangeThePlayerLetters(lettersToBeExchange);
+        }
+
+        return null;
     }
 }
