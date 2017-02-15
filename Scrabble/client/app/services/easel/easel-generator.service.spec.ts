@@ -1,6 +1,6 @@
 import { expect } from "chai";
-import { EaselGeneratorService } from "./easelGeneratorService";
-import { ScrabbleLetter } from "../models/letter/scrabble-letter";
+import { EaselGeneratorService } from "./easel-generator.service";
+import { ScrabbleLetter } from "../../models/letter/scrabble-letter";
 
 let service: EaselGeneratorService;
 let easelStub: ScrabbleLetter[];

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { ScrabbleLetter } from '../models/letter/scrabble-letter';
-import { Alphabet } from '../models/letter/alphabet';
+import { ScrabbleLetter } from '../../models/letter/scrabble-letter';
+import { Alphabet } from '../../models/letter/alphabet';
 
 @Injectable()
 export class EaselGeneratorService {

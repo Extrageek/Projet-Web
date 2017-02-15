@@ -19,24 +19,24 @@ describe("BoardCase component should", () => {
     });
 
     it("construct a board case correctly", () => {
-
+        //
     });
     it("get the alphabet letter correctly", () => {
-
+        //
     });
     it("set the alphabet letter corectly", () => {
-
+        //
     });
     it("get the point value of a letter corectly", () => {
-
+        //
     });
     it("set the point value of a letter corectly", () => {
-
+        //
     });
     it("get the quantity for a letter corectly", () => {
-
+        //
     });
     it("set the score of the player corectly", () => {
-
+        //
     });
 });

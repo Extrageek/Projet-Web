@@ -18,8 +18,8 @@ export class BoardCase {
         this._position = position;
     }
 
-    constructor(letter: ScrabbleLetter, position: CasePosition) {
-        this._letter = letter;
+    // TODO : MOTS/LETTRES DOUBLE/TRIPLE COMME BOOLEAN
+    constructor(position: CasePosition) {
         this._position = position;
     }
 }

@@ -4,7 +4,7 @@ import { BoardCase } from './board-case';
 import { CasePosition } from './case-position';
 
 
-const BOARD_SIZE = 16;
+const BOARD_SIZE = 15;
 
 export class Board {
     private _boardCase: BoardCase;
@@ -22,13 +22,14 @@ export class Board {
     private generateBoard(): void {
         let row: number;
         let colomn: number;
-        let board: Array<BoardCase>;
+        let board: Array<Array<BoardCase>>;
 
         for (row = BoardRows.A; row < BOARD_SIZE; row++) {
+            let innerRow: Array<BoardCase>;
             for (colomn = BoardColumn.FIRST_COLUMN; colomn < BOARD_SIZE; colomn++) {
-                board.push(new BoardCase(null, new CasePosition(row, colomn)));
+                innerRow.push(new BoardCase(new CasePosition(row, colomn)));
             }
+            board.push(innerRow);
         }
     }
-
 }
