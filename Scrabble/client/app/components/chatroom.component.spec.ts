@@ -5,8 +5,6 @@ import { DebugElement } from '@angular/core';
 
 import { ChatroomComponent } from './chatroom.component';
 
-
-
 describe("Chatroom testing the event handlers", () => {
     let comp: ChatroomComponent;
     let fixture: ComponentFixture<ChatroomComponent>;
@@ -38,5 +36,4 @@ describe("Chatroom testing the event handlers", () => {
         expect(comp.messageArray).to.have.lengthOf(1);
         expect(comp.messageArray[0]).to.contain("hello");
     });
-
 });

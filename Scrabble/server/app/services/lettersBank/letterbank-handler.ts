@@ -69,4 +69,19 @@ export class LetterBankHandler {
         let offset = MAX_LETTER_POSITION - MIN_LETTER_POSITION;
         return (randomNumber % offset) + MIN_LETTER_POSITION;
     }
+
+    public getLetterByAlphabet(alphabets: Array<string>): Array<Letter> {
+
+        if (alphabets === null) {
+            throw new Error("Null argument error: the letters cannot be null");
+        }
+
+        let letters = new Array<Letter>();
+        alphabets.forEach((element => {
+            let letter = this._bank.bank.filter((letter) => letter.alphabetLetter === element)[0];
+            letters.push(letter);
+        }))
+
+        return letters;
+    }
 }
