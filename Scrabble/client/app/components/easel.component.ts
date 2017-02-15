@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { ScrabbleLetter } from "../models/letter/scrabble-letter";
-import { EaselGeneratorService } from "../services/easelGeneratorService";
+import { EaselGeneratorService } from "../services/easel/easel-generator.service";
 import { OnInit } from "../../node_modules/@angular/core/src/metadata/lifecycle_hooks";
 
 @Component({

@@ -5,7 +5,7 @@ import { DebugElement } from '@angular/core';
 
 import { EaselComponent } from "./easel.component";
 import { ScrabbleLetter } from "../models/letter/scrabble-letter";
-import { EaselGeneratorService } from "../services/easelGeneratorService";
+import { EaselGeneratorService } from "../services/easel/easel-generator.service";
 
 describe("Easel component", () => {
     let comp: EaselComponent;

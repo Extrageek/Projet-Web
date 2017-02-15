@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { ScrabbleBoardService } from "../services/scrabbleBoardService";
+import { ScrabbleBoardService } from "../services/scrabble-board.service";
     @Component({
     moduleId: module.id,
     providers: [ScrabbleBoardService],
