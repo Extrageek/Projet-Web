@@ -1,7 +1,7 @@
 import { BoardRows } from './board-rows';
 import { BoardColumn } from './board-column';
 
-export class CasePosition {
+export class SquarePosition {
     private _row: BoardRows;
     public get row(): BoardRows {
         return this._row;
@@ -19,8 +19,7 @@ export class CasePosition {
     }
 
     constructor(row: BoardRows, column: BoardColumn) {
-        this._row = row;
-        this._column = column;
+        this.row = row;
+        this.column = column;
     }
 }
-

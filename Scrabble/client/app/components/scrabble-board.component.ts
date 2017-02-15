@@ -1,6 +1,9 @@
 import { Component } from "@angular/core";
 import { ScrabbleBoardService } from "../services/scrabble-board.service";
-    @Component({
+import { Square } from '../models/board/square';
+import { Board } from '../models/board/board';
+
+@Component({
     moduleId: module.id,
     providers: [ScrabbleBoardService],
     selector: "scrabble-main-board-selector",
@@ -9,11 +12,11 @@ import { ScrabbleBoardService } from "../services/scrabble-board.service";
 })
 
 export class ScrabbleBoardComponent {
-    scrabbleGrid: string[][];
+    scrabbleGrid: Board;
     currentRows: number[];
 
-    constructor(scrabbleBoardService : ScrabbleBoardService) {
+    constructor(scrabbleBoardService: ScrabbleBoardService) {
         this.currentRows = Array(15).fill(0);
-        this.scrabbleGrid = scrabbleBoardService.getScrabbleGrid();
+        this.scrabbleGrid = scrabbleBoardService.board;
     }
 }

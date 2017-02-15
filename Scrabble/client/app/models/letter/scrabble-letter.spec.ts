@@ -7,7 +7,7 @@ let _letter: ScrabbleLetter;
 describe("ScrabbleLetter letter validation", () => {
 
     beforeEach(() => {
-        _letter = new ScrabbleLetter(Alphabet.C.toString());
+        _letter = new ScrabbleLetter(Alphabet.letterC);
     });
 
     it("should be an instance of ScrabbleLetter", () => {

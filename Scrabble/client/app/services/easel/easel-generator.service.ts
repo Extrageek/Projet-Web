@@ -7,13 +7,12 @@ import { Alphabet } from '../../models/letter/alphabet';
 export class EaselGeneratorService {
     private _lettersOnEasel: Array<ScrabbleLetter>;
 
-    generatedEasel(): Array<ScrabbleLetter> {
-        this._lettersOnEasel = Array<ScrabbleLetter>();
-        this._lettersOnEasel = this._lettersOnEasel.map(() => new ScrabbleLetter(Alphabet.A.toString()));
+    public get lettersOnEasel(): Array<ScrabbleLetter> {
         return this._lettersOnEasel;
     }
 
-    get lettersOnEasel(): Array<ScrabbleLetter> {
+    public generatedEasel(lettersReceived: Array<ScrabbleLetter>): Array<ScrabbleLetter> {
+        this._lettersOnEasel = lettersReceived;
         return this._lettersOnEasel;
     }
 }
