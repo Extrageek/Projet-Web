@@ -1,3 +1,3 @@
 export interface GameComponent {
-    update(): void;
+    update(timePerFrame: number): void;
 }

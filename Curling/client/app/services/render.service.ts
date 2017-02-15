@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Scene, PerspectiveCamera, WebGLRenderer, Renderer, ObjectLoader, FontLoader, Geometry, CubeGeometry,
     TextGeometry, MeshBasicMaterial, MeshFaceMaterial, MeshPhongMaterial, MultiMaterial, Mesh, SpotLight, Group,
-    Object3D, Font, ImageUtils, BackSide, FlatShading, SmoothShading, Clock } from "three";
+    Font, ImageUtils, BackSide, FlatShading, SmoothShading, Vector3, Clock } from "three";
 import { GameStatusService } from "./game-status.service";
 import { CameraService } from "./cameras.service";
 import { Arena } from "../models/arena";
@@ -24,7 +24,6 @@ export class RenderService {
     private _mesh: Mesh;
 
     private _clock: Clock;
-    private _dt: number;
 
     private _font: Font;
     private _text: string;
@@ -48,7 +47,7 @@ export class RenderService {
     }
 
     public init(container: HTMLElement) {
-        this._clock = new Clock();
+        this._clock = new Clock(false);
 
         this._renderer = new WebGLRenderer({antialias: true, devicePixelRatio: window.devicePixelRatio});
         this._renderer.setSize(window.innerWidth, window.innerHeight, true);
@@ -78,8 +77,6 @@ export class RenderService {
         if (container.getElementsByTagName('canvas').length === 0) {
             container.appendChild(this._renderer.domElement);
         }
-        this._clock.start();
-        //this.animate();
     }
 
     public setUpLightning() {
@@ -192,6 +189,7 @@ export class RenderService {
     public loadStone() {
         this._stoneHandler.generateNewStone().then((stone: Stone) => {
             this._scene.add(stone);
+            this._cameraService.movePerspectiveCameraToFollowObjectOnZ(stone);
             this.onFinishedLoadingModel();
         });
     }
@@ -205,20 +203,31 @@ export class RenderService {
         ++this._numberOfModelsLoaded;
         if (!this._animationStarted && this._numberOfModelsLoaded >= RenderService.NUMBER_OF_MODELS_TO_LOAD) {
             this._animationStarted = true;
-            console.log("beginning animation.");
+            if (document.hasFocus()) {
+                this._clock.start();
+            }
+            this._stoneHandler.performShot(new Vector3(0, 0, 10), () => { console.log("Launch finished")});
             this.animate();
         }
     }
 
-     animate() {
+     private animate() {
         window.requestAnimationFrame(_ => this.animate());
-        this._dt = this._clock.getDelta();
-        this.avancer(this._dt);
-        let tp: Object3D = this._scene.getObjectByName('Teapot001');
-        if (tp !== undefined) {
-            (tp as Mesh).rotateZ(this._dt);
+        if (this._clock.running === true) {
+            let timePerFrame = this._clock.getDelta();
+            this._cameraService.update(timePerFrame);
+            this._stoneHandler.update(timePerFrame);
         }
-        this.render();
+        this._renderer.render(this._scene, this._currentCamera);
+    }
+
+    public toogleFocus(toogle: boolean) {
+        if (toogle === true) {
+            this._clock.start();
+        }
+        else {
+            this._clock.stop();
+        }
     }
 
     onWindowResize() {
@@ -230,14 +239,6 @@ export class RenderService {
         this._currentCamera.updateProjectionMatrix();
 
         this._renderer.setSize(newWidth, newHeight);
-    }
-
-    render() {
-        this._renderer.render(this._scene, this._currentCamera);
-    }
-
-    avancer(deltaT: number) {
-        //deltaT = deltaT + 1;
     }
 
     onResize() {

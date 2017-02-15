@@ -6,7 +6,7 @@ import { AlphabetQuantity } from '../../commons/alphabet-quantity';
 import { expect } from "chai";
 
 let _letter: Letter;
-let _alphabetLetter = Alphabet.E;
+let _alphabetLetter = Alphabet.letterE;
 let _point = AlphabetPoint.letterE;
 let _quantity = AlphabetQuantity.letterE;
 
@@ -24,8 +24,8 @@ describe("Letter should", () => {
         expect(_letter.alphabetLetter).to.be.equal(_alphabetLetter);
     });
     it("set the alphabet letter corectly", () => {
-        _alphabetLetter = Alphabet.R;
-        _letter.alphabetLetter = Alphabet.R;
+        _alphabetLetter = Alphabet.letterR;
+        _letter.alphabetLetter = Alphabet.letterR;
         expect(_letter.alphabetLetter).to.be.equal(_alphabetLetter);
     });
     it("get the point value of a letter corectly", () => {

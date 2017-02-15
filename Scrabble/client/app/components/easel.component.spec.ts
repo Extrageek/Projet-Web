@@ -4,8 +4,8 @@ import { ComponentFixture, TestBed, async } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 
 import { EaselComponent } from "./easel.component";
-import { ScrabbleLetter } from "../models/scrabble-letter";
-import { EaselGeneratorService } from "../services/easelGeneratorService";
+import { ScrabbleLetter } from "../models/letter/scrabble-letter";
+import { EaselGeneratorService } from "../services/easel/easel-generator.service";
 
 describe("Easel component", () => {
     let comp: EaselComponent;
@@ -15,10 +15,10 @@ describe("Easel component", () => {
     let service: EaselGeneratorService;
 
     // async beforeEach
-    beforeEach(async (() => {
+    beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ EaselComponent ],
-            providers: [ EaselGeneratorService ],
+            declarations: [EaselComponent],
+            providers: [EaselGeneratorService],
         })
             .compileComponents();
     }));

@@ -2,15 +2,15 @@ import { Alphabet } from './alphabet';
 import { AlphabetPoint } from '../../commons/alphabet-point';
 
 export class Letter {
-    private _alphabetLetter: Alphabet;
+    private _alphabetLetter: string;
     private _point: AlphabetPoint;
     private _quantity: number;
 
-    public get alphabetLetter(): Alphabet {
+    public get alphabetLetter(): string {
         return this._alphabetLetter;
     }
 
-    public set alphabetLetter(letter: Alphabet) {
+    public set alphabetLetter(letter: string) {
         this._alphabetLetter = letter;
     }
 
@@ -30,7 +30,7 @@ export class Letter {
         this._quantity = quantity;
     }
 
-    constructor(letter: Alphabet, point: AlphabetPoint, quantity: number) {
+    constructor(letter: string, point: AlphabetPoint, quantity: number) {
         this._alphabetLetter = letter;
         this._point = point;
         this._quantity = quantity;

@@ -1,4 +1,4 @@
-import { ObjectLoader } from "three";
+import { ObjectLoader, Vector3 } from "three";
 import { RinkInfo } from "./rinkInfo.interface";
 import { Stone, StoneColor } from "./stone";
 import { GameComponent } from "./gameComponent.interface";
@@ -14,16 +14,23 @@ export class StoneHandler implements GameComponent {
     private _currentPlayer: StoneColor;
     private _objectLoader: ObjectLoader;
     private _stoneOnTheGame: Stone[];
+    private _callbackAfterShotFinished: Function;
 
     constructor(objectLoader: ObjectLoader, rinkInfo: RinkInfo, firstPlayer: StoneColor) {
         this._rinkInfo = rinkInfo;
         this._currentPlayer = firstPlayer - 1;
         this._objectLoader = objectLoader;
         this._stoneOnTheGame = new Array<Stone>();
+        this._callbackAfterShotFinished = null;
     }
 
-    public performShot(callbackWhenShotFinished: Function) {
+    public performShot(speed: Vector3, callbackWhenShotFinished: Function = () => {}) {
         //TODO: Launch the last stone in the array of stones.
+        if (this._stoneOnTheGame.length === 0) {
+            throw new Error("Cannot perform shot on a stone. No stones has been generated yet.")
+        }
+        this._stoneOnTheGame[this._stoneOnTheGame.length - 1].speed = speed;
+        this._callbackAfterShotFinished = callbackWhenShotFinished;
     }
 
     public generateNewStone(): Promise<Stone> {
@@ -40,7 +47,20 @@ export class StoneHandler implements GameComponent {
         return null;
     }
 
-    public update() {
+    public cleanAllStones() {
+        this._stoneOnTheGame.splice(0, this._stoneOnTheGame.length);
+    }
+
+    public update(timePerFrame: number) {
         //TODO: Perform the verification of collisions here and hanble the displacement of the stones.
+        let aStoneIsMoving = false;
+        this._stoneOnTheGame.map((stone: Stone, stoneNumber: number, allTheStones: Stone[]) => {
+            stone.update(timePerFrame);
+            aStoneIsMoving = aStoneIsMoving || stone.speed.length() !== 0;
+        });
+        if (!aStoneIsMoving && this._callbackAfterShotFinished !== null) {
+            this._callbackAfterShotFinished();
+            this._callbackAfterShotFinished = null;
+        }
     }
 }

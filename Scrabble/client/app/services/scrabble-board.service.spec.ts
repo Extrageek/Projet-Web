@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { ScrabbleBoardService } from "./scrabbleBoardService";
+import { ScrabbleBoardService } from "./scrabble-board.service";
 
 let service : ScrabbleBoardService;
 

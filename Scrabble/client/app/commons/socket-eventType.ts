@@ -7,7 +7,7 @@ export class SocketEventType {
     static connectError = "connect_error";
 
     // A connected status of the client.
-    static connected = "connected";
+    static connect = "connect";
 
     // A disconnected status of the client.
     static disconnect = "disconnect";
@@ -21,6 +21,9 @@ export class SocketEventType {
     // A joined room event.
     static joinRoom = "joinedRoom";
 
+    // A joined room event.
+    static leaveRoom = "leaveRoom";
+
     // A ready state event for a room.
     static roomReady = "roomReady";
 
@@ -31,9 +34,7 @@ export class SocketEventType {
     //Message sent by the server if the name already exists
     static usernameAlreadyExist = "usernameAlreadyExist";
 
-    //Message sent by the server if the name previously received by the client is invalid
-    static invalidUsername = "onInvalidUsernameEvent";
+    static exchangeLettersRequest = "exchangeLetters";
 
-    //Message sent by the server when the number of missing players to begin the game has changed
-    static onRoomPlayerChangedEvent = "onRoomPlayerChangedEvent";
+    static exchangedLetter = "exchangedLetter";
 }

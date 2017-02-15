@@ -3,11 +3,9 @@ import { Router } from "@angular/router";
 
 import { SocketService } from "../services/socket-service";
 import { SocketEventType } from '../commons/socket-eventType';
-import { RoomMessage } from '../models/room-message';
 
 @Component({
     moduleId: module.id,
-    providers: [SocketService],
     selector: "game-initiation-selector",
     templateUrl: "../../assets/templates/game-initiation.html"
 })
@@ -16,20 +14,16 @@ export class GameInitiationComponent implements OnInit {
 
     private username = "";
 
-    constructor(private router: Router, private socketService: SocketService) {
+    constructor(private router: Router) {
         // Default constructor
     }
 
     ngOnInit() {
-        this.socketService.removeAllListeners();
-        this.socketService.suscribeToEvent(SocketEventType.connectError, this.onConnectionError);
-        this.socketService.suscribeToEvent(SocketEventType.connected, this.onConnected);
-        this.socketService.suscribeToEvent(SocketEventType.joinRoom, this.onJoinedRoom);
-        this.socketService.suscribeToEvent(SocketEventType.roomReady, this.onRoomReady);
-
-        // TODO: Check how to make validation of the username instead of sending it to the server.
-        this.socketService.suscribeToEvent(SocketEventType.invalidUsername, this.onInvalidUsername);
-        this.socketService.suscribeToEvent(SocketEventType.usernameAlreadyExist, this.onUsernameAlreadyExists);
+        SocketService.getInstance().removeAllListeners();
+        SocketService.getInstance().suscribeToEvent(SocketEventType.connectError, this.onConnectionError);
+        SocketService.getInstance().suscribeToEvent(SocketEventType.connect, this.onConnected);
+        SocketService.getInstance().suscribeToEvent(SocketEventType.joinRoom, this.onJoinedRoom);
+        SocketService.getInstance().suscribeToEvent(SocketEventType.usernameAlreadyExist, this.onUsernameAlreadyExists);
     }
 
     // A callback function when the username is not valid.
@@ -58,17 +52,35 @@ export class GameInitiationComponent implements OnInit {
     }
 
     // A callback when the player join a room
-    public onJoinedRoom(roomMessage: RoomMessage): void {
-        console.log(roomMessage.message, roomMessage.roomId,
-            " RoomReadyState", roomMessage.roomIsReady,
-            " missing players", roomMessage.numberOfMissingPlayers);
+    public onJoinedRoom(roomMessage: {
+        username: string,
+        roomId: string,
+        numberOfMissingPlayers: number,
+        roomIsReady: boolean,
+        message: string
+    }): void {
+
+        // For debug
+        console.log(roomMessage);
+        // console.log(roomMessage.message, roomMessage.roomId,
+        //     " RoomReadyState", roomMessage.roomIsReady,
+        //     " missing players", roomMessage.numberOfMissingPlayers);
     }
 
     // A callback function when the room of the user is full and the game is ready to be started
-    public onRoomReady(roomMessage: RoomMessage): void {
-        console.log(roomMessage.message, roomMessage.roomId,
-            " RoomReadyState", roomMessage.roomIsReady,
-            " missing players", roomMessage.numberOfMissingPlayers);
+    public onRoomReady(roomMessage: {
+        username: string,
+        roomId: string,
+        numberOfMissingPlayers: number,
+        roomIsReady: boolean,
+        message: string
+    }): void {
+
+        // For debug
+        console.log(roomMessage);
+        // console.log(roomMessage.message, roomMessage.roomId,
+        //     " RoomReadyState", roomMessage.roomIsReady,
+        //     " missing players", roomMessage.numberOfMissingPlayers);
 
         //this.router.navigate(["/game-room", { id: roomMessage.username }]);
         //console.log("router must be called",this.router);
@@ -76,7 +88,7 @@ export class GameInitiationComponent implements OnInit {
 
     // A callback function when the user ask for a new game.
     public sendNewGameRequest(username: string, numberOfPlayers: string) {
-        this.socketService.addNewPlayer(username, numberOfPlayers);
+        SocketService.getInstance().newGameRequest(username, numberOfPlayers);
         this.router.navigate(["/game-room", username]);
     }
 }
