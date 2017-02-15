@@ -1,8 +1,8 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
-import { GameInitiationComponent } from "./components/game-initiation.component";
-import { GameComponent } from "./components/game-room.component";
+import { GameInitiationComponent } from "./../components/game-initiation.component";
+import { GameComponent } from "./../components/game-room.component";
 
 const appRoutes: Routes = [
     { path: "", redirectTo: "/game-start", pathMatch: "full"},
