@@ -35,14 +35,14 @@ describe('GridManagerService', () => {
                 let newDuplicatedRowId = 0;
                 let newDuplicatedColumnId = 0;
 
-                // assert(gridManagerService.isDuplicatedNumberInCurrentRow(
-                //     fakePuzzle._puzzle, newDuplicatedRowId, newDuplicatedColumnId) === false,
-                //     " A duplicated number is not allowed in a row");
+                assert(gridManagerService.isDuplicatedNumberInCurrentRow(
+                    fakePuzzle._puzzle, newDuplicatedRowId, newDuplicatedColumnId) === true,
+                    " A duplicated number is not allowed in a row");
 
             }))
     );
 
-    it("isDuplicatedNumberInCurrentRow, Should return true for a valid row",
+    it("isDuplicatedNumberInCurrentRow, Should return false for a valid row",
         inject([GridManagerService],
             fakeAsync((gridManagerService: GridManagerService) => {
 
@@ -56,14 +56,13 @@ describe('GridManagerService', () => {
                 let newDuplicatedRowId = 0;
                 let newDuplicatedColumnId = 0;
 
-                // assert(gridManagerService.isDuplicatedNumberInCurrentRow(
-                //     fakePuzzle._puzzle, newDuplicatedRowId, newDuplicatedColumnId) === true,
-                //     "The current row must be valid");
-
+                assert(gridManagerService.isDuplicatedNumberInCurrentRow(
+                        fakePuzzle._puzzle, newDuplicatedRowId, newDuplicatedColumnId) === false,
+                        "The current row must be valid");
             }))
     );
 
-    it("isDuplicatedNumberInCurrentColumn, Should return false with a duplicated number error in the current column",
+    it("isDuplicatedNumberInCurrentColumn, Should return true with a duplicated number error in the current column",
         inject([GridManagerService],
             fakeAsync((gridManagerService: GridManagerService) => {
 
@@ -79,14 +78,14 @@ describe('GridManagerService', () => {
                 let newDuplicatedRowId = 0;
                 let newDuplicatedColumnId = 0;
 
-                // assert(gridManagerService.isDuplicatedNumberInCurrentColumn(
-                //     fakePuzzle._puzzle, newDuplicatedRowId, newDuplicatedColumnId) === false,
-                //     " A duplicated number is not allowed in a column");
+                assert(gridManagerService.isDuplicatedNumberInCurrentColumn(
+                    fakePuzzle._puzzle, newDuplicatedRowId, newDuplicatedColumnId) === true,
+                    " A duplicated number is not allowed in a column");
 
             }))
     );
 
-    it("isDuplicatedNumberInCurrentColumn, Should return true for a valid column",
+    it("isDuplicatedNumberInCurrentColumn, Should return false for a valid column",
         inject([GridManagerService],
             fakeAsync((gridManagerService: GridManagerService) => {
 
@@ -102,9 +101,9 @@ describe('GridManagerService', () => {
                 let newDuplicatedRowId = 0;
                 let newDuplicatedColumnId = 0;
 
-                // assert(gridManagerService.isDuplicatedNumberInCurrentColumn(
-                //     fakePuzzle._puzzle, newDuplicatedRowId, newDuplicatedColumnId) === true,
-                //     " The current column must be valid");
+                assert(gridManagerService.isDuplicatedNumberInCurrentColumn(
+                    fakePuzzle._puzzle, newDuplicatedRowId, newDuplicatedColumnId) === false,
+                    " The current column must be valid");
 
             }))
     );
@@ -136,9 +135,9 @@ describe('GridManagerService', () => {
                 let newDuplicatedRowId = 0;
                 let newDuplicatedColumnId = 0;
 
-                // assert(gridManagerService.isDuplicatedNumberInCurrentSquare(
-                //     fakePuzzle._puzzle, newDuplicatedRowId, newDuplicatedColumnId) === false,
-                //     " A duplicated number is not allowed in a square");
+                assert(gridManagerService.isDuplicatedNumberInCurrentSquare(
+                    fakePuzzle._puzzle, newDuplicatedRowId, newDuplicatedColumnId) === false,
+                    " A duplicated number is not allowed in a square");
 
             }))
     );
@@ -170,9 +169,9 @@ describe('GridManagerService', () => {
                 let newDuplicatedRowId = 0;
                 let newDuplicatedColumnId = 0;
 
-                // assert(gridManagerService.isDuplicatedNumberInCurrentSquare(
-                //     fakePuzzle._puzzle, newDuplicatedRowId, newDuplicatedColumnId) === true,
-                //     " The current square must be valid");
+                assert(gridManagerService.isDuplicatedNumberInCurrentSquare(
+                    fakePuzzle._puzzle, newDuplicatedRowId, newDuplicatedColumnId) === true,
+                    " The current square must be valid");
 
             }))
     );

@@ -6,9 +6,6 @@ let service: StopwatchService;
 
 describe('Stopwatch service tests', () => {
 
-    beforeEach(() => {
-    });
-
     it("seconds property should be equal to 5", () => {
         service = new StopwatchService();
 
@@ -19,7 +16,7 @@ describe('Stopwatch service tests', () => {
             expect(service.hours).to.equal(0, "hour property is not equal to 0...");
         });
 
-    })
+    });
 
     it("minute property should be equal to 1", done => {
 
@@ -34,7 +31,7 @@ describe('Stopwatch service tests', () => {
         });
         done();
 
-    })
+    });
 
     it("hour property should be equal to 1", done => {
         service = new StopwatchService();
@@ -48,6 +45,6 @@ describe('Stopwatch service tests', () => {
         });
         done();
 
-    })
+    });
 
 });

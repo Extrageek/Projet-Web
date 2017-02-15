@@ -23,7 +23,6 @@ import 'rxjs/add/observable/of';
 
 declare var jQuery: any;
 
-import { AppComponent } from './app.component';
 import { GridComponent } from './grid.component';
 import { Puzzle } from '../models/puzzle';
 
@@ -31,6 +30,9 @@ import { RestApiProxyService } from '../services/rest-api-proxy.service';
 import { GridManagerService } from '../services/grid-manager.service';
 import { FAKE_PUZZLE_FEED, INITIAL_PUZZLE_SEED } from '../services/mock-data';
 import { PuzzleEventManagerService } from '../services/puzzle-event-manager.service';
+
+import { StopwatchService } from "../services/stopwatch.service";
+import { UserSettingService } from "../services/user-setting.service";
 
 // Mock the REST API Service to give a fake result after a request.
 @Injectable()
@@ -52,7 +54,7 @@ describe('GridComponent', () => {
 
     beforeEach(async () => {
         TestBed.configureTestingModule({
-            declarations: [GridComponent, AppComponent], // declare the test component
+            declarations: [GridComponent], // declare the test component
             imports: [FormsModule, HttpModule],
             providers: [
                 {   // Import the necessary providers
@@ -68,14 +70,12 @@ describe('GridComponent', () => {
                 { provide: GridManagerService, PuzzleEventManagerService },
                 MockBackend,
                 MockRestApiService,
-                BaseRequestOptions
+                BaseRequestOptions,
+                UserSettingService,
+                StopwatchService,
             ]
         })
-            .compileComponents()  // compile template and stylesheets;
-            .then(() => {
-                fixture = TestBed.createComponent(GridComponent);
-                comp = fixture.componentInstance;
-            });
+            .compileComponents();  // compile template and stylesheets;
 
     });
 
@@ -86,7 +86,6 @@ describe('GridComponent', () => {
                 // Send a fake data to the caller
                 connection.mockRespond(new Response(new ResponseOptions({ body: FAKE_PUZZLE_FEED })));
             });
-
             fixture = TestBed.createComponent(GridComponent);
             comp = fixture.componentInstance;
         })));

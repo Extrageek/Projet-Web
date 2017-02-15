@@ -22,6 +22,16 @@ export class PuzzleCommon {
     static eightKey = 56;
     static nineKey = 57;
 
+    static oneNumpad = 61;
+    static twoNumpad = 62;
+    static threeNumpad = 63;
+    static fourNumpad = 64;
+    static fiveNumpad = 65;
+    static sixNumpad = 66;
+    static sevenNumpad = 67;
+    static eightNumpad = 68;
+    static nineNumpad = 69;
+
     static yPosition = 0;
     static xPosition = 1;
 
