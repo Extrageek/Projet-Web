@@ -123,8 +123,7 @@ export class RestApiProxyService {
         let records = new Array<Array<Record>>();
         await this.http.get(this._urlApi + "top-records").toPromise()
             .then(response => {
-                console.log(response);
-                if (response.status === 200) {
+               if (response.status === 200) {
                     let arrObj: Array<Array<any>> = response.json();
                     for (let i = 0; i < arrObj.length; ++i) {
                         let tempRecords = new Array<Record>();
@@ -142,7 +141,6 @@ export class RestApiProxyService {
                 console.error("ERROR - Rest api getAllRecords - Une erreur est survenue - ", error);
                 throw error;
             });
-        console.log(records);
         return records;
     }
 

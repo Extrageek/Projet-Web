@@ -17,24 +17,25 @@ import { RestApiProxyService } from '../services/rest-api-proxy.service';
 import { StopwatchService } from "../services/stopwatch.service";
 
 @NgModule({
-  imports: [
-    BrowserModule,
-    FormsModule,
-    AppRoutingModule,
-    HttpModule,
-  ],
-  declarations: [
-    AppComponent,
-    GridComponent,
-    UsernameComponent,
-    DifficultyComponent
-  ],
-  providers: [
-    RestApiProxyService,
-    GridManagerService,
-    PuzzleEventManagerService,
-    UserSettingService,
-    StopwatchService ],
-  bootstrap: [ AppComponent ]
+    imports: [
+        BrowserModule,
+        FormsModule,
+        AppRoutingModule,
+        HttpModule,
+    ],
+    declarations: [
+        AppComponent,
+        GridComponent,
+        UsernameComponent,
+        DifficultyComponent
+    ],
+    providers: [
+        RestApiProxyService,
+        GridManagerService,
+        PuzzleEventManagerService,
+        UserSettingService,
+        StopwatchService
+    ],
+    bootstrap: [ AppComponent ]
 })
 export class AppModule { }

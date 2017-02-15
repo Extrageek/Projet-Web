@@ -5,7 +5,7 @@ import {
     TestBed
 } from '@angular/core/testing';
 
-import { assert } from 'chai';
+import { assert, expect } from 'chai';
 import { PuzzleEventManagerService } from './puzzle-event-manager.service';
 import { GridManagerService } from './grid-manager.service';
 import { PuzzleCommon } from '../commons/puzzle-common';
@@ -81,25 +81,25 @@ describe('PuzzleEventManagerService', () => {
             }))
     );
 
-    it("isDirectionKey, Should return false , it's not a direction number",
+
+    it("onKeyEventUpdateCurrentCursor, Should return false , it's not a cursor event",
         inject([PuzzleEventManagerService],
             fakeAsync((eventManagerService: PuzzleEventManagerService) => {
-                let fakeEvent = document.createEvent("KeyboardEvent");
 
-                // fakeEvent.initKeyboardEvent(
-                //                 "keyup" // in DOMString typeArg
-                //                 , false // in boolean canBubbleArg
-                //                 , false // in boolean cancelableArg
-                //                 , global // in views::AbstractView viewArg
-                //                 , "+" // [test]in DOMString keyIdentifierArg | webkit event.keyIdentifier | IE9 event.key
-                //                 , 3 // [test]in unsigned long keyLocationArg | webkit event.keyIdentifier | IE9 event.location
-                //                 , true // [test]in boolean ctrlKeyArg | webkit event.shiftKey | old webkit event.ctrlKey | IE9 event.modifiersList
-                //                 , false // [test]shift | alt
-                //                 , true // [test]shift | alt
-                //                 , false // meta
-                //                 , false // altGraphKey
-                // );
+                let fakeEvent = document.createEvent("KeyboardEvent");
+                eventManagerService.onKeyEventUpdateCurrentCursor(fakeEvent, "");
             }))
     );
+
+    // it("onKeyEventUpdateCurrentCursor, Should return false , it's not a cursor event",
+    //     inject([PuzzleEventManagerService],
+    //         fakeAsync((eventManagerService: PuzzleEventManagerService) => {
+    //             let fakeEvent = document.createEvent("KeyboardEvent");
+    //             let fakeEvent = new KeyboardEvent("Left", {});
+    //
+    //             eventManagerService.onKeyEventUpdateCurrentCursor(fakeEvent, "");
+    //         }))
+    // );
+
 
 });

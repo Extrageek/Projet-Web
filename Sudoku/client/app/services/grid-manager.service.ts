@@ -48,11 +48,11 @@ export class GridManagerService {
         jQuery(cellId).css(CSS_BACKGROUND_PROPERTY, borderPropertyValue);
     }
 
-    private isDuplicatedNumberInCurrentRow(grid: PuzzleItem[][], rowIndex: number, columnIndex: number): boolean {
+    public isDuplicatedNumberInCurrentRow(grid: PuzzleItem[][], rowIndex: number, columnIndex: number): boolean {
 
         let puzzleItem = Number(grid[rowIndex][columnIndex]._value);
 
-        for (let columnId = 0; columnId < SUDOKU_LENGTH ; ++columnId) {
+        for (let columnId = 0; columnId < grid[rowIndex].length ; ++columnId) {
             if (puzzleItem === Number(grid[rowIndex][columnId]._value)
                 && columnId !== columnIndex) {
                 return true;
@@ -61,11 +61,11 @@ export class GridManagerService {
         return false;
     }
 
-    private isDuplicatedNumberInCurrentColumn(grid: PuzzleItem[][], rowIndex: number, columnIndex: number): boolean {
+    public isDuplicatedNumberInCurrentColumn(grid: PuzzleItem[][], rowIndex: number, columnIndex: number): boolean {
 
         let puzzleItem = Number(grid[rowIndex][columnIndex]._value);
 
-        for (let rowId = 0; rowId < SUDOKU_LENGTH ; ++rowId) {
+        for (let rowId = 0; rowId < grid[rowIndex].length  ; ++rowId) {
             if (puzzleItem === Number(grid[rowId][columnIndex]._value)
                 && rowId !== rowIndex) {
                 return true;
@@ -75,7 +75,7 @@ export class GridManagerService {
     }
 
     // Check if the square around the value is valid.
-    private isDuplicatedNumberInCurrentSquare(grid: PuzzleItem[][], rowIndex: number, columnIndex: number): boolean {
+    public isDuplicatedNumberInCurrentSquare(grid: PuzzleItem[][], rowIndex: number, columnIndex: number): boolean {
         let squareMinRowIndex = Math.floor(rowIndex / 3) * 3;
         let squareMaxRowIndex = squareMinRowIndex + 2;
         let squareMinColumnIndex = Math.floor(columnIndex / 3) * 3;
