@@ -32,6 +32,11 @@ export class GlComponent implements OnInit {
         this.renderService.switchCamera();
     }
 
+    @HostListener("window:visibilitychange", ["$event"])
+    public toggleClock(event: Event) {
+        this.renderService.toogleFocus(document.hasFocus());
+    }
+
     constructor(
         private renderService: RenderService,
         private snackbar: MdSnackBar

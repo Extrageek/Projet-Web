@@ -104,7 +104,7 @@ export class CameraService implements GameComponent {
             informations.objectToFollow.position.z + informations.distanceVector.z;
     }
 
-    public update(): void {
+    public update(timePerFrame: number): void {
         this._camerasToUpdate.map((element: FollowUpdate, index: number, updateArray: FollowUpdate[]) => {
             element.functionToApply(element.followInformation);
         });

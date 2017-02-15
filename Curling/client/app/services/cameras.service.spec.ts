@@ -49,7 +49,7 @@ describe("Camera service should", () => {
         let frameNumber = 0;
         function update() {
             objectFollowed.position.addScalar(displacementByFrame);
-            cameraService.update();
+            cameraService.update(0);
             ++frameNumber;
             if (frameNumber < numberOfFrames) {
                 setTimeout(update, 1);
@@ -76,7 +76,7 @@ describe("Camera service should", () => {
         let frameNumber = 0;
         function update() {
             objectFollowed.position.addScalar(displacementByFrame);
-            cameraService.update();
+            cameraService.update(0);
             ++frameNumber;
             if (frameNumber < numberOfFramesBefore) {
                 setTimeout(update, 1);
