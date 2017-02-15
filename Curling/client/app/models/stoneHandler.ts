@@ -24,12 +24,15 @@ export class StoneHandler implements GameComponent {
         this._callbackAfterShotFinished = null;
     }
 
-    public performShot(speed: Vector3, callbackWhenShotFinished: Function = () => {}) {
+    public performShot(speed: number, direction: Vector3,
+        callbackWhenShotFinished: Function = () => {/*Do nothing by default*/}) {
         //TODO: Launch the last stone in the array of stones.
         if (this._stoneOnTheGame.length === 0) {
-            throw new Error("Cannot perform shot on a stone. No stones has been generated yet.")
+            throw new Error("Cannot perform shot on a stone. No stones has been generated yet.");
         }
-        this._stoneOnTheGame[this._stoneOnTheGame.length - 1].speed = speed;
+        let lastIndex = this._stoneOnTheGame.length - 1;
+        this._stoneOnTheGame[lastIndex].speed = speed;
+        this._stoneOnTheGame[lastIndex].direction = direction;
         this._callbackAfterShotFinished = callbackWhenShotFinished;
     }
 
@@ -56,7 +59,7 @@ export class StoneHandler implements GameComponent {
         let aStoneIsMoving = false;
         this._stoneOnTheGame.map((stone: Stone, stoneNumber: number, allTheStones: Stone[]) => {
             stone.update(timePerFrame);
-            aStoneIsMoving = aStoneIsMoving || stone.speed.length() !== 0;
+            aStoneIsMoving = aStoneIsMoving || stone.speed !== 0;
         });
         if (!aStoneIsMoving && this._callbackAfterShotFinished !== null) {
             this._callbackAfterShotFinished();

@@ -52,12 +52,14 @@ describe("Stone tester should", () => {
     });
 
     it("verify stone movement", done => {
-        let speed = new Vector3(1, 1, 1);
-        stone.speed = speed;
-        let initial = speed.clone().multiplyScalar(timePerFrame);
-        //Geometric series with the normal coefficient speed in stone class.
+        let speed = Stone.SPEED_DIMINUTION_NUMBER;
+        let direction = new Vector3(1, 1, 2);
+        let directionNormalized = direction.clone().normalize();
+        //Applying MRUA with t = 1 second. Xf = Xi + V0 * t + a * t^2 / 2
         let finalPosition = initialPosition.clone().add(
-            initial.multiplyScalar((1 - Math.pow(0.99, totalNumberOfFrames)) / (1 - 0.99)));
+            directionNormalized.multiplyScalar(speed - Stone.SPEED_DIMINUTION_NUMBER / 2));
+        stone.speed = Stone.SPEED_DIMINUTION_NUMBER;
+        stone.direction = direction;
         function update() {
             stone.update(timePerFrame);
             ++frameNumber;
@@ -66,6 +68,7 @@ describe("Stone tester should", () => {
                 expect(stone.position.x.toFixed(6)).to.equals(finalPosition.x.toFixed(6));
                 expect(stone.position.y.toFixed(6)).to.equals(finalPosition.y.toFixed(6));
                 expect(stone.position.z.toFixed(6)).to.equals(finalPosition.z.toFixed(6));
+                expect(stone.speed).to.equals(0);
                 done();
             }
             else {

@@ -14,14 +14,15 @@ export class Stone extends Group implements GameComponent {
     private static readonly BOUNDING_SPHERE_RADIUS = 1;
     private static readonly SCALE = {x: 1, y: 1, z: 1};
     private static readonly MATERIAL_PROPERTIES = {wireframe: false, shininess: 0.7};
-    private static readonly SPEED_DIMINUTION_RATIO = 0.99;
-    private static readonly SPEED_DIMINUTION_RATIO_WITH_SWEEP = 0.995;
-    private static readonly MINIMUM_SPEED = 0.03;
+    public static readonly SPEED_DIMINUTION_NUMBER = 0.1;
+    public static readonly SPEED_DIMINUTION_NUMBER_WITH_SWEEP = 0.09;
+    private static readonly MINIMUM_SPEED = 0.001;
 
     private _material: MeshPhongMaterial;
     private _stoneColor: StoneColor;
     //Speed orientation and quantity in meters per second
-    private _speed: Vector3;
+    private _speed: number;
+    private _direction: Vector3;
     //Bounding sphere used for collisions. Only works if the stones are displaced on the XZ plane.
     private _boundingSphere: Sphere;
     private _sweeping: boolean;
@@ -50,7 +51,8 @@ export class Stone extends Group implements GameComponent {
         this.position.set(initialPosition.x, initialPosition.y, initialPosition.z);
         this.scale.set(Stone.SCALE.x, Stone.SCALE.y, Stone.SCALE.z);
         this._stoneColor = stoneColor;
-        this._speed = new Vector3();
+        this._speed = 0;
+        this._direction = new Vector3(0, 0, 1);
         this._boundingSphere = new Sphere(this.position, Stone.BOUNDING_SPHERE_RADIUS);
     }
 
@@ -74,30 +76,47 @@ export class Stone extends Group implements GameComponent {
         this.position = position;
     }
 
-    public get speed(): Vector3 {
+    public get speed(): number {
         return this._speed;
     }
 
-    public set speed(speed: Vector3) {
-        if (speed === null || speed === undefined) {
-            throw new Error("The speed vector cannot be null.");
+    public set speed(speed: number) {
+        if (speed === null || speed === undefined || speed <= 0) {
+            throw new Error("The speed cannot be null or less or equals than 0.");
         }
         this._speed = speed;
     }
 
+    public get direction(): Vector3 {
+        return this._direction;
+    }
+
+    public set direction(direction: Vector3) {
+        if (direction === null || direction === undefined) {
+            throw new Error("The direction is not a valid vector.");
+        }
+        this._direction = direction.normalize();
+    }
+
     public update(timePerFrame: number) {
-        //TODO : Make the physic movement here
-        if (this._speed.length() !== 0) {
-            this.position.add(this._speed.clone().multiplyScalar(timePerFrame));
-            if (this._sweeping) {
-                this._speed.multiplyScalar(Stone.SPEED_DIMINUTION_RATIO_WITH_SWEEP);
-            }
-            else {
-                this._speed.multiplyScalar(Stone.SPEED_DIMINUTION_RATIO);
-            }
-            if (this._speed.length() <= Stone.MINIMUM_SPEED) {
-                this._speed.set(0, 0, 0);
-            }
+        if (this._speed !== 0) {
+            //Applying MRUA equation. Xf = Xi + V0*t + a*t^2 / 2, where t = timePerFrame, V0 = speed,
+            //Xf is the final position, Xi is the initial position and a = -SPEED_DIMINUTION_NUMBER.
+            this.position.add(this._direction.clone().multiplyScalar(
+                this._speed * timePerFrame - Stone.SPEED_DIMINUTION_NUMBER * Math.pow(timePerFrame, 2) / 2));
+            this.decrementSpeed(timePerFrame);
+        }
+    }
+
+    private decrementSpeed(timePerFrame: number) {
+        if (this._sweeping) {
+            this._speed -= timePerFrame * Stone.SPEED_DIMINUTION_NUMBER_WITH_SWEEP;
+        }
+        else {
+            this._speed -= timePerFrame * Stone.SPEED_DIMINUTION_NUMBER;
+        }
+        if (this._speed <= Stone.MINIMUM_SPEED) {
+            this._speed = 0;
         }
     }
 }

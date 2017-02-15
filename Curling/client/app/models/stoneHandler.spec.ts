@@ -60,7 +60,7 @@ describe("StoneHandler tests should", () => {
     });
 
     it("throw error due to no stone generated", () => {
-        expect(stoneHandler.performShot.bind(new Vector3(0, 0, 1), () => {})).to.throw(Error);
+        expect(stoneHandler.performShot.bind(1, new Vector3(0, 0, 1))).to.throw(Error);
     });
 
     it("perform the launch and receive the callback when the shot finished", done => {
@@ -69,9 +69,9 @@ describe("StoneHandler tests should", () => {
                 stoneHandler.update(0.2);
                 timeoutId = setTimeout(update, 5);
             }
-            stoneHandler.performShot(new Vector3(0, 0, 0.05), () => {
+            stoneHandler.performShot(0.1, new Vector3(0, 0, 1), () => {
                 clearTimeout(timeoutId);
-                expect(stone.speed.length()).to.equals(0);
+                expect(stone.speed).to.equals(0);
                 done();
             });
             timeoutId = setTimeout(update, 5);

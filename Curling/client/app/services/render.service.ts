@@ -206,7 +206,7 @@ export class RenderService {
             if (document.hasFocus()) {
                 this._clock.start();
             }
-            this._stoneHandler.performShot(new Vector3(0, 0, 10), () => { console.log("Launch finished")});
+            this._stoneHandler.performShot(2.5, new Vector3(0, 0, 1), () => { console.log("Launch finished"); });
             this.animate();
         }
     }
@@ -215,8 +215,8 @@ export class RenderService {
         window.requestAnimationFrame(_ => this.animate());
         if (this._clock.running === true) {
             let timePerFrame = this._clock.getDelta();
-            this._cameraService.update(timePerFrame);
             this._stoneHandler.update(timePerFrame);
+            this._cameraService.update(timePerFrame);
         }
         this._renderer.render(this._scene, this._currentCamera);
     }
