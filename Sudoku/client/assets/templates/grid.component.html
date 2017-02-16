@@ -21,8 +21,8 @@
             </div>
         </div>
         <button *ngIf="!_isLoading" type="button" class="btn btn-primary" (click)="initializeCurrentGrid()">Reset</button>
-        <button *ngIf="!_isLoading" type="button" class="btn btn-primary" (click)="getNewPuzzle(0)">Facile</button>
-        <button *ngIf="!_isLoading" type="button" class="btn btn-primary" (click)="getNewPuzzle(1)">Difficile</button>
+        <button *ngIf="!_isLoading" type="button" class="btn btn-primary" (click)="getNewPuzzle('NORMAL')">Facile</button>
+        <button *ngIf="!_isLoading" type="button" class="btn btn-primary" (click)="getNewPuzzle('HARD')">Difficile</button>
     </div>
     <div class="col-md-5">
         <div class="col-md-12 menu-panel">
@@ -40,12 +40,12 @@
             <h2><span class="glyphicon glyphicon-user" aria-hidden="true"> </span> {{_userSetting.name}}</h2>
         </div>
         <div class="col-md-12 menu-panel">
-            <h2 *ngIf="_userSetting.difficulty === 'NORMAL'">
+            <h2 *ngIf="_userSetting.difficulty.toString() === 'NORMAL'">
                 <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
                 <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
                 <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span> {{_userSetting.difficulty}}
             </h2>
-            <h2 *ngIf="_userSetting.difficulty === 'HARD'">
+            <h2 *ngIf="_userSetting.difficulty.toString() === 'HARD'">
                 <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
                 <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
                 <span class="glyphicon glyphicon-star" aria-hidden="true"></span> {{_userSetting.difficulty}}
