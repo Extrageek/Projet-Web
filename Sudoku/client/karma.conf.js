@@ -97,6 +97,9 @@ module.exports = function(config) {
       { pattern: appSrcBase + '**/*.html', included: false, watched: true },
       { pattern: appSrcBase + '**/*.css', included: false, watched: true },
 
+      // The CSS files that will be copied by gulp are in the output folder
+      { pattern: appBase + '**/*.css', included: false, watched: true },
+
       // Paths for debugging with source maps in dev tools
       { pattern: appSrcBase + '**/*.ts', included: false, watched: false },
       { pattern: appBase + '**/*.js.map', included: false, watched: false },
