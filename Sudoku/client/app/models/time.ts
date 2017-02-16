@@ -36,4 +36,27 @@ export class Time {
         this._minutes = 0;
         this._seconds = 0;
     }
+
+    public compareTo(time: Time): number {
+        const areHoursLessThan = this._hours < time._hours;
+        const areHoursEqual = this._hours === time._hours;
+
+        const areMinutesLessThan = this._minutes < time._minutes;
+        const areMinutesEqual = this._minutes === time._minutes;
+
+        const areSecondsLessThan = this._seconds < time._seconds;
+        const areSecondsEqual = this._seconds === time._seconds;
+        
+        if (areHoursLessThan
+            || (areHoursEqual && areMinutesLessThan)
+            || (areHoursEqual && areMinutesEqual && areSecondsLessThan)) {
+            return -1;
+        }
+        else if (areHoursEqual && areMinutesEqual && areSecondsEqual) {
+            return 0;
+        }
+        else {
+            return 1;
+        }
+    }
 }

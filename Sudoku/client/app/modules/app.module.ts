@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { MaterialModule } from '@angular/material';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -22,6 +23,7 @@ import { StopwatchService } from "../services/stopwatch.service";
         FormsModule,
         AppRoutingModule,
         HttpModule,
+        MaterialModule.forRoot()
     ],
     declarations: [
         AppComponent,

@@ -33,6 +33,7 @@ export class DatabaseManager {
 
     public static async removeUser(body: any): Promise<boolean> {
         if (body.username === '') {
+            console.log("removeUser username null");
             return false;
         }
         else {
@@ -67,8 +68,8 @@ export class DatabaseManager {
             let docs = new Array<any>();
             try {
                 let collection = db.collection('leaderboard');
-                docs.push(await collection.find({difficulty: "NORMAL"}).sort({time: 1}).limit(3).toArray());
-                docs.push(await collection.find({difficulty: "HARD"}).sort({time: 1}).limit(3).toArray());
+                docs.push(await collection.find({ difficulty: "NORMAL" }).sort({ time: 1 }).limit(3).toArray());
+                docs.push(await collection.find({ difficulty: "HARD" }).sort({ time: 1 }).limit(3).toArray());
             } finally {
                 db.close();
             }

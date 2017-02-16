@@ -108,7 +108,7 @@ export class GridManagerService {
 
     // Clears the cells the user filled.
     // Initialize the grid format to prevent when an invalid grid format is applied.
-    initializeGrid(puzzle: Puzzle) {
+    public initializeGrid(puzzle: Puzzle) {
 
         if (puzzle === null
             || puzzle._puzzle === null) {
@@ -130,7 +130,7 @@ export class GridManagerService {
     }
 
     // Delete the current value and update the cell format.
-    deleteCurrentValue(puzzle: Puzzle, rowIndex: number, colIndex: number) {
+    public deleteCurrentValue(puzzle: Puzzle, rowIndex: number, colIndex: number) {
 
         if (rowIndex < 0 || colIndex < 0) {
             throw new Error("A row or a column index cannot be less than (0)");
@@ -145,7 +145,7 @@ export class GridManagerService {
         this._cellsToBeCompleted++;
     }
 
-    countFilledCell(puzzle: Puzzle){
+    public countFilledCell(puzzle: Puzzle){
         this._cellsToBeCompleted = 0;
         puzzle._puzzle.forEach((puzzleItems) => {
             puzzleItems.forEach((puzzleItem) => {

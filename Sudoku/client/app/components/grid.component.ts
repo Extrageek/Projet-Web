@@ -5,7 +5,8 @@
  * @date 2017/01/22
  */
 
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { MdProgressSpinnerModule } from '@angular/material';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -38,13 +39,16 @@ import { Time } from "../models/time";
 })
 
 export class GridComponent implements OnInit {
-    _newPuzzle: Puzzle;
+    _puzzle: Puzzle;
+    _isLoading: boolean;
+    _isFinished: boolean;
     _userSetting: UserSetting;
     _time: Time;
     _hiddenClock: boolean;
     _easyRecords: Array<Record>;
     _hardRecords: Array<Record>;
 
+    @ViewChild("leaderboard") leaderboard: ElementRef;
 
     constructor(
         private gridManagerService: GridManagerService,
@@ -56,11 +60,14 @@ export class GridComponent implements OnInit {
 
     // Initialization
     ngOnInit() {
+        this._isLoading = true;
+        this._isFinished = false;
         this._userSetting = this.userSettingService.userSetting;
         this._time = new Time();
         this.getNewPuzzle(this._userSetting.difficulty);
         Observable.timer(0, 1000).subscribe(() => {
-            this.stopwatchService.updateClock();
+            if (!this._isLoading && !this._isFinished)
+                this.stopwatchService.updateClock();
             this._time.seconds = this.stopwatchService.seconds;
             this._time.minutes = this.stopwatchService.minutes;
             this._time.hours = this.stopwatchService.hours;
@@ -69,18 +76,38 @@ export class GridComponent implements OnInit {
         this._hardRecords = new Array<Record>();
     }
 
-    @HostListener('window:beforeunload', ['$event'])
-    saveAndLogout(event: Event) {
-        this.api.removeUsername(this._userSetting.name);
-        event.stopImmediatePropagation();
+    @HostListener('window:beforeunload')
+    public async logout() {
+        let str: string;
+        await this.api.removeUsername(this._userSetting.name)
+            .then(result => {
+                if (result) {
+                    str = "done";
+                }
+                else {
+                    str = "not done";
+                }
+            })
+            .catch(error => {
+                console.log("error: ", error);
+                str = "error";
+            });
+        return str;
     }
 
     public getNewPuzzle(difficulty: Difficulty) {
+        this._isLoading = true;
+        this._easyRecords = [];
+        this._hardRecords = [];
+        this.leaderboard.nativeElement.classList.add("fade");
         this.api.getNewPuzzle(difficulty)
             .subscribe((puzzle: Puzzle) => {
-                this._newPuzzle = puzzle;
+                this._isLoading = false;
+                this._isFinished = false;
+                this._puzzle = puzzle;
                 this._userSetting.difficulty = difficulty;
                 this.gridManagerService.countFilledCell(puzzle);
+                this.stopwatchService.resetTime();
             });
     }
 
@@ -97,40 +124,71 @@ export class GridComponent implements OnInit {
         let colIndex = Number(rowColIndex[PuzzleCommon.xPosition]);
 
         if (event.keyCode === PuzzleCommon.backspaceKeyCode) {
-            if (this._newPuzzle._puzzle[rowIndex][colIndex]._value !== null) {
-                this.gridManagerService.deleteCurrentValue(this._newPuzzle, rowIndex, colIndex);
+            if (this._puzzle._puzzle[rowIndex][colIndex]._value !== null) {
+                this.gridManagerService.deleteCurrentValue(this._puzzle, rowIndex, colIndex);
             }
         }
 
         else if (this.puzzleEventManager.isSudokuNumber(event.which)) {
-            this.gridManagerService.validateEnteredNumber(this._newPuzzle, rowIndex, colIndex);
+            this.gridManagerService.validateEnteredNumber(this._puzzle, rowIndex, colIndex);
             // TODO: replace 59 by 0
+            console.log(this.gridManagerService.cellsToBeCompleted);
             if (this.gridManagerService.cellsToBeCompleted === 59) {
-                if (this.api.verifyGrid(this._newPuzzle)) {
-                    //TODO: add modal with table to populate
-                    //TODO: show modal when grid is valid
-                    await this.api.getTopRecords().then(topRecords => {
-                        this._easyRecords = topRecords[0];
+                //if (this.api.verifyGrid(this._puzzle)) {
+                this._isFinished = true;
+                await this.api.getTopRecords().then(topRecords => {
+                    // this._easyRecords = topRecords[0];
+                    // this._hardRecords = topRecords[1];
+                    let isInserted = false;
+                    if (this._userSetting.difficulty.toString() === "NORMAL") {
+                        for (let i = 0; i < topRecords[0].length && this._easyRecords.length <= topRecords[0].length; ++i) {
+                            if (this._time.compareTo(topRecords[0][i].time) === -1 && !isInserted) {
+                                isInserted = true;
+                                this._easyRecords.push(new Record(this._userSetting.name, this._userSetting.difficulty, this._time));
+                            }
+                            else {
+                                this._easyRecords.push(topRecords[0][i]);
+                            }
+                        }
                         this._hardRecords = topRecords[1];
-                    }).catch(error => {
-                        console.log(error);
-                    });
-                    this.api.createGameRecord(this._userSetting, this._time);
-                }
+                    }
+                    else if (this._userSetting.difficulty.toString() === "HARD") {
+                        for (let i = 0; i < topRecords[1].length && this._hardRecords.length <= topRecords[1].length; ++i) {
+                            if (this._time.compareTo(topRecords[1][i].time) === -1 && !isInserted) {
+                                isInserted = true;
+                                this._hardRecords.push(new Record(this._userSetting.name, this._userSetting.difficulty, this._time));
+                            }
+                            else {
+                                this._hardRecords.push(topRecords[1][i]);
+                            }
+                        }
+                        this._easyRecords = topRecords[0];
+                    }
+                    if (isInserted) {
+                        this.leaderboard.nativeElement.classList.remove("fade");
+                    }
+                }).catch(error => {
+                    console.log(error);
+                });
+                //this.api.createGameRecord(this._userSetting, this._time);
+                //}
             }
         }
     }
 
     // Initialize the current grid
     public initializeCurrentGrid() {
-
-        // TODO: disabled button during loading
-        if (this._newPuzzle === null
-            || this._newPuzzle._puzzle == null) {
+        if (this._puzzle === null
+            || this._puzzle._puzzle == null) {
             throw new Error("The initial grid cannot be null.");
         }
 
-        this.gridManagerService.initializeGrid(this._newPuzzle);
+        this.gridManagerService.initializeGrid(this._puzzle);
+        this.stopwatchService.resetTime();
+        this._isFinished = false;
+        this._easyRecords = [];
+        this._hardRecords = [];
+        this.leaderboard.nativeElement.classList.add("fade");
     }
 
     // Use to check if a value is a Sudoku number

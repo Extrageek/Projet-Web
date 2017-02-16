@@ -14,6 +14,10 @@ export class StopwatchService {
         this._hours = 0;
     }
 
+    public resetTime(){
+        this._startTime = new Date().getTime();
+    }
+
     public updateClock() {
         let elapsedTime : number;
         elapsedTime = new Date().getTime() - this._startTime;

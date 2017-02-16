@@ -92,7 +92,7 @@ describe('GridComponent', () => {
 
     // //Testing the method InitializeCurrentGrid by giving an empty grid.
     it("initializeCurrentGrid should throw a null argument error", () => {
-        comp._newPuzzle = null;
+        comp._puzzle = null;
         assert.throws(() => comp.initializeCurrentGrid(), Error, "The initial grid cannot be null");
     });
 
@@ -101,11 +101,11 @@ describe('GridComponent', () => {
         inject([GridManagerService], (gridManagerService: GridManagerService) => {
 
             // Must be completed
-            comp._newPuzzle = FAKE_PUZZLE;
+            comp._puzzle = FAKE_PUZZLE;
             comp.initializeCurrentGrid();
 
             // Check the expected result
-            expect(comp._newPuzzle).to.deep.equal(FAKE_INITIAL_PUZZLE);
+            expect(comp._puzzle).to.deep.equal(FAKE_INITIAL_PUZZLE);
         }));
 
     it("validateInputValue, should throw a null argument error", () => {

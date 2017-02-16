@@ -1,10 +1,13 @@
 <div class="col-md-12">
     <div class="col-md-7 grid-panel">
-        <div class="form-control" class="grid-box">
+        <div *ngIf="_isLoading" layout="row" layout-sm="column" layout-align="space-around">
+            <md-spinner></md-spinner>
+        </div>
+        <div *ngIf="!_isLoading" class="form-control" class="grid-box">
             <div class="table-responsive">
                 <table class="table">
                     <tbody>
-                        <tr class="grid" *ngFor="let row of _newPuzzle?._puzzle , let i = index" [attr.id]="'gridRowId' + i">
+                        <tr class="grid" *ngFor="let row of _puzzle?._puzzle , let i = index" [attr.id]="'gridRowId' + i">
                             <td *ngFor="let cell of row, let j = index" [attr.id]="'cellId' + i + '' + j">
                                 <input #attrRead class="readOnlyCell" *ngIf="!cell._hide" readonly maxlength="1" type="text" name="inputCell" id="{{i}}{{j}}"
                                     [ngModel]="cell._value" (keydown)="onKeyDownEventHandler($event, attrRead.id)" />
@@ -17,57 +20,72 @@
                 </table>
             </div>
         </div>
+        <button *ngIf="!_isLoading" type="button" class="btn btn-primary" (click)="initializeCurrentGrid()">Reset</button>
+        <button *ngIf="!_isLoading" type="button" class="btn btn-primary" (click)="getNewPuzzle(0)">Facile</button>
+        <button *ngIf="!_isLoading" type="button" class="btn btn-primary" (click)="getNewPuzzle(1)">Difficile</button>
     </div>
-    <div class="col-md-5 menu-panel">
-        <button type="button" class="btn btn-primary" (click)="initializeCurrentGrid()">Reset</button>
-        <h2 *ngIf="!_hiddenClock">
-            {{_time.hours}} : {{_time.minutes}} : {{_time.seconds}}
-            <span (click)="hideClock()" class="glyphicon glyphicon-ban-circle" aria-hidden="true"> </span>
-        </h2>
-        <h2 *ngIf="_hiddenClock">
-            <span (click)="hideClock()" class="glyphicon glyphicon-time" aria-hidden="true"> </span>
-        </h2>
-        <h2>{{_userSetting.name}}</h2>
-        <h2>{{_userSetting.difficulty}}</h2>
-        <button type="button" class="btn btn-primary" (click)="getNewPuzzle(0)">Facile</button>
-        <button type="button" class="btn btn-primary" (click)="getNewPuzzle(1)">Difficile</button>
-
-        <div #leaderboardEasy>
-            <table id="lead-table" class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Pseudonyme</th>
-                        <th>Niveau</th>
-                        <th>Temps</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let record of _easyRecords">
-                        <td>{{record._username}}</td>
-                        <td>{{record._difficulty}}</td>
-                        <td>{{record._time._hours}} : {{record._time._minutes}} : {{record._time._seconds}}</td>
-                    </tr>
-                </tbody>
-            </table>
+    <div class="col-md-5">
+        <div class="col-md-12 menu-panel">
+            <h2 *ngIf="!_hiddenClock">
+                <span class="glyphicon glyphicon-time" aria-hidden="true"> </span> {{_time.hours}} : {{_time.minutes}} :
+                {{_time.seconds}}
+                <span (click)="hideClock()" class="glyphicon glyphicon-eye-close" aria-hidden="true"> </span>
+            </h2>
+            <h2 *ngIf="_hiddenClock">
+                <span class="glyphicon glyphicon-time" aria-hidden="true"> </span>
+                <span (click)="hideClock()" class="glyphicon glyphicon-eye-open" aria-hidden="true"> </span>
+            </h2>
         </div>
-
-        <div #leaderboardHard>
-            <table id="lead-table" class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Pseudonyme</th>
-                        <th>Niveau</th>
-                        <th>Temps</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let record of _hardRecords">
-                        <td>{{record._username}}</td>
-                        <td>{{record._difficulty}}</td>
-                        <td>{{record._time._hours}} : {{record._time._minutes}} : {{record._time._seconds}}</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="col-md-12 menu-panel">
+            <h2><span class="glyphicon glyphicon-user" aria-hidden="true"> </span> {{_userSetting.name}}</h2>
+        </div>
+        <div class="col-md-12 menu-panel">
+            <h2 *ngIf="_userSetting.difficulty === 'NORMAL'">
+                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span> {{_userSetting.difficulty}}
+            </h2>
+            <h2 *ngIf="_userSetting.difficulty === 'HARD'">
+                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-star" aria-hidden="true"></span> {{_userSetting.difficulty}}
+            </h2>
+        </div>
+        <div #leaderboard class="col-md-12 fade">
+            <div #leaderboardEasy class="col-md-6">
+                Top Scores Facile
+                <table id="lead-table-easy" class="table table-hover menu-panel">
+                    <thead>
+                        <tr>
+                            <th>Pseudonyme</th>
+                            <th>Temps</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let record of _easyRecords">
+                            <td>{{record._username}}</td>
+                            <td>{{record._time._hours}} : {{record._time._minutes}} : {{record._time._seconds}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div #leaderboardHard class="col-md-6">
+                Top Scores Difficile
+                <table id="lead-table-hard" class="table table-hover menu-panel">
+                    <thead>
+                        <tr>
+                            <th>Pseudonyme</th>
+                            <th>Temps</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let record of _hardRecords">
+                            <td>{{record._username}}</td>
+                            <td>{{record._time._hours}} : {{record._time._minutes}} : {{record._time._seconds}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

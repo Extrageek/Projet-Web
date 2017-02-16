@@ -17,17 +17,30 @@ export class DifficultyComponent implements OnInit {
     _difficulty: Difficulty;
 
     constructor(private router: Router,
-                private userSettingService: UserSettingService,
-                private api: RestApiProxyService) { }
+        private userSettingService: UserSettingService,
+        private api: RestApiProxyService) { }
 
     ngOnInit() {
         this._username = this.userSettingService.userSetting.name;
     }
 
-    @HostListener('window:beforeunload', ['$event'])
-    saveAndLogout(event: Event) {
-        this.api.removeUsername(this._username);
-        event.stopImmediatePropagation();
+    @HostListener('window:beforeunload')
+    public async logout() {
+        let str: string;
+        await this.api.removeUsername(this._username)
+            .then(result => {
+                if (result){
+                    str = "done";
+                }
+                else{
+                    str = "not done";
+                }
+            })
+            .catch(error => {
+                console.log("error: ", error);
+                str = "error";
+            });
+        return str;
     }
 
     public launchGame() {
