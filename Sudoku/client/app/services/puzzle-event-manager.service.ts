@@ -118,11 +118,11 @@ export class PuzzleEventManagerService {
     }
 
     // On Left/Right Arrow key press, jump to the next left/right empty cell, according to the direction.
-    jumpToNextLeftOrRightEmptyCell(currentPositionXY: string[], arrayDirection: ArrayDirection) {
+    private jumpToNextLeftOrRightEmptyCell(currentPositionXY: string[], arrayDirection: ArrayDirection) {
 
         let newPosition = 0;
 
-        // Find the new left or right postion index
+        // Find the new left or right position index
         if (arrayDirection === ArrayDirection.LEFT) {
             newPosition = Number(currentPositionXY[PuzzleCommon.xPosition]) - 1;
             this._newPositionY = (newPosition < PuzzleCommon.minColumnIndex)
@@ -142,7 +142,7 @@ export class PuzzleEventManagerService {
     }
 
     // On Up/Down Arrow key press, jump to the next Up/Down empty cell, according to the direction.
-    jumpToNextUpOrDownEmptyCell(currentPositionXY: string[], arrayDirection: ArrayDirection) {
+    private jumpToNextUpOrDownEmptyCell(currentPositionXY: string[], arrayDirection: ArrayDirection) {
 
         let newPositionIndex = 0;
 

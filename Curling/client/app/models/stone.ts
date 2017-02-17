@@ -2,8 +2,8 @@ import { ObjectLoader, Group, MeshPhongMaterial, Object3D, Sphere, Vector3 } fro
 import { GameComponent } from "./gameComponent.interface";
 
 export enum StoneColor {
-    Red = 0,
-    Blue = 1,
+    Blue = 0,
+    Red = 1,
     NumberOfColors = 2
 }
 
@@ -11,7 +11,7 @@ export class Stone extends Group implements GameComponent {
 
     private static readonly STONES_PATH =
         ["/assets/models/json/curling-stone-red.json", "/assets/models/json/curling-stone-blue.json"];
-    private static readonly BOUNDING_SPHERE_RADIUS = 1;
+    private static readonly BOUNDING_SPHERE_RADIUS = 0.25;
     private static readonly SCALE = {x: 1, y: 1, z: 1};
     private static readonly MATERIAL_PROPERTIES = {wireframe: false, shininess: 0.7};
     public static readonly SPEED_DIMINUTION_NUMBER = 0.1;
@@ -23,9 +23,12 @@ export class Stone extends Group implements GameComponent {
     //Speed orientation and quantity in meters per second
     private _speed: number;
     private _direction: Vector3;
+    private _sweeping: boolean;
     //Bounding sphere used for collisions. Only works if the stones are displaced on the XZ plane.
     private _boundingSphere: Sphere;
-    private _sweeping: boolean;
+    private _lastBoundingSphere: Sphere;
+    private _lastPosition: Vector3;
+    private _lastSpeed: number;
 
     public static createStone(objectLoader: ObjectLoader, stoneColor: StoneColor,
         initialPosition: Vector3): Promise<Stone> {
@@ -54,12 +57,15 @@ export class Stone extends Group implements GameComponent {
         this._speed = 0;
         this._direction = new Vector3(0, 0, 1);
         this._boundingSphere = new Sphere(this.position, Stone.BOUNDING_SPHERE_RADIUS);
+        this._lastBoundingSphere = this._boundingSphere;
+        this._lastPosition = this.position;
     }
 
     public get boundingSphere(): Sphere {
         return this._boundingSphere;
     }
 
+    //Used by the renderer to get the material of the group.
     public get material() {
         return this._material;
     }
@@ -98,14 +104,26 @@ export class Stone extends Group implements GameComponent {
         this._direction = direction.normalize();
     }
 
+    public revertToLastPosition() {
+        this._boundingSphere = this._lastBoundingSphere;
+        this.position.copy(this._lastPosition);
+    }
+
     public update(timePerFrame: number) {
         if (this._speed !== 0) {
+            this.saveOldValues();
             //Applying MRUA equation. Xf = Xi + V0*t + a*t^2 / 2, where t = timePerFrame, V0 = speed,
             //Xf is the final position, Xi is the initial position and a = -SPEED_DIMINUTION_NUMBER.
             this.position.add(this._direction.clone().multiplyScalar(
                 this._speed * timePerFrame - Stone.SPEED_DIMINUTION_NUMBER * Math.pow(timePerFrame, 2) / 2));
             this.decrementSpeed(timePerFrame);
+            this.calculateNewBoundingSphere();
         }
+    }
+
+    private saveOldValues() {
+        this._lastBoundingSphere = this._boundingSphere.clone();
+        this._lastPosition = this.position.clone();
     }
 
     private decrementSpeed(timePerFrame: number) {
@@ -118,5 +136,9 @@ export class Stone extends Group implements GameComponent {
         if (this._speed <= Stone.MINIMUM_SPEED) {
             this._speed = 0;
         }
+    }
+
+    private calculateNewBoundingSphere() {
+        this._boundingSphere.set(this.position, Stone.BOUNDING_SPHERE_RADIUS);
     }
 }

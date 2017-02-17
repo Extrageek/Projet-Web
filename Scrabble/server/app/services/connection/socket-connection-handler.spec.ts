@@ -89,7 +89,8 @@ describe("SocketConnectionHandler, should create a socket connection handler", (
                 // When the user 2 is connected
                 clientConnection2.once(SocketEventType.connect, function () {
                     clientConnection2.emit(SocketEventType.newGameRequest, { username: playerName2, gameType: 2 });
-                    //clientConnection1.emit(SocketEventType.newGameRequest, { username: playerName1 + "2", gameType: 2 });
+                    //clientConnection1.emit(SocketEventType.newGameRequest, {
+                    //username: playerName1 + "2", gameType: 2 });
 
                 });
                 // Add a listener for the second user when he joined the room
@@ -104,7 +105,7 @@ describe("SocketConnectionHandler, should create a socket connection handler", (
                     roomMessage.message.should.equal(`${playerName2}` + ` joined the room`);
                 });
 
-                assert(socketHandler._roomHandler._rooms.length == 1, "Expect 1 Room");
+                assert(socketHandler._roomHandler._rooms.length === 1, "Expect 1 Room");
                 // assert(socketHandler._roomHandler._rooms[0].players.length == 2, "Expect 2 players");
             });
         });

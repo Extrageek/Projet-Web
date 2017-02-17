@@ -30,7 +30,8 @@ export class DisplayComponent implements OnInit {
         event.stopImmediatePropagation();
     }
 
-    constructor(private router: Router,
+    constructor(
+        private router: Router,
         private api: RestApiProxyService,
         private userSettingService: UserSettingService,
         private gameStatusService: GameStatusService) { }

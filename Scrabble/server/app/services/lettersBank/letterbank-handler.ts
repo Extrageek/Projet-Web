@@ -31,7 +31,7 @@ export class LetterBankHandler {
             this.putLetterBackInBank(this.parseFromListOfStringToListOfLetter(lettersToBeChanged));
             newLetters = this.getLetterFromBank(lettersToBeChanged.length);
         }
-        
+
         return this.parseFromListOfLetterToListOfString(newLetters);
     }
 
@@ -79,9 +79,9 @@ export class LetterBankHandler {
 
         let letters = new Array<Letter>();
         alphabets.forEach((element => {
-            let letter = this._bank.bank.filter((letter) => letter.alphabetLetter === element)[0];
+            let letter = this._bank.bank.filter((alphaLetter) => alphaLetter.alphabetLetter === element)[0];
             letters.push(letter);
-        }))
+        }));
 
         return letters;
     }
@@ -95,7 +95,7 @@ export class LetterBankHandler {
         let newList = new Array<string>();
         letters.forEach((letter) => {
             newList.push(letter.alphabetLetter);
-        })
+        });
         return newList;
     }
 }

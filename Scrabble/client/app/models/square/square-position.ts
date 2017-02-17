@@ -1,5 +1,5 @@
-import { BoardRows } from './board-rows';
-import { BoardColumn } from './board-column';
+import { BoardRows } from '../board/board-rows';
+import { BoardColumn } from '../board/board-column';
 
 export class SquarePosition {
     private _row: BoardRows;

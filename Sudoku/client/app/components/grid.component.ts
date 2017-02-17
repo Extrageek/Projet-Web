@@ -35,7 +35,7 @@ import { Time } from "../models/time";
     selector: 'sudoku-grid',
     templateUrl: "/assets/templates/grid.component.html",
     styleUrls: ["../../assets/stylesheets/grid.component.css"],
-    providers: [GridManagerService, PuzzleEventManagerService, RestApiProxyService, StopwatchService]
+    providers: [GridManagerService, PuzzleEventManagerService, StopwatchService]
 })
 
 export class GridComponent implements OnInit {
