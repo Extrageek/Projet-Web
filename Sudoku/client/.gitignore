@@ -1,4 +1,4 @@
-# Exclusion des dépendences du projet. Elles peuvent être regénérées 
+﻿# Exclusion des dépendences du projet. Elles peuvent être regénérées 
 # automatiquement.
 node_modules/
 false/
@@ -24,4 +24,5 @@ coverage/
 !karma-test-shim.js
 !systemjs.config.extras.js
 !tslint.json
+!gulpfile.js
 !tsconfig.json
