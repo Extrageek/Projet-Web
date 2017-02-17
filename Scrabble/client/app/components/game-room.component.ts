@@ -10,6 +10,7 @@ import { IRoomMessage } from '../models/room/room-message';
     providers: [SocketService],
     selector: "game-room-selector",
     templateUrl: "../../assets/templates/game-room.html",
+    styleUrls: ["../../assets/stylesheets/game-room.css"],
 })
 
 export class GameComponent implements OnInit, OnDestroy {
