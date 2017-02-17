@@ -13,7 +13,7 @@ import { StoneHandler } from "../models/stoneHandler";
 @Injectable()
 export class RenderService {
 
-    private static readonly NUMBER_OF_MODELS_TO_LOAD = 3;
+    private static readonly NUMBER_OF_MODELS_TO_LOAD = 4;
 
     private _numberOfModelsLoaded: number;
     private _scene: Scene;
@@ -163,6 +163,11 @@ export class RenderService {
             this._mesh.add(rink);
             this.onFinishedLoadingModel();
             this.loadStoneHandler();
+            this._stoneHandler.generateNewStone().then((stone: Stone) => {
+                this._scene.add(stone);
+                stone.position.set(-0.4, 0, 0);
+                this.onFinishedLoadingModel();
+            });
             this.loadStone();
         });
     }

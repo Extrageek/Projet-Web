@@ -10,6 +10,9 @@ export interface Points {
 
 export class StoneHandler implements GameComponent {
 
+    private static readonly COLLISION_SPEED_KEEP_PERCENT = 0.25;
+    private static readonly COLLISION_SPEED_TRANSFERED_PERCENT = 0.65;
+
     private _rinkInfo: RinkInfo;
     private _currentPlayer: StoneColor;
     private _objectLoader: ObjectLoader;
@@ -56,14 +59,109 @@ export class StoneHandler implements GameComponent {
 
     public update(timePerFrame: number) {
         //TODO: Perform the verification of collisions here and hanble the displacement of the stones.
-        let aStoneIsMoving = false;
-        this._stoneOnTheGame.map((stone: Stone, stoneNumber: number, allTheStones: Stone[]) => {
-            stone.update(timePerFrame);
-            aStoneIsMoving = aStoneIsMoving || stone.speed !== 0;
-        });
-        if (!aStoneIsMoving && this._callbackAfterShotFinished !== null) {
-            this._callbackAfterShotFinished();
-            this._callbackAfterShotFinished = null;
+        if (this._callbackAfterShotFinished !== null) {
+            let aStoneIsMoving = false;
+            this._stoneOnTheGame.map((stone: Stone, stoneNumber: number, allTheStones: Stone[]) => {
+                if (stone.speed !== 0) {
+                    stone.update(timePerFrame);
+                    this.resolveCollisions(stone);
+                }
+                
+                aStoneIsMoving = aStoneIsMoving || stone.speed !== 0;
+            });
+            if (!aStoneIsMoving) {
+                this._callbackAfterShotFinished();
+                this._callbackAfterShotFinished = null;
+            }
         }
+    }
+
+    private resolveCollisions(stoneToVerify: Stone) {
+        let stonesHit = new Array<Stone>();
+        this._stoneOnTheGame.map((stone: Stone, stoneNumber: number, allTheStones: Stone[]) => {
+            if (stoneToVerify !== stone) {
+                if (stoneToVerify.boundingSphere.intersectsSphere(stone.boundingSphere)) {
+                    stonesHit.push(stone);
+                }
+            }
+        });
+        if (stonesHit.length !== 0) {
+            this.changeSpeedAndDirectionOfStones(stonesHit, stoneToVerify);
+            stoneToVerify.revertToLastPosition();
+        }
+    }
+
+    private changeSpeedAndDirectionOfStones(stonesHit: Array<Stone>, stoneHiting: Stone) {
+        let newStonesDirection = this.setNewDirections(stonesHit, stoneHiting);
+        //let totalAngle = this.calculateTotalAngleOfCollision(newStonesDirection);
+        //console.log(totalAngle);
+        let totalSpeed = this.calculateTotalSpeed(stonesHit, stoneHiting);
+        let speedTransmitedToOtherStones = totalSpeed * StoneHandler.COLLISION_SPEED_TRANSFERED_PERCENT;
+        this.setNewCollidedStonesSpeeds(stonesHit, stoneHiting.direction, speedTransmitedToOtherStones);
+
+        //The direction vectors of collided stones are inverted, added together and the result is normalized.
+        let speed = 0;
+        stoneHiting.direction = newStonesDirection.reduce((previousValue: Vector3, currentValue: Vector3,
+            currentIndex: number, array: Vector3[]) => {
+                let directionSignToApply = Math.sign(stoneHiting.position.x - currentValue.x);
+                let angle = currentValue.angleTo(stoneHiting.direction)
+                if (angle !== 0) {
+                    speed += currentValue.angleTo(stoneHiting.direction) / (Math.PI/2) * stoneHiting.speed;
+                }
+                else {
+                    speed += 0.001;
+                }
+                console.log(currentValue.angleTo(stoneHiting.direction));
+                console.log(stoneHiting.speed);
+                currentValue.projectOnVector(stoneHiting.direction.clone());
+                let partOfParallelPosition = stoneHiting.direction.clone();
+                partOfParallelPosition.sub(currentValue);
+                let x = partOfParallelPosition.x;
+                let z = partOfParallelPosition.z * directionSignToApply;
+                partOfParallelPosition.setZ(x);
+                partOfParallelPosition.setX(z);
+                console.log(partOfParallelPosition);
+                currentValue.add(partOfParallelPosition).normalize();
+            return previousValue.add(currentValue).normalize();
+        }, new Vector3(0, 0, 0)).normalize();
+        stoneHiting.speed = speed / stonesHit.length;
+        console.log(stoneHiting.speed);
+        //stoneHiting.speed = totalSpeed * StoneHandler.COLLISION_SPEED_KEEP_PERCENT;
+    }
+
+    private setNewDirections(stonesHit: Array<Stone>, stoneHiting: Stone): Array<Vector3> {
+        let newStonesDirection = new Array<Vector3>();
+        stonesHit.map((stone: Stone, index: number, array: Stone[]) => {
+            stone.direction = stone.position.clone().sub(stoneHiting.position).normalize();
+            //console.log(stone.direction);
+            newStonesDirection.push(stone.direction.clone());
+        });
+        return newStonesDirection;
+    }
+
+    private calculateTotalAngleOfCollision(newStonesDirection: Array<Vector3>): number {
+        let totalAngle = 0;
+        for (let i = 1; i < newStonesDirection.length; ++i) {
+            totalAngle += newStonesDirection[i - 1].angleTo(newStonesDirection[i]);
+        }
+        return totalAngle;
+    }
+
+    private calculateTotalSpeed(stonesHit: Array<Stone>, stoneHiting: Stone): number {
+        let totalSpeed = stoneHiting.speed;
+        for (let i = 0; i < stonesHit.length; ++i) {
+            totalSpeed += stonesHit[i].speed;
+        }
+        return totalSpeed;
+    }
+
+    private setNewCollidedStonesSpeeds(stonesHit: Array<Stone>, stoneHitingDirection: Vector3,
+        speedTransmitedToOtherStones: number) {
+        stonesHit.map((stone: Stone, index: number, array: Stone[]) => {
+            let angleBetweenStonesCollide = stone.direction.angleTo(stoneHitingDirection);
+            stone.speed = speedTransmitedToOtherStones -
+                angleBetweenStonesCollide / (Math.PI/2) * speedTransmitedToOtherStones;
+            //console.log(stone.speed);
+        });
     }
 }
