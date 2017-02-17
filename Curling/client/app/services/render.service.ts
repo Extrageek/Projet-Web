@@ -13,7 +13,7 @@ import { StoneHandler } from "../models/stoneHandler";
 @Injectable()
 export class RenderService {
 
-    private static readonly NUMBER_OF_MODELS_TO_LOAD = 3;
+    private static readonly NUMBER_OF_MODELS_TO_LOAD = 4;
 
     private _numberOfModelsLoaded: number;
     private _scene: Scene;
@@ -163,6 +163,11 @@ export class RenderService {
             this._mesh.add(rink);
             this.onFinishedLoadingModel();
             this.loadStoneHandler();
+            this._stoneHandler.generateNewStone().then((stone: Stone) => {
+                this._scene.add(stone);
+                stone.position.set(-0.4, 0, 0);
+                this.onFinishedLoadingModel();
+            });
             this.loadStone();
         });
     }
@@ -177,11 +182,10 @@ export class RenderService {
     //Must be called after the rinkinfo is initialised.
     public loadStoneHandler() {
         let stoneColor: StoneColor;
-        if (this._gameStatusService.randomFirstPlayer() === true) {
-            stoneColor = StoneColor.Red;
-        }
-        else {
-           stoneColor = StoneColor.Blue;
+        if (this._gameStatusService.randomFirstPlayer() === false) {
+            stoneColor = StoneColor.Blue;
+        } else {
+           stoneColor = StoneColor.Red;
         }
         this._stoneHandler = new StoneHandler(this._objectLoader, this._rinkInfo, stoneColor);
     }

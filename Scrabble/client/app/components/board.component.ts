@@ -1,11 +1,11 @@
 import { Component } from "@angular/core";
-import { ScrabbleBoardService } from "../services/scrabble-board.service";
-import { Square } from '../models/board/square';
+import { BoardService } from "../services/board.service";
+import { Square } from '../models/square/square';
 import { Board } from '../models/board/board';
 
 @Component({
     moduleId: module.id,
-    providers: [ScrabbleBoardService],
+    providers: [BoardService],
     selector: "scrabble-main-board-selector",
     templateUrl: "../../assets/templates/scrabble.html",
     styleUrls: ["../../assets/stylesheets/scrabble-board.css"]
@@ -13,10 +13,10 @@ import { Board } from '../models/board/board';
 
 export class ScrabbleBoardComponent {
     scrabbleGrid: Board;
-    currentRows: number[];
+    //currentRows: number[];
 
-    constructor(scrabbleBoardService: ScrabbleBoardService) {
-        this.currentRows = Array(15).fill(0);
+    constructor(scrabbleBoardService: BoardService) {
+        //this.currentRows = Array(15).fill(0);
         this.scrabbleGrid = scrabbleBoardService.board;
     }
 }

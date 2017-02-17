@@ -119,12 +119,12 @@ export class RoomHandler {
         this._rooms.forEach((room) => {
 
             console.log(room.players);
-            
+
             let currentPlayer = room.players.filter((player) => {
 
                 console.log("dd", player.socketId, "-", socketId);
 
-                return (player.socketId === socketId)
+                return (player.socketId === socketId);
             })[0];
 
             if (currentPlayer !== null && currentPlayer !== undefined) {
