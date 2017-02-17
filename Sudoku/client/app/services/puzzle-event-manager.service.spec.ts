@@ -88,18 +88,18 @@ describe('PuzzleEventManagerService', () => {
 
                 let fakeEvent = document.createEvent("KeyboardEvent");
                 eventManagerService.onKeyEventUpdateCurrentCursor(fakeEvent, "");
+
             }))
     );
 
-    // it("onKeyEventUpdateCurrentCursor, Should return false , it's not a cursor event",
-    //     inject([PuzzleEventManagerService],
-    //         fakeAsync((eventManagerService: PuzzleEventManagerService) => {
-    //             let fakeEvent = document.createEvent("KeyboardEvent");
-    //             let fakeEvent = new KeyboardEvent("Left", {});
-    //
-    //             eventManagerService.onKeyEventUpdateCurrentCursor(fakeEvent, "");
-    //         }))
-    // );
-
-
+    it("updateFocus, correctly change focus",
+        inject([PuzzleEventManagerService],
+            fakeAsync((eventManagerService: PuzzleEventManagerService) => {
+                let currentPosition = ["1","1"];
+                eventManagerService.updateFocus(currentPosition,37);
+                eventManagerService.updateFocus(currentPosition,38);
+                eventManagerService.updateFocus(currentPosition,39);
+                eventManagerService.updateFocus(currentPosition,40);
+            }))
+    );
 });

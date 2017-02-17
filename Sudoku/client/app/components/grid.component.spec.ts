@@ -1,5 +1,4 @@
-
-import { Injectable } from '@angular/core';
+import {Injectable, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 
 import {
     fakeAsync,
@@ -55,6 +54,7 @@ describe('GridComponent', () => {
     beforeEach(async () => {
         TestBed.configureTestingModule({
             declarations: [GridComponent], // declare the test component
+            schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
             imports: [FormsModule, HttpModule],
             providers: [
                 {   // Import the necessary providers

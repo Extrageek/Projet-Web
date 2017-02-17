@@ -1,61 +1,74 @@
 <div class="col-md-12">
-    <div class="col-md-7 grid-panel">
-        <div *ngIf="_isLoading" layout="row" layout-sm="column" layout-align="space-around">
-            <md-spinner></md-spinner>
-        </div>
-        <div *ngIf="!_isLoading" class="form-control" class="grid-box">
-            <div class="table-responsive">
-                <table class="table">
-                    <tbody>
-                        <tr class="grid" *ngFor="let row of _puzzle?._puzzle , let i = index" [attr.id]="'gridRowId' + i">
-                            <td *ngFor="let cell of row, let j = index" [attr.id]="'cellId' + i + '' + j">
-                                <input #attrRead class="readOnlyCell" *ngIf="!cell._hide" readonly maxlength="1" type="text" name="inputCell" id="{{i}}{{j}}"
-                                    [ngModel]="cell._value" (keydown)="onKeyDownEventHandler($event, attrRead.id)" />
-                                <input #attrWrite class="readWriteCell" *ngIf="cell._hide" maxlength="1" type="text" name="inputCell" id="{{i}}{{j}}" [(ngModel)]="cell._value"
-                                    (keydown)="onKeyDownEventHandler($event, attrWrite.id)" (keyup)="onValueChange($event, attrWrite.id)"
-                                    (keypress)="validateInputValue($event)" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+    <div class="col-md-8 col-sm-7 grid-panel">
+        <div class="container-grid full-width">
+            <div *ngIf="_isLoading" class="center-spinner" layout="row" layout-sm="column" layout-align="space-around">
+                <md-spinner></md-spinner>
+            </div>
+            <div *ngIf="!_isLoading" class="form-control" class="grid-box center-grid">
+                <div id="btn-grid" class="center">
+                    <button *ngIf="!_isLoading" type="button" class="btn btn-primary" (click)="initializeCurrentGrid()">Reset</button>
+                    <button *ngIf="!_isLoading" type="button" class="btn btn-primary" (click)="getNewPuzzle('NORMAL')">Facile</button>
+                    <button *ngIf="!_isLoading" type="button" class="btn btn-primary" (click)="getNewPuzzle('HARD')">Difficile</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tbody>
+                            <tr class="grid" *ngFor="let row of _puzzle?._puzzle , let i = index" [attr.id]="'gridRowId' + i">
+                                <td *ngFor="let cell of row, let j = index" [attr.id]="'cellId' + i + '' + j">
+                                    <input #attrRead class="readOnlyCell" *ngIf="!cell._hide" readonly maxlength="1" type="text" name="inputCell" id="{{i}}{{j}}"
+                                        [ngModel]="cell._value" (keydown)="onKeyDownEventHandler($event, attrRead.id)" />
+                                    <input #attrWrite class="readWriteCell" *ngIf="cell._hide" maxlength="1" type="text" name="inputCell" id="{{i}}{{j}}" [(ngModel)]="cell._value"
+                                        (keydown)="onKeyDownEventHandler($event, attrWrite.id)" (keyup)="onValueChange($event, attrWrite.id)"
+                                        (keypress)="validateInputValue($event)" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-        <button *ngIf="!_isLoading" type="button" class="btn btn-primary" (click)="initializeCurrentGrid()">Reset</button>
-        <button *ngIf="!_isLoading" type="button" class="btn btn-primary" (click)="getNewPuzzle('NORMAL')">Facile</button>
-        <button *ngIf="!_isLoading" type="button" class="btn btn-primary" (click)="getNewPuzzle('HARD')">Difficile</button>
     </div>
-    <div class="col-md-5">
-        <div class="col-md-12 menu-panel">
-            <h2 *ngIf="!_hiddenClock">
-                <span class="glyphicon glyphicon-time" aria-hidden="true"> </span> {{_time.hours}} : {{_time.minutes}} :
-                {{_time.seconds}}
-                <span (click)="hideClock()" class="glyphicon glyphicon-eye-close" aria-hidden="true"> </span>
-            </h2>
-            <h2 *ngIf="_hiddenClock">
-                <span class="glyphicon glyphicon-time" aria-hidden="true"> </span>
-                <span (click)="hideClock()" class="glyphicon glyphicon-eye-open" aria-hidden="true"> </span>
-            </h2>
-        </div>
-        <div class="col-md-12 menu-panel">
-            <h2><span class="glyphicon glyphicon-user" aria-hidden="true"> </span> {{_userSetting.name}}</h2>
-        </div>
-        <div class="col-md-12 menu-panel">
-            <h2 *ngIf="_userSetting.difficulty.toString() === 'NORMAL'">
-                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-                <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
-                <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span> {{_userSetting.difficulty}}
-            </h2>
-            <h2 *ngIf="_userSetting.difficulty.toString() === 'HARD'">
-                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-                <span class="glyphicon glyphicon-star" aria-hidden="true"></span> {{_userSetting.difficulty}}
-            </h2>
+    <div class="col-md-4 col-sm-5">
+        <md-card>
+            <md-card-content>
+                <h2 *ngIf="!_hiddenClock">
+                    <span class="glyphicon glyphicon-time" aria-hidden="true"> </span> {{_time.hours}} : {{_time.minutes}}
+                    : {{_time.seconds}}
+                    <span (click)="hideClock()" class="glyphicon glyphicon-eye-close" aria-hidden="true"> </span>
+                </h2>
+                <h2 *ngIf="_hiddenClock">
+                    <span class="glyphicon glyphicon-time" aria-hidden="true"> </span>
+                    <span (click)="hideClock()" class="glyphicon glyphicon-eye-open" aria-hidden="true"> </span>
+                </h2>
+            </md-card-content>
+            <md-card-content>
+                <h2><span class="glyphicon glyphicon-user" aria-hidden="true"> </span> {{_userSetting.name}}</h2>
+            </md-card-content>
+            <md-card-content>
+                <h2 *ngIf="_userSetting.difficulty === 'NORMAL'">
+                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                    <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
+                    <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span> {{_userSetting.difficulty}}
+                </h2>
+                <h2 *ngIf="_userSetting.difficulty === 'HARD'">
+                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span> {{_userSetting.difficulty}}
+                </h2>
+            </md-card-content>
+        </md-card>
+
+        <div #messageCongratulation class="col-md-12 alert alert-success alert-dismissible fade show" role="alert">
+            <button type="button" class="close" (click)="hideMessageCongratulation()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            <strong>Felicitations !</strong> Vous avez réussi cette grille de niveau {{_userSetting.difficulty}}.
         </div>
         <div #leaderboard class="col-md-12 fade">
             <div #leaderboardEasy class="col-md-6">
                 Top Scores Facile
-                <table id="lead-table-easy" class="table table-hover menu-panel">
-                    <thead>
+                <table id="lead-table-easy" class="table table-hover table-responsive">
+                    <thead class="thead-inverse">
                         <tr>
                             <th>Pseudonyme</th>
                             <th>Temps</th>

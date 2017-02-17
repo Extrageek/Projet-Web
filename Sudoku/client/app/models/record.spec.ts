@@ -1,55 +1,49 @@
-// import { Record } from './record';
-// import { Difficulty } from './user-setting';
-// import { expect } from "chai";
+import { Record } from './record';
+import { Difficulty } from './user-setting';
+import { Time } from './time';
 
-// let _record: Record;
-// let _username = "Michel";
-// let _difficulty = Difficulty.HARD;
-// let _scorePlayer = 9;
-// let _scoreComputer = 5;
-// let _date = new Date();
+import { expect } from "chai";
 
-// describe("Records should", () => {
-//     beforeEach(() => {
-//         _record = new Record(_username, _difficulty,
-//             _scorePlayer, _scoreComputer, _date);
-//     });
-//     it("construct a record object correctly", () => {
-//         expect(_record.username).to.be.equal(_username);
-//         expect(_record.difficulty).to.be.equal(_difficulty);
-//         expect(_record.scorePlayer).to.be.equal(_scorePlayer);
-//         expect(_record.scoreComputer).to.be.equal(_scoreComputer);
-//     });
-//     it("get the name correctly", () => {
-//         expect(_record.username).to.be.equal(_username);
-//     });
-//     it("set the name corectly", () => {
-//         _record.username = "Louis";
-//         _username = "Louis";
-//         expect(_record.username).to.be.equal(_username);
-//     });
-//     it("get the difficulty corectly", () => {
-//         expect(_record.difficulty).to.be.equal(_difficulty);
-//     });
-//     it("set the difficulty corectly", () => {
-//         _record.difficulty = Difficulty.NORMAL;
-//         _difficulty = Difficulty.NORMAL;
-//         expect(_record.difficulty).to.be.equal(_difficulty);
-//     });
-//     it("get the scorePlayer corectly", () => {
-//         expect(_record.scorePlayer).to.be.equal(_scorePlayer);
-//     });
-//     it("set the score of the player corectly", () => {
-//         _record.scorePlayer = 12;
-//         _scorePlayer = 12;
-//         expect(_record.scorePlayer).to.be.equal(_scorePlayer);
-//     });
-//     it("get the score of the computer corectly", () => {
-//         expect(_record.scoreComputer).to.be.equal(_scoreComputer);
-//     });
-//     it("set the score of the computer corectly", () => {
-//         _record.scoreComputer = 12;
-//         _scoreComputer = 12;
-//         expect(_record.scoreComputer).to.be.equal(_scoreComputer);
-//     });
-// });
+describe("Records tests", () => {
+    let record : Record;
+    let time : Time;
+    let difficulty : Difficulty;
+
+    before(() => {
+        time = new Time();
+        time.seconds = 10;
+
+        difficulty = Difficulty.HARD;
+    });
+
+    it("should create a record object", () => {
+        record = new Record("George",difficulty,time);
+        expect(record).to.be.an.instanceOf(Record,"is not an instance of record");
+        expect(record.difficulty).to.equal(Difficulty.HARD,"is not an instance of Difficulty");
+        expect(record.username).to.equal("George","username is not george");
+        expect(record.time.seconds).to.equal(10,"time isn't correctly initialized");
+    });
+
+    it("should set the time of a record object", () => {
+        record = new Record("Clooney",difficulty,time);
+        let time1 = new Time(); time1.seconds = 15;
+        record.time = time1;
+        
+        expect(record.time.seconds).to.not.equal(10,"did not change the time");
+        expect(record.time.seconds).to.equal(15,"did not correctly set the time")
+    });
+
+    it("should set the username of a record object", () => {
+        record = new Record("Clooney",difficulty,time);
+        record.username = "Benedict";
+        expect(record.username).to.not.equal("Clooney","did not change the username");
+        expect(record.username).to.equal("Benedict","did not correctly set the username")
+    });
+
+    it("should set the difficulty of a record object", () => {
+        record = new Record("Cucumber",difficulty,time);
+        record.difficulty = Difficulty.NORMAL;
+        expect(record.difficulty).to.not.equal(Difficulty.HARD,"did not change the difficulty");
+        expect(record.difficulty).to.equal(Difficulty.NORMAL,"did not correctly set the difficulty");
+    });
+});

@@ -6,7 +6,7 @@
  */
 
 import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
-import { MdProgressSpinnerModule } from '@angular/material';
+import { MdProgressSpinnerModule, MdCardModule } from '@angular/material';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -48,6 +48,7 @@ export class GridComponent implements OnInit {
     _easyRecords: Array<Record>;
     _hardRecords: Array<Record>;
 
+    @ViewChild("messageCongratulation") messageCongratulation: ElementRef;
     @ViewChild("leaderboard") leaderboard: ElementRef;
 
     constructor(
@@ -66,11 +67,12 @@ export class GridComponent implements OnInit {
         this._time = new Time();
         this.getNewPuzzle(this._userSetting.difficulty);
         Observable.timer(0, 1000).subscribe(() => {
-            if (!this._isLoading && !this._isFinished)
+            if (!this._isLoading && !this._isFinished) {
                 this.stopwatchService.updateClock();
-            this._time.seconds = this.stopwatchService.seconds;
-            this._time.minutes = this.stopwatchService.minutes;
-            this._time.hours = this.stopwatchService.hours;
+                this._time.seconds = this.stopwatchService.seconds;
+                this._time.minutes = this.stopwatchService.minutes;
+                this._time.hours = this.stopwatchService.hours;
+            }
         });
         this._easyRecords = new Array<Record>();
         this._hardRecords = new Array<Record>();
@@ -97,17 +99,19 @@ export class GridComponent implements OnInit {
 
     public getNewPuzzle(difficulty: Difficulty) {
         this._isLoading = true;
+        this.stopwatchService.resetTime();
+        this.leaderboard.nativeElement.classList.add("fade");
+        this.hideMessageCongratulation();
         this._easyRecords = [];
         this._hardRecords = [];
-        this.leaderboard.nativeElement.classList.add("fade");
         this.api.getNewPuzzle(difficulty)
             .subscribe((puzzle: Puzzle) => {
+                this.stopwatchService.resetTime();
                 this._isLoading = false;
                 this._isFinished = false;
                 this._puzzle = puzzle;
                 this._userSetting.difficulty = difficulty;
                 this.gridManagerService.countFilledCell(puzzle);
-                this.stopwatchService.resetTime();
             });
     }
 
@@ -166,6 +170,7 @@ export class GridComponent implements OnInit {
                     }
                     if (isInserted) {
                         this.leaderboard.nativeElement.classList.remove("fade");
+                        this.messageCongratulation.nativeElement.classList.remove("fade");
                     }
                 }).catch(error => {
                     console.log(error);
@@ -183,12 +188,13 @@ export class GridComponent implements OnInit {
             throw new Error("The initial grid cannot be null.");
         }
 
-        this.gridManagerService.initializeGrid(this._puzzle);
         this.stopwatchService.resetTime();
+        this.leaderboard.nativeElement.classList.add("fade");
+        this.hideMessageCongratulation();
+        this.gridManagerService.initializeGrid(this._puzzle);
         this._isFinished = false;
         this._easyRecords = [];
         this._hardRecords = [];
-        this.leaderboard.nativeElement.classList.add("fade");
     }
 
     // Use to check if a value is a Sudoku number
@@ -202,7 +208,11 @@ export class GridComponent implements OnInit {
         }
     }
 
-    hideClock() {
+    public hideMessageCongratulation() {
+        this.messageCongratulation.nativeElement.classList.add("fade");
+    }
+
+    public hideClock() {
         this._hiddenClock = !this._hiddenClock;
     }
 }
