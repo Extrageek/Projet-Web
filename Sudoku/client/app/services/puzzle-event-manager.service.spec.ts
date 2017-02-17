@@ -55,7 +55,7 @@ describe('PuzzleEventManagerService', () => {
         inject([PuzzleEventManagerService],
             fakeAsync((eventManagerService: PuzzleEventManagerService) => {
 
-                let fakeKeyCode = 100;
+                let fakeKeyCode = 155;
                 assert(eventManagerService.isSudokuNumber(fakeKeyCode) === false,
                     "The sudoku key must have a value of 46");
             }))

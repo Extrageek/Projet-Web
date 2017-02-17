@@ -32,11 +32,7 @@ import { StopwatchService } from "../services/stopwatch.service";
         DifficultyComponent
     ],
     providers: [
-        RestApiProxyService,
-        GridManagerService,
-        PuzzleEventManagerService,
-        UserSettingService,
-        StopwatchService
+        UserSettingService, RestApiProxyService
     ],
     bootstrap: [ AppComponent ]
 })
