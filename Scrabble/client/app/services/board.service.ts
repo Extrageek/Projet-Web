@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Board } from '../models/board/board';
-import { Square } from '../models/board/square';
+import { Square } from '../models/square/square';
 
-//@Injectable()
-export class ScrabbleBoardService {
+@Injectable()
+export class BoardService {
 
     private _board: Board;
     public get board(): Board {

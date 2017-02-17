@@ -5,5 +5,5 @@ import { Component } from "@angular/core";
   templateUrl: "../../assets/templates/app-component.html",
 })
 
-export class AppComponent {/*TODO*/}
-
+export class AppComponent {
+}

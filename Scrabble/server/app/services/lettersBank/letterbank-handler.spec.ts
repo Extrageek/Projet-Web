@@ -61,14 +61,14 @@ describe("BankLetterHandler should", () => {
     });
 
     it("getLetterByAlphabet, should return a null argument error", () => {
-        let getLetters = () => { _bankHandler.parseFromListOfStringToListOfLetter(null) };
+        let getLetters = () => { _bankHandler.parseFromListOfStringToListOfLetter(null); };
         expect(getLetters).to.throw(Error, "Null argument error: the letters cannot be null");
     });
 
     it("getLetterByAlphabet, should return a null argument error", () => {
         let fakeLetters = ['A', 'K', 'E', 'O', 'P'];
         let newLetters = _bankHandler.parseFromListOfStringToListOfLetter(fakeLetters);
-    
+
         expect(newLetters).not.to.be.null;
         expect(newLetters).not.to.be.undefined;
         expect(fakeLetters).to.not.deep.equals(newLetters);
