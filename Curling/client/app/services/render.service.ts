@@ -177,11 +177,10 @@ export class RenderService {
     //Must be called after the rinkinfo is initialised.
     public loadStoneHandler() {
         let stoneColor: StoneColor;
-        if (this._gameStatusService.randomFirstPlayer() === true) {
-            stoneColor = StoneColor.Red;
-        }
-        else {
-           stoneColor = StoneColor.Blue;
+        if (this._gameStatusService.randomFirstPlayer() === false) {
+            stoneColor = StoneColor.Blue;
+        } else {
+           stoneColor = StoneColor.Red;
         }
         this._stoneHandler = new StoneHandler(this._objectLoader, this._rinkInfo, stoneColor);
     }
