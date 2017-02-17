@@ -6,7 +6,6 @@ import { UserSettingService } from '../services/user-setting.service';
 
 @Component({
     moduleId: module.id,
-    providers: [RestApiProxyService],
     selector: 'username-component',
     templateUrl: '/assets/templates/username.component.html',
     styleUrls: ['../../assets/stylesheets/username.component.css']
