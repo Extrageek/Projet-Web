@@ -2,8 +2,8 @@ import { ObjectLoader, Group, MeshPhongMaterial, Object3D, Sphere, Vector3 } fro
 import { GameComponent } from "./gameComponent.interface";
 
 export enum StoneColor {
-    Red = 0,
-    Blue = 1,
+    Blue = 0,
+    Red = 1,
     NumberOfColors = 2
 }
 
