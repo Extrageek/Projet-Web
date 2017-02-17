@@ -1,8 +1,9 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { SocketService } from "../services/socket-service";
 import { SocketEventType } from '../commons/socket-eventType';
+import { IRoomMessage } from '../models/room/room-message';
 
 @Component({
     moduleId: module.id,
@@ -11,23 +12,31 @@ import { SocketEventType } from '../commons/socket-eventType';
     templateUrl: "../../assets/templates/game-room.html",
 })
 
-export class GameComponent implements OnInit {
+export class GameComponent implements OnInit, OnDestroy {
+    connection: any; // TODO: Hell no!!! Remove this please
+
     constructor(private router: Router, private socketService: SocketService) {
         // Constructor
     }
 
     ngOnInit() {
 
-        SocketService.getInstance().removeAllListeners();
-        SocketService.getInstance().suscribeToEvent(SocketEventType.connectError, this.onConnectionError);
-        SocketService.getInstance().suscribeToEvent(SocketEventType.joinRoom, this.onJoinedRoom);
-        SocketService.getInstance().suscribeToEvent(SocketEventType.leaveRoom, this.onLeaveRoom);
-        SocketService.getInstance().suscribeToEvent(SocketEventType.roomReady, this.onRoomReady);
+        // TODO: unsubscribe all the event in the ngOnDestroy
+        this.socketService.subscribeToChannelEvent(SocketEventType.connectError)
+            .subscribe(this.onConnectionError);
 
-        // TODO: Should be removed after a clean debug
-        let fakeLetters = ['A', 'K', 'E', 'O', 'P'];
+        this.socketService.subscribeToChannelEvent(SocketEventType.joinRoom)
+            .subscribe(this.onJoinedRoom);
 
-        SocketService.getInstance().changeLettersRequest(fakeLetters);
+        this.socketService.subscribeToChannelEvent(SocketEventType.roomReady)
+            .subscribe(this.onRoomReady);
+
+        this.socketService.subscribeToChannelEvent(SocketEventType.exchangedLetter)
+            .subscribe(this.onChangedLettersReceived);
+    }
+
+    ngOnDestroy() {
+        // TODO: unsubscribe all the event in the ngOnDestroy
     }
 
     // A callback function when the server is not reachable.
@@ -36,66 +45,40 @@ export class GameComponent implements OnInit {
     }
 
     // A callback when the player join a room
-    public onJoinedRoom(roomMessage: {
-        username: string,
-        roomId: string,
-        numberOfMissingPlayers: number,
-        roomIsReady: boolean,
-        message: string
-    }): void {
+    public onJoinedRoom(roomMessage: IRoomMessage): void {
 
         // For debug
-        console.log(roomMessage);
-        console.log(roomMessage.message, roomMessage.roomId,
-            " RoomReadyState", roomMessage.roomIsReady,
-            " missing players", roomMessage.numberOfMissingPlayers);
+        console.log("In Room", roomMessage);
     }
 
     // A callback when the player leave a room
-    public onLeaveRoom(roomMessage: {
-        username: string,
-        roomId: string,
-        numberOfMissingPlayers: number,
-        roomIsReady: boolean,
-        message: string
-    }): void {
+    public onLeaveRoom(roomMessage: IRoomMessage): void {
 
         // For debug
-        console.log("On leaving room", roomMessage);
-        console.log(roomMessage.message, roomMessage.roomId,
-            " RoomReadyState", roomMessage.roomIsReady,
-            " missing players", roomMessage.numberOfMissingPlayers);
+        console.log("In Room", roomMessage);
     }
 
     // A callback function when the room of the user is full and the game is ready to be started
-    private onRoomReady(roomMessage: {
-        username: string,
-        roomId: string,
-        numberOfMissingPlayers: number,
-        roomIsReady: boolean,
-        message: string
-    }): void {
+    private onRoomReady(roomMessage: IRoomMessage): void {
 
         // For debug
-        console.log(roomMessage);
-        // console.log(roomMessage.message, roomMessage.roomId,
-        //     " RoomReadyState", roomMessage.roomIsReady,
-        //     " missing players", roomMessage.numberOfMissingPlayers);
-
-        //this.router.navigate(["/game-room", { id: roomMessage.username }]);
-        //console.log("router must be called",this.router);
+        console.log("In Room", roomMessage);
     }
 
-    private changeLettersRequest(lettersToBeChanged: Array<string>) {
+    public changeLettersRequest(/*lettersToBeChanged: Array<string>*/) {
 
         // TODO: Should be removed after a clean debug
-        let fakeLetters = ['A', 'K', 'E', 'O', 'P'];
+        let fakeLetters = ['A', 'E', 'M', 'N', 'U'];
+        console.log("Letter to change:", fakeLetters);
+        this.socketService.emitMessage(SocketEventType.exchangeLettersRequest, fakeLetters);
+    }
 
-        SocketService.getInstance().changeLettersRequest(fakeLetters);
+    private onChangedLettersReceived(changedLetters: Object) {
+        console.log("In Room", "Hey! I received new letters from the server: ", changedLetters);
     }
 
     // A callback function when in case of invalid request.
     private onInvalidRequest() {
-        console.log("The request sent to the server is invalid");
+        console.log("In Room", "The request sent to the server is invalid");
     }
 }

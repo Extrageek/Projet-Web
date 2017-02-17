@@ -222,7 +222,7 @@ describe("Room Handler", () => {
     });
 
     it("getPlayerBySocketId, should return a player", () => {
-        
+
         fakeRoomHandler.addPlayer(player1);
         fakeRoomHandler.addPlayer(player2);
 

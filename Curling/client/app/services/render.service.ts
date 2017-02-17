@@ -182,11 +182,10 @@ export class RenderService {
     //Must be called after the rinkinfo is initialised.
     public loadStoneHandler() {
         let stoneColor: StoneColor;
-        if (this._gameStatusService.randomFirstPlayer() === true) {
-            stoneColor = StoneColor.Red;
-        }
-        else {
-           stoneColor = StoneColor.Blue;
+        if (this._gameStatusService.randomFirstPlayer() === false) {
+            stoneColor = StoneColor.Blue;
+        } else {
+           stoneColor = StoneColor.Red;
         }
         this._stoneHandler = new StoneHandler(this._objectLoader, this._rinkInfo, stoneColor);
     }
@@ -211,6 +210,7 @@ export class RenderService {
             if (document.hasFocus()) {
                 this._clock.start();
             }
+            this._gameStatusService.gameStatus.usedStone(); // Remove a stone from display
             this._stoneHandler.performShot(2.5, new Vector3(0, 0, 1), () => { console.log("Launch finished"); });
             this.animate();
         }

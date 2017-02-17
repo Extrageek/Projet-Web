@@ -26,7 +26,7 @@ describe("BankLetterHandler should", () => {
     });
 
     it("exchange letters correctly in case there are sufficiant letters in bank", () => {
-        let newEasel = new Array<Letter>();
+        let newEasel = new Array<string>();
         let lettersToChange = new Array<Letter>();
         let previousQuantityOfLettersInBank = _bankHandler.bank.numberOfLettersInBank;
         lettersToChange.push(new Letter(Alphabet.blank, AlphabetPoint.blank, AlphabetQuantity.blank));
@@ -35,20 +35,20 @@ describe("BankLetterHandler should", () => {
         lettersToChange.push(new Letter(Alphabet.letterC, AlphabetPoint.letterC, AlphabetQuantity.letterC));
         lettersToChange.push(new Letter(Alphabet.letterD, AlphabetPoint.letterD, AlphabetQuantity.letterD));
         lettersToChange.push(new Letter(Alphabet.letterE, AlphabetPoint.letterE, AlphabetQuantity.letterE));
-        newEasel = _bankHandler.exchangeLetters(lettersToChange);
+        newEasel = _bankHandler.exchangeLetters(_bankHandler.parseFromListOfLetterToListOfString(lettersToChange));
         expect(newEasel.length).to.be.equal(lettersToChange.length);
         expect(previousQuantityOfLettersInBank).to.be.equal(_bankHandler.bank.numberOfLettersInBank);
     });
 
     it("prevent player from exchanging letters in case there are not sufficiant letters in bank", () => {
-        let newEasel = new Array<Letter>();
+        let newEasel = new Array<string>();
         let lettersToChange = new Array<Letter>();
         _bankHandler.bank.numberOfLettersInBank = 1;
         lettersToChange.push(new Letter(Alphabet.blank, AlphabetPoint.blank, AlphabetQuantity.blank));
         lettersToChange.push(new Letter(Alphabet.letterA, AlphabetPoint.letterA, AlphabetQuantity.letterA));
         lettersToChange.push(new Letter(Alphabet.letterB, AlphabetPoint.letterB, AlphabetQuantity.letterB));
         lettersToChange.push(new Letter(Alphabet.letterC, AlphabetPoint.letterC, AlphabetQuantity.letterC));
-        newEasel = _bankHandler.exchangeLetters(lettersToChange);
+        newEasel = _bankHandler.exchangeLetters(_bankHandler.parseFromListOfLetterToListOfString(lettersToChange));
         expect(newEasel.length).to.be.equal(0);
         expect(_bankHandler.bank.numberOfLettersInBank).to.be.equal(1);
     });
@@ -61,14 +61,14 @@ describe("BankLetterHandler should", () => {
     });
 
     it("getLetterByAlphabet, should return a null argument error", () => {
-        let getLetters = () => { _bankHandler.getLetterByAlphabet(null) };
+        let getLetters = () => { _bankHandler.parseFromListOfStringToListOfLetter(null); };
         expect(getLetters).to.throw(Error, "Null argument error: the letters cannot be null");
     });
 
     it("getLetterByAlphabet, should return a null argument error", () => {
         let fakeLetters = ['A', 'K', 'E', 'O', 'P'];
-        let newLetters = _bankHandler.getLetterByAlphabet(fakeLetters);
-    
+        let newLetters = _bankHandler.parseFromListOfStringToListOfLetter(fakeLetters);
+
         expect(newLetters).not.to.be.null;
         expect(newLetters).not.to.be.undefined;
         expect(fakeLetters).to.not.deep.equals(newLetters);

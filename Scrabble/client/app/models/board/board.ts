@@ -1,8 +1,8 @@
 import { BoardRows } from './board-rows';
 import { BoardColumn } from './board-column';
-import { Square } from './square';
-import { SquarePosition } from './square-position';
-import { SquareType } from './square-type';
+import { Square } from '../square/square';
+import { SquarePosition } from '../square/square-position';
+import { SquareType } from '../square/square-type';
 
 const BOARD_SIZE = 15;
 
@@ -11,8 +11,12 @@ export class Board {
     public get board(): Array<Array<Square>> {
         return this._board;
     }
+    public set board(_board: Array<Array<Square>>) {
+        this._board = _board;
+    }
 
     constructor() {
+        this._board = new Array<Array<Square>>();
         this.generateBoard();
         this.assignTypesToSquares();
     }
@@ -20,10 +24,11 @@ export class Board {
     private generateBoard(): void {
         let row: number;
         let colomn: number;
+        let innerRow: Array<Square>;
 
-        for (row = BoardRows.A; row < BOARD_SIZE; row++) {
-            let innerRow: Array<Square>;
-            for (colomn = BoardColumn.FIRST_COLUMN; colomn < BOARD_SIZE; colomn++) {
+        for (row = BoardRows.A; row <= BOARD_SIZE; row++) {
+            innerRow = new Array<Square>();
+            for (colomn = BoardColumn.FIRST_COLUMN; colomn <= BOARD_SIZE; colomn++) {
                 innerRow.push(new Square(new SquarePosition(row, colomn), SquareType.normal));
             }
             this.board.push(innerRow);
@@ -47,7 +52,7 @@ export class Board {
         this.board[0][7].type = SquareType.tripleWordCount;
         this.board[0][14].type = SquareType.tripleWordCount;
         this.board[7][0].type = SquareType.tripleWordCount;
-        this.board[7][15].type = SquareType.tripleWordCount;
+        this.board[7][14].type = SquareType.tripleWordCount;
         this.board[14][0].type = SquareType.tripleWordCount;
         this.board[14][7].type = SquareType.tripleWordCount;
         this.board[14][14].type = SquareType.tripleWordCount;
