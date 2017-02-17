@@ -1,7 +1,8 @@
-import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild } from "@angular/core";
+import { Component, OnInit, OnDestroy, AfterViewChecked, ElementRef, ViewChild } from "@angular/core";
 import { Route, ActivatedRoute } from '@angular/router';
 import { SocketService } from "../services/socket-service";
 import { SocketEventType } from '../commons/socket-eventType';
+import { IRoomMessage } from '../models/room/room-message';
 
 @Component({
     moduleId: module.id,
@@ -11,16 +12,17 @@ import { SocketEventType } from '../commons/socket-eventType';
     providers: [SocketService]
 })
 
-export class ChatroomComponent implements AfterViewChecked, OnInit {
+export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
     messageArray: string[];
     username: string;
+
+    connection: any; // TODO: Hell no!!!, Remove this please
 
     @ViewChild("scroll") private myScrollContainer: ElementRef;
 
     constructor(private route: ActivatedRoute, private socketService: SocketService) {
-
+        this.messageArray = new Array<string>();
     }
-
 
     ngOnInit(): void {
         this.messageArray = new Array<string>();
@@ -29,31 +31,35 @@ export class ChatroomComponent implements AfterViewChecked, OnInit {
             this.username = params['id'];
         });
 
-        SocketService.getInstance().removeAllListeners();
-        SocketService.getInstance().suscribeToEvent(SocketEventType.connectError, this.onConnectionError);
-        SocketService.getInstance().suscribeToEvent(SocketEventType.joinRoom, this.onJoinedRoom);
-        SocketService.getInstance().suscribeToEvent(SocketEventType.leaveRoom, this.onLeaveRoom);
-        SocketService.getInstance().suscribeToEvent(SocketEventType.roomReady, this.onRoomReady);
-        SocketService.getInstance().suscribeToEvent(SocketEventType.message, this.onReceivedMessage);
+        this.onJoinedRoom();
+        this.onLeaveRoom();
+        this.onReceivedMessage();
+        this.onChangedLettersReceived();
+    }
+
+    ngOnDestroy() {
+        // TODO: unsubscribe all the event in the ngOnDestroy
     }
 
     // A callback fonction for the chat message submit button
     submitMessage(message: HTMLInputElement) {
         if (message.value !== "") {
-            SocketService.getInstance().sendMessage(this.username, message.value);
-            //this.messageArray.push(message.value);
+            this.socketService.emitMessage(
+                SocketEventType.message,
+                { username: this.username, message: message.value });
         }
         message.value = "";
     }
 
     // A callback fonction when the player receive a message
-    onReceivedMessage(roomMessage: { username: string, message: string }) {
-        console.log(roomMessage.username, " send a message: ", roomMessage.message);
+    onReceivedMessage() {
 
-        // TODO: Find a good way to set the component property
-        // MessageArray inside this event callback
+        this.socketService.subscribeToChannelEvent(SocketEventType.message)
+            .subscribe((response: any) => {
+                this.messageArray.push(response.message);
 
-        // this.messageArray.push(roomMessage.message);
+                console.log("Chat room: ", response.message);
+            });
     }
 
     scrollToBottom() {
@@ -68,63 +74,52 @@ export class ChatroomComponent implements AfterViewChecked, OnInit {
         this.scrollToBottom();
     }
 
-
     // A callback function when the server is not reachable.
     public onConnectionError() {
-        console.log("Connection Error: The server is not reachable");
+        console.log("Chat room: Connection Error: The server is not reachable");
     }
 
     // A callback when the player join a room
-    public onJoinedRoom(roomMessage: {
-        username: string,
-        roomId: string,
-        numberOfMissingPlayers: number,
-        roomIsReady: boolean,
-        message: string
-    }): void {
+    public onJoinedRoom(): void {
 
-        // For debug
-        console.log(roomMessage);
-        console.log(roomMessage.message, roomMessage.roomId,
-            " RoomReadyState", roomMessage.roomIsReady,
-            " missing players", roomMessage.numberOfMissingPlayers);
+        this.socketService.subscribeToChannelEvent(SocketEventType.joinRoom)
+            .subscribe((response: any) => {
+                this.messageArray.push(response._message);
+
+                console.log("Chat room:Joined ", response._message);
+            });
     }
 
     // A callback when the player leave a room
-    public onLeaveRoom(roomMessage: {
-        username: string,
-        roomId: string,
-        numberOfMissingPlayers: number,
-        roomIsReady: boolean,
-        message: string
-    }): void {
+    public onLeaveRoom(): void {
 
-        // For debug
-        console.log("On leaving room", roomMessage);
-        console.log(roomMessage.message, roomMessage.roomId,
-            " RoomReadyState", roomMessage.roomIsReady,
-            " missing players", roomMessage.numberOfMissingPlayers);
+        this.socketService.subscribeToChannelEvent(SocketEventType.leaveRoom)
+            .subscribe((response: any) => {
+                this.messageArray.push(response._message);
 
-        //this.messageArray.push(roomMessage.message);
+                console.log("Chat room: Leave ", response._message);
+            });
     }
 
     // A callback function when the room of the user is full and the game is ready to be started
-    public onRoomReady(roomMessage: {
-        username: string,
-        roomId: string,
-        numberOfMissingPlayers: number,
-        roomIsReady: boolean,
-        message: string
-    }): void {
+    public onRoomReady(roomMessage: IRoomMessage): void {
 
         // For debug
-        console.log(roomMessage);
-        // console.log(roomMessage.message, roomMessage.roomId,
-        //     " RoomReadyState", roomMessage.roomIsReady,
-        //     " missing players", roomMessage.numberOfMissingPlayers);
-
+        console.log("Chat room: Ready", roomMessage);
         //this.router.navigate(["/game-room", { id: roomMessage.username }]);
         //console.log("router must be called",this.router);
+    }
+
+    private onChangedLettersReceived() {
+
+        this.socketService.subscribeToChannelEvent(SocketEventType.exchangedLetter)
+            .subscribe((response: any) => {
+
+                // this.messageArray.push(response.message);
+
+                console.log("Chat Room:", "Hey! I received new letters from the server: ", response);
+            });
+
     }
 
     // A callback function when in case of invalid request.

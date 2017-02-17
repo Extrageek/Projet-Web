@@ -6,10 +6,11 @@ import { Room } from '../../models/rooms/room';
 import { Player } from "../../models/players/Player";
 import { Letter } from '../../models/lettersBank/letter';
 import { SocketEventType } from '../../commons/socket-eventType';
+import { IRoomMessage } from '../../models/rooms/room-message';
 
 export class SocketConnectionHandler {
 
-    private _roomHandler: RoomHandler;
+    _roomHandler: RoomHandler; // TODO: Find a way to make this private please
     private _socket: SocketIO.Server;
 
     constructor(server: http.Server) {
@@ -51,19 +52,24 @@ export class SocketConnectionHandler {
                 socket.emit(SocketEventType.invalidRequest);
             }
             else {
+
                 // Check if the username is already taken or not
                 if (this._roomHandler.getPlayerByUsername(connectionInfos.username) === null) {
 
                     // Create a new player and return his new room.
                     let player = new Player(connectionInfos.username, connectionInfos.gameType, socket.id);
-                    let playerRoom = this._roomHandler.addPlayer(player);
+
+                    console.log(player);
+                    let room = this._roomHandler.addPlayer(player);
 
                     // Join the room
-                    socket.join(playerRoom.roomId);
+                    socket.join(room.roomId);
 
-                    this.sendWelcomeMessageOnPlayerJoinedRoom(player.username, playerRoom);
+                    this.sendWelcomeMessageOnPlayerJoinedRoom(player.username, room);
+
                 }
                 else {
+                    console.log("Already exists");
                     // Emit only to the sender
                     socket.emit(SocketEventType.usernameAlreadyExist);
                 }
@@ -86,8 +92,7 @@ export class SocketConnectionHandler {
                 // TODO: Maybe emit an error to the sender
                 throw new Error("Error, we should not be here, never, ever");
             }
-
-            this._socket.in(currentRoom.roomId).emit(SocketEventType.message, chatMessage);
+            this._socket.to(currentRoom.roomId).emit(SocketEventType.message, chatMessage);
         });
     }
 
@@ -99,27 +104,29 @@ export class SocketConnectionHandler {
         }
 
         if (room === null) {
-            throw new Error("The romm cannot be null.");
+            throw new Error("The room cannot be null.");
         }
 
         // Create a response for the room members
-        let roomResponseMessage = {
-            'username': username,
-            'roomId': room.roomId,
-            'numberOfMissingPlayers': room.numberOfMissingPlayers(),
-            'roomIsReady': false,
-            'message': `${username}` + ` join the room`
-        }
+        let roomMessage: IRoomMessage = {
+            _username: username,
+            _roomId: room.roomId,
+            _numberOfMissingPlayers: room.numberOfMissingPlayers(),
+            _roomIsReady: false,
+            _message: `${username}` + ` joined the room`
+        };
+
+        console.log("send a request", username);
 
         if (!room.isFull()) {
             // Emit to all the player in the room.
-            this._socket.to(room.roomId).emit(SocketEventType.joinRoom, roomResponseMessage);
+            this._socket.to(room.roomId).emit(SocketEventType.joinRoom, roomMessage);
 
         } else {
-            roomResponseMessage.roomIsReady = true;
+            roomMessage._roomIsReady = true;
 
             // Emit a message to all the player in the room.
-            this._socket.to(room.roomId).emit(SocketEventType.roomReady, roomResponseMessage);
+            this._socket.to(room.roomId).emit(SocketEventType.roomReady, roomMessage);
         }
     }
 
@@ -133,41 +140,43 @@ export class SocketConnectionHandler {
         socket.on(SocketEventType.disconnect, () => {
 
             let leavingPlayer = this._roomHandler.getPlayerBySocketId(socket.id);
-            let playerRoom = this._roomHandler.getRoomByUsername(leavingPlayer.username);
 
-            if (leavingPlayer !== null
-                && leavingPlayer !== undefined
-                && playerRoom !== null
-                && playerRoom !== undefined) {
+            if (leavingPlayer !== null) {
 
-                playerRoom.removePlayer(leavingPlayer);
+                console.log("send a request", leavingPlayer.username);
 
-                if (playerRoom.players.length === 0) {
-                    this._roomHandler.removeRoom(playerRoom);
+                let playerRoom = this._roomHandler.getRoomByUsername(leavingPlayer.username);
 
-                    // TODO: This should be handle in a next User Story from the Backlog
-                    // Keep this for now
+                if (leavingPlayer !== null
+                    && leavingPlayer !== undefined
+                    && playerRoom !== null
+                    && playerRoom !== undefined) {
 
-                } else {
+                    playerRoom.removePlayer(leavingPlayer);
 
-                    // TODO: This should be handle in a next User Story from the Backlog
-                    // Keep this for now
+                    if (playerRoom.players.length === 0) {
+                        this._roomHandler.removeRoom(playerRoom);
+                        // TODO: Should be handle in a next User Story
+                        // Maybe in a logger
 
-                    // Create a response for the room members
-                    let roomResponseMessage = {
-                        'username': leavingPlayer.username,
-                        'roomId': playerRoom.roomId,
-                        'numberOfMissingPlayers': playerRoom.numberOfMissingPlayers(),
-                        'roomIsReady': false,
-                        'message': `${leavingPlayer.username}` + ` leave the room`
+                    } else {
+
+                        // Create a response for the room members
+                        let roomMessage: IRoomMessage = {
+                            _username: leavingPlayer.username,
+                            _roomId: playerRoom.roomId,
+                            _numberOfMissingPlayers: playerRoom.numberOfMissingPlayers(),
+                            _roomIsReady: false,
+                            _message: `${leavingPlayer.username}` + ` left the room`
+                        };
+                        console.log("Room not empty", playerRoom);
+
+                        // Emit a message for the other players in the room.
+                        this._socket.to(playerRoom.roomId).emit(SocketEventType.leaveRoom, roomMessage);
                     }
 
-                    console.log("Room not empty", playerRoom);
-                    // Emit a message for the other players in the room.
-                    this._socket.to(playerRoom.roomId).emit(SocketEventType.leaveRoom, roomResponseMessage);
+                    console.log("player disconnected");
                 }
-
-                console.log("player disconnected");
             }
         });
     }
@@ -175,15 +184,11 @@ export class SocketConnectionHandler {
     // Use to exchange the letters of a player
     private onExchangeLetters(socket: SocketIO.Socket) {
 
-        //console.log("A request to change letters");
-
         if (socket === null) {
             throw new Error("The socket value cannot be null.");
         }
 
         socket.on(SocketEventType.exchangeLettersRequest, (letterToBeChanged: Array<string>) => {
-
-            //console.log("Letters to be changed:", letterToBeChanged);
 
             if (letterToBeChanged === null) {
                 throw new Error("The letters to be changed cannot be null");
@@ -192,8 +197,8 @@ export class SocketConnectionHandler {
             let changedLetters = this._roomHandler.exchangeLetterOfCurrentPlayer(socket.id, letterToBeChanged);
             let playerRoom = this._roomHandler.getRoomBySocketId(socket.id);
 
-
-            //console.log("Exchange letter request:", changedLetters);
+            console.log("Letters to be echanged", socket.id, "-", letterToBeChanged);
+            console.log(playerRoom, " - ", changedLetters);
 
             if (playerRoom !== null
                 && changedLetters !== null
@@ -201,11 +206,12 @@ export class SocketConnectionHandler {
 
                 // Emit a message with the new letters to the sender
                 socket.emit(SocketEventType.exchangedLetter, changedLetters);
+
+                console.log("exchanged letters: ", changedLetters);
+
             } else {
                 throw new Error("An error occured when trying to exchange the letters");
             }
-
         });
     }
-
 }
