@@ -124,10 +124,7 @@ export class Room {
     }
 
     // Use to exchange letters from the a player easel
-    public exchangeThePlayerLetters(letterToBeExchange: Array<string>): Array<Letter> {
-
-        // TODO: change to match the convention (Enum or string )after a meeting with RAMI
-        let letters = this._letterBankHandler.getLetterByAlphabet(letterToBeExchange);
-        return this._letterBankHandler.exchangeLetters(letters);
+    public exchangeThePlayerLetters(letterToBeExchange: Array<string>): Array<string> {
+        return this._letterBankHandler.exchangeLetters(letterToBeExchange);
     }
 }

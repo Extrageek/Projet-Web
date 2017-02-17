@@ -20,9 +20,9 @@ export class RestApiProxyService {
             .post(this._urlApi + "game-over", JSON.stringify({
                 username: userSetting.name,
                 difficulty: userSetting.difficulty,
-                scorePlayer: gameStatus._scorePlayer,
-                scoreComputer: gameStatus._scoreComputer,
-                set: gameStatus._currentSet,
+                scorePlayer: gameStatus.scorePlayer,
+                scoreComputer: gameStatus.scoreComputer,
+                set: gameStatus.currentSet,
                 date: new Date()
             }), { headers: this._headers })
             .toPromise()

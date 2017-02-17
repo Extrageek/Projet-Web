@@ -1,8 +1,9 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { SocketService } from "../services/socket-service";
 import { SocketEventType } from '../commons/socket-eventType';
+import { IRoomMessage } from '../models/room/room-message';
 
 @Component({
     moduleId: module.id,
@@ -10,20 +11,33 @@ import { SocketEventType } from '../commons/socket-eventType';
     templateUrl: "../../assets/templates/game-initiation.html"
 })
 
-export class GameInitiationComponent implements OnInit {
+export class GameInitiationComponent implements OnInit, OnDestroy {
 
-    private username = "";
+    private _username = "";
+    connection: any; // TODO: Remove or handle this ...
 
-    constructor(private router: Router) {
+    constructor(private router: Router, private socketService: SocketService) {
         // Default constructor
     }
 
     ngOnInit() {
-        SocketService.getInstance().removeAllListeners();
-        SocketService.getInstance().suscribeToEvent(SocketEventType.connectError, this.onConnectionError);
-        SocketService.getInstance().suscribeToEvent(SocketEventType.connect, this.onConnected);
-        SocketService.getInstance().suscribeToEvent(SocketEventType.joinRoom, this.onJoinedRoom);
-        SocketService.getInstance().suscribeToEvent(SocketEventType.usernameAlreadyExist, this.onUsernameAlreadyExists);
+
+        // TODO: unsubscribe all the event in the ngOnDestroy
+        this.connection = this.socketService.subscribeToChannelEvent(SocketEventType.connectError)
+            .subscribe(this.onConnectionError);
+
+        this.socketService.subscribeToChannelEvent(SocketEventType.joinRoom)
+            .subscribe(this.onJoinedRoom);
+
+        this.socketService.subscribeToChannelEvent(SocketEventType.roomReady)
+            .subscribe(this.onRoomReady);
+
+        this.socketService.subscribeToChannelEvent(SocketEventType.usernameAlreadyExist)
+            .subscribe(this.onUsernameAlreadyExists);
+    }
+
+    ngOnDestroy() {
+        // TODO: unsubscribe all the event in the ngOnDestroy
     }
 
     // A callback function when the username is not valid.
@@ -52,43 +66,26 @@ export class GameInitiationComponent implements OnInit {
     }
 
     // A callback when the player join a room
-    public onJoinedRoom(roomMessage: {
-        username: string,
-        roomId: string,
-        numberOfMissingPlayers: number,
-        roomIsReady: boolean,
-        message: string
-    }): void {
+    public onJoinedRoom(roomMessage: IRoomMessage): void {
 
         // For debug
         console.log(roomMessage);
-        // console.log(roomMessage.message, roomMessage.roomId,
-        //     " RoomReadyState", roomMessage.roomIsReady,
-        //     " missing players", roomMessage.numberOfMissingPlayers);
     }
 
     // A callback function when the room of the user is full and the game is ready to be started
-    public onRoomReady(roomMessage: {
-        username: string,
-        roomId: string,
-        numberOfMissingPlayers: number,
-        roomIsReady: boolean,
-        message: string
-    }): void {
+    private onRoomReady(roomMessage: IRoomMessage): void {
 
         // For debug
         console.log(roomMessage);
-        // console.log(roomMessage.message, roomMessage.roomId,
-        //     " RoomReadyState", roomMessage.roomIsReady,
-        //     " missing players", roomMessage.numberOfMissingPlayers);
-
-        //this.router.navigate(["/game-room", { id: roomMessage.username }]);
-        //console.log("router must be called",this.router);
     }
 
     // A callback function when the user ask for a new game.
     public sendNewGameRequest(username: string, numberOfPlayers: string) {
-        SocketService.getInstance().newGameRequest(username, numberOfPlayers);
-        this.router.navigate(["/game-room", username]);
+        this._username = username;
+        this.socketService.emitMessage(
+            SocketEventType.newGameRequest,
+            { 'username': username, 'gameType': Number(numberOfPlayers) });
+
+        this.router.navigate(["/game-room", this._username]);
     }
 }

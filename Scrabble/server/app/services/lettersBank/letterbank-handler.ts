@@ -25,13 +25,14 @@ export class LetterBankHandler {
         return newEasel;
     }
 
-    public exchangeLetters(lettersToBeChanged: Array<Letter>): Array<Letter> {
+    public exchangeLetters(lettersToBeChanged: Array<string>): Array<string> {
         let newLetters = new Array<Letter>();
         if (lettersToBeChanged.length < this.bank.numberOfLettersInBank) {
-            this.putLetterBackInBank(lettersToBeChanged);
+            this.putLetterBackInBank(this.parseFromListOfStringToListOfLetter(lettersToBeChanged));
             newLetters = this.getLetterFromBank(lettersToBeChanged.length);
         }
-        return newLetters;
+        
+        return this.parseFromListOfLetterToListOfString(newLetters);
     }
 
     public refillEasel(numberOfLetters: number): Array<Letter> {
@@ -70,7 +71,7 @@ export class LetterBankHandler {
         return (randomNumber % offset) + MIN_LETTER_POSITION;
     }
 
-    public getLetterByAlphabet(alphabets: Array<string>): Array<Letter> {
+    public parseFromListOfStringToListOfLetter(alphabets: Array<string>): Array<Letter> {
 
         if (alphabets === null) {
             throw new Error("Null argument error: the letters cannot be null");
@@ -83,5 +84,18 @@ export class LetterBankHandler {
         }))
 
         return letters;
+    }
+
+    public parseFromListOfLetterToListOfString(letters: Array<Letter>) {
+
+        if (letters === null) {
+            throw new Error("Null argument error, the parameter cannot be null");
+        }
+
+        let newList = new Array<string>();
+        letters.forEach((letter) => {
+            newList.push(letter.alphabetLetter);
+        })
+        return newList;
     }
 }
