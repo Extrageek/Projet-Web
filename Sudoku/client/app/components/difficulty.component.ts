@@ -10,7 +10,8 @@ import { RestApiProxyService } from '../services/rest-api-proxy.service';
     moduleId: module.id,
     selector: 'difficulty-component',
     templateUrl: '/assets/templates/difficulty.component.html',
-    styleUrls: ['../../assets/stylesheets/username.component.css']
+    styleUrls: ['../../assets/stylesheets/username.component.css'],
+    providers: [RestApiProxyService]
 })
 export class DifficultyComponent implements OnInit {
     _username: string;
@@ -29,10 +30,10 @@ export class DifficultyComponent implements OnInit {
         let str: string;
         await this.api.removeUsername(this._username)
             .then(result => {
-                if (result){
+                if (result) {
                     str = "done";
                 }
-                else{
+                else {
                     str = "not done";
                 }
             })
