@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { GameStatus } from '../models/game-status';
+import { GameStatus, CurrentPlayer } from '../models/game-status';
 
 @Injectable()
 export class GameStatusService {
@@ -20,10 +20,12 @@ export class GameStatusService {
 
     public randomFirstPlayer(): boolean {
         let randomNumber = Math.round(Math.random() * 1000) % 2;
-        if (randomNumber === 0){
+        if (randomNumber === 0) {
+            this._gameStatus.currentPlayer = CurrentPlayer.RED;
             return true;
         }
         else{
+            this._gameStatus.currentPlayer = CurrentPlayer.BLUE;
             return false;
         }
     }

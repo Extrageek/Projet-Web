@@ -3,8 +3,8 @@ import { GameComponent } from "./gameComponent.interface";
 
 export enum StoneColor {
     Red = 0,
-    Blue,
-    NumberOfColors
+    Blue = 1,
+    NumberOfColors = 2
 }
 
 export class Stone extends Group implements GameComponent {

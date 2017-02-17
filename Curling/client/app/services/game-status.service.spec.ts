@@ -10,22 +10,22 @@ describe("GameStatusService should", () => {
     });
 
     it("initialize the game stauts service correctly", () => {
-        expect(_gameStatusService.gameStatus._currentSet).to.be.equal(1);
-        expect(_gameStatusService.gameStatus._scorePlayer).to.be.equal(0);
-        expect(_gameStatusService.gameStatus._scoreComputer).to.be.equal(0);
-        expect(_gameStatusService.gameStatus._currentStonesPlayer).to.be.equal(8);
-        expect(_gameStatusService.gameStatus._currentStonesComputer).to.be.equal(8);
-        expect(_gameStatusService.gameStatus._isLaunched).to.be.equal(false);
+        expect(_gameStatusService.gameStatus.currentSet).to.be.equal(1);
+        expect(_gameStatusService.gameStatus.scorePlayer).to.be.equal(0);
+        expect(_gameStatusService.gameStatus.scoreComputer).to.be.equal(0);
+        expect(_gameStatusService.gameStatus.currentStonesPlayer).to.be.equal(8);
+        expect(_gameStatusService.gameStatus.currentStonesComputer).to.be.equal(8);
+        expect(_gameStatusService.gameStatus.isLaunched).to.be.equal(false);
     });
 
     it("set game status correctly", () => {
         let _gameStatus = new GameStatus();
-        _gameStatus._currentSet = 2;
-        _gameStatus._currentStonesComputer = 4;
-        _gameStatus._currentStonesPlayer = 4;
-        _gameStatus._scoreComputer = 3;
-        _gameStatus._scorePlayer = 5;
-        _gameStatus._isLaunched = true;
+        _gameStatus.currentSet = 2;
+        _gameStatus.currentStonesComputer = 4;
+        _gameStatus.currentStonesPlayer = 4;
+        _gameStatus.scoreComputer = 3;
+        _gameStatus.scorePlayer = 5;
+        _gameStatus.isLaunched = true;
         _gameStatusService.gameStatus = _gameStatus;
         expect(_gameStatusService.gameStatus).to.be.equal(_gameStatus);
     });

@@ -206,6 +206,7 @@ export class RenderService {
             if (document.hasFocus()) {
                 this._clock.start();
             }
+            this._gameStatusService.gameStatus.usedStone(); // Remove a stone from display
             this._stoneHandler.performShot(2.5, new Vector3(0, 0, 1), () => { console.log("Launch finished"); });
             this.animate();
         }
