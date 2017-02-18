@@ -1,7 +1,20 @@
 <div class="mainBoard">
-    <div style="background-color: #916a32" *ngFor="let currentRow of currentRows; let myIndex =index">
+    <div class="table-responsive">
+        <table class="table">
+            <tbody>
+                <tr class="grid" *ngFor="let row of scrabbleGrid?.board , let i = index" [attr.id]="'gridRowId' + i">
+                    <td class="imageContainer" *ngFor="let square of row, let j = index" [attr.id]="'squareId' + i + '' + j">
+                        <img class="cell" src="../../assets/images/{{ square._type }}.jpg" alt="../../assets/images/{{ square._type }}">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!--<div style="background-color: #916a32" *ngFor="let currentRow of currentRows; let myIndex =index">
         <ng-container class="imageContainer" *ngFor="let row of scrabbleGrid[myIndex]">
             <img class="cell" src="../../assets/images/{{ row }}" alt="../../assets/images/{{ row }}">
         </ng-container>
-    </div>
+    </div>-->
+
 </div>

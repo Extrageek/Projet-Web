@@ -1,0 +1,21 @@
+.main-wrapper{
+    height: 100%;
+}
+
+.head-title{
+    height: 20%;
+}
+.content-wrapper{
+    height: 70%;
+}
+
+.footer-wrapper{
+    height: 10%;
+}
+.board-wrapper{
+    height: 80%;
+}
+
+.chat-wrapper{
+    height: 80%;
+}

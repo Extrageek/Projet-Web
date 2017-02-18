@@ -1,12 +1,27 @@
-<div class="chatContainer">
-    <div class="chatTitle">Chat Room</div>
-    <div #scroll class="chatMessageBox">
-        <div class="individualMessages" *ngFor="let message of messageArray">{{message}}</div>
-    </div>
-    <div class="chatTextBox">
-        <form autocomplete="off">
-            <input #message (keydown.enter)="submitMessage(message)" id="inputMessage" type="text" placeholder="Enter your message" />
-            <button (click)="submitMessage(message)" id="submitMessage" type="submit">Send</button>
-        </form>
+<div class="row">
+    <div class="col-md-12 chatContainer">
+
+        <p class="chatTitle">Chat Room</p>
+        
+        <div #scroll class="col-md-12 chatMessageBox">
+            <div class="individualMessages" *ngFor="let message of messageArray">{{message}}</div>
+        </div>
+
+        <div class="chatTextBox col-md-12">
+            <form>
+                <div class="col-md-12">
+                    <div class="col-md-10">
+                        <div class="form-group">
+                            <textarea class="form-control" rows="3" id="comment" #message (keydown.enter)="submitMessage(message)" id="inputMessage"
+                                placeholder="Enter your message"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <button (click)="submitMessage(message)" id="submitMessage" type="submit">Send</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
     </div>
 </div>

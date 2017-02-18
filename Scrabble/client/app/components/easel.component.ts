@@ -1,19 +1,20 @@
-import { Component } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ScrabbleLetter } from "../models/letter/scrabble-letter";
 import { EaselGeneratorService } from "../services/easel/easel-generator.service";
-import { OnInit } from "../../node_modules/@angular/core/src/metadata/lifecycle_hooks";
+import { SocketService } from "../services/socket-service";
+import { SocketEventType } from "../commons/socket-eventType";
 
 import { Alphabet } from '../models/letter/alphabet';
 
 @Component({
     moduleId: module.id,
-    providers: [EaselGeneratorService],
+    providers: [EaselGeneratorService, SocketService],
     selector: "easel-selector",
     templateUrl: "../../assets/templates/easel.html",
     styleUrls: ["../../assets/stylesheets/easel.css"],
 })
 
-export class EaselComponent implements OnInit {
+export class EaselComponent implements OnInit, OnDestroy {
     private _letters: Array<ScrabbleLetter>;
     public get letters(): Array<ScrabbleLetter> {
         return this._letters;
@@ -24,20 +25,32 @@ export class EaselComponent implements OnInit {
 
     private fakeLettersFromServer: Array<ScrabbleLetter>;
 
-
-    constructor(private easelGenerator: EaselGeneratorService) {
-        // TODO : Get letters directly from server (In Progress)
-        this.fakeLettersFromServer = new Array<ScrabbleLetter>();
-        this.fakeLettersFromServer.push(new ScrabbleLetter(Alphabet.letterR));
-        this.fakeLettersFromServer.push(new ScrabbleLetter(Alphabet.letterA));
-        this.fakeLettersFromServer.push(new ScrabbleLetter(Alphabet.letterM));
-        this.fakeLettersFromServer.push(new ScrabbleLetter(Alphabet.letterI));
-        this.fakeLettersFromServer.push(new ScrabbleLetter(Alphabet.letterE));
-        this.fakeLettersFromServer.push(new ScrabbleLetter(Alphabet.letterI));
-        this.fakeLettersFromServer.push(new ScrabbleLetter(Alphabet.letterD));
+    constructor(private easelGenerator: EaselGeneratorService, private socketService: SocketService) {
+        this.letters = this.easelGenerator.generatedEasel(this.fakeLettersFromServer);
+        this.changeLettersRequest();
     }
 
     ngOnInit() {
-        this.letters = this.easelGenerator.generatedEasel(this.fakeLettersFromServer);
+        this.socketService.subscribeToChannelEvent(SocketEventType.exchangedLetter)
+            .subscribe((response: Array<string>) => {
+                this.letters = new Array<ScrabbleLetter>();
+
+                response.forEach((letter) => {
+                    console.log("Letter", letter);
+                    this.letters.push(new ScrabbleLetter(letter));
+                })
+            })
+        // this.letters = this.easelGenerator.generatedEasel(this.fakeLettersFromServer);
+    }
+
+    ngOnDestroy() {
+        // TODO: Unsubscribe all the socket observable here
+    }
+
+    public changeLettersRequest() {
+        let letters: Array<string>;
+        let fakeLetters = ['A', 'E', 'M', 'N', 'U', 'T', 'A'];
+
+        this.socketService.emitMessage(SocketEventType.exchangeLettersRequest, fakeLetters);
     }
 }

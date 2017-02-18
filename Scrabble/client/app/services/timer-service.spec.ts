@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { TimerService } from "./timerService";
+import { TimerService } from "./timer-service";
 
 let service : TimerService;
 const ONE_HOUR = 3600;

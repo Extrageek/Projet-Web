@@ -1,5 +1,5 @@
 import { Component, AfterViewInit } from "@angular/core";
-import { TimerService } from "../services/timerService";
+import { TimerService } from "../services/timer-service";
 
 const MAX_NUMBER_OF_LETTERS = 7;
 const ONE_SECOND = 1000;

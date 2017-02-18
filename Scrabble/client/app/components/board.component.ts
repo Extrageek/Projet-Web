@@ -13,10 +13,8 @@ import { Board } from '../models/board/board';
 
 export class ScrabbleBoardComponent {
     scrabbleGrid: Board;
-    //currentRows: number[];
 
     constructor(scrabbleBoardService: BoardService) {
-        //this.currentRows = Array(15).fill(0);
         this.scrabbleGrid = scrabbleBoardService.board;
     }
 }
