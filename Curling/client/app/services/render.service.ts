@@ -207,15 +207,13 @@ export class RenderService {
         ++this._numberOfModelsLoaded;
         if (!this._animationStarted && this._numberOfModelsLoaded >= RenderService.NUMBER_OF_MODELS_TO_LOAD) {
             this._animationStarted = true;
-            console.log("animation Started");
-           // if (document.hasFocus()) {
+            if (document.hasFocus()) {
                 this._clock.start();
-            //}
+            }
             this._gameStatusService.gameStatus.usedStone(); // Remove a stone from display
-            this._stoneHandler.performShot(4.32, new Vector3(0, 0, 1), () => { console.log("Launch finished"); });
+            this._stoneHandler.performShot(4.32, new Vector3(0, 0, 1), () => { });
             this.animate();
         }
-        console.log("Model loaded");
     }
 
      private animate() {
