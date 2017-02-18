@@ -57,8 +57,8 @@ describe('GridManagerService', () => {
                 let newDuplicatedColumnId = 0;
 
                 assert(gridManagerService.isDuplicatedNumberInCurrentRow(
-                        fakePuzzle._puzzle, newDuplicatedRowId, newDuplicatedColumnId) === false,
-                        "The current row must be valid");
+                    fakePuzzle._puzzle, newDuplicatedRowId, newDuplicatedColumnId) === false,
+                    "The current row must be valid");
             }))
     );
 
@@ -108,7 +108,7 @@ describe('GridManagerService', () => {
             }))
     );
 
-    it("isDuplicatedNumberInCurrentSquare, Should return false with a duplicated number error in the first square",
+    it("isDuplicatedNumberInCurrentSquare, Should return true with a duplicated number error in the first square",
         inject([GridManagerService],
             fakeAsync((gridManagerService: GridManagerService) => {
 
@@ -136,13 +136,13 @@ describe('GridManagerService', () => {
                 let newDuplicatedColumnId = 0;
 
                 assert(gridManagerService.isDuplicatedNumberInCurrentSquare(
-                    fakePuzzle._puzzle, newDuplicatedRowId, newDuplicatedColumnId) === false,
+                    fakePuzzle._puzzle, newDuplicatedRowId, newDuplicatedColumnId) === true,
                     " A duplicated number is not allowed in a square");
 
             }))
     );
 
-    it("isDuplicatedNumberInCurrentSquare, Should return true for a valid square",
+    it("isDuplicatedNumberInCurrentSquare, Should return false for a valid square",
         inject([GridManagerService],
             fakeAsync((gridManagerService: GridManagerService) => {
 
@@ -170,7 +170,7 @@ describe('GridManagerService', () => {
                 let newDuplicatedColumnId = 0;
 
                 assert(gridManagerService.isDuplicatedNumberInCurrentSquare(
-                    fakePuzzle._puzzle, newDuplicatedRowId, newDuplicatedColumnId) === true,
+                    fakePuzzle._puzzle, newDuplicatedRowId, newDuplicatedColumnId) === false,
                     " The current square must be valid");
 
             }))
@@ -338,6 +338,7 @@ describe('GridManagerService', () => {
                 assert.throws(() => gridManagerService.initializeGrid(null), Error, "The initial grid cannot be null");
             })));
 
+
     it("initializeGrid should reset the current given",
         inject([GridManagerService], fakeAsync((gridManagerService: GridManagerService) => {
 
@@ -379,6 +380,152 @@ describe('GridManagerService', () => {
             // Check the expected result
             expect(fakePuzzle).to.deep.equal(expectedPuzzle);
         })));
+
+    it("countFilledCell, Should set the number of cell to be completed to 1.",
+        inject([GridManagerService],
+            fakeAsync((gridManagerService: GridManagerService) => {
+
+                // Create a ready puzzle for the grid.
+                let fakePuzzle = new Puzzle([
+                    [new PuzzleItem(1, false), new PuzzleItem(2, false), new PuzzleItem(null, false),
+                    new PuzzleItem(6, false), new PuzzleItem(3, false), new PuzzleItem(8, false)],
+                    [new PuzzleItem(2, false), new PuzzleItem(6, false), new PuzzleItem(3, false),
+                    new PuzzleItem(5, false), new PuzzleItem(1, false), new PuzzleItem(2, false)],
+                    [new PuzzleItem(5, false), new PuzzleItem(null, false), new PuzzleItem(7, false),
+                    new PuzzleItem(9, false), new PuzzleItem(4, false), new PuzzleItem(null, false)],
+
+                    [new PuzzleItem(1, false), new PuzzleItem(5, false), new PuzzleItem(null, true),
+                    new PuzzleItem(4, false), new PuzzleItem(2, false), new PuzzleItem(null, false)],
+                    [new PuzzleItem(2, false), new PuzzleItem(1, false), new PuzzleItem(4, false),
+                    new PuzzleItem(3, false), new PuzzleItem(7, false), new PuzzleItem(null, false)],
+                    [new PuzzleItem(7, false), new PuzzleItem(null, false), new PuzzleItem(null, false),
+                    new PuzzleItem(8, false), new PuzzleItem(5, false), new PuzzleItem(null, false)],
+                ]);
+
+                gridManagerService.countFilledCell(fakePuzzle);
+                expect(gridManagerService.cellsToBeCompleted).to.be.equals(1);
+            }))
+    );
+
+    it("decrementCellsToBeCompleted, Should return 1 for a puzzle with only 2 remaining cells to be completed.",
+        inject([GridManagerService],
+            fakeAsync((gridManagerService: GridManagerService) => {
+
+                // Create a ready puzzle for the grid.
+                let fakePuzzle = new Puzzle([
+                    [new PuzzleItem(1, false), new PuzzleItem(2, false), new PuzzleItem(null, false),
+                    new PuzzleItem(6, false), new PuzzleItem(3, false), new PuzzleItem(8, false)],
+                    [new PuzzleItem(2, false), new PuzzleItem(6, false), new PuzzleItem(3, false),
+                    new PuzzleItem(5, false), new PuzzleItem(1, false), new PuzzleItem(2, false)],
+                    [new PuzzleItem(5, false), new PuzzleItem(null, false), new PuzzleItem(7, false),
+                    new PuzzleItem(9, false), new PuzzleItem(4, false), new PuzzleItem(null, false)],
+
+                    [new PuzzleItem(1, false), new PuzzleItem(5, false), new PuzzleItem(null, true),
+                    new PuzzleItem(4, false), new PuzzleItem(2, false), new PuzzleItem(null, true)],
+                    [new PuzzleItem(2, false), new PuzzleItem(1, false), new PuzzleItem(4, false),
+                    new PuzzleItem(3, false), new PuzzleItem(7, false), new PuzzleItem(null, false)],
+                    [new PuzzleItem(7, false), new PuzzleItem(null, false), new PuzzleItem(null, false),
+                    new PuzzleItem(8, false), new PuzzleItem(5, false), new PuzzleItem(null, false)],
+                ]);
+
+                gridManagerService.countFilledCell(fakePuzzle);
+                expect(gridManagerService.cellsToBeCompleted).to.be.equals(2);
+                gridManagerService.decrementCellsToBeCompleted();
+                expect(gridManagerService.cellsToBeCompleted).to.be.equals(1);
+            }))
+    );
+
+    it("deleteCurrentValue, Should delete value of PuzzleItem located at row 0, column 0 "
+        + "and increment cellsToBeCompleted",
+        inject([GridManagerService],
+            fakeAsync((gridManagerService: GridManagerService) => {
+
+                // Create a ready puzzle for the grid.
+                let fakePuzzle = new Puzzle([
+                    [new PuzzleItem(1, false), new PuzzleItem(2, false), new PuzzleItem(null, false),
+                    new PuzzleItem(6, false), new PuzzleItem(3, false), new PuzzleItem(8, false)],
+                    [new PuzzleItem(2, false), new PuzzleItem(6, false), new PuzzleItem(3, false),
+                    new PuzzleItem(5, false), new PuzzleItem(1, false), new PuzzleItem(2, false)],
+                    [new PuzzleItem(5, false), new PuzzleItem(null, false), new PuzzleItem(7, false),
+                    new PuzzleItem(9, false), new PuzzleItem(4, false), new PuzzleItem(null, false)],
+
+                    [new PuzzleItem(1, false), new PuzzleItem(5, false), new PuzzleItem(null, true),
+                    new PuzzleItem(4, false), new PuzzleItem(2, false), new PuzzleItem(null, true)],
+                    [new PuzzleItem(2, false), new PuzzleItem(1, false), new PuzzleItem(4, false),
+                    new PuzzleItem(3, false), new PuzzleItem(7, false), new PuzzleItem(null, false)],
+                    [new PuzzleItem(7, false), new PuzzleItem(null, false), new PuzzleItem(null, false),
+                    new PuzzleItem(8, false), new PuzzleItem(5, false), new PuzzleItem(null, false)],
+                ]);
+
+                gridManagerService.countFilledCell(fakePuzzle);
+                expect(gridManagerService.cellsToBeCompleted).to.be.equals(2);
+                gridManagerService.deleteCurrentValue(fakePuzzle, 0, 0);
+                expect(gridManagerService.cellsToBeCompleted).to.be.equals(3);
+                expect(fakePuzzle._puzzle[0][0]._value).to.be.null;
+            }))
+    );
+
+    it("deleteCurrentValue, Should throw an error because the row index is out of bound.",
+        inject([GridManagerService],
+            fakeAsync((gridManagerService: GridManagerService) => {
+
+                // Create a ready puzzle for the grid.
+                let fakePuzzle = new Puzzle([
+                    [new PuzzleItem(1, false), new PuzzleItem(2, false), new PuzzleItem(null, false),
+                    new PuzzleItem(6, false), new PuzzleItem(3, false), new PuzzleItem(8, false)],
+                    [new PuzzleItem(2, false), new PuzzleItem(6, false), new PuzzleItem(3, false),
+                    new PuzzleItem(5, false), new PuzzleItem(1, false), new PuzzleItem(2, false)],
+                    [new PuzzleItem(5, false), new PuzzleItem(null, false), new PuzzleItem(7, false),
+                    new PuzzleItem(9, false), new PuzzleItem(4, false), new PuzzleItem(null, false)],
+
+                    [new PuzzleItem(1, false), new PuzzleItem(5, false), new PuzzleItem(null, true),
+                    new PuzzleItem(4, false), new PuzzleItem(2, false), new PuzzleItem(null, true)],
+                    [new PuzzleItem(2, false), new PuzzleItem(1, false), new PuzzleItem(4, false),
+                    new PuzzleItem(3, false), new PuzzleItem(7, false), new PuzzleItem(null, false)],
+                    [new PuzzleItem(7, false), new PuzzleItem(null, false), new PuzzleItem(null, false),
+                    new PuzzleItem(8, false), new PuzzleItem(5, false), new PuzzleItem(null, false)],
+                ]);
+
+                gridManagerService.countFilledCell(fakePuzzle);
+                expect(gridManagerService.cellsToBeCompleted).to.be.equals(2);
+                let fnGt = function () {
+                    gridManagerService.deleteCurrentValue(fakePuzzle, 9, 0);
+                };
+                expect(fnGt).to.throw("A row or a column index cannot be greater than (8)");
+                let fnLt = function () {
+                    gridManagerService.deleteCurrentValue(fakePuzzle, -1, 0);
+                };
+                expect(fnLt).to.throw("A row or a column index cannot be less than (0)");
+            }))
+    );
+
+    it("updateGridAfterDelete, Should not do any modification on the grid except css ones.",
+        inject([GridManagerService],
+            fakeAsync((gridManagerService: GridManagerService) => {
+
+                // Create a ready puzzle for the grid.
+                let fakePuzzle = new Puzzle([
+                    [new PuzzleItem(1, true), new PuzzleItem(2, true), new PuzzleItem(null, false),
+                    new PuzzleItem(6, false), new PuzzleItem(3, false), new PuzzleItem(8, false)],
+                    [new PuzzleItem(2, false), new PuzzleItem(6, false), new PuzzleItem(3, false),
+                    new PuzzleItem(5, false), new PuzzleItem(1, false), new PuzzleItem(2, false)],
+                    [new PuzzleItem(5, false), new PuzzleItem(null, false), new PuzzleItem(7, false),
+                    new PuzzleItem(9, false), new PuzzleItem(4, false), new PuzzleItem(null, false)],
+
+                    [new PuzzleItem(1, false), new PuzzleItem(5, false), new PuzzleItem(null, true),
+                    new PuzzleItem(4, false), new PuzzleItem(2, false), new PuzzleItem(null, true)],
+                    [new PuzzleItem(2, false), new PuzzleItem(1, false), new PuzzleItem(4, false),
+                    new PuzzleItem(3, false), new PuzzleItem(7, false), new PuzzleItem(null, false)],
+                    [new PuzzleItem(7, false), new PuzzleItem(null, false), new PuzzleItem(null, false),
+                    new PuzzleItem(8, false), new PuzzleItem(5, false), new PuzzleItem(null, false)],
+                ]);
+
+                gridManagerService.countFilledCell(fakePuzzle);
+                expect(gridManagerService.cellsToBeCompleted).to.be.equals(4);
+                gridManagerService.updateGridAfterDelete(fakePuzzle, 0, 0);
+                expect(gridManagerService.cellsToBeCompleted).to.be.equals(4);
+            }))
+    );
 
     // it("deleteCurrentValue should throw a null element error for a not existing DOM element",
     //     inject([GridManagerService],

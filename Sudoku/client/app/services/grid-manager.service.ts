@@ -34,7 +34,7 @@ export class GridManagerService {
             this.updateCurrentCellFormat(rowIndex, columnIndex, true);
         } else {
             if ((!isSquareValid || !isColumnValid || !isRowValid)
-             && grid[rowIndex][columnIndex]._value !== null) {
+                && grid[rowIndex][columnIndex]._value !== null) {
                 this.updateCurrentCellFormat(rowIndex, columnIndex);
             }
         }
@@ -51,7 +51,7 @@ export class GridManagerService {
 
         let puzzleItem = Number(grid[rowIndex][columnIndex]._value);
 
-        for (let columnId = 0; columnId < grid[rowIndex].length ; ++columnId) {
+        for (let columnId = 0; columnId < grid[rowIndex].length; ++columnId) {
             if (columnId !== columnIndex && puzzleItem === Number(grid[rowIndex][columnId]._value)) {
                 return true;
             }
@@ -63,8 +63,8 @@ export class GridManagerService {
 
         let puzzleItem = Number(grid[rowIndex][columnIndex]._value);
 
-        for (let rowId = 0; rowId < grid[rowIndex].length  ; ++rowId) {
-            if ( rowId !== rowIndex && puzzleItem === Number(grid[rowId][columnIndex]._value)) {
+        for (let rowId = 0; rowId < grid[rowIndex].length; ++rowId) {
+            if (rowId !== rowIndex && puzzleItem === Number(grid[rowId][columnIndex]._value)) {
                 return true;
             }
         }
@@ -82,7 +82,7 @@ export class GridManagerService {
 
         for (let rowId = squareMinRowIndex; rowId <= squareMaxRowIndex; ++rowId) {
             for (let columnId = squareMinColumnIndex; columnId <= squareMaxColumnIndex; ++columnId) {
-                if(columnId !== columnIndex && rowId !== rowIndex && puzzleItem === grid[rowId][columnId]._value){
+                if (columnId !== columnIndex && rowId !== rowIndex && puzzleItem === grid[rowId][columnId]._value) {
                     return true;
                 };
             }
@@ -119,6 +119,9 @@ export class GridManagerService {
         if (rowIndex < 0 || colIndex < 0) {
             throw new Error("A row or a column index cannot be less than (0)");
         }
+        else if (rowIndex >= SUDOKU_LENGTH || colIndex >= SUDOKU_LENGTH) {
+            throw new Error("A row or a column index cannot be greater than (8)");
+        }
         // Get the id of the current input id and delete it value
         let inputId = [CELL_ID_PREFIX, rowIndex, colIndex].join('');
 
@@ -129,11 +132,11 @@ export class GridManagerService {
         this._cellsToBeCompleted++;
     }
 
-    public countFilledCell(puzzle: Puzzle){
+    public countFilledCell(puzzle: Puzzle) {
         this._cellsToBeCompleted = 0;
         puzzle._puzzle.forEach((puzzleItems) => {
             puzzleItems.forEach((puzzleItem) => {
-                if (puzzleItem._hide){
+                if (puzzleItem._hide) {
                     this._cellsToBeCompleted++;
                 }
             });
@@ -143,19 +146,19 @@ export class GridManagerService {
     public updateGridAfterDelete(puzzle: Puzzle, rowIndex: number, colIndex: number): void {
 
         for (let columnIndex = 0; columnIndex < puzzle._puzzle.length; ++columnIndex) {
-            if(puzzle._puzzle[rowIndex][columnIndex]._hide === true){
+            if (puzzle._puzzle[rowIndex][columnIndex]._hide === true) {
                 this.validateEnteredNumber(puzzle, rowIndex, columnIndex);
             }
         }
 
         for (let rowIndex = 0; rowIndex < puzzle._puzzle.length; ++rowIndex) {
-            if(puzzle._puzzle[rowIndex][colIndex]._hide === true) {
+            if (puzzle._puzzle[rowIndex][colIndex]._hide === true) {
                 this.validateEnteredNumber(puzzle, rowIndex, colIndex);
             }
         }
     }
 
-    public decrementCellsToBeCompleted(){
+    public decrementCellsToBeCompleted() {
         this._cellsToBeCompleted--;
     };
 
