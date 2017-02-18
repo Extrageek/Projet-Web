@@ -1,4 +1,4 @@
- import { Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { Puzzle, PuzzleItem } from '../models/puzzle';
 
@@ -26,9 +26,9 @@ export class GridManagerService {
 
         let grid = puzzle._puzzle;
 
-        let isColumnValid = !(this.isDuplicatedNumberInCurrentColumn(grid, rowIndex, columnIndex));
-        let isRowValid = !(this.isDuplicatedNumberInCurrentRow(grid, rowIndex, columnIndex));
-        let isSquareValid = this.isDuplicatedNumberInCurrentSquare(grid, rowIndex, columnIndex);
+        let isColumnValid = !this.isDuplicatedNumberInCurrentColumn(grid, rowIndex, columnIndex);
+        let isRowValid = !this.isDuplicatedNumberInCurrentRow(grid, rowIndex, columnIndex);
+        let isSquareValid = !this.isDuplicatedNumberInCurrentSquare(grid, rowIndex, columnIndex);
 
         if (isColumnValid && isRowValid && isSquareValid) {
             this.updateCurrentCellFormat(rowIndex, columnIndex, true);
@@ -38,11 +38,10 @@ export class GridManagerService {
                 this.updateCurrentCellFormat(rowIndex, columnIndex);
             }
         }
-        this._cellsToBeCompleted--;
         return (isRowValid && isColumnValid && isSquareValid);
     }
 
-    updateCurrentCellFormat(rowIndex: number, columnIndex: number, removeErrorCSS?: boolean) {
+    public updateCurrentCellFormat(rowIndex: number, columnIndex: number, removeErrorCSS?: boolean) {
         let borderPropertyValue = (!removeErrorCSS) ? CSS_BACKGROUND_VALUE : CSS_BACKGROUND_INIT;
         let cellId = CELL_ID_PREFIX + rowIndex + columnIndex;
         jQuery(cellId).css(CSS_BACKGROUND_PROPERTY, borderPropertyValue);
@@ -53,8 +52,7 @@ export class GridManagerService {
         let puzzleItem = Number(grid[rowIndex][columnIndex]._value);
 
         for (let columnId = 0; columnId < grid[rowIndex].length ; ++columnId) {
-            if (puzzleItem === Number(grid[rowIndex][columnId]._value)
-                && columnId !== columnIndex) {
+            if (columnId !== columnIndex && puzzleItem === Number(grid[rowIndex][columnId]._value)) {
                 return true;
             }
         }
@@ -66,8 +64,7 @@ export class GridManagerService {
         let puzzleItem = Number(grid[rowIndex][columnIndex]._value);
 
         for (let rowId = 0; rowId < grid[rowIndex].length  ; ++rowId) {
-            if (puzzleItem === Number(grid[rowId][columnIndex]._value)
-                && rowId !== rowIndex) {
+            if ( rowId !== rowIndex && puzzleItem === Number(grid[rowId][columnIndex]._value)) {
                 return true;
             }
         }
@@ -81,29 +78,16 @@ export class GridManagerService {
         let squareMinColumnIndex = Math.floor(columnIndex / 3) * 3;
         let squareMaxColumnIndex = squareMinColumnIndex + 2;
 
-        for (let rowId1 = squareMinRowIndex; rowId1 <= squareMaxRowIndex; ++rowId1) {
+        let puzzleItem = Number(grid[rowIndex][columnIndex]._value);
 
-            for (let columnId1 = squareMinColumnIndex; columnId1 <= squareMaxColumnIndex; ++columnId1) {
-
-                let count = 0;
-                let cellValue = grid[rowId1][columnId1]._value;
-
-                for (let rowId2 = squareMinRowIndex; rowId2 <= squareMaxRowIndex; ++rowId2) {
-                    for (let columnId2 = squareMinColumnIndex; columnId2 <= squareMaxColumnIndex; ++columnId2) {
-
-                        if (Number(grid[rowId2][columnId2]._value) === Number(cellValue)
-                            && Number(cellValue) !== 0) {
-                            ++count;
-                        }
-                        if (count > 1) {
-                            return false;
-                        }
-                    }
-                }
+        for (let rowId = squareMinRowIndex; rowId <= squareMaxRowIndex; ++rowId) {
+            for (let columnId = squareMinColumnIndex; columnId <= squareMaxColumnIndex; ++columnId) {
+                if(columnId !== columnIndex && rowId !== rowIndex && puzzleItem === grid[rowId][columnId]._value){
+                    return true;
+                };
             }
         }
-
-        return true;
+        return false;
     }
 
     // Clears the cells the user filled.
@@ -155,4 +139,26 @@ export class GridManagerService {
             });
         });
     }
+
+    public updateGridAfterDelete(puzzle: Puzzle, rowIndex: number, colIndex: number): void {
+        console.log("updateGridAfterDelete");
+        // parcourir toutes les cases de la ligne rowIndex
+        for (let j = 0; j < puzzle._puzzle.length; ++j) {
+            if(puzzle._puzzle[rowIndex][j]._hide === true){
+                this.validateEnteredNumber(puzzle, rowIndex, j);
+            }
+        }
+        // parcourir toutes les cases de la colonne colIndex
+        for (let i = 0; i < puzzle._puzzle.length; ++i) {
+            if(puzzle._puzzle[i][colIndex]._hide === true) {
+                this.validateEnteredNumber(puzzle, i, colIndex);
+            }
+        }
+        // parcourir toutes les cases de la case colIndex rowIndex
+    }
+
+    public decrementCellsToBeCompleted(){
+        this._cellsToBeCompleted--;
+    };
+
 }

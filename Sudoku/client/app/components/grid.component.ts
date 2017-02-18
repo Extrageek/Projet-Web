@@ -6,7 +6,7 @@
  */
 
 import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
-import { MdProgressSpinnerModule, MdCardModule } from '@angular/material';
+import { MdProgressSpinnerModule, MdCardModule, MdTabsModule } from '@angular/material';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -99,7 +99,7 @@ export class GridComponent implements OnInit {
 
     public getNewPuzzle(difficulty: Difficulty) {
         this._isLoading = true;
-        this.stopwatchService.resetTime();
+        this._time.resetTime();
         this.leaderboard.nativeElement.classList.add("fade");
         this.hideMessageCongratulation();
         this._easyRecords = [];
@@ -127,13 +127,14 @@ export class GridComponent implements OnInit {
         let rowIndex = Number(rowColIndex[PuzzleCommon.yPosition]);
         let colIndex = Number(rowColIndex[PuzzleCommon.xPosition]);
 
-        if (event.keyCode === PuzzleCommon.backspaceKeyCode) {
+        if (event.keyCode === PuzzleCommon.backspaceKeyCode || event.keyCode === PuzzleCommon.deleteKeyCode) {
             if (this._puzzle._puzzle[rowIndex][colIndex]._value !== null) {
                 this.gridManagerService.deleteCurrentValue(this._puzzle, rowIndex, colIndex);
+                this.gridManagerService.updateGridAfterDelete(this._puzzle, rowIndex, colIndex);
             }
         }
-
         else if (this.puzzleEventManager.isSudokuNumber(event.which)) {
+            this.gridManagerService.decrementCellsToBeCompleted();
             this.gridManagerService.validateEnteredNumber(this._puzzle, rowIndex, colIndex);
             // TODO: replace 59 by 0
             console.log(this.gridManagerService.cellsToBeCompleted);
@@ -141,14 +142,15 @@ export class GridComponent implements OnInit {
                 //if (this.api.verifyGrid(this._puzzle)) {
                 this._isFinished = true;
                 await this.api.getTopRecords().then(topRecords => {
-                    // this._easyRecords = topRecords[0];
-                    // this._hardRecords = topRecords[1];
                     let isInserted = false;
-                    if (this._userSetting.difficulty.toString() === "NORMAL") {
-                        for (let i = 0; i < topRecords[0].length && this._easyRecords.length <= topRecords[0].length; ++i) {
+                    if (this._userSetting.difficulty === Difficulty.NORMAL) {
+                        for (let i = 0; i < topRecords[0].length
+                            && this._easyRecords.length <= topRecords[0].length; ++i) {
                             if (this._time.compareTo(topRecords[0][i].time) === -1 && !isInserted) {
                                 isInserted = true;
-                                this._easyRecords.push(new Record(this._userSetting.name, this._userSetting.difficulty, this._time));
+                                this._easyRecords.push(
+                                    new Record(this._userSetting.name, this._userSetting.difficulty, this._time)
+                                );
                             }
                             else {
                                 this._easyRecords.push(topRecords[0][i]);
@@ -156,11 +158,14 @@ export class GridComponent implements OnInit {
                         }
                         this._hardRecords = topRecords[1];
                     }
-                    else if (this._userSetting.difficulty.toString() === "HARD") {
-                        for (let i = 0; i < topRecords[1].length && this._hardRecords.length <= topRecords[1].length; ++i) {
+                    else if (this._userSetting.difficulty === Difficulty.HARD) {
+                        for (let i = 0; i < topRecords[1].length
+                            && this._hardRecords.length <= topRecords[1].length; ++i) {
                             if (this._time.compareTo(topRecords[1][i].time) === -1 && !isInserted) {
                                 isInserted = true;
-                                this._hardRecords.push(new Record(this._userSetting.name, this._userSetting.difficulty, this._time));
+                                this._hardRecords.push(
+                                    new Record(this._userSetting.name, this._userSetting.difficulty, this._time)
+                                );
                             }
                             else {
                                 this._hardRecords.push(topRecords[1][i]);

@@ -43,7 +43,7 @@ export class RestApiProxyService {
      * @returns an Observable with a newPuzzle json data
      * TODO: Must be checked if we need to convert to an object.
      */
-    getNewPuzzle(difficulty: Difficulty): Observable<Puzzle> {
+    public getNewPuzzle(difficulty: Difficulty): Observable<Puzzle> {
         return this.http.get(this._urlApi + "puzzle?difficulty=" + difficulty)
             .map(this.retrieveDataFromHttpResponse)
             .catch((error) => {

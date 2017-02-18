@@ -45,7 +45,7 @@ export class DifficultyComponent implements OnInit {
     }
 
     public launchGame() {
-        this.userSettingService.userSetting.difficulty = this._difficulty;
+        this.userSettingService.userSetting.difficulty = Number(this._difficulty);
         this.router.navigate(['/game']);
     }
 }
