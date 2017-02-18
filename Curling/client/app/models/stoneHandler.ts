@@ -1,7 +1,8 @@
-import { ObjectLoader, Vector3 } from "three";
+import { Object3D, ObjectLoader, PerspectiveCamera, Vector2, Vector3 } from "three";
 import { RinkInfo } from "./rinkInfo.interface";
 import { Stone, StoneColor } from "./stone";
 import { GameComponent } from "./gameComponent.interface";
+import { CameraType } from "./../services/render.service";
 
 export interface Points {
     player: number;
@@ -17,6 +18,8 @@ export class StoneHandler implements GameComponent {
     private _currentPlayer: StoneColor;
     private _objectLoader: ObjectLoader;
     private _stoneOnTheGame: Stone[];
+    private _mousePositionPlaneXZ: Vector3;
+    private _raycaster = new THREE.Raycaster();
     private _callbackAfterShotFinished: Function;
 
     constructor(objectLoader: ObjectLoader, rinkInfo: RinkInfo, firstPlayer: StoneColor) {
@@ -24,7 +27,28 @@ export class StoneHandler implements GameComponent {
         this._currentPlayer = firstPlayer - 1;
         this._objectLoader = objectLoader;
         this._stoneOnTheGame = new Array<Stone>();
+        this._mousePositionPlaneXZ = new Vector3();
         this._callbackAfterShotFinished = null;
+    }
+
+    public calculateMousePosition(event: MouseEvent, currentCam: CameraType) {
+        if(currentCam === CameraType.PERSPECTIVE_CAM) {
+            this._mousePositionPlaneXZ.set(
+                (event.clientX / window.innerWidth) * 2 - 1,
+                0,
+                -(event.clientY / window.innerHeight) *  6.17 + 3.21
+            );
+            // console.log(this._mousePositionPlaneXZ, -(event.clientY / window.innerHeight));
+        } else if(currentCam === CameraType.ORTHOGRAPHIC_CAM) {
+            this._mousePositionPlaneXZ.set(
+                (event.clientX / window.innerWidth) * 2 - 0.36,
+                0,
+                -(event.clientY / window.innerHeight) *  2  + 1  
+            );
+            // console.log(this._mousePositionPlaneXZ);       
+        } else {
+            console.error("calculateMousePosition : camera unrecognized");
+        }
     }
 
     public performShot(speed: number, direction: Vector3,
