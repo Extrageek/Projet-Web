@@ -5,7 +5,7 @@ import {
     TestBed
 } from '@angular/core/testing';
 
-import { assert, expect } from 'chai';
+import { assert } from 'chai';
 import { PuzzleEventManagerService } from './puzzle-event-manager.service';
 import { GridManagerService } from './grid-manager.service';
 import { PuzzleCommon } from '../commons/puzzle-common';
@@ -25,7 +25,7 @@ describe('PuzzleEventManagerService', () => {
         inject([PuzzleEventManagerService],
             fakeAsync((eventManagerService: PuzzleEventManagerService) => {
 
-                let randomKey = 10;
+                let randomKey = "George";
                 assert(eventManagerService.isDeleteKey(randomKey) === false,
                     "The value is not a Sudoku valid value");
             }))
@@ -55,7 +55,7 @@ describe('PuzzleEventManagerService', () => {
         inject([PuzzleEventManagerService],
             fakeAsync((eventManagerService: PuzzleEventManagerService) => {
 
-                let fakeKeyCode = 155;
+                let fakeKeyCode = "number";
                 assert(eventManagerService.isSudokuNumber(fakeKeyCode) === false,
                     "The sudoku key must have a value of 46");
             }))
@@ -75,7 +75,7 @@ describe('PuzzleEventManagerService', () => {
         inject([PuzzleEventManagerService],
             fakeAsync((eventManagerService: PuzzleEventManagerService) => {
 
-                let fakeNumberKeyCode = 100;
+                let fakeNumberKeyCode = "Up";
                 assert(eventManagerService.isDirection(fakeNumberKeyCode) === false,
                     "It's not a direction key");
             }))
@@ -96,10 +96,10 @@ describe('PuzzleEventManagerService', () => {
         inject([PuzzleEventManagerService],
             fakeAsync((eventManagerService: PuzzleEventManagerService) => {
                 let currentPosition = ["1","1"];
-                eventManagerService.updateFocus(currentPosition,37);
-                eventManagerService.updateFocus(currentPosition,38);
-                eventManagerService.updateFocus(currentPosition,39);
-                eventManagerService.updateFocus(currentPosition,40);
+                eventManagerService.updateFocus(currentPosition,"ArrowLeft");
+                eventManagerService.updateFocus(currentPosition,"ArrowRight");
+                eventManagerService.updateFocus(currentPosition,"ArrowUp");
+                eventManagerService.updateFocus(currentPosition,"ArrowDown");
             }))
     );
 });

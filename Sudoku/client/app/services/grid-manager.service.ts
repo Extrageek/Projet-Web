@@ -141,20 +141,18 @@ export class GridManagerService {
     }
 
     public updateGridAfterDelete(puzzle: Puzzle, rowIndex: number, colIndex: number): void {
-        console.log("updateGridAfterDelete");
-        // parcourir toutes les cases de la ligne rowIndex
-        for (let j = 0; j < puzzle._puzzle.length; ++j) {
-            if(puzzle._puzzle[rowIndex][j]._hide === true){
-                this.validateEnteredNumber(puzzle, rowIndex, j);
+
+        for (let columnIndex = 0; columnIndex < puzzle._puzzle.length; ++columnIndex) {
+            if(puzzle._puzzle[rowIndex][columnIndex]._hide === true){
+                this.validateEnteredNumber(puzzle, rowIndex, columnIndex);
             }
         }
-        // parcourir toutes les cases de la colonne colIndex
-        for (let i = 0; i < puzzle._puzzle.length; ++i) {
-            if(puzzle._puzzle[i][colIndex]._hide === true) {
-                this.validateEnteredNumber(puzzle, i, colIndex);
+
+        for (let rowIndex = 0; rowIndex < puzzle._puzzle.length; ++rowIndex) {
+            if(puzzle._puzzle[rowIndex][colIndex]._hide === true) {
+                this.validateEnteredNumber(puzzle, rowIndex, colIndex);
             }
         }
-        // parcourir toutes les cases de la case colIndex rowIndex
     }
 
     public decrementCellsToBeCompleted(){

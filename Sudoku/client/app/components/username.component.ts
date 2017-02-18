@@ -1,6 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { MdInputModule } from '@angular/material';
 
 import { RestApiProxyService } from '../services/rest-api-proxy.service';
 import { UserSettingService } from '../services/user-setting.service';

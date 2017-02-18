@@ -1,36 +1,26 @@
 
 export class PuzzleCommon {
 
-    static leftArrowKeyCode = 37;
-    static rightArrowKeyCode = 39;
-    static upArrowKeyCode = 38;
-    static downArrowKeyCode = 40;
+    static leftArrowKeyCode = "ArrowLeft";
+    static rightArrowKeyCode = "ArrowRight";
+    static upArrowKeyCode = "ArrowUp";
+    static downArrowKeyCode = "ArrowDown";
 
-    static deleteKeyCode = 46;
+    static deleteKeyCode = "Delete";
 
     // Use backspace for Delete keycode on mac /backspace
     // Need to be improved.
-    static backspaceKeyCode = 8;
+    static backspaceKeyCode = "Backspace";
 
-    static oneKey = 49;
-    static twoKey = 50;
-    static threeKey = 51;
-    static fourKey = 52;
-    static fiveKey = 53;
-    static sixKey = 54;
-    static sevenKey = 55;
-    static eightKey = 56;
-    static nineKey = 57;
-
-    static oneNumpad = 97;
-    static twoNumpad = 98;
-    static threeNumpad = 99;
-    static fourNumpad = 100;
-    static fiveNumpad = 101;
-    static sixNumpad = 102;
-    static sevenNumpad = 103;
-    static eightNumpad = 104;
-    static nineNumpad = 105;
+    static oneKey = "1";
+    static twoKey = "2";
+    static threeKey = "3";
+    static fourKey = "4";
+    static fiveKey = "5";
+    static sixKey = "6";
+    static sevenKey = "7";
+    static eightKey = "8";
+    static nineKey = "9";
 
     static yPosition = 0;
     static xPosition = 1;

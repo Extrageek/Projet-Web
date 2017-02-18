@@ -29,7 +29,7 @@ export class PuzzleEventManagerService {
     _nextInputPositionYX: string;
     _newInputId = "";
 
-    constructor(private gridManagerService: GridManagerService) {
+    constructor() {
         // Default constructor
     }
 
@@ -40,9 +40,12 @@ export class PuzzleEventManagerService {
      * @method isDeleteKey
      * @return true for a delete keypress
      */
-    isDirection(keyCode: number): boolean {
+    isDirection(keyCode: string): boolean {
         // If code of the key is an arrow (left/right/up/downArrowKeyCode)
-        return 37 <= keyCode && keyCode <= 40;
+        return (keyCode == PuzzleCommon.downArrowKeyCode
+                || keyCode == PuzzleCommon.upArrowKeyCode
+                || keyCode == PuzzleCommon.leftArrowKeyCode
+                || keyCode == PuzzleCommon.rightArrowKeyCode) ;
     }
 
     /**
@@ -52,7 +55,7 @@ export class PuzzleEventManagerService {
     * @method isDeleteKey
     * @return true for a delete keypress
     */
-    isDeleteKey(keyCode: number): boolean {
+    isDeleteKey(keyCode: string): boolean {
         return (keyCode === PuzzleCommon.backspaceKeyCode
             || keyCode === PuzzleCommon.deleteKeyCode);
     }
@@ -64,10 +67,9 @@ export class PuzzleEventManagerService {
      * @method isDeleteKey
      * @return true for a valid number for the puzzle
      */
-    isSudokuNumber(keyCode: number): boolean {
+    isSudokuNumber(keyCode: string): boolean {
 
-        return (PuzzleCommon.oneKey <= keyCode && keyCode <= PuzzleCommon.nineKey) ||
-               (PuzzleCommon.oneNumpad <= keyCode && keyCode <= PuzzleCommon.nineNumpad);
+        return (PuzzleCommon.oneKey <= keyCode && keyCode <= PuzzleCommon.nineKey);
     }
 
     /**
@@ -78,7 +80,7 @@ export class PuzzleEventManagerService {
      */
     onKeyEventUpdateCurrentCursor(event: KeyboardEvent, id: string): void {
         let currentPositionXY = id.split('');
-        let keyCode = event.which;
+        let keyCode = event.key;
 
         if (this.isDirection(keyCode)) {
             this.updateFocus(currentPositionXY, keyCode);
@@ -91,7 +93,7 @@ export class PuzzleEventManagerService {
     * @class PuzzleEventManagerService
     * @method updateFocus
     */
-    updateFocus(currentPositionXY: string[], keyCode: number): void {
+    updateFocus(currentPositionXY: string[], keyCode: string): void {
         // Reads next direction of arrow keys and decide if it warps to the other end
         // or if it goes to the next cell
 

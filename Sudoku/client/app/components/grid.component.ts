@@ -6,13 +6,11 @@
  */
 
 import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
-import { MdProgressSpinnerModule, MdCardModule, MdTabsModule } from '@angular/material';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/timer';
 
-declare var jQuery: any;
 
 import { RestApiProxyService } from '../services/rest-api-proxy.service';
 import { GridManagerService } from '../services/grid-manager.service';
@@ -127,17 +125,17 @@ export class GridComponent implements OnInit {
         let rowIndex = Number(rowColIndex[PuzzleCommon.yPosition]);
         let colIndex = Number(rowColIndex[PuzzleCommon.xPosition]);
 
-        if (event.keyCode === PuzzleCommon.backspaceKeyCode || event.keyCode === PuzzleCommon.deleteKeyCode) {
+        if (this.puzzleEventManager.isDeleteKey(event.key)) {
             if (this._puzzle._puzzle[rowIndex][colIndex]._value !== null) {
                 this.gridManagerService.deleteCurrentValue(this._puzzle, rowIndex, colIndex);
                 this.gridManagerService.updateGridAfterDelete(this._puzzle, rowIndex, colIndex);
             }
         }
-        else if (this.puzzleEventManager.isSudokuNumber(event.which)) {
+        else if (this.puzzleEventManager.isSudokuNumber(event.key)) {
             this.gridManagerService.decrementCellsToBeCompleted();
             this.gridManagerService.validateEnteredNumber(this._puzzle, rowIndex, colIndex);
             // TODO: replace 59 by 0
-            console.log(this.gridManagerService.cellsToBeCompleted);
+
             if (this.gridManagerService.cellsToBeCompleted === 59) {
                 //if (this.api.verifyGrid(this._puzzle)) {
                 this._isFinished = true;
@@ -208,7 +206,7 @@ export class GridComponent implements OnInit {
             throw new Error("No event source is provided.");
         }
 
-        if (!this.puzzleEventManager.isSudokuNumber(event.which)) {
+        if (!this.puzzleEventManager.isSudokuNumber(event.key)) {
             return false;
         }
     }
