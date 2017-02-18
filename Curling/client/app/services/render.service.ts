@@ -162,13 +162,13 @@ export class RenderService {
             this._rinkInfo = rink;
             this._mesh.add(rink);
             this.onFinishedLoadingModel();
-            this.loadStoneHandler();
-            this._stoneHandler.generateNewStone().then((stone: Stone) => {
-                this._scene.add(stone);
-                stone.position.set(-0.4, 0, 0);
-                this.onFinishedLoadingModel();
-            });
-            this.loadStone();
+            // this.loadStoneHandler();
+            // this._stoneHandler.generateNewStone().then((stone: Stone) => {
+            //     this._scene.add(stone);
+            //     stone.position.set(0, 0, 0);
+            //     this.onFinishedLoadingModel();
+            // });
+            // this.loadStone();
         });
     }
 
@@ -207,13 +207,15 @@ export class RenderService {
         ++this._numberOfModelsLoaded;
         if (!this._animationStarted && this._numberOfModelsLoaded >= RenderService.NUMBER_OF_MODELS_TO_LOAD) {
             this._animationStarted = true;
-            if (document.hasFocus()) {
+            console.log("animation Started");
+           // if (document.hasFocus()) {
                 this._clock.start();
-            }
+            //}
             this._gameStatusService.gameStatus.usedStone(); // Remove a stone from display
-            this._stoneHandler.performShot(2.5, new Vector3(0, 0, 1), () => { console.log("Launch finished"); });
+            this._stoneHandler.performShot(4.32, new Vector3(0, 0, 1), () => { console.log("Launch finished"); });
             this.animate();
         }
+        console.log("Model loaded");
     }
 
      private animate() {

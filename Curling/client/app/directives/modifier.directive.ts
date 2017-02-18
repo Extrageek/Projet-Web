@@ -6,7 +6,7 @@ import { RenderService } from '../services/render.service';
 })
 
 export class ModifierDirective {
-    public scale: number = 1;
+    public scale = 1;
     constructor(private _renderService: RenderService) {
     }
 
