@@ -46,8 +46,8 @@ export class RestApiProxyService {
     public getNewPuzzle(difficulty: Difficulty): Observable<Puzzle> {
         return this.http.get(this._urlApi + "puzzle?difficulty=" + difficulty)
             .map(this.retrieveDataFromHttpResponse)
-            .catch((error) => {
-                return Observable.throw("Error when getting a new puzzle : " + error);
+            .catch((error: Error) => {
+                throw error;
             });
     }
 
@@ -80,7 +80,6 @@ export class RestApiProxyService {
                 }
             })
             .catch(error => {
-                console.log("ERROR in RestApiProxyService - createGameRecord. ", error);
                 throw error;
             });
     }

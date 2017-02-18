@@ -488,14 +488,10 @@ describe('GridManagerService', () => {
 
                 gridManagerService.countFilledCell(fakePuzzle);
                 expect(gridManagerService.cellsToBeCompleted).to.be.equals(2);
-                let fnGt = function () {
-                    gridManagerService.deleteCurrentValue(fakePuzzle, 9, 0);
-                };
-                expect(fnGt).to.throw("A row or a column index cannot be greater than (8)");
-                let fnLt = function () {
-                    gridManagerService.deleteCurrentValue(fakePuzzle, -1, 0);
-                };
-                expect(fnLt).to.throw("A row or a column index cannot be less than (0)");
+                expect(() => gridManagerService.deleteCurrentValue(fakePuzzle, 9, 0))
+                    .to.throw("A row or a column index cannot be greater than (8)");
+                expect(() => gridManagerService.deleteCurrentValue(fakePuzzle, -1, 0))
+                    .to.throw("A row or a column index cannot be less than (0)");
             }))
     );
 

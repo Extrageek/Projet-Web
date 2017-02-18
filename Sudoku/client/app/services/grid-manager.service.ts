@@ -84,7 +84,7 @@ export class GridManagerService {
             for (let columnId = squareMinColumnIndex; columnId <= squareMaxColumnIndex; ++columnId) {
                 if (columnId !== columnIndex && rowId !== rowIndex && puzzleItem === grid[rowId][columnId]._value) {
                     return true;
-                };
+                }
             }
         }
         return false;
@@ -160,6 +160,6 @@ export class GridManagerService {
 
     public decrementCellsToBeCompleted() {
         this._cellsToBeCompleted--;
-    };
+    }
 
 }
