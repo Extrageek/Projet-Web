@@ -28,7 +28,7 @@ module GridGenerationService {
         private _easySudoku: Array<Puzzle>;
         private _hardSudoku: Array<Puzzle>;
 
-        getNewPuzzle(difficulty: Difficulty): Puzzle {
+        public getNewPuzzle(difficulty: Difficulty): Puzzle {
             //this._easySudoku.push(this.generateNewPuzzle());
             //return this._easySudoku.pop();
             return this.generateNewPuzzle(difficulty);

@@ -27,8 +27,8 @@
         <md-card>
             <md-card-content>
                 <h2 *ngIf="!_hiddenClock">
-                    <span class="glyphicon glyphicon-time" aria-hidden="true"> </span> {{_time.hours}} : {{_time.minutes}}
-                    : {{_time.seconds}}
+                    <span class="glyphicon glyphicon-time" aria-hidden="true"> </span> {{_time.printHours()}} : {{_time.printMinutes()}}
+                    : {{_time.printSeconds()}}
                     <span (click)="hideClock()" class="glyphicon glyphicon-eye-close" aria-hidden="true"> </span>
                 </h2>
                 <h2 *ngIf="_hiddenClock">
