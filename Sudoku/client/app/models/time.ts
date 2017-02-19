@@ -37,6 +37,18 @@ export class Time {
         this._seconds = 0;
     }
 
+    public printHours(): string {
+        return ("0" + this.hours).slice(-2);
+    }
+
+    public printMinutes(): string {
+        return ("0" + this.minutes).slice(-2);
+    }
+
+    public printSeconds(): string {
+        return ("0" + this.seconds).slice(-2);
+    }
+
     public compareTo(time: Time): number {
         const areHoursLessThan = this._hours < time._hours;
         const areHoursEqual = this._hours === time._hours;
