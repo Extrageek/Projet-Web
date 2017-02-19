@@ -13,7 +13,7 @@
     "coverage": "tsc && nyc --require ts-node/register _mocha -c -R spec -- out/**/*.js",
     "nyan-coverage": "tsc && nyc --require ts-node/register _mocha -c -R nyan -- out/**/*.js"
   },
-  "nyc":{
+  "nyc": {
     "reporter": [
       "text-summary",
       "html"
@@ -21,15 +21,15 @@
     "sourceMap": true,
     "instrument": true
   },
-  "mocha":{
+  "mocha": {
     "colors": true
   },
   "dependencies": {
+    "@types/body-parser": "0.0.32",
     "@types/express": "^4.0.32",
     "@types/express-serve-static-core": "^4.0.39",
-    "@types/node-uuid": "0.0.28",
-    "@types/body-parser": "0.0.32",
     "@types/node": "^6.0.45",
+    "@types/node-uuid": "0.0.28",
     "body-parser": "^1.15.2",
     "concurrently": "3.1.0",
     "cookie-parser": "^1.4.3",
@@ -38,9 +38,10 @@
     "mongoose": "^4.7.6",
     "morgan": "^1.7.0",
     "nodemon": "^1.11.0",
-    "serve-favicon": "^2.3.2",
+    "nyc": "^10.1.2",
     "pug": "^2.0.0-alpha6",
-    "systemjs": "^0.19.41"    
+    "serve-favicon": "^2.3.2",
+    "systemjs": "^0.19.41"
   },
   "devDependencies": {
     "@types/body-parser": "0.0.33",

@@ -6,6 +6,14 @@ import { Puzzle, PuzzleItem } from './../models/puzzle';
 let gridValidationManager = new GridValidationManager();
 
 describe('Grid Validation Manager', () => {
+    it("isRowValid, Should return false because of a null value",
+        () => {
+            let puzzle = new Puzzle();
+            puzzle._puzzle[0][0]._value = null;
+            expect(gridValidationManager.isRowValid(puzzle._puzzle, 0)).to.be.false;
+        }
+    );
+
     it("isRowValid, Should return false with a duplicated number error in the current row",
         () => {
             // let isRowValid = gridValidationManagerRewire.__get__('isRowValid');
@@ -34,6 +42,14 @@ describe('Grid Validation Manager', () => {
         }
     );
 
+    it("isColumnValid, Should return false because of a null value",
+        () => {
+            let puzzle = new Puzzle();
+            puzzle._puzzle[0][0]._value = null;
+            expect(gridValidationManager.isColumnValid(puzzle._puzzle, 0)).to.be.false;
+        }
+    );
+
     it("isColumnValid, Should return false with a duplicated number error in the current column",
         () => {
             // let isColumnValid = gridValidationManagerRewire.__get__('isColumnValid');
@@ -59,6 +75,14 @@ describe('Grid Validation Manager', () => {
         () => {
             // let validateColumns = gridValidationManagerRewire.__get__('validateColumns');
             expect(gridValidationManager.validateColumns(GRID_NOT_VALID)).to.be.false;
+        }
+    );
+
+    it("isSquareValid, Should return false because of a null value",
+        () => {
+            let puzzle = new Puzzle();
+            puzzle._puzzle[0][0]._value = null;
+            expect(gridValidationManager.isSquareValid(puzzle._puzzle, 0, 0)).to.be.false;
         }
     );
 

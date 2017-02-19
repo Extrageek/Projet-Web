@@ -5,28 +5,34 @@ import { Puzzle, PuzzleItem } from './../models/puzzle';
 
 let gridGenerationManager = new GridGenerationManager();
 describe('Puzzle Manager Service', () => {
-    it('should get a new puzzle', function(done) {
+    it('getNewPuzzle should get a new puzzle', function (done) {
         this.timeout(6000);
-        let puzzle = gridGenerationManager.getNewPuzzle(Difficulty.HARD); 
+        let puzzle = gridGenerationManager.getNewPuzzle(Difficulty.HARD);
         expect(puzzle).to.be.instanceof(Puzzle);
         expect(puzzle._puzzle.length).to.be.equal(9);
         done();
     });
 
-    it('should generate a new puzzle', function(done) {
+    it('generateNewPuzzle should generate a new puzzle', function (done) {
         this.timeout(6000);
-        let puzzle = gridGenerationManager.generateNewPuzzle(Difficulty.NORMAL); 
+        let puzzle = gridGenerationManager.generateNewPuzzle(Difficulty.NORMAL);
         expect(puzzle).to.be.instanceof(Puzzle);
         expect(puzzle._puzzle.length).to.be.equal(9);
         done();
     });
 
-    it('should remove value from puzzleItem to be guessed', () => {
+    it('createPuzzleHoles should remove value from puzzleItem to be guessed', () => {
         let puzzle = new Puzzle();
         puzzle._puzzle = GRID_FULL;
         let puzzleHoles = new Puzzle();
         puzzleHoles._puzzle = GRID_HOLES;
         expect(gridGenerationManager.createPuzzleHoles(puzzle)).to.be.deep.equal(puzzleHoles);
+    });
+
+    it('createPuzzleHoles should throw an error when the parameter is null', () => {
+        expect(() => {
+            gridGenerationManager.createPuzzleHoles(null);
+        }).to.throw(Error);
     });
 });
 
