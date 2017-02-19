@@ -58,7 +58,7 @@ export class Time {
 
         const areSecondsLessThan = this._seconds < time._seconds;
         const areSecondsEqual = this._seconds === time._seconds;
-        
+
         if (areHoursLessThan
             || (areHoursEqual && areMinutesLessThan)
             || (areHoursEqual && areMinutesEqual && areSecondsLessThan)) {
