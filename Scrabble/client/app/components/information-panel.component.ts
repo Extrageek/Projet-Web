@@ -12,14 +12,14 @@ const ONE_SECOND = 1000;
 })
 export class InformationPanelComponent implements AfterViewInit {
     player = "default";
-    score : number;
-    lettersOnEasel : number;
+    score: number;
+    lettersOnEasel: number;
     seconds: number;
-    minute: number;
-    hour: number;
+    minutes: number;
 
-    constructor(private timerService : TimerService) {
-        this.seconds = 0; this.minute = 0; this.hour = 0;
+    constructor(private timerService: TimerService) {
+        this.seconds = 0;
+        this.minutes = 0;
         this.score = 0;
         this.lettersOnEasel = MAX_NUMBER_OF_LETTERS;
     }
@@ -28,8 +28,15 @@ export class InformationPanelComponent implements AfterViewInit {
         setInterval(() => {
             this.timerService.updateClock();
             this.seconds = this.timerService.seconds;
-            this.minute = this.timerService.minute;
-            this.hour = this.timerService.hour;
+            this.minutes = this.timerService.minutes;
         }, ONE_SECOND);
+
+    }
+    public printMinutes(): string {
+        return ("0" + this.minutes).slice(-2);
+    }
+
+    public printSeconds(): string {
+        return ("0" + this.seconds).slice(-2);
     }
 }
