@@ -78,8 +78,12 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let record of _easyRecords">
-                                <td>{{record._username}}</td>
-                                <td>{{record._time._hours}} : {{record._time._minutes}} : {{record._time._seconds}}</td>
+                                <td>{{record.username}}</td>
+                                <td>
+                                    <span *ngIf="record._time._hours < 10">0</span>{{record._time._hours}} :
+                                    <span *ngIf="record._time._minutes < 10">0</span>{{record._time._minutes}} :
+                                    <span *ngIf="record._time._seconds < 10">0</span>{{record._time._seconds}}
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -94,8 +98,12 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let record of _hardRecords">
-                                <td>{{record._username}}</td>
-                                <td>{{record._time._hours}} : {{record._time._minutes}} : {{record._time._seconds}}</td>
+                                <td>{{record.username}}</td>
+                                <td>
+                                    <span *ngIf="record._time._hours < 10">0</span>{{record._time._hours}} :
+                                    <span *ngIf="record._time._minutes < 10">0</span>{{record._time._minutes}} :
+                                    <span *ngIf="record._time._seconds < 10">0</span>{{record._time._seconds}}
+                                </td>
                             </tr>
                         </tbody>
                     </table>
