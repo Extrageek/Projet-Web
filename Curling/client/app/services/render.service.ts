@@ -10,14 +10,20 @@ import { Stone, StoneColor } from "../models/stone";
 import { RinkInfo } from "../models/rinkInfo.interface";
 import { StoneHandler } from "../models/stoneHandler";
 
+export enum CameraType {
+        PERSPECTIVE_CAM = 0,
+        ORTHOGRAPHIC_CAM = 1
+}
+
 @Injectable()
 export class RenderService {
 
-    private static readonly NUMBER_OF_MODELS_TO_LOAD = 4;
+    private static readonly NUMBER_OF_MODELS_TO_LOAD = 2;
 
     private _numberOfModelsLoaded: number;
     private _scene: Scene;
     private _currentCamera: PerspectiveCamera;
+    private _currentCameraType: CameraType;
     private _renderer: Renderer;
     private _geometry: Geometry;
     private _material: MeshFaceMaterial;
@@ -53,6 +59,7 @@ export class RenderService {
         this._renderer.setSize(window.innerWidth, window.innerHeight, true);
 
         this._currentCamera = this._cameraService.perspectiveCamera;
+        this._currentCameraType = CameraType.PERSPECTIVE_CAM;
 
         //Part 2: Scenery
         this.setUpLightning(); //Because lighting is everything
@@ -69,6 +76,7 @@ export class RenderService {
         //Part 5: Events
         // bind to window resizes
         window.addEventListener('resize', _ => this.onResize());
+        window.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event));
     }
 
     public linkRenderServerToCanvas(container: HTMLElement) {
@@ -161,14 +169,14 @@ export class RenderService {
         Rink.createRink(this._objectLoader).then((rink: Rink) => {
             this._rinkInfo = rink;
             this._mesh.add(rink);
-            this.onFinishedLoadingModel();
             this.loadStoneHandler();
-            this._stoneHandler.generateNewStone().then((stone: Stone) => {
-                this._scene.add(stone);
-                stone.position.set(-0.4, 0, 0);
-                this.onFinishedLoadingModel();
-            });
+            // this._stoneHandler.generateNewStone().then((stone: Stone) => {
+            //     this._scene.add(stone);
+            //     stone.position.set(0, 0, 0);
+            //     this.onFinishedLoadingModel();
+            // });
             this.loadStone();
+            // this.onFinishedLoadingModel();
         });
     }
 
@@ -200,6 +208,7 @@ export class RenderService {
 
     public switchCamera() {
         this._currentCamera = this._cameraService.nextCamera();
+        this._currentCameraType = (!this._currentCamera) ? CameraType.PERSPECTIVE_CAM : CameraType.ORTHOGRAPHIC_CAM;
         this.onResize();
     }
 
@@ -211,7 +220,7 @@ export class RenderService {
                 this._clock.start();
             }
             this._gameStatusService.gameStatus.usedStone(); // Remove a stone from display
-            this._stoneHandler.performShot(2.5, new Vector3(0, 0, 1), () => { console.log("Launch finished"); });
+            this._stoneHandler.performShot(3, new Vector3(0, 0, 1), () => { });
             this.animate();
         }
     }
@@ -254,6 +263,12 @@ export class RenderService {
         this._currentCamera.updateProjectionMatrix();
 
         this._renderer.setSize(width, height);
+    }
+
+    onMouseMove(event: MouseEvent) {
+        if(this._stoneHandler !== undefined) {
+            this._stoneHandler.calculateMousePosition(event, this._currentCameraType);
+        }
     }
 
     /* This version loads the font each time, not efficient ! */

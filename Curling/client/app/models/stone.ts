@@ -11,10 +11,10 @@ export class Stone extends Group implements GameComponent {
 
     private static readonly STONES_PATH =
         ["/assets/models/json/curling-stone-red.json", "/assets/models/json/curling-stone-blue.json"];
-    private static readonly BOUNDING_SPHERE_RADIUS = 0.25;
+    private static readonly BOUNDING_SPHERE_RADIUS = 0.26;
     private static readonly SCALE = {x: 1, y: 1, z: 1};
     private static readonly MATERIAL_PROPERTIES = {wireframe: false, shininess: 0.7};
-    public static readonly SPEED_DIMINUTION_NUMBER = 0.1;
+    public static readonly SPEED_DIMINUTION_NUMBER = 0.2;
     public static readonly SPEED_DIMINUTION_NUMBER_WITH_SWEEP = 0.09;
     private static readonly MINIMUM_SPEED = 0.001;
 
@@ -28,7 +28,6 @@ export class Stone extends Group implements GameComponent {
     private _boundingSphere: Sphere;
     private _lastBoundingSphere: Sphere;
     private _lastPosition: Vector3;
-    private _lastSpeed: number;
 
     public static createStone(objectLoader: ObjectLoader, stoneColor: StoneColor,
         initialPosition: Vector3): Promise<Stone> {
@@ -87,8 +86,8 @@ export class Stone extends Group implements GameComponent {
     }
 
     public set speed(speed: number) {
-        if (speed === null || speed === undefined || speed <= 0) {
-            throw new Error("The speed cannot be null or less or equals than 0.");
+        if (speed === null || speed === undefined || speed < 0) {
+            throw new Error("The speed cannot be null or less than 0.");
         }
         this._speed = speed;
     }
