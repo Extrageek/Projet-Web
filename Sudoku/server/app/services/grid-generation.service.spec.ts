@@ -1,12 +1,127 @@
-// import { assert, expect } from 'chai';
+import { assert, expect } from 'chai';
 
-// import { GridGenerationManager } from './grid-generation.service';
-// import { Puzzle, PuzzleItem } from './../models/puzzle';
+import { GridGenerationManager, Difficulty } from './grid-generation.service';
+import { Puzzle, PuzzleItem } from './../models/puzzle';
 
+let gridGenerationManager = new GridGenerationManager();
+describe('Puzzle Manager Service', () => {
+    it('should get a new puzzle', function(done) {
+        this.timeout(6000);
+        let puzzle = gridGenerationManager.getNewPuzzle(Difficulty.HARD); 
+        expect(puzzle).to.be.instanceof(Puzzle);
+        expect(puzzle._puzzle.length).to.be.equal(9);
+        done();
+    });
 
-// describe('Puzzle Manager Service', () => {
-//     it('should initialize a grid', () => {
-      
-//             // TODO: Must be completed
-//        });
-// });
+    it('should generate a new puzzle', function(done) {
+        this.timeout(6000);
+        let puzzle = gridGenerationManager.generateNewPuzzle(Difficulty.NORMAL); 
+        expect(puzzle).to.be.instanceof(Puzzle);
+        expect(puzzle._puzzle.length).to.be.equal(9);
+        done();
+    });
+
+    it('should remove value from puzzleItem to be guessed', () => {
+        let puzzle = new Puzzle();
+        puzzle._puzzle = GRID_FULL;
+        let puzzleHoles = new Puzzle();
+        puzzleHoles._puzzle = GRID_HOLES;
+        expect(gridGenerationManager.createPuzzleHoles(puzzle)).to.be.deep.equal(puzzleHoles);
+    });
+});
+
+const GRID_FULL = [
+    [
+        new PuzzleItem(4, true), new PuzzleItem(1, true), new PuzzleItem(5, true),
+        new PuzzleItem(6, true), new PuzzleItem(3, false), new PuzzleItem(8, true),
+        new PuzzleItem(9, true), new PuzzleItem(7, true), new PuzzleItem(2, false)
+    ],
+    [
+        new PuzzleItem(3, true), new PuzzleItem(6, false), new PuzzleItem(2, false),
+        new PuzzleItem(4, false), new PuzzleItem(7, true), new PuzzleItem(9, true),
+        new PuzzleItem(1, true), new PuzzleItem(8, false), new PuzzleItem(5, true)
+    ],
+    [
+        new PuzzleItem(7, false), new PuzzleItem(8, true), new PuzzleItem(9, true),
+        new PuzzleItem(2, false), new PuzzleItem(1, true), new PuzzleItem(5, false),
+        new PuzzleItem(3, true), new PuzzleItem(6, true), new PuzzleItem(4, true)
+    ],
+    [
+        new PuzzleItem(9, true), new PuzzleItem(2, true), new PuzzleItem(6, false),
+        new PuzzleItem(3, true), new PuzzleItem(4, true), new PuzzleItem(1, true),
+        new PuzzleItem(7, true), new PuzzleItem(5, true), new PuzzleItem(8, false)
+    ],
+    [
+        new PuzzleItem(1, true), new PuzzleItem(3, true), new PuzzleItem(8, true),
+        new PuzzleItem(7, true), new PuzzleItem(5, true), new PuzzleItem(6, true),
+        new PuzzleItem(4, true), new PuzzleItem(2, true), new PuzzleItem(9, true)
+    ],
+    [
+        new PuzzleItem(5, true), new PuzzleItem(7, false), new PuzzleItem(4, true),
+        new PuzzleItem(9, true), new PuzzleItem(8, true), new PuzzleItem(2, true),
+        new PuzzleItem(6, true), new PuzzleItem(3, false), new PuzzleItem(1, true)
+    ],
+    [
+        new PuzzleItem(2, false), new PuzzleItem(5, true), new PuzzleItem(7, true),
+        new PuzzleItem(1, false), new PuzzleItem(6, true), new PuzzleItem(4, false),
+        new PuzzleItem(8, false), new PuzzleItem(9, true), new PuzzleItem(3, true)
+    ],
+    [
+        new PuzzleItem(8, true), new PuzzleItem(4, true), new PuzzleItem(3, true),
+        new PuzzleItem(5, false), new PuzzleItem(9, true), new PuzzleItem(7, true),
+        new PuzzleItem(2, true), new PuzzleItem(1, true), new PuzzleItem(6, true)
+    ],
+    [
+        new PuzzleItem(6, true), new PuzzleItem(9, true), new PuzzleItem(1, true),
+        new PuzzleItem(8, false), new PuzzleItem(2, false), new PuzzleItem(3, true),
+        new PuzzleItem(5, true), new PuzzleItem(4, true), new PuzzleItem(7, false)
+    ]
+];
+
+const GRID_HOLES = [
+    [
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(null, true), new PuzzleItem(3, false), new PuzzleItem(null, true),
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(2, false)
+    ],
+    [
+        new PuzzleItem(null, true), new PuzzleItem(6, false), new PuzzleItem(2, false),
+        new PuzzleItem(4, false), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(null, true), new PuzzleItem(8, false), new PuzzleItem(null, true)
+    ],
+    [
+        new PuzzleItem(7, false), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(2, false), new PuzzleItem(null, true), new PuzzleItem(5, false),
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(null, true)
+    ],
+    [
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(6, false),
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(8, false)
+    ],
+    [
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(null, true)
+    ],
+    [
+        new PuzzleItem(null, true), new PuzzleItem(7, false), new PuzzleItem(null, true),
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(null, true), new PuzzleItem(3, false), new PuzzleItem(null, true)
+    ],
+    [
+        new PuzzleItem(2, false), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(1, false), new PuzzleItem(null, true), new PuzzleItem(4, false),
+        new PuzzleItem(8, false), new PuzzleItem(null, true), new PuzzleItem(null, true)
+    ],
+    [
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(5, false), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(null, true)
+    ],
+    [
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(8, false), new PuzzleItem(2, false), new PuzzleItem(null, true),
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(7, false)
+    ]
+];

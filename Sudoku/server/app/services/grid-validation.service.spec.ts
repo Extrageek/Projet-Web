@@ -3,9 +3,6 @@ import { assert, expect } from 'chai';
 import { GridValidationManager } from './grid-validation.service';
 import { Puzzle, PuzzleItem } from './../models/puzzle';
 
-// Rewire allows us to test private methods
-// var rewire = require('rewire'),
-//     gridValidationManagerRewire = rewire('./grid-validation.service');
 let gridValidationManager = new GridValidationManager();
 
 describe('Grid Validation Manager', () => {

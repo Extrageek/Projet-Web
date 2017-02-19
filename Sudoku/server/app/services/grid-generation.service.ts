@@ -7,7 +7,7 @@
 
 import { Puzzle } from './../models/puzzle';
 
-const NOMBRE_ITERATION = 1000;
+const NOMBRE_ITERATION = 1;
 
 // Used to generate the type of transformation and to give a number of holes to dig in sudoku
 function getRandomInRange(min: number, max: number) {
@@ -27,6 +27,8 @@ module GridGenerationService {
 
         private _easySudoku: Array<Puzzle>;
         private _hardSudoku: Array<Puzzle>;
+
+        constructor() {}
 
         public getNewPuzzle(difficulty: Difficulty): Puzzle {
             //this._easySudoku.push(this.generateNewPuzzle());
@@ -74,6 +76,7 @@ module GridGenerationService {
                 // Vertical Symmetry
                 newPuzzle.verticalSymmetry();
             }
+            
             while (new Date().getTime() / 1000 < endTime) {
                 // Wait until five seconds
             }
@@ -87,7 +90,7 @@ module GridGenerationService {
          * @method createPuzzleHoles
          * @return Puzzle
          */
-        private createPuzzleHoles(puzzle: Puzzle) {
+        public createPuzzleHoles(puzzle: Puzzle) {
 
             if (puzzle === null) {
                 throw new Error("The parameter cannot be null");
