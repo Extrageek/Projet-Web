@@ -1,0 +1,32 @@
+.info-title {
+    padding: 7px;
+    width: auto;
+    border-bottom: 2px solid dimgrey;
+    font-size: larger;
+    /*font-family: Arial, "Times New Roman", Georgia;*/
+    font-size: 26px;
+}
+
+table.info-elements {
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    border-collapse: separate;
+    table-layout: fixed;
+    width: 100%;
+    border-spacing: 0 5px;
+}
+
+.info-elements tr  {
+    border: 1px solid #ddd;
+    background-color:#fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.16);
+}
+
+.info-elements td  {
+    font-size: 20px;
+    padding: 10px;
+}
+
+
+.info-elements td:first-child  {
+    width:70%;
+}

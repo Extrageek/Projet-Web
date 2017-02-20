@@ -11,11 +11,11 @@ import { GameComponent } from "./../components/game-room.component";
 @NgModule({
     imports: [BrowserModule, FormsModule],
     declarations: [
-        GameComponent,
         ScrabbleBoardComponent,
         EaselComponent,
         ChatroomComponent,
-        InformationPanelComponent
+        InformationPanelComponent,
+        GameComponent
     ],
 })
 export class GameRoomModule { }

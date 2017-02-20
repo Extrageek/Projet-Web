@@ -9,7 +9,9 @@ const ONE_SECOND = 1000;
     providers: [TimerService],
     selector: "info-panel-selector",
     templateUrl: "../../assets/templates/information-panel.html",
+    styleUrls: ['../../assets/stylesheets/information-panel.css']
 })
+
 export class InformationPanelComponent implements AfterViewInit {
     player = "default";
     score: number;

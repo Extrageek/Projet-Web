@@ -34,21 +34,11 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
         this.onJoinedRoom();
         this.onLeaveRoom();
         this.onReceivedMessage();
-        this.onChangedLettersReceived();
+        // this.onChangedLettersReceived();
     }
 
     ngOnDestroy() {
         // TODO: unsubscribe all the event in the ngOnDestroy
-    }
-
-    // A callback fonction for the chat message submit button
-    submitMessage(message: HTMLInputElement) {
-        if (message.value !== "") {
-            this.socketService.emitMessage(
-                SocketEventType.message,
-                { username: this.username, message: message.value });
-        }
-        message.value = "";
     }
 
     // A callback fonction when the player receive a message
@@ -114,12 +104,10 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
 
         this.socketService.subscribeToChannelEvent(SocketEventType.exchangedLetter)
             .subscribe((response: any) => {
-
-                // this.messageArray.push(response.message);
+                this.messageArray.push(response.message);
 
                 console.log("Chat Room:", "Hey! I received new letters from the server: ", response);
             });
-
     }
 
     // A callback function when in case of invalid request.

@@ -1,32 +1,60 @@
-<div class="row">
-    <div class="col-md-10 col-md-offset-1">
-        <div class="main-wrapper">
+<!--<div class="head-title">
+    <h1>Scrab..</h1>
+</div>-->
 
-            <div class="col-md-12 head-title">
-               title
-            </div>
-            <div class="col-md-12 content-wrapper">
-                <div class="col-md-2">
-                    <info-panel-selector>...Loading information panel</info-panel-selector>
+<div class="main-wrapper">
+    <div class="row">
+        <div class="col-md-12 content-wrapper">
+            <div class="col-md-3 info-wrapper">
+                <info-panel-selector>...Loading information panel</info-panel-selector>
+
+                <div class="control-panel col-md-12">
+                    <p class="control-panel-title">Control panel</p>
+
+                    <!--TODO: The pass command must be implemented first -->
+                    <button id="btn-pass" type="submit" type="button" class="btn btn-default btn-md">Test Pass</button>
+
                 </div>
 
-                <div class="col-md-7 board-wrapper">
-                    <div class="col-md-12">
-                        <scrabble-main-board-selector>Loading Scrabble board 2 here...</scrabble-main-board-selector>
+                <div class="col-md-12 easel-box">
+                    <!-- TODO: Must use the list of letters in the easl as parameters -->
+                    <button id="btn-exchange" (click)="changeLettersRequest()" type="submit" type="button" class="btn btn-success btn-md">Test Exchange</button>
+                    <easel-selector (easelTabKeyEvent)="onTabKeyEventFromEasel($event)">
+                        Loading easel...
+                    </easel-selector>
+                </div>
+
+            </div>
+
+            <div class="col-md-6 board-wrapper">
+                <div class="col-md-12">
+                    <scrabble-main-board-selector>Loading Scrabble board 2 here...</scrabble-main-board-selector>
+                </div>
+
+                <div class="col-md-12 command-box-wrapper">
+                    <div class="icon-left-box col-md-2">
+                        <br>
+                    </div>
+                    <div class="input-box col-md-8">
+                        <div class="form-group">
+                            <textarea #message id="inputMessage" autofocus class="form-control" rows="2" (keydown.enter)="submitMessage(message)" (keydown)="onKeyPressEventHandler($event)"
+                                placeholder="Enter your message"></textarea>
+
+                        </div>
                     </div>
 
-                    <div class="col-md-12">
-                        <easel-selector>Loading easel...</easel-selector>
+                    <div class="submit-btn-box col-md-2">
+                        <button (click)="submitMessage(message)" id="submit-btn" type="submit" type="button" class="btn btn-info btn-md">Send</button>
                     </div>
                 </div>
+            </div>
 
-                <div class="col-md-3 chat-wrapper">
-                    <scrabble-chatroom-selector> Loading chatroom...</scrabble-chatroom-selector>
-                </div>
+            <div class="col-md-3 chat-wrapper">
+                <scrabble-chatroom-selector> Loading chatroom...</scrabble-chatroom-selector>
             </div>
-            <div class="col-md-12 footer-wrapper">
-                footer
-            </div>
+        </div>
+        <div class="col-md-12 footer-wrapper">
+            footer
         </div>
     </div>
 </div>

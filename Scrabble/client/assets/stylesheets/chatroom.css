@@ -1,22 +1,23 @@
 .chatContainer {
-    width:100%;
-    height:533px;
-    border: 2px solid dimgrey;
-    background-color: white;
+    width: 100%;
+    height: 630px;
+    background-color: #eee;
 }
 
 .chatTitle {
-    padding:4px;
+    padding: 7px;
     width: auto;
     border-bottom: 2px solid dimgrey;
-    font-size: larger;
-    font-family: Arial, "Times New Roman", Georgia;
+    /*font-family: Arial, "Times New Roman", Georgia;*/
+    font-size: 26px;
 }
 
 .chatMessageBox {
-    height:412px;
-    overflow-y:scroll;
-    border-bottom: 1px solid black;
+    height: 412px;
+    border: 1px solid #ddd;
+    /*border-radius: 15px;*/
+    background-color: #fff;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.16);
 }
 
 .individualMessages {
@@ -26,11 +27,8 @@
     padding: 3px;
     background-color: lightgray;
 }
+
 .individualMessages:nth-child(odd) {
     background: white;
     word-wrap: break-word;
-}
-
-#inputMessage {
-    /**/
 }

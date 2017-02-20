@@ -2,13 +2,20 @@ import { Alphabet } from './alphabet';
 
 export class ScrabbleLetter {
     private _letter: string;
-    get letter() {
+    private _imageSource: string;
+
+    public get letter(): string {
         return this._letter;
     }
+    public set letter(v: string) {
+        this._letter = v;
+    }
 
-    private _imageSource: string;
-    get imageSource(): string {
+    public get imageSource(): string {
         return this._imageSource;
+    }
+    public set imageSource(v: string) {
+        this._imageSource = v;
     }
 
     constructor(letter: string) {

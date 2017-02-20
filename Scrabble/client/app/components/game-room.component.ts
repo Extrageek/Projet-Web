@@ -1,26 +1,47 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Router } from "@angular/router";
+import { Component, OnInit, OnDestroy, Output, ViewChild, EventEmitter } from "@angular/core";
+import { Route, ActivatedRoute } from '@angular/router';
 
 import { SocketService } from "../services/socket-service";
+import { EaselComponent } from './easel.component';
+import { GameRoomEventManagerService } from "../services/gameRoom/game-room-event-manager.service";
 import { SocketEventType } from '../commons/socket-eventType';
 import { IRoomMessage } from '../models/room/room-message';
+import { ScrabbleLetter } from "../models/letter/scrabble-letter";
+import { EaselControl } from '../commons/easel-control';
+
+
+declare var jQuery: any;
 
 @Component({
     moduleId: module.id,
-    providers: [SocketService],
+    providers: [SocketService, GameRoomEventManagerService],
     selector: "game-room-selector",
     templateUrl: "../../assets/templates/game-room.html",
     styleUrls: ["../../assets/stylesheets/game-room.css"],
 })
 
 export class GameComponent implements OnInit, OnDestroy {
-    connection: any; // TODO: Hell no!!! Remove this please
 
-    constructor(private router: Router, private socketService: SocketService) {
+    // Create an event emitter to interact with the Easel Component
+    @Output() tabKeyEvent = new EventEmitter();
+
+    @ViewChild(EaselComponent)
+    private _childEasel: EaselComponent;
+    private _username: string;
+
+    constructor(
+        private route: ActivatedRoute,
+        private socketService: SocketService,
+        private gameRoomEventManagerService: GameRoomEventManagerService) {
         // Constructor
     }
 
     ngOnInit() {
+        this.route.params.subscribe(params => {
+            this._username = params['id'];
+        });
+
+        this.changeLettersRequest();
 
         // TODO: unsubscribe all the event in the ngOnDestroy
         this.socketService.subscribeToChannelEvent(SocketEventType.connectError)
@@ -37,7 +58,7 @@ export class GameComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        // TODO: unsubscribe all the event in the ngOnDestroy
+        // TODO: unsubscribe to all the event in the ngOnDestroy
     }
 
     // A callback function when the server is not reachable.
@@ -66,14 +87,6 @@ export class GameComponent implements OnInit, OnDestroy {
         console.log("In Room", roomMessage);
     }
 
-    public changeLettersRequest(/*lettersToBeChanged: Array<string>*/) {
-
-        // TODO: Should be removed after a clean debug
-        let fakeLetters = ['A', 'E', 'M', 'N', 'U'];
-        console.log("Letter to change:", fakeLetters);
-        this.socketService.emitMessage(SocketEventType.exchangeLettersRequest, fakeLetters);
-    }
-
     private onChangedLettersReceived(changedLetters: Object) {
         console.log("In Room", "Hey! I received new letters from the server: ", changedLetters);
     }
@@ -81,5 +94,38 @@ export class GameComponent implements OnInit, OnDestroy {
     // A callback function when in case of invalid request.
     private onInvalidRequest() {
         console.log("In Room", "The request sent to the server is invalid");
+    }
+
+    // A callback fonction for the chat message submit button
+    public submitMessage(message: HTMLInputElement) {
+        if (message.value !== "") {
+            this.socketService.emitMessage(
+                SocketEventType.message,
+                { username: this._username, message: message.value });
+        }
+        message.value = "";
+    }
+
+    public changeLettersRequest(/*lettersToBeChanged: Array<string>*/) {
+
+        // TODO: Should be removed after a clean debug
+        let fakeLetters = ['A', 'E', 'M', 'N', 'U', 'A', 'A'];
+        console.log("Letter to change:", fakeLetters);
+        this.socketService.emitMessage(SocketEventType.exchangeLettersRequest, fakeLetters);
+    }
+
+    public onTabKeyEventFromEasel(letter: any) {
+        // Give the focus to the input box
+        setTimeout(function () {
+            jQuery("#inputMessage").focus();
+        }, 0);
+    }
+
+    public onKeyPressEventHandler(event: KeyboardEvent) {
+        let keyCode = event.which;
+
+        if (this.gameRoomEventManagerService.isTabKey(keyCode)) {
+            this._childEasel.getNotificationOnTabKeyPress(keyCode);
+        }
     }
 }

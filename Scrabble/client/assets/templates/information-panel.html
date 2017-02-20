@@ -1,15 +1,38 @@
-<section class="panel panel-info">
-    <header class="panel-heading">
-        <h5 class="panel-title">Information panel</h5>
-    </header>
-    <div class="panel-body">
-        <p>Time left: {{printMinutes()}}:{{printSeconds()}} </p>
-        <p>Users playing : {{player}}</p>
-        <p>Your score : {{score}} </p>
-        <p>Number of letters on easel: {{lettersOnEasel}} </p>
-        <p>Number of letters left in bank: </p>
-    </div>
-    <div class="col-md-10 col-md-offset-1">
-        <button (click)="changeLettersRequest(); $event.preventDefault()" type="button" class="btn btn-info btn-md">Test Exchange</button>
-    </div>
-</section>
+<div class="col-md-12">
+    <p class="info-title">Information panel</p>
+
+    <table class="info-elements">
+        <tbody>
+            <tr>
+                <td>Time left <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                </td>
+                <td>{{printMinutes()}}: {{ printSeconds()}}</td>
+            </tr>
+            <tr>
+                <td>Users playing
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                </td>
+                <td>{{player}}</td>
+            </tr>
+            <tr>
+                <td>Your score
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                </td>
+                <td>{{score}}</td>
+            </tr>
+            <tr>
+                <td>Letters on easel
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                </td>
+                <td>{{lettersOnEasel}}</td>
+            </tr>
+            <tr>
+                <td>Letters in bank
+                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                </td>
+                <td>102</td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
