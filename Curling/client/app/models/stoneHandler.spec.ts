@@ -77,4 +77,22 @@ describe("StoneHandler tests should", () => {
             timeoutId = setTimeout(update, 5);
         });
     });
+
+    it("detect a collision", done => {
+        stoneHandler.generateNewStone().then((s1: Stone) => {
+            s1.position = new Vector3(0, 0, 0);
+            s1.direction = new Vector3(0, 0, 1);
+            s1.speed = 4;
+            stoneHandler.generateNewStone().then((s2: Stone) => {
+                s2.position = new Vector3(0, 0, 1);
+                s2.speed = 0;
+                stoneHandler.update(0.2);
+                console.log(s1.speed);
+                expect(s1.speed).to.not.equals(4);
+                console.log(s2.speed);
+                expect(s2.speed).to.not.equals(0);
+            });
+        });
+        done();
+    });
 });

@@ -32,20 +32,18 @@ export class StoneHandler implements GameComponent {
     }
 
     public calculateMousePosition(event: MouseEvent, currentCam: CameraType) {
-        if(currentCam === CameraType.PERSPECTIVE_CAM) {
+        if (currentCam === CameraType.PERSPECTIVE_CAM) {
             this._mousePositionPlaneXZ.set(
-                (event.clientX / window.innerWidth) * 2 - 1,
+                (event.clientX / window.innerWidth) / 0.02215 - 22.55, // Numbers to align with the rink model
                 0,
-                -(event.clientY / window.innerHeight) *  6.17 + 3.21
+                -(event.clientY / window.innerHeight) / 0.008 + 46.75 // Numbers to align with the rink model
             );
-            // console.log(this._mousePositionPlaneXZ, -(event.clientY / window.innerHeight));
-        } else if(currentCam === CameraType.ORTHOGRAPHIC_CAM) {
+        } else if (currentCam === CameraType.ORTHOGRAPHIC_CAM) {
             this._mousePositionPlaneXZ.set(
-                (event.clientX / window.innerWidth) * 2 - 0.36,
+                -(event.clientY / window.innerHeight) / 0.038 + 13.2 ,
                 0,
-                -(event.clientY / window.innerHeight) *  2  + 1  
+                 (event.clientX / window.innerWidth) / 0.0268 - 18.6
             );
-            // console.log(this._mousePositionPlaneXZ);       
         } else {
             console.error("calculateMousePosition : camera unrecognized");
         }
@@ -145,11 +143,11 @@ export class StoneHandler implements GameComponent {
                 totalSpeed += stone.speed;
             });
             symmetryAxisVector.normalize();
-            
+
             stoneHiting.revertToLastPosition(); // Revert position to prevent the stone to be stucked
             stoneHiting.direction = symmetryAxisVector;
             stoneHiting.speed = totalSpeed * (1 - StoneHandler.COLLISION_SPEED_KEEP_PERCENT) / stonesHit.length;
-            
+
             stonesHit.map((stone: Stone, stoneNumber: number, allTheStone: Stone[]) => {
                 stone.speed = totalSpeed / (stonesHit.length) * StoneHandler.COLLISION_SPEED_TRANSFERED_PERCENT;
                 stone.direction = stone.position.clone().sub(stoneHiting.position).normalize();
