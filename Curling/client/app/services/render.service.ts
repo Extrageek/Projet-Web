@@ -175,6 +175,11 @@ export class RenderService {
             //     stone.position.set(0, 0, 0);
             //     this.onFinishedLoadingModel();
             // });
+            //  this._stoneHandler.generateNewStone().then((stone: Stone) => {
+            //     this._scene.add(stone);
+            //     stone.position.set(0, 0, 1);
+            //     this.onFinishedLoadingModel();
+            // });
             this.loadStone();
             // this.onFinishedLoadingModel();
         });
@@ -266,7 +271,7 @@ export class RenderService {
     }
 
     onMouseMove(event: MouseEvent) {
-        if(this._stoneHandler !== undefined) {
+        if (this._stoneHandler !== undefined) {
             this._stoneHandler.calculateMousePosition(event, this._currentCameraType);
         }
     }

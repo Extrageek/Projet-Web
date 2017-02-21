@@ -1,4 +1,4 @@
-import { Object3D, ObjectLoader, PerspectiveCamera, Vector2, Vector3 } from "three";
+import { ObjectLoader, Vector3 } from "three";
 import { RinkInfo } from "./rinkInfo.interface";
 import { Stone, StoneColor } from "./stone";
 import { GameComponent } from "./gameComponent.interface";
@@ -19,7 +19,6 @@ export class StoneHandler implements GameComponent {
     private _objectLoader: ObjectLoader;
     private _stoneOnTheGame: Stone[];
     private _mousePositionPlaneXZ: Vector3;
-    private _raycaster = new THREE.Raycaster();
     private _callbackAfterShotFinished: Function;
 
     constructor(objectLoader: ObjectLoader, rinkInfo: RinkInfo, firstPlayer: StoneColor) {
