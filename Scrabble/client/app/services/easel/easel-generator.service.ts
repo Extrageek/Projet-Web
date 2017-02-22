@@ -11,6 +11,7 @@ export class EaselGeneratorService {
         return this._lettersOnEasel;
     }
 
+    // TODO: ???????????????
     public generatedEasel(lettersReceived: Array<ScrabbleLetter>): Array<ScrabbleLetter> {
         this._lettersOnEasel = lettersReceived;
         return this._lettersOnEasel;

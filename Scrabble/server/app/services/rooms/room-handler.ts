@@ -117,9 +117,6 @@ export class RoomHandler {
         let availableRoom: Room;
 
         this._rooms.forEach((room) => {
-
-            console.log(room.players);
-
             let currentPlayer = room.players.filter((player) => {
 
                 console.log("dd", player.socketId, "-", socketId);

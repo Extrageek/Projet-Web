@@ -2,9 +2,28 @@
     <div class="col-md-12 chatContainer">
 
         <p class="chatTitle">Chat Room</p>
-        
+
         <div #scroll class="col-md-12 chatMessageBox">
-            <div class="individualMessages" *ngFor="let message of messageArray">{{message}}</div>
+            <div class="msg-wrapper" *ngFor="let response of _messageArray">
+
+                <p class="msg-date">{{response._date | date: 'yMMMdjms'}}</p>
+
+                <div *ngIf="response._username===_username" class="self-message">
+                    <p class="msg">
+                        {{response._message}}
+                    </p>
+                </div>
+
+                <div *ngIf="response._username!==_username" class="other-message">
+                    <p>
+                        <img class="image-circle" src="../../assets/images/blank-user-img.png" alt="user id" align="left">
+                        <span>{{response._username}}</span>
+                    </p>
+                    <p class="msg">
+                        {{response._message}}
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 </div>

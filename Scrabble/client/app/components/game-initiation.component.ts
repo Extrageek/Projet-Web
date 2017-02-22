@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
+import { Subscription } from 'rxjs/Subscription';
 
 import { SocketService } from "../services/socket-service";
 import { SocketEventType } from '../commons/socket-eventType';
@@ -14,73 +15,94 @@ import { IRoomMessage } from '../models/room/room-message';
 export class GameInitiationComponent implements OnInit, OnDestroy {
 
     private _username = "";
-    connection: any; // TODO: Remove or handle this ...
+    private _onConnectedSubscription: Subscription;
+    private _onJoinedRoomSubscription: Subscription;
+    private _onLeaveRoomSubscription: Subscription;
+    private _onReceivedMessageSubscription: Subscription;
+    private _onUsernameAlreadyExistSubscription: Subscription;
+    private _onInvalidRequestEventSubscription: Subscription;
+    private _onConnectionErrorSubscription: Subscription;
 
     constructor(private router: Router, private socketService: SocketService) {
         // Default constructor
     }
 
     ngOnInit() {
-
-        // TODO: unsubscribe all the event in the ngOnDestroy
-        this.connection = this.socketService.subscribeToChannelEvent(SocketEventType.connectError)
-            .subscribe(this.onConnectionError);
-
-        this.socketService.subscribeToChannelEvent(SocketEventType.joinRoom)
-            .subscribe(this.onJoinedRoom);
-
-        this.socketService.subscribeToChannelEvent(SocketEventType.roomReady)
-            .subscribe(this.onRoomReady);
-
-        this.socketService.subscribeToChannelEvent(SocketEventType.usernameAlreadyExist)
-            .subscribe(this.onUsernameAlreadyExists);
+        // Subscribe to event by calling the related method and save them for unsubsciption OnDestroy
+        this._onConnectedSubscription = this.onConnected();
+        this._onJoinedRoomSubscription = this.onJoinedRoom();
+        this._onLeaveRoomSubscription = this.onleaveRoom();
+        this._onUsernameAlreadyExistSubscription = this.onUsernameAlreadyExists();
+        this._onInvalidRequestEventSubscription = this.onInvalidRequest();
+        this._onConnectionErrorSubscription = this.onConnectionError();
     }
 
     ngOnDestroy() {
-        // TODO: unsubscribe all the event in the ngOnDestroy
-    }
-
-    // A callback function when the username is not valid.
-    public onInvalidUsername() {
-        console.log("The username is invalid. The name can only contain alphanumeric characters.");
-    }
-
-    // A callback function when in case of invalid request.
-    public onInvalidRequest() {
-        console.log("The request sent to the server is invalid");
-    }
-
-    // A callback function when the username is taken.
-    public onUsernameAlreadyExists() {
-        console.log("This username is already taken, please choose another username.");
+        // unsubscribe to all the listening events
     }
 
     // A callback function when the client is connected to the server.
-    public onConnected() {
-        console.log("I'm connected to the server");
-    }
-
-    // A callback function when the server is not reachable.
-    public onConnectionError() {
-        console.log("Connection Error: The server is not reachable");
+    private onConnected(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.connect)
+            .subscribe(() => {
+                console.log("I'm connected to the server");
+            });
     }
 
     // A callback when the player join a room
-    public onJoinedRoom(roomMessage: IRoomMessage): void {
+    private onJoinedRoom(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.joinRoom)
+            .subscribe((roomMessage: IRoomMessage) => {
+                console.log("Joined the room", roomMessage);
+            });
+    }
 
-        // For debug
-        console.log(roomMessage);
+    // A callback when the player join a room
+    private onleaveRoom(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.leaveRoom)
+            .subscribe((roomMessage: IRoomMessage) => {
+                console.log("Left the room", roomMessage);
+            });
     }
 
     // A callback function when the room of the user is full and the game is ready to be started
-    private onRoomReady(roomMessage: IRoomMessage): void {
+    private onRoomReady(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.roomReady)
+            .subscribe((roomMessage: IRoomMessage) => {
+                console.log("Room ready");
+            });
+    }
 
-        // For debug
-        console.log(roomMessage);
+    // A callback function when in case of invalid request.
+    private onInvalidRequest(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.invalidRequest)
+            .subscribe(() => {
+                console.log("The request sent to the server is invalid");
+            });
+    }
+
+    // A callback function when the username is taken.
+    private onUsernameAlreadyExists(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.usernameAlreadyExist)
+            .subscribe(() => {
+                console.log("This username is already taken, please choose another username.");
+            });
+    }
+
+    // A callback function when the server is not reachable.
+    private onConnectionError(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.connectError)
+            .subscribe((error) => {
+                console.log("Connection Error: The server is not reachable", error);
+            });
     }
 
     // A callback function when the user ask for a new game.
     public sendNewGameRequest(username: string, numberOfPlayers: string) {
+        if (username === null || numberOfPlayers === null) {
+            throw new Error("Null argument error: All the parameters are required");
+        }
+
         this._username = username;
         this.socketService.emitMessage(
             SocketEventType.newGameRequest,

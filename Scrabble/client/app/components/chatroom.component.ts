@@ -1,4 +1,6 @@
 import { Component, OnInit, OnDestroy, AfterViewChecked, ElementRef, ViewChild } from "@angular/core";
+import { Subscription } from 'rxjs/Subscription';
+
 import { Route, ActivatedRoute } from '@angular/router';
 import { SocketService } from "../services/socket-service";
 import { SocketEventType } from '../commons/socket-eventType';
@@ -13,46 +15,74 @@ import { IRoomMessage } from '../models/room/room-message';
 })
 
 export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
-    messageArray: string[];
-    username: string;
+    _messageArray: Array<IRoomMessage>;
+    _username: string;
 
-    connection: any; // TODO: Hell no!!!, Remove this please
+    private _onJoinedRoom: Subscription;
+    private _onLeaveRoom: Subscription;
+    private _onReceivedMessage: Subscription;
 
     @ViewChild("scroll") private myScrollContainer: ElementRef;
 
     constructor(private route: ActivatedRoute, private socketService: SocketService) {
-        this.messageArray = new Array<string>();
+        this._messageArray = new Array<IRoomMessage>();
     }
 
     ngOnInit(): void {
-        this.messageArray = new Array<string>();
+        this._messageArray = new Array<IRoomMessage>();
 
         this.route.params.subscribe(params => {
-            this.username = params['id'];
+            this._username = params['id'];
         });
 
-        this.onJoinedRoom();
-        this.onLeaveRoom();
-        this.onReceivedMessage();
-        // this.onChangedLettersReceived();
+        // Subscribe to event by calling the related method and save them for unsubsciption OnDestroy
+        this._onJoinedRoom = this.onJoinedRoom();
+        this._onLeaveRoom = this.onLeaveRoom();
+        this._onReceivedMessage = this.onReceivedMessage();
     }
 
     ngOnDestroy() {
-        // TODO: unsubscribe all the event in the ngOnDestroy
+        // unsubscribe to all the listening events
+        this._onJoinedRoom.unsubscribe();
+        this._onLeaveRoom.unsubscribe();
+        this._onReceivedMessage.unsubscribe();
     }
 
-    // A callback fonction when the player receive a message
-    onReceivedMessage() {
-
-        this.socketService.subscribeToChannelEvent(SocketEventType.message)
-            .subscribe((response: any) => {
-                this.messageArray.push(response.message);
-
-                console.log("Chat room: ", response.message);
+    // A callback when the player join a room
+    private onJoinedRoom(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.joinRoom)
+            .subscribe((response: IRoomMessage) => {
+                if (response !== undefined && response._message !== null) {
+                    this._messageArray.push(response);
+                    console.log("Chat room:Joined ", response._message);
+                }
             });
     }
 
-    scrollToBottom() {
+    // A callback when the player leave a room
+    public onLeaveRoom(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.leaveRoom)
+            .subscribe((response: IRoomMessage) => {
+                if (response !== undefined && response._message !== null) {
+                    this._messageArray.push(response);
+                    console.log("Chat room: Leave ", response._message);
+                }
+            });
+    }
+
+    // A callback fonction when the player receive a message
+    private onReceivedMessage(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.message)
+            .subscribe((response: any) => {
+                if (response !== undefined && response._message !== null) {
+                    this._messageArray.push(response as IRoomMessage);
+                    console.log("Chat room: ", response.message, response.date);
+                }
+            });
+    }
+
+    // Use to add a scroller to the chatroom
+    private scrollToBottom() {
         try {
             this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
         } catch (err) {
@@ -60,58 +90,8 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
         }
     }
 
+    // Use to help the user when scrolling
     ngAfterViewChecked() {
         this.scrollToBottom();
-    }
-
-    // A callback function when the server is not reachable.
-    public onConnectionError() {
-        console.log("Chat room: Connection Error: The server is not reachable");
-    }
-
-    // A callback when the player join a room
-    public onJoinedRoom(): void {
-
-        this.socketService.subscribeToChannelEvent(SocketEventType.joinRoom)
-            .subscribe((response: any) => {
-                this.messageArray.push(response._message);
-
-                console.log("Chat room:Joined ", response._message);
-            });
-    }
-
-    // A callback when the player leave a room
-    public onLeaveRoom(): void {
-
-        this.socketService.subscribeToChannelEvent(SocketEventType.leaveRoom)
-            .subscribe((response: any) => {
-                this.messageArray.push(response._message);
-
-                console.log("Chat room: Leave ", response._message);
-            });
-    }
-
-    // A callback function when the room of the user is full and the game is ready to be started
-    public onRoomReady(roomMessage: IRoomMessage): void {
-
-        // For debug
-        console.log("Chat room: Ready", roomMessage);
-        //this.router.navigate(["/game-room", { id: roomMessage.username }]);
-        //console.log("router must be called",this.router);
-    }
-
-    private onChangedLettersReceived() {
-
-        this.socketService.subscribeToChannelEvent(SocketEventType.exchangedLetter)
-            .subscribe((response: any) => {
-                this.messageArray.push(response.message);
-
-                console.log("Chat Room:", "Hey! I received new letters from the server: ", response);
-            });
-    }
-
-    // A callback function when in case of invalid request.
-    public onInvalidRequest() {
-        console.log("The request sent to the server is invalid");
     }
 }

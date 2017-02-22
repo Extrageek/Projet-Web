@@ -26,7 +26,6 @@ import { UserSetting, Difficulty } from '../models/user-setting';
 import { Observable } from 'rxjs/Observable';
 import { Time } from "../models/time";
 
-
 //noinspection TsLint
 @Component({
     moduleId: module.id,

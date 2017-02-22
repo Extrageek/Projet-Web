@@ -64,8 +64,7 @@ export class SocketConnectionHandler {
 
                     // Join the room
                     socket.join(room.roomId);
-
-                    this.sendWelcomeMessageOnPlayerJoinedRoom(player.username, room);
+                    this.sendWelcomeMessageOnPlayerJoinedRoom(player.username, room, socket);
 
                 }
                 else {
@@ -83,21 +82,32 @@ export class SocketConnectionHandler {
             throw new Error("The socket value cannot be null.");
         }
 
-        socket.on(SocketEventType.message, (chatMessage: { username: string, message: string }) => {
-            let currentRoom = this._roomHandler.getRoomByUsername(chatMessage.username);
+        socket.on(SocketEventType.message, (sentMessage: { username: string, message: string }) => {
+            let currentRoom = this._roomHandler.getRoomByUsername(sentMessage.username);
 
-            console.log("Room message :", chatMessage);
+            console.log("Room message :", sentMessage);
 
             if (currentRoom == null || currentRoom === undefined) {
                 // TODO: Maybe emit an error to the sender
                 throw new Error("Error, we should not be here, never, ever");
             }
+
+            // Create a response for the room members
+            let chatMessage: IRoomMessage = {
+                _username: sentMessage.username,
+                _roomId: currentRoom.roomId,
+                _numberOfMissingPlayers: currentRoom.numberOfMissingPlayers(),
+                _roomIsReady: currentRoom.isFull(),
+                _message: sentMessage.message,
+                _date: new Date()
+            };
+
             this._socket.to(currentRoom.roomId).emit(SocketEventType.message, chatMessage);
         });
     }
 
     // Use to send a message to a specific room members
-    private sendWelcomeMessageOnPlayerJoinedRoom(username: string, room: Room) {
+    private sendWelcomeMessageOnPlayerJoinedRoom(username: string, room: Room, socket:SocketIO.Socket) {
 
         if (username === null) {
             throw new Error("The username cannot be null.");
@@ -113,21 +123,25 @@ export class SocketConnectionHandler {
             _roomId: room.roomId,
             _numberOfMissingPlayers: room.numberOfMissingPlayers(),
             _roomIsReady: false,
-            _message: `${username}` + ` joined the room`
+            _message: `${username}` + ` joined the room`,
+            _date: new Date()
         };
 
         console.log("send a request", username);
 
-        if (!room.isFull()) {
-            // Emit to all the player in the room.
-            this._socket.to(room.roomId).emit(SocketEventType.joinRoom, roomMessage);
+        // TODO: Don't remove this block , will be use for an other User Story from the Backlog
+        /**************************/
+        // if (room.isFull()) {
+        //     roomMessage._roomIsReady = true;
+        //     roomMessage._message = 'The room is ready';
 
-        } else {
-            roomMessage._roomIsReady = true;
+        //     // Emit a message to all the player in the room.
+        //     this._socket.in(room.roomId).emit(SocketEventType.roomReady, roomMessage);
+        // }
+        /*************************/
 
-            // Emit a message to all the player in the room.
-            this._socket.to(room.roomId).emit(SocketEventType.roomReady, roomMessage);
-        }
+        // Emit to all the player in the room.
+        socket.to(room.roomId).emit(SocketEventType.joinRoom, roomMessage);
     }
 
     // On player disconnect event
@@ -167,7 +181,8 @@ export class SocketConnectionHandler {
                             _roomId: playerRoom.roomId,
                             _numberOfMissingPlayers: playerRoom.numberOfMissingPlayers(),
                             _roomIsReady: false,
-                            _message: `${leavingPlayer.username}` + ` left the room`
+                            _message: `${leavingPlayer.username}` + ` left the room`,
+                            _date: new Date()
                         };
                         console.log("Room not empty", playerRoom);
 
