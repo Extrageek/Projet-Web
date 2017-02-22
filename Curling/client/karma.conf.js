@@ -61,6 +61,9 @@ module.exports = function(config) {
 
             'node_modules/three/build/three.js',
 
+            { pattern: 'node_modules/sinon/**/*.js', included: false, watched: false },
+            { pattern: 'node_modules/sinon-chai/**/*.js', included: false, watched: false },
+
             // Everything that is in our local folder assets will be served by our server
             // see proxy section that will rewrite.
             { pattern: assetsBase + 'models/**/*.json', watched: false, included: false, served: true },
@@ -92,32 +95,36 @@ module.exports = function(config) {
             { pattern: appSrcBase + '**/*.html', included: false, watched: true },
             { pattern: appSrcBase + '**/*.css', included: false, watched: true },
 
+      // The CSS files that will be copied by gulp are in the output folder
+      { pattern: appBase + '**/*.css', included: false, watched: true },
+      { pattern: appBase + '**/*.html', included: false, watched: true },
+
             // Paths for debugging with source maps in dev tools
-            { pattern: appSrcBase + '**/*.ts', included: false, watched: false },
-            { pattern: appBase + '**/*.js.map', included: false, watched: false },
-            { pattern: testingSrcBase + '**/*.ts', included: false, watched: false },
-            { pattern: testingBase + '**/*.js.map', included: false, watched: false }
-        ],
+      { pattern: appSrcBase + '**/*.ts', included: false, watched: false },
+      { pattern: appBase + '**/*.js.map', included: false, watched: false },
+      { pattern: testingSrcBase + '**/*.ts', included: false, watched: false },
+      { pattern: testingBase + '**/*.js.map', included: false, watched: false}
+    ],
 
-        // Change if appBase changes
-        // Proxied base paths for loading assets
-        proxies: {
-            // required for component assets fetched by Angular's compiler
-            "/app/": appAssets,
-            // Any assets in Angular that gets a ressource from '/assets/' will
-            // in fact be redirected to another ressource (/base/assets) that is the
-            // one that is used by karma when we included the files. (All files are 
-            // served by karma in 'base')
-            '/assets/': '/base/assets/'
-        },
+    // Change if appBase changes
+    // Proxied base paths for loading assets
+    proxies: {
+      // required for component assets fetched by Angular's compiler
+      "/app/": appAssets,
+      // Any assets in Angular that gets a ressource from '/assets/' will
+      // in fact be redirected to another ressource (/base/assets) that is the
+      // one that is used by karma when we included the files. (All files are
+      // served by karma in 'base')
+      '/assets/': '/base/assets/'
+    },
 
-        exclude: [],
-        // Change if appBase changes
-        preprocessors: {
-            'out/**/!(*spec).js': ['coverage']
-        },
+    exclude: [],
+    // Change if appBase changes
+    preprocessors: {
+        'out/**/!(*spec).js': ['coverage']
+    },
 
-        reporters: ['mocha', 'coverage'],
+    reporters: ['mocha','coverage'],
 
         mochaReporter: {
             maxLogLines: -1
