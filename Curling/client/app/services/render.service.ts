@@ -28,6 +28,7 @@ export class RenderService {
     private _geometry: Geometry;
     private _material: MeshFaceMaterial;
     private _mesh: Mesh;
+    private _line: THREE.Line;
 
     private _clock: Clock;
 
@@ -77,11 +78,12 @@ export class RenderService {
         // bind to window resizes
         window.addEventListener('resize', _ => this.onResize());
         window.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event));
+        window.addEventListener('mousedown', _ => this.onMousePressed());
+        window.addEventListener('mouseup', _ => this.onMouseReleased());
     }
 
     public linkRenderServerToCanvas(container: HTMLElement) {
         // Inser the canvas into the DOM
-        //var container = document.getElementById("glContainer");
         if (container.getElementsByTagName('canvas').length === 0) {
             container.appendChild(this._renderer.domElement);
         }
@@ -170,6 +172,7 @@ export class RenderService {
             this._rinkInfo = rink;
             this._mesh.add(rink);
             this.loadStoneHandler();
+
             // this._stoneHandler.generateNewStone().then((stone: Stone) => {
             //     this._scene.add(stone);
             //     stone.position.set(0, 0, 0);
@@ -180,8 +183,31 @@ export class RenderService {
             //     stone.position.set(0, 0, 1);
             //     this.onFinishedLoadingModel();
             // });
-            this.loadStone();
+            // this.loadStone();
             // this.onFinishedLoadingModel();
+
+            let geometry = new THREE.Geometry();
+            geometry.verticesNeedUpdate = true;
+            geometry.vertices.push(new THREE.Vector3(0, 0.1, -11.1)); // First HogLine
+            geometry.vertices.push(new THREE.Vector3(0, 0.1, 22.4)); // EndPoint
+
+            geometry.computeLineDistances();
+
+            let material = new THREE.LineDashedMaterial({
+                color: 0x0000e0,
+                linewidth: 1,
+                dashSize: 1,
+                gapSize: 1
+            });
+            material.needsUpdate = true;
+            this._line = new THREE.Line(geometry, material);
+            this._scene.add(this._line);
+
+            this._stoneHandler.generateNewStone().then((stone: Stone) => {
+                this._scene.add(stone);
+                stone.position.set(0, 0, -11.4);
+                this.onFinishedLoadingModel();
+            });
         });
     }
 
@@ -224,13 +250,13 @@ export class RenderService {
             if (document.hasFocus()) {
                 this._clock.start();
             }
-            this._gameStatusService.gameStatus.usedStone(); // Remove a stone from display
-            this._stoneHandler.performShot(3, new Vector3(0, 0, 1), () => { });
+            //this._gameStatusService.gameStatus.usedStone(); // Remove a stone from display
+            //this._stoneHandler.performShot(3, new Vector3(0, 0, 1), () => { });
             this.animate();
         }
     }
 
-     private animate() {
+    private animate() {
         window.requestAnimationFrame(_ => this.animate());
         if (this._clock.running === true) {
             let timePerFrame = this._clock.getDelta();
@@ -271,8 +297,27 @@ export class RenderService {
     }
 
     onMouseMove(event: MouseEvent) {
-        if (this._stoneHandler !== undefined) {
+        if (this._gameStatusService.gameStatus.isShooting && this._stoneHandler !== undefined) {
             this._stoneHandler.calculateMousePosition(event, this._currentCameraType);
+        }
+    }
+
+    onMousePressed() {
+        if (!this._gameStatusService.gameStatus.isShooting) {
+            this._gameStatusService.gameStatus.isShooting = true;
+            this._stoneHandler.startPower();
+            console.log("Start Shot");
+        }
+    }
+
+    onMouseReleased() {
+        if (this._gameStatusService.gameStatus.isShooting) {
+            this._stoneHandler.performShot(new Vector3(0, 0, 1), () => {
+            console.log("Shot");
+                this._stoneHandler.generateNewStone().then((newStone: Stone) => {
+                    this._gameStatusService.gameStatus.isShooting = false;
+                });
+            });
         }
     }
 
