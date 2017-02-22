@@ -125,30 +125,24 @@ export class EaselComponent implements OnInit, OnDestroy {
 
         let easelMaxIndex = this.letters.length - 1;
         let currentLetter = this.letters[currentInputIndex].letter;
-        let currentImageSource = this.letters[currentInputIndex].imageSource;
 
         if (keyCode === EaselControl.rightArrowKeyCode
             && nextInputIndex === 0) {
             for (let index = easelMaxIndex; index > 0; --index) {
                 this.letters[index].letter = this.letters[index - 1].letter;
-                this.letters[index].imageSource = this.letters[index - 1].imageSource;
             }
 
         } else if (keyCode === EaselControl.leftArrowKeyCode
             && nextInputIndex === easelMaxIndex) {
             for (let index = 0; index < easelMaxIndex; ++index) {
                 this.letters[index].letter = this.letters[index + 1].letter;
-                this.letters[index].imageSource = this.letters[index + 1].imageSource;
             }
 
         } else {
             this.letters[currentInputIndex].letter = this.letters[nextInputIndex].letter;
-            this.letters[currentInputIndex].imageSource = this.letters[nextInputIndex].imageSource;
-
         }
 
         this.letters[nextInputIndex].letter = currentLetter;
-        this.letters[nextInputIndex].imageSource = currentImageSource;
     }
 
     private setFocusToNextMatchLetter(

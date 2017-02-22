@@ -1,12 +1,14 @@
 import { Component, AfterViewInit } from "@angular/core";
 import { TimerService } from "../services/timer-service";
+import { SocketService } from "../services/socket-service";
+import { EaselGeneratorService } from "../services/easel/easel-generator.service";
 
-const MAX_NUMBER_OF_LETTERS = 7;
+//const MAX_NUMBER_OF_LETTERS = 7;
 const ONE_SECOND = 1000;
 
 @Component({
     moduleId: module.id,
-    providers: [TimerService],
+    providers: [TimerService, EaselGeneratorService],
     selector: "info-panel-selector",
     templateUrl: "../../assets/templates/information-panel.html",
     styleUrls: ['../../assets/stylesheets/information-panel.css']
@@ -16,21 +18,31 @@ export class InformationPanelComponent implements AfterViewInit {
     player = "default";
     score: number;
     lettersOnEasel: number;
+    lettersInBank: number;
     seconds: number;
     minutes: number;
 
-    constructor(private timerService: TimerService) {
-        this.seconds = 0;
-        this.minutes = 0;
+    constructor(private timerService: TimerService, private easelService: EaselGeneratorService) {
+        this.seconds = timerService.seconds;
+        this.minutes = timerService.minutes;
         this.score = 0;
-        this.lettersOnEasel = MAX_NUMBER_OF_LETTERS;
+        // TODO : Use nextLine, but easel is undefined...
+        // this.lettersOnEasel = this.easelService.lettersOnEasel.length;
+        this.lettersOnEasel = 7;
+        // TODO : get it from letterbank service
+        this.lettersInBank = 102;
     }
 
     ngAfterViewInit() {
         setInterval(() => {
-            this.timerService.updateClock();
-            this.seconds = this.timerService.seconds;
-            this.minutes = this.timerService.minutes;
+            // TODO Should only start when room is full and game ready to begin
+            if (this.timerService.timerIsRunning()) {
+                this.timerService.updateClock();
+                this.seconds = this.timerService.seconds;
+                this.minutes = this.timerService.minutes;
+            } else {
+                // Player's turn is over
+            }
         }, ONE_SECOND);
 
     }

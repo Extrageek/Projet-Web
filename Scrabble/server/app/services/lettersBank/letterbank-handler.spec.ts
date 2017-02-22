@@ -74,4 +74,10 @@ describe("BankLetterHandler should", () => {
         expect(fakeLetters).to.not.deep.equals(newLetters);
     });
 
+    it("get the number of letters in bank correctly", () => {
+        expect(_bankHandler.getNumberOfLettersInBank()).to.be.equal(102);
+        let fakeEasel = new Array<Letter>();
+        fakeEasel = _bankHandler.initializeEasel();
+        expect(_bankHandler.getNumberOfLettersInBank()).to.be.equal(95);
+    });
 });

@@ -14,6 +14,6 @@ export class BoardService {
     }
 
     constructor() {
-        this.board = new Board();
+        this._board = new Board();
     }
 }

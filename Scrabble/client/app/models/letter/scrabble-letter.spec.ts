@@ -25,4 +25,18 @@ describe("ScrabbleLetter letter validation", () => {
     it("should contain the .jpg extension", () => {
         expect(_letter.imageSource).to.contain(".jpg");
     });
+
+    it("should set letter correctly", () => {
+        let fakeLeter: string;
+        fakeLeter = Alphabet.letterK;
+        _letter.letter = fakeLeter;
+        expect(_letter.letter).to.be.equal(fakeLeter);
+    });
+
+    it("should set imageSource correctly with the chosen letter", () => {
+        let fakeImageSource: string;
+        fakeImageSource = Alphabet.letterD;
+        _letter.imageSource = fakeImageSource;
+        expect(_letter.imageSource).to.contains(fakeImageSource);
+    });
 });
