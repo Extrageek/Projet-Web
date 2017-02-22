@@ -98,7 +98,7 @@ export class GridComponent implements OnInit {
     public getNewPuzzle(difficulty: Difficulty) {
         this._isLoading = true;
         this._time.resetTime();
-        this.leaderboard.nativeElement.classList.add("fade");
+        // this.leaderboard.nativeElement.classList.add("fade");
         this.hideMessageCongratulation();
         this._easyRecords = [];
         this._hardRecords = [];
@@ -173,7 +173,7 @@ export class GridComponent implements OnInit {
                     }
                     if (isInserted) {
                         this.leaderboard.nativeElement.classList.remove("fade");
-                        this.messageCongratulation.nativeElement.classList.remove("fade");
+                        // this.messageCongratulation.nativeElement.classList.remove("fade");
                     }
                 }).catch(error => {
                     console.log(error);
@@ -192,7 +192,7 @@ export class GridComponent implements OnInit {
         }
 
         this.stopwatchService.resetTime();
-        this.leaderboard.nativeElement.classList.add("fade");
+        // this.leaderboard.nativeElement.classList.add("fade");
         this.hideMessageCongratulation();
         this.gridManagerService.initializeGrid(this._puzzle);
         this._isFinished = false;

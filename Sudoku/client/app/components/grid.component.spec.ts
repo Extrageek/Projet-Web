@@ -75,12 +75,12 @@ describe('GridComponent', () => {
                 StopwatchService,
             ]
         })
-            .compileComponents();  // compile template and stylesheets;
+            .compileComponents().then(()=> {
+        });  // compile template and stylesheets;
 
     });
 
-    beforeEach(inject([RestApiProxyService, MockBackend],
-        fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
+    beforeEach(inject([RestApiProxyService, MockBackend], fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
 
             mockBackend.connections.subscribe((connection: MockConnection) => {
                 // Send a fake data to the caller

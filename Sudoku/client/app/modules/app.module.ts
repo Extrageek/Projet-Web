@@ -23,7 +23,7 @@ import { StopwatchService } from "../services/stopwatch.service";
         FormsModule,
         AppRoutingModule,
         HttpModule,
-        MaterialModule.forRoot()
+        MaterialModule
     ],
     declarations: [
         AppComponent,

@@ -81,11 +81,15 @@ input:focus {
 }
 
 tr {
-    border-left: 4px solid #212121;
-    border-right: 4px solid #212121;
+    border: 3px solid #212121;
 }
 
-#gridRowId2, 
+#leaderboard {
+    background-color: white;
+    color : black;
+}
+
+#gridRowId2,
 #gridRowId5,
 #gridRowId8 {
     border-bottom: 4px solid #212121;
