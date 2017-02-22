@@ -30,6 +30,10 @@ export class StoneHandler implements GameComponent {
         this._callbackAfterShotFinished = null;
     }
 
+    public get stoneOnTheGame(): Stone[] {
+        return this._stoneOnTheGame;
+    }
+
     public calculateMousePosition(event: MouseEvent, currentCam: CameraType) {
         if (currentCam === CameraType.PERSPECTIVE_CAM) {
             this._mousePositionPlaneXZ.set(

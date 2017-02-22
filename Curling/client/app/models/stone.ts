@@ -79,6 +79,7 @@ export class Stone extends Group implements GameComponent {
 
     public set position(position: Vector3) {
         this.position = position;
+        this.boundingSphere.center = position;
     }
 
     public get speed(): number {
