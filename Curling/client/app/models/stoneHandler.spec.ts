@@ -63,36 +63,47 @@ describe("StoneHandler tests should", () => {
         expect(stoneHandler.performShot.bind(1, new Vector3(0, 0, 1))).to.throw(Error);
     });
 
-    it("perform the launch and receive the callback when the shot finished", done => {
-        stoneHandler.generateNewStone().then((stone: Stone) => {
+    it("handle a collision between two stones", done => {
+        stoneHandler.generateNewStone().then((stoneCollided: Stone) => {
             function update() {
                 stoneHandler.update(0.2);
                 timeoutId = setTimeout(update, 5);
             }
-            stoneHandler.performShot(0.1, new Vector3(0, 0, 1), () => {
-                clearTimeout(timeoutId);
-                expect(stone.speed).to.equals(0);
-                done();
-            });
+            stoneHandler.generateNewStone().then((stoneColliding: Stone) => {
+                stoneCollided.position.set(0, 0, 1);
+                stoneColliding.position.set(0, 0, 0);
+                stoneHandler.performShot(3, new Vector3(0, 0, 1), () => {
+                    clearTimeout(timeoutId);
+                    expect(stoneCollided.speed).to.not.equals(0);
+                    expect(stoneColliding.speed).to.not.equals(3);
+                    done();
+                });
             timeoutId = setTimeout(update, 5);
+            });
         });
     });
 
-    it("detect a collision", done => {
-        stoneHandler.generateNewStone().then((s1: Stone) => {
-            s1.position = new Vector3(0, 0, 0);
-            s1.direction = new Vector3(0, 0, 1);
-            s1.speed = 4;
-            stoneHandler.generateNewStone().then((s2: Stone) => {
-                s2.position = new Vector3(0, 0, 1);
-                s2.speed = 0;
-                stoneHandler.update(0.2);
-                console.log(s1.speed);
-                expect(s1.speed).to.not.equals(4);
-                console.log(s2.speed);
-                expect(s2.speed).to.not.equals(0);
+    it("handle a collision between three stones", done => {
+        stoneHandler.generateNewStone().then((stoneCollided2: Stone) => {
+            stoneCollided2.position.set(0, 0, 2);
+            stoneHandler.generateNewStone().then((stoneCollided1: Stone) => {
+                function update() {
+                    stoneHandler.update(0.2);
+                    timeoutId = setTimeout(update, 5);
+                }
+                stoneHandler.generateNewStone().then((stoneColliding: Stone) => {
+                    stoneCollided1.position.set(0, 0, 1);
+                    stoneColliding.position.set(0, 0, 0);
+
+                    stoneHandler.performShot(3, new Vector3(0, 0, 1), () => {
+                        clearTimeout(timeoutId);
+                        expect(stoneCollided1.speed).to.not.equals(0);
+                        expect(stoneColliding.speed).to.not.equals(1);
+                        done();
+                    });
+                    timeoutId = setTimeout(update, 5);
+                });
             });
         });
-        done();
     });
 });
