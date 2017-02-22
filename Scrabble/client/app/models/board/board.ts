@@ -11,9 +11,9 @@ export class Board {
     public get board(): Array<Array<Square>> {
         return this._board;
     }
-    public set board(_board: Array<Array<Square>>) {
-        this._board = _board;
-    }
+    // public set board(_board: Array<Array<Square>>) {
+    //     this._board = _board;
+    // }
 
     constructor() {
         this._board = new Array<Array<Square>>();

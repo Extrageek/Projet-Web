@@ -8,23 +8,21 @@ const DECREMENT_QUANTITY = -1;
 
 export class LetterBank {
     private _bank: Array<Letter>;
-    private _numberOfLettersInBank: number;
-
     public get bank(): Array<Letter> {
         return this._bank;
     }
 
+    private _numberOfLettersInBank: number;
     public get numberOfLettersInBank(): number {
         return this._numberOfLettersInBank;
     }
-
     public set numberOfLettersInBank(numberOfLettersInBank: number) {
         this._numberOfLettersInBank = numberOfLettersInBank;
     }
 
     constructor() {
         this._bank = new Array<Letter>();
-        this._numberOfLettersInBank = 102;
+        this.numberOfLettersInBank = 102;
         this.initializeLetterBank();
     }
 

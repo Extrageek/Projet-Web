@@ -22,7 +22,10 @@ describe("ScrabbleLetter letter validation", () => {
         expect(_letter.letter.charCodeAt(0)).to.be.above(64).and.to.be.below(91);
     });
 
-    it("should contain the .jpg extension", () => {
-        expect(_letter.imageSource).to.contain(".jpg");
+    it("should set letter correctly", () => {
+        let fakeLeter: string;
+        fakeLeter = Alphabet.letterK;
+        _letter.letter = fakeLeter;
+        expect(_letter.letter).to.be.equal(fakeLeter);
     });
 });
