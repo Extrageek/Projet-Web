@@ -27,8 +27,16 @@ export class EaselComponent implements OnInit, OnDestroy {
     @Input() keyEventValue: any;
 
     private _letters: Array<ScrabbleLetter>;
+    private _indexOflettersToExchange: Array<number>;
     private _keyEventKeyCode: string;
     private _exchangeLetter: Subscription;
+
+    public get indexOfLettersToChange(): Array<number> {
+        return this._indexOflettersToExchange;
+    }
+    public set indexOfLettersToChange(v: Array<number>) {
+        this._indexOflettersToExchange = v;
+    }
 
     public get letters(): Array<ScrabbleLetter> {
         return this._letters;
@@ -54,6 +62,7 @@ export class EaselComponent implements OnInit, OnDestroy {
         private socketService: SocketService) {
 
         this._letters = new Array<ScrabbleLetter>();
+        this._indexOflettersToExchange = new Array<number>();
 
         // TODO: Check with RAMI, We should generate the letters from the server
         let fakeLetters = ['A', 'E', 'M', 'N', 'U', 'A', 'A'];
@@ -64,12 +73,17 @@ export class EaselComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._exchangeLetter = this.socketService.subscribeToChannelEvent(SocketEventType.exchangedLetter)
-            .subscribe((response: Array<string>) => {
-                this.letters = new Array<ScrabbleLetter>();
+            .subscribe((lettersResponse: Array<string>) => {
 
-                response.forEach((letter) => {
-                    this.letters.push(new ScrabbleLetter(letter));
-                });
+                for (let index = 0; index < this._indexOflettersToExchange.length; ++index) {
+                    console.log(this._indexOflettersToExchange[index]);
+
+                    this.letters[this._indexOflettersToExchange[index]] =
+                        new ScrabbleLetter(lettersResponse[index]);
+                }
+                // lettersResponse.forEach((letter) => {
+                //     this.letters.push(new ScrabbleLetter(letter));
+                // });
             });
     }
 
