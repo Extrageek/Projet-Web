@@ -78,7 +78,7 @@ describe("StoneHandler tests should", () => {
                     expect(stoneColliding.speed).to.not.equals(3);
                     done();
                 });
-            timeoutId = setTimeout(update, 5);
+                timeoutId = setTimeout(update, 5);
             });
         });
     });
@@ -105,5 +105,28 @@ describe("StoneHandler tests should", () => {
                 });
             });
         });
+    });
+
+    it("handle a collision between three stones", () => {
+        let stone1 = stoneHandler.generateNewStone().then((stone) => {
+            stone.position.set(-0.27,0,0);
+        });
+        let stone2 = stoneHandler.generateNewStone().then((stone) => {
+            stone.position.set(0.27,0,0);
+        });
+
+        stoneHandler.generateNewStone().then((stone) => {
+            stone.position.set(0,0,-1)
+            stoneHandler.performShot(0.5, new Vector3(0,0,1));
+            stoneHandler.update(1);
+            stoneHandler.performShot(0.5, new Vector3(0,0,1));
+            stoneHandler.update(1);
+            stoneHandler.performShot(0.5, new Vector3(0,0,1));
+            stoneHandler.update(1);
+        });
+
+        for (let stone of stoneHandler.stoneOnTheGame){
+            expect(stone.speed).to.not.be.equal(0,"stone"+ stone +" was not in the collision");
+        }
     });
 });

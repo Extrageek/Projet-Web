@@ -10,12 +10,12 @@ describe("UserSetting should", () => {
         _userSetting = new UserSetting();
     });
 
-    it("construct the settings chosen by the player corectly", () => {
+    it("construct the settings chosen by the player correctly", () => {
         expect(_userSetting.name).to.be.equal('');
         expect(_userSetting.difficulty).to.be.equal(Difficulty.NORMAL);
     });
 
-    it("get the name corectly", () => {
+    it("get the name correctly", () => {
         expect(_userSetting.name).to.be.equal('');
     });
     it("correctly", () => {
@@ -23,10 +23,10 @@ describe("UserSetting should", () => {
         let _username = "Michel";
         expect(_userSetting.name).to.be.equal(_username);
     });
-    it("get the difficulty corectly", () => {
+    it("get the difficulty correctly", () => {
         expect(_userSetting.difficulty).to.be.equal(Difficulty.NORMAL);
     });
-    it("set the difficulty corectly", () => {
+    it("set the difficulty correctly", () => {
         _userSetting.difficulty = Difficulty.HARD;
         let _difficulty = Difficulty.HARD;
         expect(_userSetting.difficulty).to.be.equal(_difficulty);

@@ -46,7 +46,7 @@ module.exports = function(config) {
 
             // Polyfills
             'node_modules/core-js/client/shim.js',
-            'node_modules/reflect-metadata/Reflect.js',
+            //'node_modules/reflect-metadata/Reflect.js',
             //'node_modules/phantomjs-polyfill/bind-polyfill.js',
 
 
