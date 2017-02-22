@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EaselControl } from '../../commons/easel-control';
-import { ScrabbleLetter } from "../../models/letter/scrabble-letter";
+import { ScrabbleLetter } from '../../models/letter/scrabble-letter';
 
 declare var jQuery: any;
 
@@ -95,39 +95,6 @@ export class EaselManagerService {
             default:
                 break;
         }
-    }
-
-    public getIndexOfLettersToChangeIfValidRequest(
-        lettersInEasel: Array<ScrabbleLetter>,
-        enteredletters: Array<string>): Array<number> {
-
-        if (lettersInEasel === null || enteredletters === null) {
-            throw new Error("Null argument error: the parameters cannot be null");
-        }
-
-        if (enteredletters.length > lettersInEasel.length || enteredletters.length === 0) {
-            throw new Error("Invalid argument error");
-        }
-
-        let listOfLettersToChange = new Array<number>();
-
-        for (let index = 0; index < enteredletters.length; ++index) {
-
-            //let letter: ScrabbleLetter;
-            if (enteredletters[index] === '*') {
-                enteredletters[index] = 'blank';
-            }
-
-            let letterIndex = lettersInEasel.findIndex((letter: ScrabbleLetter) =>
-                letter.letter.toUpperCase() === enteredletters[index].toUpperCase());
-
-            if (letterIndex === -1 || letterIndex === undefined) {
-                return null;
-            }
-
-            listOfLettersToChange.push(letterIndex);
-        }
-        return listOfLettersToChange;
     }
 
     public getStringListofChar(texte: string): Array<string> {
