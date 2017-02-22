@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy, EventEmitter, Input, Output } from "@angu
 import { Subscription } from 'rxjs/Subscription';
 
 import { ScrabbleLetter } from "../models/letter/scrabble-letter";
-import { EaselGeneratorService } from "../services/easel/easel-generator.service";
 import { EaselManagerService } from '../services/easel/easel-manager.service';
 import { EaselControl } from '../commons/easel-control';
 import { SocketService } from "../services/socket-service";
@@ -14,7 +13,7 @@ import { Alphabet } from '../models/letter/alphabet';
 
 @Component({
     moduleId: module.id,
-    providers: [EaselGeneratorService, EaselManagerService, SocketService],
+    providers: [EaselManagerService, SocketService],
     selector: "easel-selector",
     templateUrl: "../../assets/templates/easel.html",
     styleUrls: ["../../assets/stylesheets/easel.css"],
@@ -57,7 +56,6 @@ export class EaselComponent implements OnInit, OnDestroy {
     private fakeLettersFromServer: Array<ScrabbleLetter>;
 
     constructor(
-        private easelGenerator: EaselGeneratorService,
         private easelEventManagerService: EaselManagerService,
         private socketService: SocketService) {
 

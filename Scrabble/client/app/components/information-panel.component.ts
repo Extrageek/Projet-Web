@@ -1,14 +1,13 @@
 import { Component, AfterViewInit } from "@angular/core";
 import { TimerService } from "../services/timer-service";
 import { SocketService } from "../services/socket-service";
-import { EaselGeneratorService } from "../services/easel/easel-generator.service";
 
 //const MAX_NUMBER_OF_LETTERS = 7;
 const ONE_SECOND = 1000;
 
 @Component({
     moduleId: module.id,
-    providers: [TimerService, EaselGeneratorService],
+    providers: [TimerService],
     selector: "info-panel-selector",
     templateUrl: "../../assets/templates/information-panel.html",
     styleUrls: ['../../assets/stylesheets/information-panel.css']
@@ -22,12 +21,11 @@ export class InformationPanelComponent implements AfterViewInit {
     seconds: number;
     minutes: number;
 
-    constructor(private timerService: TimerService, private easelService: EaselGeneratorService) {
+    constructor(private timerService: TimerService) {
         this.seconds = timerService.seconds;
         this.minutes = timerService.minutes;
         this.score = 0;
-        // TODO : Use nextLine, but easel is undefined...
-        // this.lettersOnEasel = this.easelService.lettersOnEasel.length;
+        // TODO : get it from socket Service
         this.lettersOnEasel = 7;
         // TODO : get it from letterbank service
         this.lettersInBank = 102;
