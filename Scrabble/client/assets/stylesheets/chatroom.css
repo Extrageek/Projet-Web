@@ -15,20 +15,63 @@
 .chatMessageBox {
     height: 412px;
     border: 1px solid #ddd;
-    /*border-radius: 15px;*/
+    overflow: scroll;
     background-color: #fff;
     box-shadow: 0 1px 5px rgba(0,0,0,0.16);
 }
 
-.individualMessages {
-    word-wrap: break-word;
-    list-style: none;
-    border-bottom: 1px solid dimgrey;
-    padding: 3px;
-    background-color: lightgray;
+.msg-wrapper {
+    display: inline-block;
+    width:100%;
 }
 
-.individualMessages:nth-child(odd) {
-    background: white;
+.msg-date{
+    color: #90949c;
+    font-size: 10px;
+    text-align: center;
+    font-weight: bold;
+    margin: 0;
+}
+
+.other-message p img.image-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+.self-message p.msg,
+.other-message p.msg{
+    /*margin: 0 0 0.2rem 0;*/
     word-wrap: break-word;
+    border-radius: 12px;
+    padding: 6px;
+}
+
+.self-message p.msg{
+    color: #fff;
+    background-color: #2196F3;
+}
+
+.self-message p.msg{
+    float: right;
+    margin: 10px 10px;
+}
+
+.other-message p.msg{
+    color: #222;
+    background-color: #CFD8DC;
+}
+
+.other-message p.msg{
+    margin: 10px 10px 10px 0;
+    float: left;
+}
+
+.other-message p span {
+    font-size: 12px;
+    text-align: left;
+    color: steelblue;
+    margin-left:7px;
+}
+.other-message p:first {
+    margin-top: 5px;
 }

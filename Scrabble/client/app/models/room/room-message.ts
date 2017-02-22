@@ -4,4 +4,5 @@ export interface IRoomMessage {
     _numberOfMissingPlayers: number;
     _roomIsReady: boolean;
     _message: string;
+    _date: Date;
 }

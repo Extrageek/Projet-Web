@@ -37,7 +37,8 @@
                     </div>
                     <div class="input-box col-md-8">
                         <div class="form-group">
-                            <textarea #message id="inputMessage" autofocus class="form-control" rows="2" (keydown.enter)="submitMessage(message)" (keydown)="onKeyPressEventHandler($event)"
+                            <textarea #message id="inputMessage" [(ngModel)]="_inputMessage" autofocus class="form-control" rows="2" (keydown.enter)="submitMessage()" 
+                            (keydown)="onKeyPressEventHandler($event)"
                                 placeholder="Enter your message"></textarea>
 
                         </div>

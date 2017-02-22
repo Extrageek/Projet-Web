@@ -3,7 +3,7 @@ import { Route, ActivatedRoute } from '@angular/router';
 
 import { SocketService } from "../services/socket-service";
 import { EaselComponent } from './easel.component';
-import { GameRoomEventManagerService } from "../services/gameRoom/game-room-event-manager.service";
+import { GameRoomManagerService } from "../services/gameRoom/game-room-manager.service";
 import { SocketEventType } from '../commons/socket-eventType';
 import { IRoomMessage } from '../models/room/room-message';
 import { ScrabbleLetter } from "../models/letter/scrabble-letter";
@@ -14,7 +14,7 @@ declare var jQuery: any;
 
 @Component({
     moduleId: module.id,
-    providers: [SocketService, GameRoomEventManagerService],
+    providers: [SocketService, GameRoomManagerService],
     selector: "game-room-selector",
     templateUrl: "../../assets/templates/game-room.html",
     styleUrls: ["../../assets/stylesheets/game-room.css"],
@@ -27,12 +27,14 @@ export class GameComponent implements OnInit, OnDestroy {
 
     @ViewChild(EaselComponent)
     private _childEasel: EaselComponent;
-    private _username: string;
+    _username: string;
+    _inputMessage: string;
 
     constructor(
         private route: ActivatedRoute,
         private socketService: SocketService,
-        private gameRoomEventManagerService: GameRoomEventManagerService) {
+        private gameRoomEventManagerService: GameRoomManagerService) {
+        this._inputMessage = '';
         // Constructor
     }
 
@@ -40,8 +42,6 @@ export class GameComponent implements OnInit, OnDestroy {
         this.route.params.subscribe(params => {
             this._username = params['id'];
         });
-
-        this.changeLettersRequest();
 
         // TODO: unsubscribe all the event in the ngOnDestroy
         this.socketService.subscribeToChannelEvent(SocketEventType.connectError)
@@ -97,21 +97,24 @@ export class GameComponent implements OnInit, OnDestroy {
     }
 
     // A callback fonction for the chat message submit button
-    public submitMessage(message: HTMLInputElement) {
-        if (message.value !== "") {
+    public submitMessage() {
+        if (this._inputMessage.trim() !== "" && this._inputMessage.trim().length) {
             this.socketService.emitMessage(
                 SocketEventType.message,
-                { username: this._username, message: message.value });
+                { username: this._username, message: this._inputMessage });
         }
-        message.value = "";
+        this._inputMessage = '';
     }
 
-    public changeLettersRequest(/*lettersToBeChanged: Array<string>*/) {
+    public changeLettersRequest(lettersToBeChanged: Array<string>) {
+        console.log("Letter to change:", lettersToBeChanged);
 
-        // TODO: Should be removed after a clean debug
-        let fakeLetters = ['A', 'E', 'M', 'N', 'U', 'A', 'A'];
-        console.log("Letter to change:", fakeLetters);
-        this.socketService.emitMessage(SocketEventType.exchangeLettersRequest, fakeLetters);
+        // TODO: remove after debug
+        let letters = new Array<string>();
+        this._childEasel.letters.forEach((scrabbleLetter: ScrabbleLetter) => {
+            letters.push(scrabbleLetter.letter);
+        });
+        this.socketService.emitMessage(SocketEventType.exchangeLettersRequest, letters);
     }
 
     public onTabKeyEventFromEasel(letter: any) {

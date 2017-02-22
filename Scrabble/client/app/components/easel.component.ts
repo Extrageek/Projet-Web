@@ -28,7 +28,7 @@ export class EaselComponent implements OnInit, OnDestroy {
 
     private _letters: Array<ScrabbleLetter>;
     private _keyEventKeyCode: string;
-    private _connection: Subscription;
+    private _exchangeLetter: Subscription;
 
     public get letters(): Array<ScrabbleLetter> {
         return this._letters;
@@ -52,10 +52,18 @@ export class EaselComponent implements OnInit, OnDestroy {
         private easelGenerator: EaselGeneratorService,
         private easelEventManagerService: EaselManagerService,
         private socketService: SocketService) {
+
+        this._letters = new Array<ScrabbleLetter>();
+
+        // TODO: Check with RAMI, We should generate the letters from the server
+        let fakeLetters = ['A', 'E', 'M', 'N', 'U', 'A', 'A'];
+        fakeLetters.forEach((letter) => {
+            this.letters.push(new ScrabbleLetter(letter));
+        });
     }
 
     ngOnInit() {
-        this._connection = this.socketService.subscribeToChannelEvent(SocketEventType.exchangedLetter)
+        this._exchangeLetter = this.socketService.subscribeToChannelEvent(SocketEventType.exchangedLetter)
             .subscribe((response: Array<string>) => {
                 this.letters = new Array<ScrabbleLetter>();
 
@@ -66,7 +74,7 @@ export class EaselComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this._connection.unsubscribe();
+        this._exchangeLetter.unsubscribe();
     }
 
     public onKeyDownEventHandler(
@@ -165,6 +173,7 @@ export class EaselComponent implements OnInit, OnDestroy {
         }
     }
 
+    // This method is used as an event listener, waiting for an emit from the the GameComponent
     public getNotificationOnTabKeyPress(keyCode: any) {
         if (keyCode === null) {
             throw new Error("The key code cannot be null.");
@@ -172,11 +181,5 @@ export class EaselComponent implements OnInit, OnDestroy {
 
         let firstLetterIndex = 0;
         this.easelEventManagerService.setFocusToElementWithGivenIndex(this.letters.length, firstLetterIndex);
-    }
-
-    public changeLettersRequest() {
-        let letters: Array<string>;
-        let fakeLetters = ['A', 'E', 'M', 'N', 'U', 'T', 'A'];
-        //this.socketService.emitMessage(SocketEventType.exchangeLettersRequest, fakeLetters);
     }
 }

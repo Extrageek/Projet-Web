@@ -14,7 +14,7 @@ declare var jQuery: any;
 export const INPUT_ID_PREFIX = '#';
 
 @Injectable()
-export class GameRoomEventManagerService {
+export class GameRoomManagerService {
 
     _newPositionX = 0;
 
