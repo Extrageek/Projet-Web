@@ -72,13 +72,13 @@ describe("StoneHandler tests should", () => {
             stoneHandler.generateNewStone().then((stoneColliding: Stone) => {
                 stoneCollided.position.set(0, 0, 1);
                 stoneColliding.position.set(0, 0, 0);
-                stoneHandler.performShot(3, new Vector3(0, 0, 1), () => {
+                stoneHandler.performShot(new Vector3(0, 0, 1), () => {
                     clearTimeout(timeoutId);
                     expect(stoneCollided.speed).to.not.equals(0);
-                    expect(stoneColliding.speed).to.not.equals(3);
+                    expect(stoneColliding.speed).to.not.equals(5);
                     done();
-                });
-                timeoutId = setTimeout(update, 5);
+                }, 5);
+            timeoutId = setTimeout(update, 5);
             });
         });
     });
@@ -95,12 +95,12 @@ describe("StoneHandler tests should", () => {
                     stoneCollided1.position.set(0, 0, 1);
                     stoneColliding.position.set(0, 0, 0);
 
-                    stoneHandler.performShot(3, new Vector3(0, 0, 1), () => {
+                    stoneHandler.performShot(new Vector3(0, 0, 1), () => {
                         clearTimeout(timeoutId);
                         expect(stoneCollided1.speed).to.not.equals(0);
-                        expect(stoneColliding.speed).to.not.equals(1);
+                        expect(stoneColliding.speed).to.not.equals(5);
                         done();
-                    });
+                    }, 5);
                     timeoutId = setTimeout(update, 5);
                 });
             });

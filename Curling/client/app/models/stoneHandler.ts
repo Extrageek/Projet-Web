@@ -1,4 +1,4 @@
-import { ObjectLoader, Vector3 } from "three";
+import { Clock, ObjectLoader, Vector3 } from "three";
 import { RinkInfo } from "./rinkInfo.interface";
 import { Stone, StoneColor } from "./stone";
 import { GameComponent } from "./gameComponent.interface";
@@ -13,11 +13,15 @@ export class StoneHandler implements GameComponent {
 
     private static readonly COLLISION_SPEED_KEEP_PERCENT = 0.85;
     private static readonly COLLISION_SPEED_TRANSFERED_PERCENT = 0.85;
+    private static readonly SHOT_POWER_MINIMUM = 0.5;
+    private static readonly SHOT_POWER_MAXIMUM = 5;
+    private static readonly SHOT_POWER_OFFSET = 2;
 
     private _rinkInfo: RinkInfo;
     private _currentPlayer: StoneColor;
     private _objectLoader: ObjectLoader;
     private _stoneOnTheGame: Stone[];
+    private _powerTimer: Clock;
     private _mousePositionPlaneXZ: Vector3;
     private _callbackAfterShotFinished: Function;
 
@@ -26,6 +30,7 @@ export class StoneHandler implements GameComponent {
         this._currentPlayer = firstPlayer - 1;
         this._objectLoader = objectLoader;
         this._stoneOnTheGame = new Array<Stone>();
+        this._powerTimer = new Clock();
         this._mousePositionPlaneXZ = new Vector3();
         this._callbackAfterShotFinished = null;
     }
@@ -34,12 +39,16 @@ export class StoneHandler implements GameComponent {
         return this._stoneOnTheGame;
     }
 
+    public get mousePositionPlaneXZ(): Vector3 {
+        return this._mousePositionPlaneXZ;
+    }
+
     public calculateMousePosition(event: MouseEvent, currentCam: CameraType) {
         if (currentCam === CameraType.PERSPECTIVE_CAM) {
             this._mousePositionPlaneXZ.set(
-                (event.clientX / window.innerWidth) / 0.02215 - 22.55, // Numbers to align with the rink model
+                -(event.clientX / window.innerWidth) / 0.02215 + 22.55, // Numbers to align with the rink model
                 0,
-                -(event.clientY / window.innerHeight) / 0.008 + 46.75 // Numbers to align with the rink model
+                (event.clientY / window.innerHeight) / 0.008 + 46.75 // Numbers to align with the rink model
             );
         } else if (currentCam === CameraType.ORTHOGRAPHIC_CAM) {
             this._mousePositionPlaneXZ.set(
@@ -52,16 +61,38 @@ export class StoneHandler implements GameComponent {
         }
     }
 
-    public performShot(speed: number, direction: Vector3,
-        callbackWhenShotFinished: Function = () => {/*Do nothing by default*/}) {
-        //TODO: Launch the last stone in the array of stones.
-        if (this._stoneOnTheGame.length === 0) {
-            throw new Error("Cannot perform shot on a stone. No stones has been generated yet.");
-        }
-        let lastIndex = this._stoneOnTheGame.length - 1;
-        this._stoneOnTheGame[lastIndex].speed = speed;
-        this._stoneOnTheGame[lastIndex].direction = direction;
-        this._callbackAfterShotFinished = callbackWhenShotFinished;
+    public startPower() {
+        this._powerTimer.start();
+    }
+
+    public performShot(
+        direction: Vector3,
+        callbackWhenShotFinished: Function = () => {/*Do nothing by default*/},
+        speed?: number) {
+            //TODO: Launch the last stone in the array of stones.
+            if (this._stoneOnTheGame.length === 0) {
+                throw new Error("Cannot perform shot on a stone. No stones has been generated yet.");
+            }
+            this._powerTimer.stop();
+            let timeDelta = this._powerTimer.getElapsedTime();
+                            console.log(timeDelta, this._powerTimer.oldTime);
+            if (timeDelta > StoneHandler.SHOT_POWER_MINIMUM) {
+                let lastIndex = this._stoneOnTheGame.length - 1;
+                console.log(speed);
+                if (speed === undefined) {
+                    this._stoneOnTheGame[lastIndex].speed =
+                        (timeDelta > StoneHandler.SHOT_POWER_MAXIMUM)
+                            ? StoneHandler.SHOT_POWER_MAXIMUM
+                                : timeDelta + StoneHandler.SHOT_POWER_OFFSET;
+                            console.log(this._stoneOnTheGame[lastIndex].speed);
+                } else {
+                    this._stoneOnTheGame[lastIndex].speed = speed;
+                }
+                this._stoneOnTheGame[lastIndex].direction = direction;
+                this._callbackAfterShotFinished = callbackWhenShotFinished;
+            } else {
+                callbackWhenShotFinished();
+            }
     }
 
     public generateNewStone(): Promise<Stone> {
@@ -83,7 +114,6 @@ export class StoneHandler implements GameComponent {
     }
 
     public update(timePerFrame: number) {
-        //TODO: Perform the verification of collisions here and hanble the displacement of the stones.
         if (this._callbackAfterShotFinished !== null) {
             let aStoneIsMoving = false;
             this._stoneOnTheGame.map((stone: Stone, stoneNumber: number, allTheStones: Stone[]) => {
@@ -106,7 +136,6 @@ export class StoneHandler implements GameComponent {
             if (stoneToVerify !== stone) {
                 if (stoneToVerify.boundingSphere.intersectsSphere(stone.boundingSphere)) {
                     stonesHit.push(stone);
-                    //console.log(stone);
                 }
             }
         });
