@@ -14,7 +14,7 @@
     "coverage": "tsc && nyc --require ts-node/register _mocha -c -R spec -- out/**/*.js",
     "nyan-coverage": "tsc && nyc --require ts-node/register _mocha -c -R nyan -- out/**/*.js"
   },
-  "nyc":{
+  "nyc": {
     "reporter": [
       "text-summary",
       "html"
@@ -22,7 +22,7 @@
     "sourceMap": true,
     "instrument": true
   },
-  "mocha":{
+  "mocha": {
     "colors": true
   },
   "dependencies": {
@@ -35,8 +35,9 @@
     "mongoose": "^4.7.6",
     "morgan": "^1.7.0",
     "node-uuid": "^1.4.7",
-    "serve-favicon": "^2.3.2",
+    "nyc": "^10.1.2",
     "pug": "^2.0.0-alpha6",
+    "serve-favicon": "^2.3.2",
     "socket.io": "^1.7.2",
     "systemjs": "^0.19.41"
   },
