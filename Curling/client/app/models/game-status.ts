@@ -14,6 +14,7 @@ export class GameStatus {
     private _currentStonesPlayer: number;
     private _currentStonesComputer: number;
     private _isLaunched: boolean;
+    private _isShooting: boolean;
     private _currentPlayer: CurrentPlayer;
 
     constructor() {
@@ -23,6 +24,7 @@ export class GameStatus {
         this._currentStonesPlayer = 8;
         this._currentStonesComputer = 8;
         this._isLaunched = false;
+        this._isShooting = false;
         this._currentPlayer = CurrentPlayer.INVALID;
     }
 
@@ -72,6 +74,14 @@ export class GameStatus {
 
     public set isLaunched(v: boolean ) {
         this._isLaunched = v ;
+    }
+
+    public get isShooting(): boolean {
+        return this._isShooting;
+    }
+
+    public set isShooting(v: boolean ) {
+        this._isShooting = v ;
     }
 
     public set currentPlayer(v : number) {
