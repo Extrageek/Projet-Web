@@ -50,7 +50,8 @@ module.exports = function(config) {
       'node_modules/reflect-metadata/Reflect.js',
       //'node_modules/phantomjs-polyfill/bind-polyfill.js',
 
-
+	// Jquery
+      'https://code.jquery.com/jquery-1.11.2.min.js',
       // zone.js
       'node_modules/zone.js/dist/zone.js',
       'node_modules/zone.js/dist/long-stack-trace-zone.js',
@@ -74,6 +75,11 @@ module.exports = function(config) {
 	    // RxJs
       { pattern: 'node_modules/rxjs/**/*.js', included: false, watched: false },
       { pattern: 'node_modules/rxjs/**/*.js.map', included: false, watched: false },
+
+
+            //socketIO
+      { pattern: 'node_modules/socket.io-client/**/*.js', included: false, watched: false },
+      { pattern: 'node_modules/socket.io-client/**/*.js.map', included: false, watched: false },
 
       // Paths loaded via module imports:
       // Angular itself

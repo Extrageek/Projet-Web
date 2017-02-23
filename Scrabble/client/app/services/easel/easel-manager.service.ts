@@ -31,19 +31,41 @@ export class EaselManagerService {
     }
 
     public isDirection(keyCode: number): boolean {
-        return 37 === keyCode || keyCode === 39;
+        let verification: boolean;
+        if (keyCode === null) {
+            throw new Error("Argument error: the keyCode cannot be null");
+        }
+        verification = (EaselControl.leftArrowKeyCode === keyCode || keyCode === EaselControl.rightArrowKeyCode);
+        return verification;
     }
 
     public isScrabbleLetter(keyCode: number): boolean {
-        return EaselControl.letterAKeyCode <= keyCode && keyCode <= EaselControl.letterZKeyCode;
+        let verification: boolean;
+        if (keyCode === null) {
+            throw new Error("Argument error: the keyCode cannot be null");
+        }
+        verification = (EaselControl.letterAKeyCode <= keyCode && keyCode <= EaselControl.letterZKeyCode);
+        return verification;
     }
 
     public isTabKey(keyCode: number): boolean {
-        return (keyCode === EaselControl.tabKeyCode);
+        let verification: boolean;
+        if (keyCode === null) {
+            throw new Error("Argument error: the keyCode cannot be null");
+        }
+        verification = (keyCode === EaselControl.tabKeyCode);
+        return verification;
     }
 
     public onKeyEventUpdateCurrentCursor(easelLength: number, keyCode: number, currentPosition?: number): number {
+        if (easelLength === null) {
+            throw new Error("Argument error: the easelLenght cannot be null");
+        }
         this.removeFocusFormatInEasel(easelLength);
+
+        if (keyCode === null) {
+            throw new Error("Argument error: the keyCode cannot be null");
+        }
 
         let newPosition = this.getNextLetterPosition(keyCode, currentPosition);
         if (newPosition !== null) {
@@ -53,20 +75,25 @@ export class EaselManagerService {
         return newPosition;
     }
 
-    public setFocusToElementWithGivenIndex(easelLength: number, index: number) {
-        let newInputId = [INPUT_ID_PREFIX, index].join('');
-        this.removeFocusFormatInEasel(easelLength);
-        if (jQuery(newInputId) !== undefined) {
-            jQuery(newInputId).focus();
-            jQuery(newInputId).css(CSS_BORDER, EASEL_FOCUS_ELEMENT_CSS.border);
-            jQuery(newInputId).css(CSS_OUT_LINE, EASEL_FOCUS_ELEMENT_CSS.outline);
-            jQuery(newInputId).css(CSS_BOX_SHADOW, EASEL_FOCUS_ELEMENT_CSS.boxShadow);
+    private getNextLetterPosition(keyCode: number, currentPosition: number): number {
+        let newPosition: number;
+
+        switch (keyCode) {
+            case EaselControl.leftArrowKeyCode:
+                newPosition = currentPosition - 1;
+                return (newPosition < MIN_POSITION_INDEX) ? MAX_POSITION_INDEX : newPosition;
+            case EaselControl.rightArrowKeyCode:
+                newPosition = currentPosition + 1;
+                return (newPosition > MAX_POSITION_INDEX) ? MIN_POSITION_INDEX : newPosition;
+            case EaselControl.tabKeyCode:
+                return MIN_POSITION_INDEX;
+            default:
+                return newPosition = 0;
         }
     }
 
-    public removeFocusFormatToElementWithGivenIndex(index: number) {
+    private removeFocusFormatToElementWithGivenIndex(index: number) {
         let newInputId = [INPUT_ID_PREFIX, index].join('');
-
         if (jQuery(newInputId) !== undefined) {
             jQuery(newInputId).css(CSS_BORDER, EASEL_INIT_ELEMENT_CSS.border);
             jQuery(newInputId).css(CSS_OUT_LINE, EASEL_INIT_ELEMENT_CSS.outline);
@@ -80,25 +107,18 @@ export class EaselManagerService {
         }
     }
 
-    public getNextLetterPosition(keyCode: number, currentPosition: number): number {
-        let newPosition = 0;
-
-        switch (keyCode) {
-            case EaselControl.leftArrowKeyCode:
-                newPosition = currentPosition - 1;
-                return (newPosition < MIN_POSITION_INDEX) ? MAX_POSITION_INDEX : newPosition;
-            case EaselControl.rightArrowKeyCode:
-                newPosition = currentPosition + 1;
-                return (newPosition > MAX_POSITION_INDEX) ? MIN_POSITION_INDEX : newPosition;
-            case EaselControl.tabKeyCode:
-                return MIN_POSITION_INDEX;
-            default:
-                break;
+    public setFocusToElementWithGivenIndex(easelLength: number, index: number) {
+        let newInputId = [INPUT_ID_PREFIX, index].join('');
+        this.removeFocusFormatInEasel(easelLength);
+        if (jQuery(newInputId) !== undefined) {
+            jQuery(newInputId).focus();
+            jQuery(newInputId).css(CSS_BORDER, EASEL_FOCUS_ELEMENT_CSS.border);
+            jQuery(newInputId).css(CSS_OUT_LINE, EASEL_FOCUS_ELEMENT_CSS.outline);
+            jQuery(newInputId).css(CSS_BOX_SHADOW, EASEL_FOCUS_ELEMENT_CSS.boxShadow);
         }
     }
 
     public getStringListofChar(texte: string): Array<string> {
-
         if (texte === null) {
             throw new Error("Null argument error: The parameter cannot be null");
         }

@@ -26,15 +26,15 @@ describe("SquarePosition object should", () => {
     it("get the row index correctly", () => {
         expect(_position.row).to.be.equal(_row);
     });
-    it("set the row index corectly", () => {
+    it("set the row index correctly", () => {
         _row = BoardRows.B;
         _position.row = _row;
         expect(_position.row).to.be.equal(_row);
     });
-    it("get the column index corectly", () => {
+    it("get the column index correctly", () => {
         expect(_position.column).to.be.equal(_column);
     });
-    it("set the column index corectly", () => {
+    it("set the column index correctly", () => {
         _column = BoardColumn.SECOND_COLUMN;
         _position.column = _column;
         expect(_position.column).to.be.equal(_column);
