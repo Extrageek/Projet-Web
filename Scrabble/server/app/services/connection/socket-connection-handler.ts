@@ -117,7 +117,8 @@ export class SocketConnectionHandler {
             throw new Error("The socket value cannot be null.");
         }
 
-        socket.on(SocketEventType.message, (sentMessage: { commandType: CommandType, username: string, message: string }) => {
+        socket
+        .on(SocketEventType.message, (sentMessage: { commandType: CommandType, username: string, message: string }) => {
             let currentRoom = this._roomHandler.getRoomByUsername(sentMessage.username);
 
             console.log("Room message :", sentMessage);
@@ -156,7 +157,9 @@ export class SocketConnectionHandler {
                     throw new Error("The letters to be changed cannot be null");
                 }
 
-                let changedLetters = this._roomHandler.exchangeLetterOfCurrentPlayer(socket.id, sentMessage.listOfLettersToChange);
+                let changedLetters =
+                this._roomHandler.exchangeLetterOfCurrentPlayer(socket.id, sentMessage.listOfLettersToChange);
+
                 let playerRoom = this._roomHandler.getRoomBySocketId(socket.id);
 
                 if (playerRoom !== null
@@ -173,8 +176,7 @@ export class SocketConnectionHandler {
                         _data: changedLetters,
                         _username: player.username,
                         _commandType: sentMessage.commandType
-
-                    }
+                    };
                     // Emit a message with the new letters to the sender
                     this._socket.to(playerRoom.roomId).emit(SocketEventType.changeLettersRequest, commandMessage);
                 } else {
@@ -202,7 +204,7 @@ export class SocketConnectionHandler {
                     _data: null,
                     _username: player.username,
                     _commandType: commandRequest.commandType
-                }
+                };
 
                 // Emit a message with the new letters to the sender
                 this._socket.to(playerRoom.roomId).emit(SocketEventType.commandRequest, commandMessage);

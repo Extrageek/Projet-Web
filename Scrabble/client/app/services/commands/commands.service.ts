@@ -60,7 +60,7 @@ export class CommandsService {
         if (enteredletters === null
             || enteredletters.length > lettersInEasel.length
             || enteredletters.length === 0) {
-            return { _commandStatus: CommandStatus.SynthaxeError, _response: null }
+            return { _commandStatus: CommandStatus.SynthaxeError, _response: null };
         }
 
         for (let index = 0; index < enteredletters.length; ++index) {
@@ -76,10 +76,8 @@ export class CommandsService {
             if (letterIndex === -1 || letterIndex === undefined) {
                 request._commandStatus = CommandStatus.NotAllowed;
                 request._response = null;
-
                 return request;
             }
-
             indexOfLettersToChange.push(letterIndex);
         }
 
