@@ -30,7 +30,6 @@ export class RenderService {
     private _mesh: Mesh;
     private _lineGeometry: Geometry;
     private _lineMaterial: THREE.LineDashedMaterial;
-    private _lineMesh: Mesh;
     private _line: THREE.Line;
 
     private _clock: Clock;
@@ -269,13 +268,15 @@ export class RenderService {
     }
 
     public updateLine() {
-        console.log("line update");
-        // this._lineGeometry.vertices[1].setComponent(0, this._stoneHandler.mousePositionPlaneXZ.x);
-        // this._lineGeometry.verticesNeedUpdate = true;
-        this._lineGeometry.vertices.pop();
-        this._lineGeometry.vertices.push(new Vector3(this._stoneHandler.mousePositionPlaneXZ.x, 0.1, 22.4));
-        this._lineGeometry.computeLineDistances();
-        this._lineGeometry.verticesNeedUpdate = true;
+        if (this._gameStatusService.gameStatus.isShooting) {
+            this._lineMaterial.visible = false;
+        } else {
+            this._lineMaterial.visible = true;
+            this._lineGeometry.vertices.pop();
+            this._lineGeometry.vertices.push(new Vector3(this._stoneHandler.mousePositionPlaneXZ.x, 0.1, 22.4));
+            this._lineGeometry.computeLineDistances();
+            this._lineGeometry.verticesNeedUpdate = true;
+        }
     }
 
     public toogleFocus(toogle: boolean) {
@@ -309,9 +310,7 @@ export class RenderService {
     }
 
     onMouseMove(event: MouseEvent) {
-        if (this._gameStatusService.gameStatus.isShooting) {
-            this.updateLine();
-        } else if (!this._gameStatusService.gameStatus.isShooting) {
+        if (!this._gameStatusService.gameStatus.isShooting) {
             this._stoneHandler.calculateMousePosition(event, this._currentCameraType);
         }
     }

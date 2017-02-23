@@ -78,7 +78,6 @@ export class RestApiProxyService {
         let records: Array<Record> = new Array<Record>();
         await this.http.get(this._urlApi + "records-all").toPromise()
             .then(response => {
-                console.log(response);
                 if (response.status === 200) {
                     let arrObj: Array<any> = response.json();
                     arrObj.forEach(element => {

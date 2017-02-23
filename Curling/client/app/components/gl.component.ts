@@ -19,7 +19,6 @@ export class GlComponent implements OnInit {
         this.webgltext = "";
         this.xmodel = this.ymodel = 0;
         this.zCamera = 0;
-        //console.log(this.trigger());
     }
 
     @HostListener("window:keydown.space", ["$event"])

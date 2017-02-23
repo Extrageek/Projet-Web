@@ -72,11 +72,11 @@ describe("StoneHandler tests should", () => {
 
                 stoneHandler.generateNewStone().then((stone2) => {
                     stone2.position.set(0, 0, -1);
-                    stoneHandler.performShot(new Vector3(0, 0, 1), () => {}, 0.5);
+                    stoneHandler.performShot(new Vector3(0, 0, 1), () => { /* Do nothing*/ });
                     stoneHandler.update(1);
-                    stoneHandler.performShot(new Vector3(0, 0, 1), () => {}, 0.5);
+                    stoneHandler.performShot(new Vector3(0, 0, 1), () => { /* Do nothing*/ });
                     stoneHandler.update(1);
-                    stoneHandler.performShot(new Vector3(0, 0, 1), () => {}, 0.5);
+                    stoneHandler.performShot(new Vector3(0, 0, 1), () => { /* Do nothing*/ });
                     stoneHandler.update(1);
                     done();
                 });
@@ -99,11 +99,11 @@ describe("StoneHandler tests should", () => {
 
                     stoneHandler.generateNewStone().then((stone3) => {
                         stone3.position.set(0, 0, -1);
-                        stoneHandler.performShot(new Vector3(0, 0, 1), () => {}, 0.5);
+                        stoneHandler.performShot(new Vector3(0, 0, 1), () => { /* Do nothing*/ });
                         stoneHandler.update(1);
-                        stoneHandler.performShot(new Vector3(0, 0, 1), () => {}, 0.5);
+                        stoneHandler.performShot(new Vector3(0, 0, 1), () => { /* Do nothing*/ });
                         stoneHandler.update(1);
-                        stoneHandler.performShot(new Vector3(0, 0, 1), () => {}, 0.5);
+                        stoneHandler.performShot(new Vector3(0, 0, 1), () => { /* Do nothing*/ });
                         stoneHandler.update(1);
                         done();
                     });

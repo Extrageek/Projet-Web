@@ -76,8 +76,8 @@ export class StoneHandler implements GameComponent {
 
     public performShot(
         direction: Vector3,
-        callbackWhenShotFinished: Function = () => {/*Do nothing by default*/},
-        speed?: number) {
+        callbackWhenShotFinished: Function = () => {/*Do nothing by default*/}
+        ) {
             if (this._stoneOnTheGame.length === 0) {
                 throw new RangeError("Cannot perform shot on a stone. No stones has been generated yet.");
             }
@@ -85,17 +85,12 @@ export class StoneHandler implements GameComponent {
             this._powerTimer.stop();
             let timeDelta = this._powerTimer.getElapsedTime();
             if (timeDelta > StoneHandler.SHOT_POWER_MINIMUM) {
-                console.log(timeDelta);
                 let lastIndex = this._stoneOnTheGame.length - 1;
-                if (speed === undefined) {
-                    this._stoneOnTheGame[lastIndex].speed =
-                        (timeDelta > StoneHandler.SHOT_POWER_MAXIMUM)
-                            ? StoneHandler.SHOT_POWER_MAXIMUM
-                                : timeDelta + StoneHandler.SHOT_POWER_OFFSET;
-                            console.log(this._stoneOnTheGame[lastIndex].speed);
-                } else {
-                    this._stoneOnTheGame[lastIndex].speed = speed;
-                }
+                this._stoneOnTheGame[lastIndex].speed =
+                    (timeDelta > StoneHandler.SHOT_POWER_MAXIMUM)
+                        ? StoneHandler.SHOT_POWER_MAXIMUM + StoneHandler.SHOT_POWER_OFFSET
+                            : timeDelta + StoneHandler.SHOT_POWER_OFFSET;
+
                 this._stoneOnTheGame[lastIndex].direction = direction;
                 this._callbackAfterShotFinished = callbackWhenShotFinished;
             } else {
