@@ -8,12 +8,10 @@ export class Room {
     static roomMinCapacity = 1;
     static roomMaxCapacity = 4;
 
-    private static roomIdCounter = 0;
     private _players: Array<Player>;
     private _letterBankHandler: LetterBankHandler;
     private _roomCapacity: number;
     private _roomId: string;
-    private _roomNumber: number;
 
     // The constructor of the room
     constructor(roomCapacity: number) {
@@ -21,12 +19,10 @@ export class Room {
             throw new RangeError("Argument error: the number of players must be between 1 and 4.");
         }
 
-        ++Room.roomIdCounter;
         this._roomCapacity = roomCapacity;
         this._players = new Array<Player>();
         this._letterBankHandler = new LetterBankHandler();
         this._roomId = uuid.v1(); // Generate a v1 (time-based) id
-        this._roomNumber = Room.roomIdCounter;
     }
 
     // The player of the room
@@ -45,24 +41,10 @@ export class Room {
     public get roomId(): string {
         return this._roomId;
     }
-    public set roomId(value: string) {
-        this._roomId = value;
-    }
-
-    // TODO: Can be removed, must be checked with the group before
-    public get roomNumber(): number {
-        return this._roomNumber;
-    }
-    public set roomNumber(value: number) {
-        this._roomNumber = value;
-    }
 
     // The room capacity
     public get roomCapacity(): number {
         return this._roomCapacity;
-    }
-    public set roomCapacity(value: number) {
-        this._roomCapacity = value;
     }
 
     // Check if the room is full or not
@@ -95,6 +77,8 @@ export class Room {
 
     // Remove a player from the current room
     public removePlayer(player: Player): Player {
+        let playerRemoved: Player;
+        playerRemoved = null;
         if (player === null || player === undefined) {
             throw new Error("Argument error: the player cannot be null");
         }
@@ -104,12 +88,10 @@ export class Room {
         });
 
         if (index !== -1) {
-
-            let playerRemoved = this._players.splice(index, 1)[0];
-            return playerRemoved;
+            playerRemoved = this._players.splice(index, 1)[0];
         }
 
-        return null;
+        return playerRemoved;
     }
 
     // Check if the username of the player already exist in the current room
@@ -125,6 +107,6 @@ export class Room {
 
     // Use to exchange letters from the a player easel
     public exchangeThePlayerLetters(letterToBeExchange: Array<string>): Array<string> {
-        return this._letterBankHandler.exchangeLetters(letterToBeExchange);
+        return this.letterBankHandler.exchangeLetters(letterToBeExchange);
     }
 }

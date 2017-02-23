@@ -143,17 +143,17 @@ export class GridManagerService {
         });
     }
 
-    public updateGridAfterDelete(puzzle: Puzzle, rowIndex: number, colIndex: number): void {
+    public updateGridAfterDelete(puzzle: Puzzle, rowIndexModif: number, colIndexModif: number): void {
 
         for (let columnIndex = 0; columnIndex < puzzle._puzzle.length; ++columnIndex) {
-            if (puzzle._puzzle[rowIndex][columnIndex]._hide === true) {
-                this.validateEnteredNumber(puzzle, rowIndex, columnIndex);
+            if (puzzle._puzzle[rowIndexModif][columnIndex]._hide === true) {
+                this.validateEnteredNumber(puzzle, rowIndexModif, columnIndex);
             }
         }
 
         for (let rowIndex = 0; rowIndex < puzzle._puzzle.length; ++rowIndex) {
-            if (puzzle._puzzle[rowIndex][colIndex]._hide === true) {
-                this.validateEnteredNumber(puzzle, rowIndex, colIndex);
+            if (puzzle._puzzle[rowIndex][colIndexModif]._hide === true) {
+                this.validateEnteredNumber(puzzle, rowIndex, colIndexModif);
             }
         }
     }
@@ -161,5 +161,4 @@ export class GridManagerService {
     public decrementCellsToBeCompleted() {
         this._cellsToBeCompleted--;
     }
-
 }

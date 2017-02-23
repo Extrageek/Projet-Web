@@ -119,7 +119,7 @@ export class RoomHandler {
         this._rooms.forEach((room) => {
             let currentPlayer = room.players.filter((player) => {
 
-                console.log("dd", player.socketId, "-", socketId);
+                //console.log("dd", player.socketId, "-", socketId);
 
                 return (player.socketId === socketId);
             })[0];
@@ -153,20 +153,18 @@ export class RoomHandler {
     }
 
     public exchangeLetterOfCurrentPlayer(socketId: string, lettersToBeExchange: Array<string>): Array<string> {
-
+        let letters = new Array<string>();
         if (socketId === null) {
             throw new Error("The socket value cannot be null.");
         }
         if (lettersToBeExchange === null) {
             throw new Error("The list of letters to be exchanged cannot cannot be null.");
         }
-
         let playerRoom = this.getRoomBySocketId(socketId);
 
         if (playerRoom !== null) {
-            return playerRoom.exchangeThePlayerLetters(lettersToBeExchange);
+            letters = playerRoom.exchangeThePlayerLetters(lettersToBeExchange);
         }
-
-        return null;
+        return letters;
     }
 }

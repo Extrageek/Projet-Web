@@ -26,7 +26,6 @@ import { UserSetting, Difficulty } from '../models/user-setting';
 import { Observable } from 'rxjs/Observable';
 import { Time } from "../models/time";
 
-//noinspection TsLint
 @Component({
     moduleId: module.id,
     selector: 'sudoku-grid',
@@ -78,26 +77,13 @@ export class GridComponent implements OnInit {
     @HostListener('window:beforeunload')
     public async logout() {
         let str: string;
-        await this.api.removeUsername(this._userSetting.name)
-            .then(result => {
-                if (result) {
-                    str = "done";
-                }
-                else {
-                    str = "not done";
-                }
-            })
-            .catch(error => {
-                console.log("error: ", error);
-                str = "error";
-            });
-        return str;
+        await this.api.removeUsername(this._userSetting.name);
     }
 
     public getNewPuzzle(difficulty: Difficulty) {
         this._isLoading = true;
         this._time.resetTime();
-        // this.leaderboard.nativeElement.classList.add("fade");
+        this.leaderboard.nativeElement.classList.add("fade");
         this.hideMessageCongratulation();
         this._easyRecords = [];
         this._hardRecords = [];
@@ -133,46 +119,16 @@ export class GridComponent implements OnInit {
         else if (this.puzzleEventManager.isSudokuNumber(event.key)) {
             this.gridManagerService.decrementCellsToBeCompleted();
             this.gridManagerService.validateEnteredNumber(this._puzzle, rowIndex, colIndex);
-            // TODO: replace 59 by 0
 
+            // TODO: replace 59 by 0
             if (this.gridManagerService.cellsToBeCompleted === 59) {
                 //if (this.api.verifyGrid(this._puzzle)) {
                 this._isFinished = true;
                 await this.api.getTopRecords().then(topRecords => {
-                    let isInserted = false;
-                    if (this._userSetting.difficulty === Difficulty.NORMAL) {
-                        for (let i = 0; i < topRecords[0].length
-                            && this._easyRecords.length <= topRecords[0].length; ++i) {
-                            if (this._time.compareTo(topRecords[0][i].time) === -1 && !isInserted) {
-                                isInserted = true;
-                                this._easyRecords.push(
-                                    new Record(this._userSetting.name, this._userSetting.difficulty, this._time)
-                                );
-                            }
-                            else {
-                                this._easyRecords.push(topRecords[0][i]);
-                            }
-                        }
-                        this._hardRecords = topRecords[1];
-                    }
-                    else if (this._userSetting.difficulty === Difficulty.HARD) {
-                        for (let i = 0; i < topRecords[1].length
-                            && this._hardRecords.length <= topRecords[1].length; ++i) {
-                            if (this._time.compareTo(topRecords[1][i].time) === -1 && !isInserted) {
-                                isInserted = true;
-                                this._hardRecords.push(
-                                    new Record(this._userSetting.name, this._userSetting.difficulty, this._time)
-                                );
-                            }
-                            else {
-                                this._hardRecords.push(topRecords[1][i]);
-                            }
-                        }
-                        this._easyRecords = topRecords[0];
-                    }
+                    let isInserted = this.insertUserScoreIntoTopScores(topRecords);
+                    this.messageCongratulation.nativeElement.classList.remove("fade");
                     if (isInserted) {
                         this.leaderboard.nativeElement.classList.remove("fade");
-                        // this.messageCongratulation.nativeElement.classList.remove("fade");
                     }
                 }).catch(error => {
                     console.log(error);
@@ -191,7 +147,7 @@ export class GridComponent implements OnInit {
         }
 
         this.stopwatchService.resetTime();
-        // this.leaderboard.nativeElement.classList.add("fade");
+        this.leaderboard.nativeElement.classList.add("fade");
         this.hideMessageCongratulation();
         this.gridManagerService.initializeGrid(this._puzzle);
         this._isFinished = false;
@@ -216,5 +172,20 @@ export class GridComponent implements OnInit {
 
     public hideClock() {
         this._hiddenClock = !this._hiddenClock;
+    }
+
+    public insertUserScoreIntoTopScores(recordsFromDb: Record[][]): boolean {
+        let isInserted = false;
+        for (let i = 0; i < recordsFromDb[this._userSetting.difficulty].length; ++i) {
+            if (this._time.compareTo(recordsFromDb[this._userSetting.difficulty][i].time) === -1 && !isInserted) {
+                isInserted = true;
+                recordsFromDb[this._userSetting.difficulty][i] = new Record(this._userSetting.name,
+                    this._userSetting.difficulty,
+                    this._time);
+            }
+        }
+        this._easyRecords = recordsFromDb[Difficulty.NORMAL];
+        this._hardRecords = recordsFromDb[Difficulty.HARD];
+        return isInserted;
     }
 }
