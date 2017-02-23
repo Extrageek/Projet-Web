@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy, EventEmitter, Input, Output } from "@angu
 import { Subscription } from 'rxjs/Subscription';
 
 import { ScrabbleLetter } from "../models/letter/scrabble-letter";
-import { EaselGeneratorService } from "../services/easel/easel-generator.service";
 import { EaselManagerService } from '../services/easel/easel-manager.service';
 import { EaselControl } from '../commons/easel-control';
 import { SocketService } from "../services/socket-service";
@@ -14,7 +13,7 @@ import { Alphabet } from '../models/letter/alphabet';
 
 @Component({
     moduleId: module.id,
-    providers: [EaselGeneratorService, EaselManagerService, SocketService],
+    providers: [EaselManagerService, SocketService],
     selector: "easel-selector",
     templateUrl: "../../assets/templates/easel.html",
     styleUrls: ["../../assets/stylesheets/easel.css"],
@@ -57,7 +56,6 @@ export class EaselComponent implements OnInit, OnDestroy {
     private fakeLettersFromServer: Array<ScrabbleLetter>;
 
     constructor(
-        private easelGenerator: EaselGeneratorService,
         private easelEventManagerService: EaselManagerService,
         private socketService: SocketService) {
 
@@ -125,30 +123,24 @@ export class EaselComponent implements OnInit, OnDestroy {
 
         let easelMaxIndex = this.letters.length - 1;
         let currentLetter = this.letters[currentInputIndex].letter;
-        let currentImageSource = this.letters[currentInputIndex].imageSource;
 
         if (keyCode === EaselControl.rightArrowKeyCode
             && nextInputIndex === 0) {
             for (let index = easelMaxIndex; index > 0; --index) {
                 this.letters[index].letter = this.letters[index - 1].letter;
-                this.letters[index].imageSource = this.letters[index - 1].imageSource;
             }
 
         } else if (keyCode === EaselControl.leftArrowKeyCode
             && nextInputIndex === easelMaxIndex) {
             for (let index = 0; index < easelMaxIndex; ++index) {
                 this.letters[index].letter = this.letters[index + 1].letter;
-                this.letters[index].imageSource = this.letters[index + 1].imageSource;
             }
 
         } else {
             this.letters[currentInputIndex].letter = this.letters[nextInputIndex].letter;
-            this.letters[currentInputIndex].imageSource = this.letters[nextInputIndex].imageSource;
-
         }
 
         this.letters[nextInputIndex].letter = currentLetter;
-        this.letters[nextInputIndex].imageSource = currentImageSource;
     }
 
     private setFocusToNextMatchLetter(

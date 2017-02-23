@@ -2,16 +2,28 @@
   "name": "scrabble-service",
   "version": "1.0.0",
   "description": "Le projet Scrabble pour le cours LOG2990 de la session H2017",
+  "private": true,
   "scripts": {
     "start": "tsc && concurrently --kill-others \"tsc -w \" \"nodemon out/www.js\" ",
     "lint": "tslint app/**/*.ts app/*.ts --force -t verbose",
-    "test": "nodemon --watch app -e ts --exec \"npm run test-once\"",
-    "test-once": "tsc && mocha out/*.spec.js && mocha out/models/*/*.spec.js && mocha out/services/*/*.spec.js",
-    "coverage": "remap-istanbul -i coverage/coverage-final.json -o coverage -t html",
     "tsc": "tsc",
     "tsc:w": "tsc -w",
     "clean": "rimraf out node_modules",
-    "postinstall": "rimraf false"
+    "postinstall": "rimraf false",
+    "test": "tsc && mocha out/**/*.spec.js -R spec -c -u exports --harmony",
+    "coverage": "tsc && nyc --require ts-node/register _mocha -c -R spec -- out/**/*.js",
+    "nyan-coverage": "tsc && nyc --require ts-node/register _mocha -c -R nyan -- out/**/*.js"
+  },
+  "nyc": {
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
+    "sourceMap": true,
+    "instrument": true
+  },
+  "mocha": {
+    "colors": true
   },
   "dependencies": {
     "body-parser": "^1.15.2",
@@ -23,6 +35,8 @@
     "mongoose": "^4.7.6",
     "morgan": "^1.7.0",
     "node-uuid": "^1.4.7",
+    "nyc": "^10.1.2",
+    "pug": "^2.0.0-alpha6",
     "serve-favicon": "^2.3.2",
     "socket.io": "^1.7.2",
     "systemjs": "^0.19.41"
@@ -46,6 +60,7 @@
     "nodemon": "^1.11.0",
     "remap-istanbul": "^0.8.4",
     "rimraf": "^2.5.4",
+    "ts-node": "^2.1.0",
     "socket.io-client": "^1.7.2",
     "tslint": "^4.4.2",
     "tslint-eslint-rules": "^3.2.3",

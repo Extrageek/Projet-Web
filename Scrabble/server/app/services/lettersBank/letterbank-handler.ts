@@ -98,4 +98,9 @@ export class LetterBankHandler {
         });
         return newList;
     }
+
+    public getNumberOfLettersInBank(): number {
+        let numberOfLetters = this.bank.numberOfLettersInBank;
+        return this.bank.numberOfLettersInBank;
+    }
 }

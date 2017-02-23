@@ -2,16 +2,20 @@ import { Component, OnInit, OnDestroy, Output, ViewChild, EventEmitter } from "@
 import { Route, ActivatedRoute } from '@angular/router';
 
 import { SocketService } from "../services/socket-service";
-import { CommandsService, EXCHANGE_COMMAND, PLACE_COMMAND } from "../services/gameRoom/commands.service";
+import { EaselManagerService } from '../services/easel/easel-manager.service';
+import { GameRoomManagerService } from "../services/gameRoom/game-room-manager.service";
+import { CommandsService, EXCHANGE_COMMAND, PLACE_COMMAND } from "../services/commandes/commands.service";
+
+import { IExchangeCommandRequest } from "../services/commandes/command-request";
+import { CommandStatus } from "../services/commandes/command-status";
+import { InputCommandType } from '../services/commandes/command-type';
+
 import { EaselComponent } from './easel.component';
 import { ChatroomComponent } from './chatroom.component';
-import { GameRoomManagerService } from "../services/gameRoom/game-room-manager.service";
-import { EaselManagerService } from '../services/easel/easel-manager.service';
 import { SocketEventType } from '../commons/socket-eventType';
 import { IRoomMessage } from '../models/room/room-message';
 import { ScrabbleLetter } from "../models/letter/scrabble-letter";
 import { EaselControl } from '../commons/easel-control';
-import { InputCommand } from '../commons/input-commands';
 
 
 declare var jQuery: any;
@@ -109,56 +113,67 @@ export class GameComponent implements OnInit, OnDestroy {
         let texte = this._inputMessage.trim();
         let commandAndRequest = this.commandsService.getInputCommand(this._inputMessage);
 
-        if (commandAndRequest === InputCommand.MessageCmd) {
-            if (this._inputMessage.trim() !== "" && this._inputMessage.trim().length) {
-                this.socketService.emitMessage(
-                    SocketEventType.message,
-                    { username: this._username, message: this._inputMessage });
-            }
-        } else if (commandAndRequest === InputCommand.ExchangeCmd) {
+        if (commandAndRequest === InputCommandType.MessageCmd) {
+            this.executeSendMessageCommand();
 
-            let request = texte.split(EXCHANGE_COMMAND)[1].trim();
-            let listOfLettersToChange = this.easelManagerService.getStringListofChar(request);
+        } else if (commandAndRequest === InputCommandType.ExchangeCmd) {
 
             try {
-
-                this.executeExchangeCommand(listOfLettersToChange);
-
+                this.executeExchangeLettersCommand(texte);
+                this._inputMessage = '';
             } catch (error) {
-                let invalidCmd = listOfLettersToChange.toString();
-                console.log('invalid command', invalidCmd, error);
+                console.log('invalid request', error);
             }
 
-        } else if (commandAndRequest === InputCommand.PlaceCmd) {
+        } else if (commandAndRequest === InputCommandType.PlaceCmd) {
             //placeCmd
             this._inputMessage = '';
 
-        } else if (commandAndRequest === InputCommand.PassCmd) {
+        } else if (commandAndRequest === InputCommandType.PassCmd) {
             // passCmd
             this._inputMessage = '';
 
-        } else if (commandAndRequest === InputCommand.InvalidCmd) {
+        } else if (commandAndRequest === InputCommandType.InvalidCmd) {
             //InvalidCmd
             this._inputMessage = 'Invalid command';
         }
     }
 
-    private executeExchangeCommand(listOfLettersToChange: Array<string>) {
-        if (listOfLettersToChange === null) {
+    private executeSendMessageCommand() {
+        if (this._inputMessage.trim() !== "" && this._inputMessage.trim().length) {
+            this.socketService.emitMessage(
+                SocketEventType.message,
+                { username: this._username, message: this._inputMessage });
+            this._inputMessage = '';
+        }
+    }
+
+    private executeExchangeLettersCommand(requestValue: string) {
+        if (requestValue === null) {
             throw new Error("Null argument error: The parameter cannot be null");
         }
 
-        let indexOfLettersToChange = this.easelManagerService
-            .getIndexOfLettersToChangeIfValidRequest(this._childEasel.letters, listOfLettersToChange);
+        let request = requestValue.split(EXCHANGE_COMMAND)[1].trim();
+        let listOfLettersToChange = this.easelManagerService.getStringListofChar(request);
 
-        if (indexOfLettersToChange !== null) {
-            this._childEasel.indexOfLettersToChange = indexOfLettersToChange;
+        let exchangeRequest = this.commandsService
+            .createExchangeEaselLettersRequest(this._childEasel.letters, listOfLettersToChange);
+
+        if (exchangeRequest._commandStatus === CommandStatus.Ok) {
+            this._childEasel.indexOfLettersToChange = exchangeRequest._indexOfLettersToExchange;
             this.socketService.emitMessage(SocketEventType.exchangeLettersRequest, listOfLettersToChange);
             this._inputMessage = '';
 
-        } else {
-            let invalidCmd = listOfLettersToChange.toString();
-            console.log('invalid command', invalidCmd);
+            console.log("Ok");
+
+        } else if (exchangeRequest._commandStatus === CommandStatus.NotAllowed) {
+            console.log("NotAllowed");
+
+        } else if (exchangeRequest._commandStatus === CommandStatus.SynthaxeError) {
+            console.log("SynthaxeError");
+
+        } else if (exchangeRequest._commandStatus === CommandStatus.Invalid) {
+            console.log("Invalid");
         }
     }
 
