@@ -203,11 +203,7 @@ export class RenderService {
             this._line = new THREE.Line(geometry, material);
             this._scene.add(this._line);
 
-            this._stoneHandler.generateNewStone().then((stone: Stone) => {
-                this._scene.add(stone);
-                stone.position.set(0, 0, -11.4);
-                this.onFinishedLoadingModel();
-            });
+            this.loadStone();
         });
     }
 
@@ -231,6 +227,7 @@ export class RenderService {
 
     public loadStone() {
         this._stoneHandler.generateNewStone().then((stone: Stone) => {
+            stone.position.set(0, 0, -11.4);
             this._scene.add(stone);
             this._cameraService.movePerspectiveCameraToFollowObjectOnZ(stone);
             this.onFinishedLoadingModel();
@@ -297,27 +294,34 @@ export class RenderService {
     }
 
     onMouseMove(event: MouseEvent) {
-        if (this._gameStatusService.gameStatus.isShooting && this._stoneHandler !== undefined) {
+        if (this._gameStatusService.gameStatus.isShooting) {
             this._stoneHandler.calculateMousePosition(event, this._currentCameraType);
         }
     }
 
     onMousePressed() {
         if (!this._gameStatusService.gameStatus.isShooting) {
-            this._gameStatusService.gameStatus.isShooting = true;
             this._stoneHandler.startPower();
-            console.log("Start Shot");
+            this._stoneHandler.mouseIsPressed = true;
         }
     }
 
     onMouseReleased() {
-        if (this._gameStatusService.gameStatus.isShooting) {
-            this._stoneHandler.performShot(new Vector3(0, 0, 1), () => {
-            console.log("Shot");
-                this._stoneHandler.generateNewStone().then((newStone: Stone) => {
+        if (this._stoneHandler.mouseIsPressed) {
+            this._stoneHandler.mouseIsPressed = false;
+            try {
+                this._gameStatusService.gameStatus.isShooting = true;
+                this._stoneHandler.performShot(new Vector3(0, 0, 1), () => {
+                    this.loadStone();
                     this._gameStatusService.gameStatus.isShooting = false;
                 });
-            });
+            } catch (e) {
+                if (e instanceof (RangeError)) {
+                    this._gameStatusService.gameStatus.isShooting = false;
+                } else {
+                    throw e;
+                }
+            }
         }
     }
 
