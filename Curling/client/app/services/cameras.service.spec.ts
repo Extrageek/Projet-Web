@@ -101,4 +101,23 @@ describe("Camera service should", () => {
         }
         setTimeout(update, 1);
     });
+
+    it("return the perspective camera to it's initial position", () => {
+        let objectFollowed = new Object3D();
+        objectFollowed.position.set(0, 0, 0);
+        cameraService.movePerspectiveCameraToFollowObjectOnZ(objectFollowed);
+        objectFollowed.position.set(1, 1, 1);
+        cameraService.update(1);
+        cameraService.replacePCameraToInitialPosition();
+        let perspectiveCamera = cameraService.perspectiveCamera;
+        expect(perspectiveCamera.position.x).to.equals(CameraService.INITIAL_POSITION_P.x);
+        expect(perspectiveCamera.position.y).to.equals(CameraService.INITIAL_POSITION_P.y);
+        expect(perspectiveCamera.position.z).to.equals(CameraService.INITIAL_POSITION_P.z);
+
+        objectFollowed.position.set(2, 2, 2);
+        cameraService.update(1);
+        expect(perspectiveCamera.position.x).to.equals(CameraService.INITIAL_POSITION_P.x);
+        expect(perspectiveCamera.position.y).to.equals(CameraService.INITIAL_POSITION_P.y);
+        expect(perspectiveCamera.position.z).to.equals(CameraService.INITIAL_POSITION_P.z);
+    });
 });

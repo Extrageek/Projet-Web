@@ -330,6 +330,7 @@ export class RenderService {
                 this._stoneHandler.performShot(new Vector3(0, 0, 1), () => {
                     this._gameStatusService.gameStatus.usedStone();
                     this._gameStatusService.gameStatus.nextPlayer();
+                    this._cameraService.replacePCameraToInitialPosition();
                     this.loadStone();
                     this._gameStatusService.gameStatus.isShooting = false;
                 });

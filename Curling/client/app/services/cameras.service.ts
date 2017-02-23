@@ -16,7 +16,7 @@ interface FollowUpdate {
 @Injectable()
 export class CameraService implements GameComponent {
     private static readonly FIELD_OF_VIEW = 65;
-    private static readonly INITIAL_POSITION_P = {x: 0, y: 6, z: -24};
+    public static readonly INITIAL_POSITION_P = {x: 0, y: 6, z: -24};
     private static readonly POINT_TO_P = {x: 0, y: 0, z: -10};
     private static readonly INITIAL_POSITION_T = {x: 0, y: 20, z: 0};
     private static readonly POINT_TO_T = {x: 0, y: 0, z: 0};
@@ -102,6 +102,14 @@ export class CameraService implements GameComponent {
     private followObjectOnZAxis(informations: FollowInformation) {
         informations.objectWhoFollow.position.z =
             informations.objectToFollow.position.z + informations.distanceVector.z;
+    }
+
+    public replacePCameraToInitialPosition() {
+        this.stopPerspectiveCameraToFollowObjectOnZ();
+        this._cameras[CameraService.PERSPECTIVE_CAMERA_INDEX].position.set(
+            CameraService.INITIAL_POSITION_P.x,
+            CameraService.INITIAL_POSITION_P.y,
+            CameraService.INITIAL_POSITION_P.z);
     }
 
     public update(timePerFrame: number): void {
