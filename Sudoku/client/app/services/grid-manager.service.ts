@@ -82,7 +82,8 @@ export class GridManagerService {
 
         for (let rowId = squareMinRowIndex; rowId <= squareMaxRowIndex; ++rowId) {
             for (let columnId = squareMinColumnIndex; columnId <= squareMaxColumnIndex; ++columnId) {
-                if (columnId !== columnIndex && rowId !== rowIndex && puzzleItem === grid[rowId][columnId]._value) {
+                if (columnId !== columnIndex && rowId !== rowIndex
+                    && puzzleItem === Number(grid[rowId][columnId]._value)) {
                     return true;
                 }
             }

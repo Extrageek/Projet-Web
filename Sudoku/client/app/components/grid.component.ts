@@ -133,7 +133,7 @@ export class GridComponent implements OnInit {
                 }).catch(error => {
                     console.log(error);
                 });
-                //this.api.createGameRecord(this._userSetting, this._time);
+                this.api.createGameRecord(this._userSetting, this._time);
                 //}
             }
         }

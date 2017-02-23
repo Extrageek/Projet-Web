@@ -32,8 +32,7 @@ export class DatabaseManager {
     }
 
     public static async removeUser(body: any): Promise<boolean> {
-        if (body.username === '') {
-            console.log("removeUser username null");
+        if (body.username === "") {
             return false;
         }
         else {
@@ -42,9 +41,7 @@ export class DatabaseManager {
             let isRemoved = false;
             try {
                 let collection = db.collection('username');
-                console.log(body);
                 (await collection.deleteOne(body).then((result: any) => {
-                    console.log(result.deletedCount);
                     if (result.deletedCount === 1) {
                         isRemoved = true;
                         console.log("-- user removed --");
@@ -56,7 +53,6 @@ export class DatabaseManager {
             } finally {
                 db.close();
             }
-            console.log("-- isRemoved ", isRemoved);
             return isRemoved;
         }
     }
