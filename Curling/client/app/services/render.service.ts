@@ -327,7 +327,7 @@ export class RenderService {
             this._stoneHandler.mouseIsPressed = false;
             try {
                 this._gameStatusService.gameStatus.isShooting = true;
-                this._stoneHandler.performShot(new Vector3(0, 0, 1), () => {
+                this._stoneHandler.performShot(this._lineGeometry.vertices[1].clone().normalize(), () => {
                     this._gameStatusService.gameStatus.usedStone();
                     this._gameStatusService.gameStatus.nextPlayer();
                     this._cameraService.replacePCameraToInitialPosition();

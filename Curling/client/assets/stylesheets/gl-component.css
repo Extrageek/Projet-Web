@@ -7,3 +7,11 @@
     height: 100%;
 }
 
+.power-bar {
+    position: absolute;
+    left: 40vw;
+    top: 64vh;
+    width: 20vw;
+    height: 2vh;
+    z-index: 1;
+}

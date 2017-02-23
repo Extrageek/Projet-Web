@@ -1,2 +1,10 @@
 <modifier [container]="container" [webgltext]="webgltext"> </modifier>
+<md-progress-bar
+    *ngIf="!renderService._gameStatusService._gameStatus.isShooting
+        && renderService._stoneHandler !== undefined"
+    class="power-bar"
+    color="primary"
+    mode="determinate"
+    [value]="renderService._stoneHandler.power">
+</md-progress-bar>
 <div #container id="threejs"> </div>

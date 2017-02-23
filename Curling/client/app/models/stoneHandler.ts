@@ -11,17 +11,21 @@ export interface Points {
 
 export class StoneHandler implements GameComponent {
 
+    private static readonly SHOT_POWER_MINIMUM = 0.2;
+    private static readonly SHOT_POWER_MAXIMUM = 4;
+    private static readonly SHOT_POWER_OFFSET = 1;
+
     private static readonly COLLISION_SPEED_KEEP_PERCENT = 0.85;
     private static readonly COLLISION_SPEED_TRANSFERED_PERCENT = 0.85;
-    private static readonly SHOT_POWER_MINIMUM = 0.5;
-    private static readonly SHOT_POWER_MAXIMUM = 5;
-    private static readonly SHOT_POWER_OFFSET = 2;
+    private static readonly SHOT_ANGLE_MINIMUM = -2.25;
+    private static readonly SHOT_ANGLE_MAXIMUM = 2.25;
 
     private _rinkInfo: RinkInfo;
     private _currentPlayer: StoneColor;
     private _objectLoader: ObjectLoader;
     private _stoneOnTheGame: Stone[];
     private _powerTimer: Clock;
+    private _power: number;
     private _mouseIsPressed: boolean;
     private _mousePositionPlaneXZ: Vector3;
     private _callbackAfterShotFinished: Function;
@@ -31,6 +35,8 @@ export class StoneHandler implements GameComponent {
         this._currentPlayer = firstPlayer - 1;
         this._objectLoader = objectLoader;
         this._stoneOnTheGame = new Array<Stone>();
+        this._power = 0;
+        this._powerTimer = new THREE.Clock();
         this._mouseIsPressed = false;
         this._mousePositionPlaneXZ = new Vector3();
         this._callbackAfterShotFinished = null;
@@ -38,6 +44,10 @@ export class StoneHandler implements GameComponent {
 
     public get stoneOnTheGame(): Stone[] {
         return this._stoneOnTheGame;
+    }
+
+    public get power(): number {
+        return this._power;
     }
 
     public get mousePositionPlaneXZ(): Vector3 {
@@ -67,6 +77,15 @@ export class StoneHandler implements GameComponent {
         } else {
             console.error("calculateMousePosition : camera unrecognized");
         }
+        // Clamp to angle range
+        // Under
+        if (this.mousePositionPlaneXZ.x < StoneHandler.SHOT_ANGLE_MINIMUM) {
+            this.mousePositionPlaneXZ.x = StoneHandler.SHOT_ANGLE_MINIMUM;
+        }
+        // Over
+        if (this.mousePositionPlaneXZ.x > StoneHandler.SHOT_ANGLE_MAXIMUM) {
+            this.mousePositionPlaneXZ.x = StoneHandler.SHOT_ANGLE_MAXIMUM;
+        }
     }
 
     public startPower() {
@@ -94,6 +113,7 @@ export class StoneHandler implements GameComponent {
                 this._stoneOnTheGame[lastIndex].direction = direction;
                 this._callbackAfterShotFinished = callbackWhenShotFinished;
             } else {
+                this._powerTimer.stop();
                 throw new RangeError("Not enough power.");
             }
     }
@@ -117,6 +137,11 @@ export class StoneHandler implements GameComponent {
     }
 
     public update(timePerFrame: number) {
+        if (this._mouseIsPressed) {
+            this._power = Math.min(this._powerTimer.getElapsedTime() / StoneHandler.SHOT_POWER_MAXIMUM * 100, 100);
+        } else {
+            this._power = 0;
+        }
         if (this._callbackAfterShotFinished !== null) {
             let aStoneIsMoving = false;
             let isCollision = false;

@@ -42,7 +42,6 @@ export class DisplayComponent implements OnInit {
         this._gameStatus = this.gameStatusService.gameStatus;
     }
 
-
     public toggleOverlay() {
         this.hamburger.nativeElement.classList.toggle("is-active");
         this.overlay.nativeElement.classList.toggle("is-open-menu");
