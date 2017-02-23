@@ -22,6 +22,7 @@ export class StoneHandler implements GameComponent {
     private _objectLoader: ObjectLoader;
     private _stoneOnTheGame: Stone[];
     private _powerTimer: Clock;
+    private _mouseIsPressed: boolean;
     private _mousePositionPlaneXZ: Vector3;
     private _callbackAfterShotFinished: Function;
 
@@ -30,7 +31,7 @@ export class StoneHandler implements GameComponent {
         this._currentPlayer = firstPlayer - 1;
         this._objectLoader = objectLoader;
         this._stoneOnTheGame = new Array<Stone>();
-        this._powerTimer = new Clock();
+        this._mouseIsPressed = false;
         this._mousePositionPlaneXZ = new Vector3();
         this._callbackAfterShotFinished = null;
     }
@@ -41,6 +42,13 @@ export class StoneHandler implements GameComponent {
 
     public get mousePositionPlaneXZ(): Vector3 {
         return this._mousePositionPlaneXZ;
+    }
+
+    public get mouseIsPressed() : boolean {
+        return this._mouseIsPressed;
+    }
+    public set mouseIsPressed(v : boolean) {
+        this._mouseIsPressed = v;
     }
 
     public calculateMousePosition(event: MouseEvent, currentCam: CameraType) {
@@ -62,6 +70,7 @@ export class StoneHandler implements GameComponent {
     }
 
     public startPower() {
+        this._powerTimer = new THREE.Clock();
         this._powerTimer.start();
     }
 
@@ -69,16 +78,15 @@ export class StoneHandler implements GameComponent {
         direction: Vector3,
         callbackWhenShotFinished: Function = () => {/*Do nothing by default*/},
         speed?: number) {
-            //TODO: Launch the last stone in the array of stones.
             if (this._stoneOnTheGame.length === 0) {
-                throw new Error("Cannot perform shot on a stone. No stones has been generated yet.");
+                throw new RangeError("Cannot perform shot on a stone. No stones has been generated yet.");
             }
+
             this._powerTimer.stop();
             let timeDelta = this._powerTimer.getElapsedTime();
-                            console.log(timeDelta, this._powerTimer.oldTime);
             if (timeDelta > StoneHandler.SHOT_POWER_MINIMUM) {
+                console.log(timeDelta);
                 let lastIndex = this._stoneOnTheGame.length - 1;
-                console.log(speed);
                 if (speed === undefined) {
                     this._stoneOnTheGame[lastIndex].speed =
                         (timeDelta > StoneHandler.SHOT_POWER_MAXIMUM)
@@ -91,7 +99,7 @@ export class StoneHandler implements GameComponent {
                 this._stoneOnTheGame[lastIndex].direction = direction;
                 this._callbackAfterShotFinished = callbackWhenShotFinished;
             } else {
-                callbackWhenShotFinished();
+                throw new RangeError("Not enough power.");
             }
     }
 
@@ -116,14 +124,16 @@ export class StoneHandler implements GameComponent {
     public update(timePerFrame: number) {
         if (this._callbackAfterShotFinished !== null) {
             let aStoneIsMoving = false;
+            let isCollision = false;
             this._stoneOnTheGame.map((stone: Stone, stoneNumber: number, allTheStones: Stone[]) => {
                 if (stone.speed !== 0) {
                     stone.update(timePerFrame);
                     this.resolveCollisions(stone);
+                    isCollision = true;
                 }
                 aStoneIsMoving = aStoneIsMoving || stone.speed !== 0;
             });
-            if (!aStoneIsMoving) {
+            if (!aStoneIsMoving && !isCollision) {
                 this._callbackAfterShotFinished();
                 this._callbackAfterShotFinished = null;
             }
