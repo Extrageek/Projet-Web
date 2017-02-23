@@ -11,8 +11,8 @@ import { RinkInfo } from "../models/rinkInfo.interface";
 import { StoneHandler } from "../models/stoneHandler";
 
 export enum CameraType {
-        PERSPECTIVE_CAM = 0,
-        ORTHOGRAPHIC_CAM = 1
+    PERSPECTIVE_CAM = 0,
+    ORTHOGRAPHIC_CAM = 1
 }
 
 @Injectable()
@@ -28,6 +28,9 @@ export class RenderService {
     private _geometry: Geometry;
     private _material: MeshFaceMaterial;
     private _mesh: Mesh;
+    private _lineGeometry: Geometry;
+    private _lineMaterial: THREE.LineDashedMaterial;
+    private _lineMesh: Mesh;
     private _line: THREE.Line;
 
     private _clock: Clock;
@@ -54,6 +57,7 @@ export class RenderService {
     }
 
     public init(container: HTMLElement) {
+        this.loadLine();
         this._clock = new Clock(false);
 
         this._renderer = new WebGLRenderer({antialias: true, devicePixelRatio: window.devicePixelRatio});
@@ -63,7 +67,7 @@ export class RenderService {
         this._currentCameraType = CameraType.PERSPECTIVE_CAM;
 
         //Part 2: Scenery
-        this.setUpLightning(); //Because lighting is everything
+        this.setUpLighting(); //Because lighting is everything
         this.generateSkybox();
 
         //Part 3: Components
@@ -77,9 +81,25 @@ export class RenderService {
         //Part 5: Events
         // bind to window resizes
         window.addEventListener('resize', _ => this.onResize());
-        window.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event));
-        window.addEventListener('mousedown', _ => this.onMousePressed());
-        window.addEventListener('mouseup', _ => this.onMouseReleased());
+    }
+
+    public loadLine() {
+        let geometry = new THREE.Geometry();
+        geometry.vertices.push(new THREE.Vector3(0, 0.1, -11.1)); // First HogLine
+        geometry.vertices.push(new THREE.Vector3(0, 0.1, 22.4)); // EndPoint
+        geometry.computeLineDistances();
+
+        let material = new THREE.LineDashedMaterial({
+            color: 0x0000e0,
+            linewidth: 5,
+            dashSize: 1,
+            gapSize: 1
+        });
+
+        this._lineGeometry = geometry;
+        this._lineMaterial = material;
+        this._line = new THREE.Line(this._lineGeometry, this._lineMaterial);
+        this._scene.add(this._line);
     }
 
     public linkRenderServerToCanvas(container: HTMLElement) {
@@ -89,7 +109,7 @@ export class RenderService {
         }
     }
 
-    public setUpLightning() {
+    public setUpLighting() {
         let spotlightHouseNear = new SpotLight(0xffffff, 0.5, 0, 0.4);
         spotlightHouseNear.penumbra = 0.34;
         spotlightHouseNear.position.set(9, 10, -17);
@@ -133,18 +153,18 @@ export class RenderService {
         this._scene.add(spotlight4);
     }
 
-     /**
+    /**
      * See : http://danni-three.blogspot.ca/2013/09/threejs-skybox.html
      */
     public generateSkybox() {
         let imagePrefix = "../../assets/images/frozen_";
         let directions = ["rt", "lf", "up", "dn", "ft", "bk"];
         let imageSuffix = ".jpg";
-        let materialArray = [];
+        let materialArray = Array<MeshBasicMaterial>();
         for (let i = 0; i < 6; i++) {
             materialArray.push( new MeshBasicMaterial({
-            map: ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
-            side: BackSide
+                map: ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
+                side: BackSide
             }));
         }
         this._geometry = new CubeGeometry( 200, 200, 200);
@@ -157,8 +177,8 @@ export class RenderService {
     public loadFont() {
         this._fontLoader = new FontLoader();
         this._textMaterial = new MultiMaterial([
-            new MeshPhongMaterial({shading: FlatShading}), // front
-            new MeshPhongMaterial({shading: SmoothShading})
+                new MeshPhongMaterial({shading: FlatShading}), // front
+                new MeshPhongMaterial({shading: SmoothShading})
             ]
         );
         this._textGroup = new Group();
@@ -186,23 +206,6 @@ export class RenderService {
             // this.loadStone();
             // this.onFinishedLoadingModel();
 
-            let geometry = new THREE.Geometry();
-            geometry.verticesNeedUpdate = true;
-            geometry.vertices.push(new THREE.Vector3(0, 0.1, -11.1)); // First HogLine
-            geometry.vertices.push(new THREE.Vector3(0, 0.1, 22.4)); // EndPoint
-
-            geometry.computeLineDistances();
-
-            let material = new THREE.LineDashedMaterial({
-                color: 0x0000e0,
-                linewidth: 1,
-                dashSize: 1,
-                gapSize: 1
-            });
-            material.needsUpdate = true;
-            this._line = new THREE.Line(geometry, material);
-            this._scene.add(this._line);
-
             this.loadStone();
         });
     }
@@ -220,7 +223,7 @@ export class RenderService {
         if (this._gameStatusService.randomFirstPlayer() === false) {
             stoneColor = StoneColor.Blue;
         } else {
-           stoneColor = StoneColor.Red;
+            stoneColor = StoneColor.Red;
         }
         this._stoneHandler = new StoneHandler(this._objectLoader, this._rinkInfo, stoneColor);
     }
@@ -247,20 +250,32 @@ export class RenderService {
             if (document.hasFocus()) {
                 this._clock.start();
             }
-            //this._gameStatusService.gameStatus.usedStone(); // Remove a stone from display
-            //this._stoneHandler.performShot(3, new Vector3(0, 0, 1), () => { });
+            window.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event));
+            window.addEventListener('mousedown', _ => this.onMousePressed());
+            window.addEventListener('mouseup', _ => this.onMouseReleased());
             this.animate();
         }
     }
 
     private animate() {
+        this.updateLine();
         window.requestAnimationFrame(_ => this.animate());
-        if (this._clock.running === true) {
-            let timePerFrame = this._clock.getDelta();
-            this._stoneHandler.update(timePerFrame);
-            this._cameraService.update(timePerFrame);
-        }
+        // if (this._clock.running === true) {
+        let timePerFrame = this._clock.getDelta();
+        this._stoneHandler.update(timePerFrame);
+        // }
+        this._cameraService.update(timePerFrame);
         this._renderer.render(this._scene, this._currentCamera);
+    }
+
+    public updateLine() {
+        console.log("line update");
+        // this._lineGeometry.vertices[1].setComponent(0, this._stoneHandler.mousePositionPlaneXZ.x);
+        // this._lineGeometry.verticesNeedUpdate = true;
+        this._lineGeometry.vertices.pop();
+        this._lineGeometry.vertices.push(new Vector3(this._stoneHandler.mousePositionPlaneXZ.x, 0.1, 22.4));
+        this._lineGeometry.computeLineDistances();
+        this._lineGeometry.verticesNeedUpdate = true;
     }
 
     public toogleFocus(toogle: boolean) {
@@ -295,6 +310,8 @@ export class RenderService {
 
     onMouseMove(event: MouseEvent) {
         if (this._gameStatusService.gameStatus.isShooting) {
+            this.updateLine();
+        } else if (!this._gameStatusService.gameStatus.isShooting) {
             this._stoneHandler.calculateMousePosition(event, this._currentCameraType);
         }
     }
@@ -312,6 +329,8 @@ export class RenderService {
             try {
                 this._gameStatusService.gameStatus.isShooting = true;
                 this._stoneHandler.performShot(new Vector3(0, 0, 1), () => {
+                    this._gameStatusService.gameStatus.usedStone();
+                    this._gameStatusService.gameStatus.nextPlayer();
                     this.loadStone();
                     this._gameStatusService.gameStatus.isShooting = false;
                 });
@@ -377,11 +396,11 @@ export class RenderService {
         this._mesh.position.y += y;
     }
     /*
-    public translateCamera(x: number, y: number, z: number): void {
-        this._camera.position.x += x === undefined ? 0 : x ;
-        this._camera.position.y += y === undefined ? 0 : y ;
-        this._camera.position.z += z === undefined ? 0 : z ;
-        this._camera.updateProjectionMatrix();
-    }
-    */
+     public translateCamera(x: number, y: number, z: number): void {
+     this._camera.position.x += x === undefined ? 0 : x ;
+     this._camera.position.y += y === undefined ? 0 : y ;
+     this._camera.position.z += z === undefined ? 0 : z ;
+     this._camera.updateProjectionMatrix();
+     }
+     */
 }
