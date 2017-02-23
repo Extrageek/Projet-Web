@@ -38,7 +38,7 @@ export class SocketEventType {
     static placeWordCommandRequest = "!place";
     // static passCommandRequest = "!passer";
 
-    static commandRequest = "commandRequest"
+    static commandRequest = "commandRequest";
     // static syntaxErrorRequest = "synthaxeError";
     // static invalidCommandRequest = "invalidCommand";
     // static notAllowedCommandRequest = "notAllowedCommand";

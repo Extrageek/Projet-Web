@@ -7,7 +7,6 @@ import { SocketEventType } from '../commons/socket-eventType';
 import { IGameMessage } from '../commons/messages/game-message-interface';
 import { IRoomMessage } from '../commons/messages/room-message';
 import { ICommandMessage } from '../commons/messages/command-message';
-import { } from '../commons/messages/room-message';
 
 @Component({
     moduleId: module.id,
@@ -120,7 +119,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
             });
     }
 
-    
+
 
     // Use to add a scroller to the chatroom
     private scrollToBottom() {
