@@ -1,6 +1,7 @@
 import { expect, assert } from "chai";
 import { Room } from "./room";
 import { Player } from "../players/player";
+import { LetterBankHandler } from '../../services/lettersBank/letterbank-handler';
 
 let fakeSocketId = "fakeId@33md401";
 
@@ -166,5 +167,30 @@ describe("Room", () => {
 
         let mustFailFunction = () => room.removePlayer(null);
         expect(mustFailFunction).to.throw(Error, "Argument error: the player cannot be null");
+    });
+    it("set a new list of players in room", () => {
+        let roomCapacity = 2;
+        let fakeRoom = new Room(roomCapacity);
+        let newPlayers = new Array<Player>();
+        newPlayers.push(new Player("rami", 2, "1234"));
+        newPlayers.push(new Player("mathieu", 2, "12345"));
+        fakeRoom.players = newPlayers;
+        expect(fakeRoom.players).to.be.equal(newPlayers);
+    });
+    it("get the letterbank handler correctly", () => {
+        let roomCapacity = 2;
+        let fakeRoom = new Room(roomCapacity);
+        let fakeLetterBankHandler = new LetterBankHandler();
+        expect(fakeRoom.letterBankHandler).to.be.deep.equals(fakeLetterBankHandler);
+    });
+    it("handle the letter bank to change a player's letters", () => {
+        let roomCapacity = 2;
+        let fakeRoom = new Room(roomCapacity);
+        let fakeLettersToChange: Array<string>;
+        let fakeLettersReceived: Array<string>;
+        fakeLettersToChange = ['A', 'B', 'C'];
+        fakeLettersReceived = fakeRoom.exchangeThePlayerLetters(fakeLettersToChange);
+        expect(fakeLettersReceived).to.be.an.instanceOf(Array);
+        expect(fakeLettersToChange.length).to.be.equal(fakeLettersReceived.length);
     });
 });

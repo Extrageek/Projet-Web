@@ -107,7 +107,7 @@ export class SocketConnectionHandler {
     }
 
     // Use to send a message to a specific room members
-    private sendWelcomeMessageOnPlayerJoinedRoom(username: string, room: Room, socket:SocketIO.Socket) {
+    private sendWelcomeMessageOnPlayerJoinedRoom(username: string, room: Room, socket: SocketIO.Socket) {
 
         if (username === null) {
             throw new Error("The username cannot be null.");

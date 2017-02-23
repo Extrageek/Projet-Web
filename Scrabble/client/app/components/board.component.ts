@@ -4,16 +4,18 @@ import { Board } from '../models/board/board';
 
 @Component({
     moduleId: module.id,
-    providers: [Board],
     selector: "scrabble-main-board-selector",
     templateUrl: "../../assets/templates/scrabble.html",
     styleUrls: ["../../assets/stylesheets/scrabble-board.css"]
 })
 
 export class ScrabbleBoardComponent {
-    scrabbleGrid: Board;
+    private _scrabbleGrid : Board;
+    public get scrabbleGrid() : Board {
+        return this._scrabbleGrid;
+    }
 
-    constructor(scrabbleBoard: Board) {
-        this.scrabbleGrid = new Board();
+    constructor() {
+        this._scrabbleGrid = new Board();
     }
 }

@@ -236,4 +236,74 @@ describe("Room Handler", () => {
 
         expect(fakeRoomHandler.getPlayerBySocketId(player2.socketId)).to.be.deep.equals(player2);
     });
+
+    it("should not allow a room to add a player if an error is thrown", () => {
+        fakeRoomHandler.addPlayer(player1);
+        let fakeRoomWithPlayer = () => fakeRoomHandler.addPlayer(null);
+        expect(fakeRoomWithPlayer).to.throw(Error);
+    });
+
+    it("should not find a player by its username if it's null", () => {
+        fakeRoomHandler.addPlayer(player1);
+        fakeRoomHandler.addPlayer(player2);
+        let fakePlayer = () => fakeRoomHandler.getPlayerByUsername(null);
+        expect(fakePlayer).to.throw(Error);
+    });
+
+    it("should not find a room by its socket if it's null", () => {
+        let fakeRoom = () => fakeRoomHandler.getRoomBySocketId(null);
+        expect(fakeRoom).to.throw(Error);
+    });
+
+    it("should not find a room by a player's username if it's null", () => {
+        let fakeRoom = () => fakeRoomHandler.getRoomByUsername(null);
+        expect(fakeRoom).to.throw(Error);
+    });
+
+    it("should not find a player by it's socket id if it's null", () => {
+        let fakePlayer = () => fakeRoomHandler.getPlayerBySocketId(null);
+        expect(fakePlayer).to.throw(Error);
+    });
+
+    it("should find the room of a player with it's socket id", () => {
+        let roomCapacityRoom1 = 1;
+        let roomCapacityRoom2 = 1;
+        let room1 = new Room(roomCapacityRoom1);
+        let room2 = new Room(roomCapacityRoom2);
+        fakeRoomHandler._rooms = [room1, room2];
+        fakeRoomHandler.addPlayer(player1);
+        fakeRoomHandler.addPlayer(player2);
+        let roomOfPlayer1 = fakeRoomHandler.getRoomBySocketId(player1.socketId);
+        expect(roomOfPlayer1.players).to.contains(player1);
+        let roomOfPlayer2 = fakeRoomHandler.getRoomBySocketId(player2.socketId);
+        expect(roomOfPlayer2.players).to.contains(player2);
+    });
+
+    it("should exchange letters of a player when id and array are valid", () => {
+        let roomCapacity = 1;
+        let room = new Room(roomCapacity);
+        fakeRoomHandler.addPlayer(player1);
+        let fakeLettersToBeChanges: Array<string>;
+        fakeLettersToBeChanges = ['A', 'B', 'C'];
+        let fakeNewLetters: Array<String>;
+        fakeNewLetters = fakeRoomHandler.exchangeLetterOfCurrentPlayer(player1.socketId, fakeLettersToBeChanges);
+        expect(fakeNewLetters).to.be.an.instanceOf(Array);
+        expect(fakeNewLetters.length).to.be.equal(fakeLettersToBeChanges.length);
+    });
+
+    it("should not allow to exchange letters of a player when it's id is invalid", () => {
+        let fakeLettersToBeChanges: Array<string>;
+        fakeLettersToBeChanges = ['A', 'B', 'C'];
+        let fakeNewLetters = () => fakeRoomHandler.exchangeLetterOfCurrentPlayer(null, fakeLettersToBeChanges);
+        expect(fakeNewLetters).to.be.throw(Error);
+    });
+
+
+    it("should not exchange letters of a player when the array is invalid", () => {
+        let roomCapacity = 1;
+        let room = new Room(roomCapacity);
+        fakeRoomHandler.addPlayer(player1);
+        let fakeNewLetters = () => fakeRoomHandler.exchangeLetterOfCurrentPlayer(player1.socketId, null);
+        expect(fakeNewLetters).to.be.throw(Error);
+    });
 });

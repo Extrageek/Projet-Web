@@ -86,7 +86,7 @@ export class LetterBankHandler {
         return letters;
     }
 
-    public parseFromListOfLetterToListOfString(letters: Array<Letter>) {
+    public parseFromListOfLetterToListOfString(letters: Array<Letter>): Array<string> {
 
         if (letters === null) {
             throw new Error("Null argument error, the parameter cannot be null");

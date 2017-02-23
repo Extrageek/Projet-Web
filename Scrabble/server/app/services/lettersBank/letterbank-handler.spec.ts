@@ -80,4 +80,9 @@ describe("BankLetterHandler should", () => {
         fakeEasel = _bankHandler.initializeEasel();
         expect(_bankHandler.getNumberOfLettersInBank()).to.be.equal(95);
     });
+
+    it("not parse null arrays of letters and throw an erro", () => {
+        let getLefakeStringParsedtters = () => { _bankHandler.parseFromListOfLetterToListOfString(null); };
+        expect(getLefakeStringParsedtters).to.throw(Error, "Null argument error, the parameter cannot be null");
+    });
 });
