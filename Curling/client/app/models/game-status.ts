@@ -88,8 +88,12 @@ export class GameStatus {
         this._currentPlayer = v;
     }
 
-    public get currentPlayer() : number {
+    public get currentPlayer(): number {
         return this._currentPlayer;
+    }
+
+    public nextPlayer() {
+        this._currentPlayer = (this._currentPlayer === CurrentPlayer.BLUE) ? CurrentPlayer.RED : CurrentPlayer.BLUE;
     }
 
     public usedStone(): void {
