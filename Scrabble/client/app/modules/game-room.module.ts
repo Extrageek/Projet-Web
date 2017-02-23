@@ -12,8 +12,8 @@ import { GameComponent } from "./../components/game-room.component";
     imports: [BrowserModule, FormsModule],
     declarations: [
         ScrabbleBoardComponent,
-        EaselComponent,
         ChatroomComponent,
+        EaselComponent,
         InformationPanelComponent,
         GameComponent
     ],

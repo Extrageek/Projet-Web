@@ -75,3 +75,16 @@
 .other-message p:first {
     margin-top: 5px;
 }
+
+p.command-request-ok,
+p.command-request-error {
+    font-size: 13px;
+}
+
+p.command-request-ok {
+    color: green;
+}
+
+p.command-request-error {
+    color: red;
+}

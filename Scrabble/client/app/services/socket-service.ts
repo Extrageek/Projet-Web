@@ -15,7 +15,7 @@ export class SocketService {
 
     constructor() {
         if (SocketService._socket === null) {
-            SocketService._socket = io.connect(this._serverUri, { 'forceNew': true });
+            SocketService._socket = io.connect(this._serverUri, { 'forceNew': false });
         }
     }
 

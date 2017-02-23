@@ -5,7 +5,10 @@ import { ScrabbleLetter } from "../models/letter/scrabble-letter";
 import { EaselManagerService } from '../services/easel/easel-manager.service';
 import { EaselControl } from '../commons/easel-control';
 import { SocketService } from "../services/socket-service";
+import { CommandType } from "../services/commands/command-type";
 import { SocketEventType } from "../commons/socket-eventType";
+import { IGameMessage } from '../commons/messages/game-message-interface';
+import { ICommandMessage } from '../commons/messages/command-message';
 
 declare var jQuery: any;
 
@@ -70,23 +73,36 @@ export class EaselComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this._exchangeLetter = this.socketService.subscribeToChannelEvent(SocketEventType.exchangedLetter)
-            .subscribe((lettersResponse: Array<string>) => {
+        this.socketService.subscribeToChannelEvent(SocketEventType.changeLettersRequest)
+            .subscribe((lettersResponse: any) => {
+
+                console.log("iii", lettersResponse._data);
 
                 for (let index = 0; index < this._indexOflettersToExchange.length; ++index) {
-                    console.log(this._indexOflettersToExchange[index]);
+                    console.log("in easel", this._indexOflettersToExchange[index]);
 
                     this.letters[this._indexOflettersToExchange[index]] =
-                        new ScrabbleLetter(lettersResponse[index]);
+                        new ScrabbleLetter(lettersResponse._data[index]);
+                    console.log(this.letters);
                 }
-                // lettersResponse.forEach((letter) => {
-                //     this.letters.push(new ScrabbleLetter(letter));
-                // });
             });
     }
 
+
+
+    // onChangedLetterCommand(): Subscription {
+    //     return this.socketService.subscribeToChannelEvent(SocketEventType.changeLettersRequest)
+    //         .subscribe((response: ICommandMessage<Array<string>>) => {
+    //             if (response !== undefined && response._message !== null) {
+    //                 this._messageArray.push(response);
+    //                 console.log("Changed letters a work ", response._message);
+    //             }
+    //         });
+    //}
+
+
     ngOnDestroy() {
-        this._exchangeLetter.unsubscribe();
+        //this._exchangeLetter.unsubscribe();
     }
 
     public onKeyDownEventHandler(
@@ -105,7 +121,6 @@ export class EaselComponent implements OnInit, OnDestroy {
             this.easelEventManagerService.removeFocusFormatInEasel(this.letters.length);
 
         } else if (this.easelEventManagerService.isDirection(keyCode)) {
-
             let nextInputIndex = this.easelEventManagerService
                 .onKeyEventUpdateCurrentCursor(this.letters.length, keyCode, currentInputIndex);
 

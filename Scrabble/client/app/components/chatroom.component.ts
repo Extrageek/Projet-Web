@@ -4,7 +4,10 @@ import { Subscription } from 'rxjs/Subscription';
 import { Route, ActivatedRoute } from '@angular/router';
 import { SocketService } from "../services/socket-service";
 import { SocketEventType } from '../commons/socket-eventType';
-import { IRoomMessage } from '../models/room/room-message';
+import { IGameMessage } from '../commons/messages/game-message-interface';
+import { IRoomMessage } from '../commons/messages/room-message';
+import { ICommandMessage } from '../commons/messages/command-message';
+import { } from '../commons/messages/room-message';
 
 @Component({
     moduleId: module.id,
@@ -15,12 +18,20 @@ import { IRoomMessage } from '../models/room/room-message';
 })
 
 export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
-    _messageArray: Array<IRoomMessage>;
+    _messageArray: Array<IGameMessage>;
     _username: string;
 
-    private _onJoinedRoom: Subscription;
-    private _onLeaveRoom: Subscription;
-    private _onReceivedMessage: Subscription;
+    private _onJoinedRoomSubscription: Subscription;
+    private _onLeaveRoomSubscription: Subscription;
+    private _onReceivedMessageSubscription: Subscription;
+
+    private _onPlaceWordSubscription: Subscription;
+    private _onChangedLetterCommandSubscription: Subscription;
+    private _onPassCommandSubscription: Subscription;
+
+    private _onCommandRequest: Subscription;
+    private _onInvalidCommandSubscription: Subscription;
+    private _onNotAllowedCommandSubscription: Subscription;
 
     @ViewChild("scroll") private myScrollContainer: ElementRef;
 
@@ -36,16 +47,44 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
         });
 
         // Subscribe to event by calling the related method and save them for unsubsciption OnDestroy
-        this._onJoinedRoom = this.onJoinedRoom();
-        this._onLeaveRoom = this.onLeaveRoom();
-        this._onReceivedMessage = this.onReceivedMessage();
+        this._onJoinedRoomSubscription = this.onJoinedRoom();
+        this._onLeaveRoomSubscription = this.onLeaveRoom();
+        this._onReceivedMessageSubscription = this.onReceivedMessage();
+
+        // this._onPlaceWordSubscription = this.onCommandRequest();
+        this._onChangedLetterCommandSubscription = this.onChangedLetterCommand();
+        // this._onPassCommandSubscription = this.onPassCommand();
+
+        this._onCommandRequest = this.onCommandRequest();
+        // this._onNotAllowedCommandSubscription = this.onNotAllowedCommand();
+        // this._onInvalidCommandSubscription = this.onInvalidCommand();
     }
 
     ngOnDestroy() {
         // unsubscribe to all the listening events
-        this._onJoinedRoom.unsubscribe();
-        this._onLeaveRoom.unsubscribe();
-        this._onReceivedMessage.unsubscribe();
+        // this._onJoinedRoomSubscription.unsubscribe();
+        // this._onLeaveRoomSubscription.unsubscribe();
+        // this._onReceivedMessageSubscription.unsubscribe();
+    }
+
+    onCommandRequest(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.commandRequest)
+            .subscribe((response: ICommandMessage<any>) => {
+                if (response !== undefined && response._message !== null) {
+                    this._messageArray.push(response);
+                    console.log("CommandRequest Chatroom", response._message);
+                }
+            });
+    }
+
+    onChangedLetterCommand(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.changeLettersRequest)
+            .subscribe((response: ICommandMessage<Array<string>>) => {
+                if (response !== undefined && response._message !== null) {
+                    this._messageArray.push(response);
+                    console.log("Changed letters ", response._message);
+                }
+            });
     }
 
     // A callback when the player join a room
@@ -80,6 +119,8 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
                 }
             });
     }
+
+    
 
     // Use to add a scroller to the chatroom
     private scrollToBottom() {

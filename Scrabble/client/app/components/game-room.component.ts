@@ -4,16 +4,16 @@ import { Route, ActivatedRoute } from '@angular/router';
 import { SocketService } from "../services/socket-service";
 import { EaselManagerService } from '../services/easel/easel-manager.service';
 import { GameRoomManagerService } from "../services/gameRoom/game-room-manager.service";
-import { CommandsService, EXCHANGE_COMMAND, PLACE_COMMAND } from "../services/commandes/commands.service";
+import { CommandsService, EXCHANGE_COMMAND, PLACE_COMMAND } from "../services/commands/commands.service";
 
-import { IExchangeCommandRequest } from "../services/commandes/command-request";
-import { CommandStatus } from "../services/commandes/command-status";
-import { InputCommandType } from '../services/commandes/command-type';
+import { IExchangeCommandRequest } from "../services/commands/command-request";
+import { CommandStatus } from "../services/commands/command-status";
+import { CommandType } from '../services/commands/command-type';
 
 import { EaselComponent } from './easel.component';
 import { ChatroomComponent } from './chatroom.component';
 import { SocketEventType } from '../commons/socket-eventType';
-import { IRoomMessage } from '../models/room/room-message';
+import { IRoomMessage } from '../commons/messages/room-message';
 import { ScrabbleLetter } from "../models/letter/scrabble-letter";
 import { EaselControl } from '../commons/easel-control';
 
@@ -65,8 +65,9 @@ export class GameComponent implements OnInit, OnDestroy {
         this.socketService.subscribeToChannelEvent(SocketEventType.roomReady)
             .subscribe(this.onRoomReady);
 
-        this.socketService.subscribeToChannelEvent(SocketEventType.exchangedLetter)
-            .subscribe(this.onChangedLettersReceived);
+        // this.socketService.subscribeToChannelEvent(SocketEventType.changeLettersRequest)
+        //     .subscribe(this.onChangedLettersReceived);
+
     }
 
     ngOnDestroy() {
@@ -110,45 +111,63 @@ export class GameComponent implements OnInit, OnDestroy {
 
     // A callback fonction for the chat message submit button
     public submitMessage() {
-        let texte = this._inputMessage.trim();
-        let commandAndRequest = this.commandsService.getInputCommand(this._inputMessage);
+        let request = this._inputMessage.trim();
+        let commandType = this.commandsService.getInputCommandType(this._inputMessage);
 
-        if (commandAndRequest === InputCommandType.MessageCmd) {
-            this.executeSendMessageCommand();
+        if (commandType === CommandType.InvalidCmd) {
+            this.socketService.emitMessage(SocketEventType.commandRequest,
+                { commandStatus: CommandStatus.Invalid, data: this._inputMessage });
 
-        } else if (commandAndRequest === InputCommandType.ExchangeCmd) {
+            this._inputMessage = '';
+            console.log("Custom message: Invalid");
+        }
 
-            try {
-                this.executeExchangeLettersCommand(texte);
-                this._inputMessage = '';
-            } catch (error) {
-                console.log('invalid request', error);
+        this.executeCommand(commandType, request);
+    }
+
+    private executeCommand(commandType: CommandType, requestValue: string) {
+        try {
+            switch (commandType) {
+                case CommandType.MessageCmd:
+                    this.executeSendMessageCommand(commandType);
+                    break;
+                case CommandType.ExchangeCmd:
+                    this.executeExchangeLettersCommand(commandType, requestValue);
+                    this._inputMessage = '';
+                    break;
+                case CommandType.PlaceCmd:
+                    //TODO:
+                    this._inputMessage = '';
+                    break;
+                case CommandType.PassCmd:
+                    // TODO: for the next sprint
+                    this._inputMessage = '';
+                    break;
+                case CommandType.Guide:
+                    // TODO: for the next sprint
+                    this._inputMessage = '';
+                    break;
+                case CommandType.InvalidCmd:
+                    this._inputMessage = '';
+                    break;
+                default:
+                    break;
             }
-
-        } else if (commandAndRequest === InputCommandType.PlaceCmd) {
-            //placeCmd
-            this._inputMessage = '';
-
-        } else if (commandAndRequest === InputCommandType.PassCmd) {
-            // passCmd
-            this._inputMessage = '';
-
-        } else if (commandAndRequest === InputCommandType.InvalidCmd) {
-            //InvalidCmd
-            this._inputMessage = 'Invalid command';
+        } catch (error) {
+            console.log('invalid request', error);
         }
     }
 
-    private executeSendMessageCommand() {
+    private executeSendMessageCommand(commandType: CommandType) {
         if (this._inputMessage.trim() !== "" && this._inputMessage.trim().length) {
             this.socketService.emitMessage(
                 SocketEventType.message,
-                { username: this._username, message: this._inputMessage });
+                { commandType: commandType, username: this._username, message: this._inputMessage });
             this._inputMessage = '';
         }
     }
 
-    private executeExchangeLettersCommand(requestValue: string) {
+    private executeExchangeLettersCommand(commandType: CommandType, requestValue: string) {
         if (requestValue === null) {
             throw new Error("Null argument error: The parameter cannot be null");
         }
@@ -160,20 +179,27 @@ export class GameComponent implements OnInit, OnDestroy {
             .createExchangeEaselLettersRequest(this._childEasel.letters, listOfLettersToChange);
 
         if (exchangeRequest._commandStatus === CommandStatus.Ok) {
-            this._childEasel.indexOfLettersToChange = exchangeRequest._indexOfLettersToExchange;
-            this.socketService.emitMessage(SocketEventType.exchangeLettersRequest, listOfLettersToChange);
-            this._inputMessage = '';
+            this._childEasel.indexOfLettersToChange = exchangeRequest._response;
+            this.socketService.emitMessage(SocketEventType.changeLettersRequest,
+                { commandType: commandType, listOfLettersToChange: listOfLettersToChange });
 
+            this._inputMessage = '';
             console.log("Ok");
 
         } else if (exchangeRequest._commandStatus === CommandStatus.NotAllowed) {
-            console.log("NotAllowed");
+            this.socketService.emitMessage(
+                SocketEventType.commandRequest,
+                { commandType: commandType, commandStatus: CommandStatus.NotAllowed, data: requestValue });
+
+            this._inputMessage = '';
+            console.log("Custom message: NotAllowed");
 
         } else if (exchangeRequest._commandStatus === CommandStatus.SynthaxeError) {
-            console.log("SynthaxeError");
+            this.socketService.emitMessage(SocketEventType.commandRequest,
+                { commandType: commandType, commandStatus: CommandStatus.SynthaxeError, data: requestValue });
 
-        } else if (exchangeRequest._commandStatus === CommandStatus.Invalid) {
-            console.log("Invalid");
+            this._inputMessage = '';
+            console.log("Custom message: SyntaxError");
         }
     }
 

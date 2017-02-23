@@ -6,7 +6,10 @@ import { Room } from '../../models/rooms/room';
 import { Player } from "../../models/players/Player";
 import { Letter } from '../../models/lettersBank/letter';
 import { SocketEventType } from '../../commons/socket-eventType';
-import { IRoomMessage } from '../../models/rooms/room-message';
+import { CommandType } from '../../commons/command-type';
+import { CommandStatus } from '../../commons/command-status';
+import { IRoomMessage } from '../../commons/messages/room-message';
+import { ICommandMessage } from '../../commons/messages/command-message';
 
 export class SocketConnectionHandler {
 
@@ -29,10 +32,16 @@ export class SocketConnectionHandler {
 
             console.log("a new connection to the server", socket.id);
 
-            this.onNewGameRequest(socket);
-            this.onMessage(socket);
-            this.onDisconnect(socket);
-            this.onExchangeLetters(socket);
+            try {
+                this.onNewGameRequest(socket);
+                this.onMessage(socket);
+                this.onDisconnect(socket);
+                this.onExchangeLetters(socket);
+                this.onCommandRequest(socket);
+
+            } catch (error) {
+                this._socket.emit(SocketEventType.connectError);
+            }
         });
     }
 
@@ -76,36 +85,6 @@ export class SocketConnectionHandler {
         });
     }
 
-    // Handle a message sent by a member of a room
-    private onMessage(socket: SocketIO.Socket) {
-        if (socket === null) {
-            throw new Error("The socket value cannot be null.");
-        }
-
-        socket.on(SocketEventType.message, (sentMessage: { username: string, message: string }) => {
-            let currentRoom = this._roomHandler.getRoomByUsername(sentMessage.username);
-
-            console.log("Room message :", sentMessage);
-
-            if (currentRoom == null || currentRoom === undefined) {
-                // TODO: Maybe emit an error to the sender
-                throw new Error("Error, we should not be here, never, ever");
-            }
-
-            // Create a response for the room members
-            let chatMessage: IRoomMessage = {
-                _username: sentMessage.username,
-                _roomId: currentRoom.roomId,
-                _numberOfMissingPlayers: currentRoom.numberOfMissingPlayers(),
-                _roomIsReady: currentRoom.isFull(),
-                _message: sentMessage.message,
-                _date: new Date()
-            };
-
-            this._socket.to(currentRoom.roomId).emit(SocketEventType.message, chatMessage);
-        });
-    }
-
     // Use to send a message to a specific room members
     private sendWelcomeMessageOnPlayerJoinedRoom(username: string, room: Room, socket: SocketIO.Socket) {
 
@@ -124,24 +103,110 @@ export class SocketConnectionHandler {
             _numberOfMissingPlayers: room.numberOfMissingPlayers(),
             _roomIsReady: false,
             _message: `${username}` + ` joined the room`,
-            _date: new Date()
+            _date: new Date(),
+            _commandType: CommandType.MessageCmd
         };
-
-        console.log("send a request", username);
-
-        // TODO: Don't remove this block , will be use for an other User Story from the Backlog
-        /**************************/
-        // if (room.isFull()) {
-        //     roomMessage._roomIsReady = true;
-        //     roomMessage._message = 'The room is ready';
-
-        //     // Emit a message to all the player in the room.
-        //     this._socket.in(room.roomId).emit(SocketEventType.roomReady, roomMessage);
-        // }
-        /*************************/
 
         // Emit to all the player in the room.
         socket.to(room.roomId).emit(SocketEventType.joinRoom, roomMessage);
+    }
+
+    // Handle a message sent by a member of a room
+    private onMessage(socket: SocketIO.Socket) {
+        if (socket === null) {
+            throw new Error("The socket value cannot be null.");
+        }
+
+        socket.on(SocketEventType.message, (sentMessage: { commandType: CommandType, username: string, message: string }) => {
+            let currentRoom = this._roomHandler.getRoomByUsername(sentMessage.username);
+
+            console.log("Room message :", sentMessage);
+
+            if (currentRoom == null || currentRoom === undefined) {
+                // TODO: Maybe emit an error to the sender
+                throw new Error("Error, we should not be here, never, ever");
+            }
+
+            // Create a response for the room members
+            let chatMessage: IRoomMessage = {
+                _username: sentMessage.username,
+                _roomId: currentRoom.roomId,
+                _numberOfMissingPlayers: currentRoom.numberOfMissingPlayers(),
+                _roomIsReady: currentRoom.isFull(),
+                _message: sentMessage.message,
+                _date: new Date(),
+                _commandType: sentMessage.commandType
+            };
+
+            this._socket.to(currentRoom.roomId).emit(SocketEventType.message, chatMessage);
+        });
+    }
+
+    // Use to exchange the letters of a player
+    private onExchangeLetters(socket: SocketIO.Socket) {
+
+        if (socket === null) {
+            throw new Error("The socket value cannot be null.");
+        }
+
+        socket.on(SocketEventType.changeLettersRequest,
+            (sentMessage: { commandType: CommandType, listOfLettersToChange: Array<string> }) => {
+
+                if (sentMessage.listOfLettersToChange === null) {
+                    throw new Error("The letters to be changed cannot be null");
+                }
+
+                let changedLetters = this._roomHandler.exchangeLetterOfCurrentPlayer(socket.id, sentMessage.listOfLettersToChange);
+                let playerRoom = this._roomHandler.getRoomBySocketId(socket.id);
+
+                if (playerRoom !== null
+                    && changedLetters !== null
+                    && changedLetters.length === sentMessage.listOfLettersToChange.length) {
+
+                    let player = this._roomHandler.getPlayerBySocketId(socket.id);
+                    let message = `$: <!changer` + ' ' + `${sentMessage.listOfLettersToChange.toString()}>`;
+
+                    let commandMessage: ICommandMessage<Array<string>> = {
+                        _commandStatus: CommandStatus.Ok,
+                        _date: new Date(),
+                        _message: message,
+                        _data: changedLetters,
+                        _username: player.username,
+                        _commandType: sentMessage.commandType
+
+                    }
+                    // Emit a message with the new letters to the sender
+                    this._socket.to(playerRoom.roomId).emit(SocketEventType.changeLettersRequest, commandMessage);
+                } else {
+                    throw new Error("An error occured when trying to exchange the letters");
+                }
+            });
+    }
+
+    private onCommandRequest(socket: SocketIO.Socket) {
+
+        if (socket === null) {
+            throw new Error("The socket value cannot be null.");
+        }
+
+        socket.on(SocketEventType.commandRequest,
+            (commandRequest: { commandType: CommandType, commandStatus: CommandStatus, data: string }) => {
+                let playerRoom = this._roomHandler.getRoomBySocketId(socket.id);
+                let player = this._roomHandler.getPlayerBySocketId(socket.id);
+                let message = `$: ${CommandStatus[commandRequest.commandStatus]}` + ': ' + `<${commandRequest.data}>`;
+
+                let commandMessage: ICommandMessage<string> = {
+                    _commandStatus: commandRequest.commandStatus,
+                    _date: new Date(),
+                    _message: message,
+                    _data: null,
+                    _username: player.username,
+                    _commandType: commandRequest.commandType
+                }
+
+                // Emit a message with the new letters to the sender
+                this._socket.to(playerRoom.roomId).emit(SocketEventType.commandRequest, commandMessage);
+            });
     }
 
     // On player disconnect event
@@ -182,7 +247,8 @@ export class SocketConnectionHandler {
                             _numberOfMissingPlayers: playerRoom.numberOfMissingPlayers(),
                             _roomIsReady: false,
                             _message: `${leavingPlayer.username}` + ` left the room`,
-                            _date: new Date()
+                            _date: new Date(),
+                            _commandType: null,
                         };
                         console.log("Room not empty", playerRoom);
 
@@ -192,40 +258,6 @@ export class SocketConnectionHandler {
 
                     console.log("player disconnected");
                 }
-            }
-        });
-    }
-
-    // Use to exchange the letters of a player
-    private onExchangeLetters(socket: SocketIO.Socket) {
-
-        if (socket === null) {
-            throw new Error("The socket value cannot be null.");
-        }
-
-        socket.on(SocketEventType.exchangeLettersRequest, (letterToBeChanged: Array<string>) => {
-
-            if (letterToBeChanged === null) {
-                throw new Error("The letters to be changed cannot be null");
-            }
-
-            let changedLetters = this._roomHandler.exchangeLetterOfCurrentPlayer(socket.id, letterToBeChanged);
-            let playerRoom = this._roomHandler.getRoomBySocketId(socket.id);
-
-            console.log("Letters to be echanged", socket.id, "-", letterToBeChanged);
-            console.log(playerRoom, " - ", changedLetters);
-
-            if (playerRoom !== null
-                && changedLetters !== null
-                && changedLetters.length === letterToBeChanged.length) {
-
-                // Emit a message with the new letters to the sender
-                socket.emit(SocketEventType.exchangedLetter, changedLetters);
-
-                console.log("exchanged letters: ", changedLetters);
-
-            } else {
-                throw new Error("An error occured when trying to exchange the letters");
             }
         });
     }

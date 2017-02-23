@@ -34,7 +34,12 @@ export class SocketEventType {
     //Message sent by the server if the name already exists
     static usernameAlreadyExist = "usernameAlreadyExist";
 
-    static exchangeLettersRequest = "exchangeLetters";
+    static changeLettersRequest = "!changer";
+    static placeWordCommandRequest = "!place";
+    // static passCommandRequest = "!passer";
 
-    static exchangedLetter = "exchangedLetter";
+    static commandRequest = "commandRequest"
+    // static syntaxErrorRequest = "synthaxeError";
+    // static invalidCommandRequest = "invalidCommand";
+    // static notAllowedCommandRequest = "notAllowedCommand";
 }

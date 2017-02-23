@@ -9,7 +9,12 @@
                 <p class="msg-date">{{response._date | date: 'yMMMdjms'}}</p>
 
                 <div *ngIf="response._username===_username" class="self-message">
-                    <p class="msg">
+                    <p *ngIf="response._commandType===0" class="msg">
+                        {{response._message}}
+                    </p>
+                    <p *ngIf="response._commandType !== 0" 
+                    [ngClass]="{'command-request-ok':response._commandStatus===0, 
+                    'command-request-error':response._commandStatus!==0}">
                         {{response._message}}
                     </p>
                 </div>
@@ -19,9 +24,14 @@
                         <img class="image-circle" src="../../assets/images/blank-user-img.png" alt="user id" align="left">
                         <span>{{response._username}}</span>
                     </p>
-                    <p class="msg">
+                    <p *ngIf="response._commandType === 0" class="msg">
                         {{response._message}}
                     </p>
+                    <p *ngIf="response._commandType !== 0" 
+                    [ngClass]="{'command-request-ok':response._commandStatus===0,
+                     'command-request-error':response._commandStatus!==0}">
+                        {{response._message}}
+                        </p>
                 </div>
             </div>
         </div>

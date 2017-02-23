@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 
 import { EaselManagerService } from '../easel/easel-manager.service';
 import { ScrabbleLetter } from '../../models/letter/scrabble-letter';
-import { InputCommandType } from './command-type';
+import { CommandType } from './command-type';
 import { CommandStatus } from './command-status';
-import { IExchangeCommandRequest } from './command-request';
+import { ICommandRequest } from './command-request';
 
 export const EXCHANGE_COMMAND = '!changer';
 export const PLACE_COMMAND = '!placer';
 export const PASS_COMMAND = '!passer';
+export const GUIDE = '!aide';
 
 @Injectable()
 export class CommandsService {
@@ -17,36 +18,39 @@ export class CommandsService {
         // Default constructor
     }
 
-    public getInputCommand(enteredValue: string): InputCommandType {
+    public getInputCommandType(enteredValue: string): CommandType {
 
         if (enteredValue === null) {
-            throw new Error("The texte entered cannot be null");
+            throw new Error("Null argument error: the texte entered cannot be null");
         }
 
         let texte = enteredValue.trim();
 
         if (texte.startsWith(PLACE_COMMAND)) {
-            return InputCommandType.PlaceCmd;
+            return CommandType.PlaceCmd;
 
         } else if (texte.startsWith(EXCHANGE_COMMAND)) {
-            return InputCommandType.ExchangeCmd;
+            return CommandType.ExchangeCmd;
 
         } else if (texte.startsWith(PASS_COMMAND)) {
-            return InputCommandType.PassCmd;
+            return CommandType.PassCmd;
+
+        } else if (texte.startsWith(GUIDE)) {
+            return CommandType.Guide;
 
         } else if (texte.startsWith('!')) {
-            return InputCommandType.InvalidCmd;
+            return CommandType.InvalidCmd;
 
         } else if (texte !== null && texte !== '') {
-            return InputCommandType.MessageCmd;
+            return CommandType.MessageCmd;
         }
     }
 
     public createExchangeEaselLettersRequest(
         lettersInEasel: Array<ScrabbleLetter>,
-        enteredletters: Array<string>): IExchangeCommandRequest {
+        enteredletters: Array<string>): ICommandRequest<Array<number>> {
 
-        let request: IExchangeCommandRequest = { _commandStatus: null, _indexOfLettersToExchange: null };
+        let request: ICommandRequest<Array<number>> = { _commandStatus: null, _response: null };
         let indexOfLettersToChange = new Array<number>();
 
         if (lettersInEasel === null) {
@@ -56,7 +60,7 @@ export class CommandsService {
         if (enteredletters === null
             || enteredletters.length > lettersInEasel.length
             || enteredletters.length === 0) {
-            return { _commandStatus: CommandStatus.SynthaxeError, _indexOfLettersToExchange: null }
+            return { _commandStatus: CommandStatus.SynthaxeError, _response: null }
         }
 
         for (let index = 0; index < enteredletters.length; ++index) {
@@ -64,12 +68,14 @@ export class CommandsService {
                 enteredletters[index] = 'blank';
             }
 
+            // TODO: Check, a bug is found when changing several occurance of a letters
+            // Style get the first occurance
             let letterIndex = lettersInEasel.findIndex((letter: ScrabbleLetter) =>
                 letter.letter.toUpperCase() === enteredletters[index].toUpperCase());
 
             if (letterIndex === -1 || letterIndex === undefined) {
                 request._commandStatus = CommandStatus.NotAllowed;
-                request._indexOfLettersToExchange = null;
+                request._response = null;
 
                 return request;
             }
@@ -78,8 +84,15 @@ export class CommandsService {
         }
 
         request._commandStatus = CommandStatus.Ok;
-        request._indexOfLettersToExchange = indexOfLettersToChange;
-
+        request._response = indexOfLettersToChange;
         return request;
     }
+
+    // public createPlaceWordRequest(
+    //     lettersInEasel: Array<ScrabbleLetter>,
+    //     commandValue: Array<string>): ICommandRequest<[Array<string>, string]> {
+    //     let request: ICommandRequest<[Array<string>, string]> = { _commandStatus: null, _response: null };
+
+    //     return request;
+    // }
 }
