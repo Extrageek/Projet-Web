@@ -13,6 +13,7 @@ describe("Arena class should", () => {
     it("instantiate an arena object", done => {
         Arena.createArena(objectLoader).then((arena: Arena) => {
             expect(arena).to.be.instanceof(Arena);
+            expect(arena.material).to.exist;
             done();
         });
     });

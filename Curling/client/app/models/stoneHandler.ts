@@ -1,6 +1,6 @@
 import { Clock, ObjectLoader, Vector3 } from "three";
 import { RinkInfo } from "./rinkInfo.interface";
-import { Stone, StoneColor } from "./stone";
+import { Stone, StoneColor, StoneSpin } from "./stone";
 import { GameComponent } from "./gameComponent.interface";
 import { CameraType } from "./../services/render.service";
 
@@ -11,14 +11,15 @@ export interface Points {
 
 export class StoneHandler implements GameComponent {
 
-    private static readonly SHOT_POWER_MINIMUM = 0.2;
-    private static readonly SHOT_POWER_MAXIMUM = 4;
-    private static readonly SHOT_POWER_OFFSET = 1;
+    public static readonly SHOT_POWER_MINIMUM = 0.2;
+    public static readonly SHOT_POWER_MAXIMUM = 4;
+    public static readonly SHOT_POWER_OFFSET = 1;
 
-    private static readonly COLLISION_SPEED_KEEP_PERCENT = 0.85;
-    private static readonly COLLISION_SPEED_TRANSFERED_PERCENT = 0.85;
-    private static readonly SHOT_ANGLE_MINIMUM = -2.25;
-    private static readonly SHOT_ANGLE_MAXIMUM = 2.25;
+    public static readonly COLLISION_SPEED_KEEP_PERCENT = 0.85;
+    public static readonly COLLISION_SPEED_TRANSFERED_PERCENT = 0.85;
+
+    public static readonly SHOT_ANGLE_MINIMUM = -2.25;
+    public static readonly SHOT_ANGLE_MAXIMUM = 2.25;
 
     private _rinkInfo: RinkInfo;
     private _currentPlayer: StoneColor;
@@ -26,6 +27,7 @@ export class StoneHandler implements GameComponent {
     private _stoneOnTheGame: Stone[];
     private _powerTimer: Clock;
     private _power: number;
+    private _currentSpin: StoneSpin;
     private _mouseIsPressed: boolean;
     private _mousePositionPlaneXZ: Vector3;
     private _callbackAfterShotFinished: Function;
@@ -37,8 +39,9 @@ export class StoneHandler implements GameComponent {
         this._stoneOnTheGame = new Array<Stone>();
         this._power = 0;
         this._powerTimer = new THREE.Clock();
+        this._currentSpin = StoneSpin.Clockwise;
         this._mouseIsPressed = false;
-        this._mousePositionPlaneXZ = new Vector3();
+        this._mousePositionPlaneXZ = new Vector3(0, 0, 0);
         this._callbackAfterShotFinished = null;
     }
 
@@ -47,8 +50,13 @@ export class StoneHandler implements GameComponent {
     }
 
     public get power(): number {
-        return this._power;
+        return this._power || 0;
     }
+
+    public get currentSpin(): StoneSpin {
+        return this._currentSpin;
+    }
+
 
     public get mousePositionPlaneXZ(): Vector3 {
         return this._mousePositionPlaneXZ;
@@ -57,8 +65,14 @@ export class StoneHandler implements GameComponent {
     public get mouseIsPressed() : boolean {
         return this._mouseIsPressed;
     }
+
     public set mouseIsPressed(v : boolean) {
         this._mouseIsPressed = v;
+    }
+
+    public invertSpin() {
+        this._currentSpin = (this.currentSpin === StoneSpin.Clockwise)
+            ? StoneSpin.CounterClockwise : StoneSpin.Clockwise;
     }
 
     public calculateMousePosition(event: MouseEvent, currentCam: CameraType) {
@@ -111,6 +125,7 @@ export class StoneHandler implements GameComponent {
                             : timeDelta + StoneHandler.SHOT_POWER_OFFSET;
 
                 this._stoneOnTheGame[lastIndex].direction = direction;
+                this._stoneOnTheGame[lastIndex].spin = this.currentSpin;
                 this._callbackAfterShotFinished = callbackWhenShotFinished;
             } else {
                 this._powerTimer.stop();
@@ -127,10 +142,10 @@ export class StoneHandler implements GameComponent {
             });
     }
 
-    public countPoints(): Points {
-        //TODO: Count the points by looking at the RinkInfo and the position of the array of stones.
-        return null;
-    }
+    //TODO: Count the points by looking at the RinkInfo and the position of the array of stones.
+    // public countPoints(): Points {
+    //     return null;
+    // }
 
     public cleanAllStones() {
         this._stoneOnTheGame.splice(0, this._stoneOnTheGame.length);

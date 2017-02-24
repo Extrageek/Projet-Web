@@ -192,19 +192,6 @@ export class RenderService {
             this._mesh.add(rink);
             this.loadStoneHandler();
 
-            // this._stoneHandler.generateNewStone().then((stone: Stone) => {
-            //     this._scene.add(stone);
-            //     stone.position.set(0, 0, 0);
-            //     this.onFinishedLoadingModel();
-            // });
-            //  this._stoneHandler.generateNewStone().then((stone: Stone) => {
-            //     this._scene.add(stone);
-            //     stone.position.set(0, 0, 1);
-            //     this.onFinishedLoadingModel();
-            // });
-            // this.loadStone();
-            // this.onFinishedLoadingModel();
-
             this.loadStone();
         });
     }
@@ -249,7 +236,9 @@ export class RenderService {
             if (document.hasFocus()) {
                 this._clock.start();
             }
+            // Add events here to be sure they won't encounter undefined property 
             window.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event));
+            window.addEventListener('keydown', (event: KeyboardEvent) => this.switchSpin(event));
             window.addEventListener('mousedown', _ => this.onMousePressed());
             window.addEventListener('mouseup', _ => this.onMouseReleased());
             this.animate();
@@ -307,6 +296,13 @@ export class RenderService {
         this._currentCamera.updateProjectionMatrix();
 
         this._renderer.setSize(width, height);
+    }
+
+    switchSpin(event: KeyboardEvent) {
+        let sKeyCode = 83;
+        if (event.keyCode === sKeyCode) {
+            this._stoneHandler.invertSpin();
+        }
     }
 
     onMouseMove(event: MouseEvent) {
