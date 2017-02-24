@@ -23,11 +23,10 @@ export class DisplayComponent implements OnInit {
     @ViewChild("hamburger") hamburger: ElementRef;
     @ViewChild("overlay") overlay: ElementRef;
 
-    @HostListener('window:beforeunload', ['$event'])
-    saveAndLogout(event: Event) {
-        this.api.createGameRecord(this._userSetting, this._gameStatus);
-        this.api.removeUsername(this._userSetting.name);
-        event.stopImmediatePropagation();
+    @HostListener('window:beforeunload')
+    public async saveAndLogout() {
+        await this.api.removeUsername(this._userSetting.name);
+        await this.api.createGameRecord(this._userSetting, this._gameStatus);
     }
 
     constructor(
@@ -38,7 +37,9 @@ export class DisplayComponent implements OnInit {
 
     ngOnInit() {
         this._userSetting = this.userSettingService.userSetting;
-        console.log(this.userSettingService.userSetting);
+        if (this._userSetting.name === "") {
+            this.router.navigate(['/']);
+        }
         this._gameStatus = this.gameStatusService.gameStatus;
     }
 

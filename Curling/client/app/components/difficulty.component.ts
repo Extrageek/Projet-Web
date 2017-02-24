@@ -22,12 +22,14 @@ export class DifficultyComponent implements OnInit {
 
     ngOnInit() {
         this._username = this.userSettingService.userSetting.name;
+        if (this._username === "") {
+            this.router.navigate(['/']);
+        }
     }
 
-    @HostListener('window:beforeunload', ['$event'])
-    saveAndLogout(event: Event) {
-        this.api.removeUsername(this._username);
-        event.stopImmediatePropagation();
+    @HostListener('window:beforeunload')
+    public async logout() {
+        await this.api.removeUsername(this._username);
     }
 
     public launchGame() {
