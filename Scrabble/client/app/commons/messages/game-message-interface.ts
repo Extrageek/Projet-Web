@@ -1,6 +1,6 @@
 import { CommandType } from '../../services/commands/command-type';
 
-export class IGameMessage {
+export interface IGameMessage {
     _username: string;
     _message: string;
     _date: Date;

@@ -17,8 +17,6 @@ export const GUIDE = '!aide';
 
 let _commandService: CommandsService;
 let _easelManagerService: EaselManagerService;
-//let _commandStatus: CommandStatus;
-//let _response: any;
 let _iCommandRequest: ICommandRequest<Array<number>> = { _commandStatus: null, _response: null };
 
 describe("CommandService should", () => {
@@ -84,10 +82,10 @@ describe("CommandService should", () => {
     it("return an syntax error response if the entered letters are null", () => {
         let lettersInEasel = new Array<ScrabbleLetter>();
         lettersInEasel.push(new ScrabbleLetter(Alphabet.letterJ));
-        let enteredLetters: Array<string>;
-        enteredLetters = null;
+        // let enteredLetters: Array<string>;
+        // enteredLetters = null;
 
-        _iCommandRequest = _commandService.createExchangeEaselLettersRequest(lettersInEasel, enteredLetters);
+        _iCommandRequest = _commandService.createExchangeEaselLettersRequest(lettersInEasel, null);
         expect(_iCommandRequest._commandStatus).to.be.equal(CommandStatus.SynthaxeError);
         expect(_iCommandRequest._response).to.be.null;
     });
@@ -103,14 +101,14 @@ describe("CommandService should", () => {
         expect(_iCommandRequest._response).to.be.null;
     });
 
-    it("return a syntax error response if there are no letters entered", () => {
+    it("return a not allowed error response if there are no letters entered", () => {
         let lettersInEasel = new Array<ScrabbleLetter>();
         lettersInEasel.push(new ScrabbleLetter(Alphabet.letterO));
         let enteredLetters: Array<string>;
         enteredLetters = [];
 
         _iCommandRequest = _commandService.createExchangeEaselLettersRequest(lettersInEasel, enteredLetters);
-        expect(_iCommandRequest._commandStatus).to.be.equal(CommandStatus.SynthaxeError);
+        expect(_iCommandRequest._commandStatus).to.be.equal(CommandStatus.NotAllowed);
         expect(_iCommandRequest._response).to.be.null;
     });
 
@@ -141,5 +139,110 @@ describe("CommandService should", () => {
 
         _iCommandRequest = _commandService.createExchangeEaselLettersRequest(lettersInEasel, enteredLetters);
         expect(_iCommandRequest._commandStatus).to.be.equal(CommandStatus.NotAllowed);
+    });
+
+    it("throw an error when there are no letters to be placed on the board", () => {
+        let request = "e4v a";
+        let verification = () => _commandService.createPlaceWordRequest(null, request);
+        expect(verification).to.throw(Error);
+    });
+
+    it("not reconize an empty array of string as scrabble letters", () => {
+        let letters = new Array<string>();
+        letters = [];
+
+        let verification = _commandService.isScrabbleLetters(letters);
+        expect(verification).to.be.false;
+    });
+
+    it("reconize a valid array of string as scrabble letters", () => {
+        let letters = new Array<string>();
+        letters.push(Alphabet.letterA);
+        letters.push(Alphabet.letterB);
+
+        let verification = _commandService.isScrabbleLetters(letters);
+        expect(verification).to.be.true;
+    });
+
+    it("reconize an array including * as scrabble letters", () => {
+        let letters = new Array<ScrabbleLetter>();
+        //letters.push(new ScrabbleLetter(Alphabet.letterR));
+        letters.push(new ScrabbleLetter(Alphabet.blank));
+
+        let stringArray = new Array<string>();
+        stringArray = _easelManagerService.parseScrabbleLettersToListofChar(letters);
+
+        let verification = _commandService.isScrabbleLetters(stringArray);
+        expect(verification).to.be.true;
+    });
+
+    it("validate a good entry to place a word request vertical", () => {
+        let lettersInEasel = new Array<ScrabbleLetter>();
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterA));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterB));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.blank));
+        let request = "e4v ab*";
+        let verification = _commandService.createPlaceWordRequest(lettersInEasel, request);
+        expect(verification._commandStatus).to.be.equal(CommandStatus.Ok);
+    });
+
+    it("validate a good entry to place a word request vertical", () => {
+        let lettersInEasel = new Array<ScrabbleLetter>();
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterA));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterB));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.blank));
+        let request = "e4h ab*";
+        let verification = _commandService.createPlaceWordRequest(lettersInEasel, request);
+        expect(verification._commandStatus).to.be.equal(CommandStatus.Ok);
+    });
+
+    it("should not validate a word when placing a word request", () => {
+        let lettersInEasel = new Array<ScrabbleLetter>();
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterA));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterB));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.blank));
+        let request = "a4v cd";
+        let verification = _commandService.createPlaceWordRequest(lettersInEasel, request);
+        expect(verification._commandStatus).to.be.equal(CommandStatus.NotAllowed);
+    });
+
+    it("should not validate a wrong letter when writing a word request", () => {
+        let lettersInEasel = new Array<ScrabbleLetter>();
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterA));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterB));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.blank));
+        let request = "a4v ....";
+        let verification = _commandService.createPlaceWordRequest(lettersInEasel, request);
+        expect(verification._commandStatus).to.be.equal(CommandStatus.SynthaxeError);
+    });
+
+    it("should not validate a wrong position when writing a word request", () => {
+        let lettersInEasel = new Array<ScrabbleLetter>();
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterA));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterB));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.blank));
+        let request = "a34v ab";
+        let verification = _commandService.createPlaceWordRequest(lettersInEasel, request);
+        expect(verification._commandStatus).to.be.equal(CommandStatus.SynthaxeError);
+    });
+
+    it("should not validate a wrong position when writing a word request", () => {
+        let lettersInEasel = new Array<ScrabbleLetter>();
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterA));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterB));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.blank));
+        let request = "a0v ab";
+        let verification = _commandService.createPlaceWordRequest(lettersInEasel, request);
+        expect(verification._commandStatus).to.be.equal(CommandStatus.SynthaxeError);
+    });
+
+    it("should not validate a wrong position when writing a word request", () => {
+        let lettersInEasel = new Array<ScrabbleLetter>();
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterA));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterB));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.blank));
+        let request = "a.v ab";
+        let verification = _commandService.createPlaceWordRequest(lettersInEasel, request);
+        expect(verification._commandStatus).to.be.equal(CommandStatus.SynthaxeError);
     });
 });

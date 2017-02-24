@@ -27,8 +27,8 @@ const FOURTH_INDEX = 3;
 
 const VERTICAL_ORIENTATION = 'v';
 const HORIZONTAL_ORIENTATION = 'h';
-const BLANK_VALUE ='*';
-const BLANK_WORD ='blank';
+const BLANK_VALUE = '*';
+const BLANK_WORD = 'blank';
 
 @Injectable()
 export class CommandsService {
@@ -39,9 +39,7 @@ export class CommandsService {
 
     public getInputCommandType(enteredValue: string): CommandType {
 
-        if (enteredValue === null) {
-            throw new Error("Null argument error: the texte entered cannot be null");
-        }
+        this.throwsErrorIfParameterIsNull(enteredValue);
 
         let texte = enteredValue.trim();
 
@@ -72,13 +70,9 @@ export class CommandsService {
         let request: ICommandRequest<Array<number>> = { _commandStatus: null, _response: null };
         let indexOfLettersToChange = new Array<number>();
 
-        if (lettersInEasel === null) {
-            throw new Error("Null argument error: the parameters cannot be null");
-        }
+        this.throwsErrorIfParameterIsNull(lettersInEasel);
 
-        if (enteredletters === null
-            || enteredletters.length > lettersInEasel.length
-            || enteredletters.length === 0) {
+        if (enteredletters === null || enteredletters.length > lettersInEasel.length) {
             return { _commandStatus: CommandStatus.SynthaxeError, _response: null };
         }
 
@@ -121,9 +115,7 @@ export class CommandsService {
         let commandRequest: ICommandRequest<Array<ScrabbleLetter>> =
             { _commandStatus: null, _response: null };
 
-        if (lettersInEasel === null) {
-            throw new Error("Null argument error: the parameters cannot be null");
-        }
+        this.throwsErrorIfParameterIsNull(lettersInEasel);
 
         // get the differents section of the request
         let requestElement = request.split(' ');
@@ -131,27 +123,7 @@ export class CommandsService {
         // Get the position of the word to be placed
         let wordPosition = requestElement[FIRST_INDEX].split('');
         let enteredWord = requestElement[SECOND_INDEX];
-
-        if (enteredWord === null || enteredWord === undefined) {
-            commandRequest._commandStatus = CommandStatus.NotAllowed;
-            commandRequest._response = null;
-            return commandRequest;
-        }
-
-        // Get the word to be placed
-        let wordToBePlaced = this.easelManagerService.parseStringToListofChar(enteredWord);
-
-        if (wordToBePlaced === null || wordToBePlaced.length === 0) {
-            commandRequest._commandStatus = CommandStatus.NotAllowed;
-            commandRequest._response = null;
-            return commandRequest;
-        }
-
-        wordToBePlaced.forEach((letter) => {
-            if (letter === BLANK_VALUE) {
-                letter = BLANK_WORD;
-            }
-        });
+        let wordToBePlaced = this.extractWordToBePlaced(enteredWord);
 
         if (!this.isValidPosition(wordPosition)
             || !this.isScrabbleLetters(wordToBePlaced)) {
@@ -166,7 +138,7 @@ export class CommandsService {
         // Check if the word to be placed exist in the current state of the easel
         if (wordFromEasel === null
             || wordFromEasel === undefined
-            || wordFromEasel.length == 0) {
+            || wordFromEasel.length === 0) {
             commandRequest._commandStatus = CommandStatus.NotAllowed;
             commandRequest._response = null;
             return commandRequest;
@@ -175,8 +147,21 @@ export class CommandsService {
         commandRequest._commandStatus = CommandStatus.Ok;
         commandRequest._response = wordFromEasel;
         return commandRequest;
-
     }
+
+    private extractWordToBePlaced(enteredWord: string): Array<string> {
+        let wordToBePlaced: Array<string>;
+        if (enteredWord !== undefined) {
+            wordToBePlaced = this.easelManagerService.parseStringToListofChar(enteredWord);
+            wordToBePlaced.forEach((letter) => {
+                if (letter === BLANK_VALUE) {
+                    letter = BLANK_WORD;
+                }
+            });
+            return wordToBePlaced;
+        }
+    }
+
 
     private isValidPosition(wordPosition: Array<string>) {
         if (wordPosition.length < MIN_POSITION_VALUE || wordPosition.length > MAX_POSITION_VALUE) {
@@ -192,9 +177,9 @@ export class CommandsService {
 
         let wordOrientation = wordPosition[wordPosition.length - 1];
 
-        console.log("--", this.isValidRowPosition(rowIndex),
-            this.isValidColumnPosition(colIndex),
-            this.isValidOrientation(wordOrientation))
+        // console.log("--", this.isValidRowPosition(rowIndex),
+        //     this.isValidColumnPosition(colIndex),
+        //     this.isValidOrientation(wordOrientation));
 
         return (this.isValidRowPosition(rowIndex)
             && this.isValidColumnPosition(colIndex)
@@ -202,28 +187,22 @@ export class CommandsService {
     }
 
     private isValidRowPosition(letter: string): boolean {
-        if (letter === null) {
-            throw new Error("Null argument error: the letter entered cannot be null");
-        }
+        this.throwsErrorIfParameterIsNull(letter);
         let keyCode = letter.toUpperCase().charCodeAt(0);
         return keyCode >= EaselControl.letterAKeyCode
             && keyCode <= EaselControl.letterOKeyCode;
     }
 
     private isValidColumnPosition(index: number): boolean {
-        if (index === null) {
-            throw new Error("Null argument error: the index entered cannot be null");
-        }
+        this.throwsErrorIfParameterIsNull(index);
         return index !== 0
             && index >= MIN_BOARD_POSITION_INDEX
             && index <= MAX_BOARD_POSITION_INDEX;
     }
 
     private isValidOrientation(orientation: string): boolean {
-        console.log("-", orientation);
-        if (orientation === null) {
-            throw new Error("Null argument error: the index entered cannot be null");
-        }
+        //console.log("-", orientation);
+        this.throwsErrorIfParameterIsNull(orientation);
         return orientation === VERTICAL_ORIENTATION
             || orientation === HORIZONTAL_ORIENTATION;
     }
@@ -239,5 +218,11 @@ export class CommandsService {
             return !this.easelManagerService.isScrabbleLetter(value.charCodeAt(0)) && value !== BLANK_VALUE;
         });
         return (notScrabbleLetters.length === 0);
+    }
+
+    private throwsErrorIfParameterIsNull(parameter: any) {
+        if (parameter === null) {
+            throw new Error("Null argument error: the letter entered cannot be null");
+        }
     }
 }

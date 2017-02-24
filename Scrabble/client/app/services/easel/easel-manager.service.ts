@@ -48,19 +48,6 @@ export class EaselManagerService {
         return verification;
     }
 
-    public isScrabbleLetters(enteredLetters: Array<string>): boolean {
-        let notScrabbleLetters = new Array<string>();
-
-        if (enteredLetters.length === 0) {
-            return false;
-        }
-
-        notScrabbleLetters = enteredLetters.filter((value) => {
-            return !this.isScrabbleLetter(value.charCodeAt(0));
-        });
-        return (notScrabbleLetters.length === 0);
-    }
-
     public isTabKey(keyCode: number): boolean {
         let verification: boolean;
         if (keyCode === null) {
@@ -132,7 +119,6 @@ export class EaselManagerService {
     }
 
     public parseStringToListofChar(texte: string): Array<string> {
-
         if (texte === null
             || texte === undefined) {
             throw new Error("Null argument error: The parameter cannot be null");
@@ -145,7 +131,6 @@ export class EaselManagerService {
     }
 
     public parseScrabbleLettersToListofChar(scrabbleLetters: Array<ScrabbleLetter>): Array<string> {
-
         if (scrabbleLetters === null) {
             throw new Error("Null argument error: The parameter cannot be null");
         }
@@ -156,7 +141,10 @@ export class EaselManagerService {
         return listOfChar;
     }
 
-    public getScrabbleWordFromTheEasel(easelLetters: Array<ScrabbleLetter>, enteredLetters: Array<string>): Array<ScrabbleLetter> {
+    public getScrabbleWordFromTheEasel(
+        easelLetters: Array<ScrabbleLetter>,
+        enteredLetters: Array<string>):
+        Array<ScrabbleLetter> {
         if (enteredLetters === null
             || easelLetters === null) {
             throw new Error("Null argument error: The parameter cannot be null");
@@ -174,10 +162,10 @@ export class EaselManagerService {
         for (let index = 0; index < enteredLetters.length; ++index) {
             let letterIndex = tempEaselLetters.findIndex((letter) => {
                 return letter === enteredLetters[index]
-                    || enteredLetters[index] === '*'
+                    || enteredLetters[index] === '*';
             });
 
-            console.log("Easel manager", letterIndex);
+            //console.log("Easel manager", letterIndex);
 
             if (letterIndex !== -1) {
                 words.push(easelLetters[letterIndex]);

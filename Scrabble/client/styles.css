@@ -1,8 +1,8 @@
-body {
-    font-size: 16px;
-    font-family: WeblySleek UI,Segoe UI,Helvetica Neue,Arial,sans-serif;
-    line-height: normal;
-    /*background-image:url('../../assets/images/wood.jpg');*/
-    background-image: url('../../assets/images/bg_image.jpg');
-    margin: 0px;
-}
+    body {
+        font-size: 16px;
+        font-family: WeblySleek UI, Segoe UI, Helvetica Neue, Arial, sans-serif;
+        line-height: normal;
+        background-image: url('../../assets/images/wood.jpg');
+        /*background-image: url('../../assets/images/bg_image.jpg');*/
+        margin: 0px;
+    }

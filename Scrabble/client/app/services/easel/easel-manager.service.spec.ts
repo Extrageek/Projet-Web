@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ScrabbleLetter } from "../../models/letter/scrabble-letter";
+import { Alphabet } from "../../models/letter/alphabet";
 import { EaselControl } from '../../commons/easel-control';
 import { EaselManagerService } from "./easel-manager.service";
 import { EaselComponent } from "../../components/easel.component";
@@ -7,12 +8,6 @@ import { SocketService } from "../socket-service";
 import { expect } from 'chai';
 
 import { async, TestBed } from '@angular/core/testing';
-
-// class MockSocketService {
-//     constructor() {
-//         // Default
-//     }
-// }
 
 const MIN_POSITION_INDEX = 0;
 const MAX_POSITION_INDEX = 6;
@@ -141,12 +136,40 @@ describe("EaselManagerService should", () => {
     });
 
     it("throw and exception if the text is null when trying to get a list of char", () => {
-        let verification = () => service.getStringListofChar(null);
+        let verification = () => service.parseStringToListofChar(null);
         expect(verification).to.throw(Error);
     });
-    // WHERE DO CHECK LENGHT OF ARRAY ??
+
     it("throw and exception if the text is not null when trying to get a list of char", () => {
-        let response = service.getStringListofChar("abc");
+        let response = service.parseStringToListofChar("abc");
         expect(response).to.be.an.instanceOf(Array);
+    });
+
+    it("throw and exception if the array is null when trying to get a list of string", () => {
+        let verification = () => service.parseScrabbleLettersToListofChar(null);
+        expect(verification).to.throw(Error);
+    });
+
+    it("throw and exception if the text is not null when trying to get a list of char", () => {
+        let scrabbleLetters = new Array<ScrabbleLetter>();
+        scrabbleLetters.push(new ScrabbleLetter(Alphabet.letterA));
+        scrabbleLetters.push(new ScrabbleLetter(Alphabet.letterB));
+        scrabbleLetters.push(new ScrabbleLetter(Alphabet.blank));
+        let response = service.parseScrabbleLettersToListofChar(scrabbleLetters);
+        expect(response).to.be.an.instanceOf(Array);
+    });
+
+    it("throw an error if the easelLetters is null when trying to get a scrabble letter from easel", () => {
+        //let easelLetters = new Array<ScrabbleLetter>();
+        let enteredLetters = [Alphabet.letterA, Alphabet.letterD];
+        let verification = () => service.getScrabbleWordFromTheEasel(null, enteredLetters);
+        expect(verification).to.throw(Error);
+    });
+
+    it("throw an error if the enteredLetters is null when trying to get a scrabble letter from easel", () => {
+        let easelLetters = new Array<ScrabbleLetter>();
+        easelLetters.push(new ScrabbleLetter(Alphabet.letterF));
+        let verification = () => service.getScrabbleWordFromTheEasel(easelLetters, null);
+        expect(verification).to.throw(Error);
     });
 });
