@@ -119,7 +119,7 @@ export class GridManagerService {
         this._cellsToBeCompleted = 0;
         puzzle._puzzle.forEach((puzzleItems) => {
             puzzleItems.forEach((puzzleItem) => {
-                if (puzzleItem._value === null) {
+                if (puzzleItem._hide) {
                     this._cellsToBeCompleted++;
                 }
             });
