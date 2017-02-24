@@ -15,8 +15,8 @@ export class Puzzle {
 
 export class PuzzleItem {
 
-    _value: number;
-    _hide: boolean;
+    public _value: number;
+    public _hide: boolean;
     public _isRed: boolean;
 
     constructor(value: number, hide: boolean) {

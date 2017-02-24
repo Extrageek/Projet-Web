@@ -113,28 +113,26 @@ export class GridComponent implements OnInit {
         if (this.puzzleEventManager.isDeleteKey(event.key)) {
             if (this._puzzle._puzzle[rowIndex][colIndex]._value !== null) {
                 this.gridManagerService.deleteCurrentValue(this._puzzle, rowIndex, colIndex);
-                this.gridManagerService.updateGridAfterDelete(this._puzzle, rowIndex, colIndex);
+                this.gridManagerService.updateGridAfterInsertOrDelete(this._puzzle, rowIndex, colIndex);
             }
         }
         else if (this.puzzleEventManager.isSudokuNumber(event.key)) {
             this.gridManagerService.decrementCellsToBeCompleted();
-            this.gridManagerService.validateEnteredNumber(this._puzzle, rowIndex, colIndex);
-
-            // TODO: replace 59 by 0
-            if (this.gridManagerService.cellsToBeCompleted === 59) {
-                //if (this.api.verifyGrid(this._puzzle)) {
-                this._isFinished = true;
-                await this.api.getTopRecords().then(topRecords => {
-                    let isInserted = this.insertUserScoreIntoTopScores(topRecords);
-                    this.messageCongratulation.nativeElement.classList.remove("fade");
-                    if (isInserted) {
-                        this.leaderboard.nativeElement.classList.remove("fade");
-                    }
-                }).catch(error => {
-                    console.log(error);
-                });
-                this.api.createGameRecord(this._userSetting, this._time);
-                //}
+            this.gridManagerService.updateGridAfterInsertOrDelete(this._puzzle, rowIndex, colIndex);
+            if (this.gridManagerService.cellsToBeCompleted === 0) {
+                if (await this.api.verifyGrid(this._puzzle)) {
+                    this._isFinished = true;
+                    await this.api.getTopRecords().then(topRecords => {
+                        let isInserted = this.insertUserScoreIntoTopScores(topRecords);
+                        this.messageCongratulation.nativeElement.classList.remove("fade");
+                        if (isInserted) {
+                            this.leaderboard.nativeElement.classList.remove("fade");
+                        }
+                    }).catch(error => {
+                        console.log(error);
+                    });
+                    this.api.createGameRecord(this._userSetting, this._time);
+                }
             }
         }
     }
