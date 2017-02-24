@@ -1,4 +1,5 @@
 <modifier [container]="container" [webgltext]="webgltext"> </modifier>
+
 <md-progress-bar
     *ngIf="!renderService._gameStatusService._gameStatus.isShooting
         && renderService._stoneHandler !== undefined"
@@ -7,4 +8,19 @@
     mode="determinate"
     [value]="renderService._stoneHandler.power">
 </md-progress-bar>
+
+<div *ngIf="!renderService._gameStatusService.gameStatus.isShooting
+    && renderService._stoneHandler !== undefined
+    && renderService._stoneHandler.currentSpin === 1"
+    class="clockwiseArrow">
+        <img src=" ../../assets/images/clockwise-arrow.png" alt="Sens horaire" height="30vw" width="30vw">
+</div>
+
+<div *ngIf="!renderService._gameStatusService.gameStatus.isShooting
+    && renderService._stoneHandler !== undefined
+    && renderService._stoneHandler.currentSpin === 0"
+    class="counterclockwiseArrow">
+        <img src=" ../../assets/images/counterclockwise-arrow.png" alt="Sens anti-horaire" height="30vw" width="30vw">
+</div>
+
 <div #container id="threejs"> </div>
