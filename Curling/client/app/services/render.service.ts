@@ -240,7 +240,7 @@ export class RenderService {
             if (document.hasFocus()) {
                 this._clock.start();
             }
-            // Add events here to be sure they won't encounter undefined property 
+            // Add events here to be sure they won't encounter undefined property
             window.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event));
             window.addEventListener('keydown', (event: KeyboardEvent) => this.switchSpin(event));
             window.addEventListener('mousedown', _ => this.onMousePressed());
