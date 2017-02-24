@@ -16,8 +16,6 @@ export const INPUT_ID_PREFIX = '#';
 @Injectable()
 export class GameRoomManagerService {
 
-    _newPositionX = 0;
-
     constructor() {
         // Default constructor
     }
@@ -28,17 +26,11 @@ export class GameRoomManagerService {
      * @return true for a tab key press
      */
     isTabKey(keyCode: number): boolean {
-        return (keyCode === EaselControl.tabKeyCode);
-    }
-
-    /**
-    * @class GameRoomEventManagerService
-    * @method isScrabbleLetter
-    * @return true for a valid scrabble letter key press
-    */
-    isScrabbleLetter(keyCode: string): boolean {
-        let letterKeyCode = Number(keyCode);
-        return (letterKeyCode >= EaselControl.letterAKeyCode
-            && letterKeyCode <= EaselControl.letterZKeyCode);
+        let response: boolean;
+        if (keyCode === null) {
+            throw new Error("Argument error: the keyCode cannot be null");
+        }
+        response = (keyCode === EaselControl.tabKeyCode);
+        return response;
     }
 }

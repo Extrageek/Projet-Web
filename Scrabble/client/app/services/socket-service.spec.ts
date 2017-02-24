@@ -1,27 +1,42 @@
-// import { expect , assert } from "chai";
-
+// import { Injectable } from "@angular/core";
+// import { Subject } from 'rxjs/Subject';
+// import { Observable } from 'rxjs/Observable';
 // import { SocketService } from "./socket-service";
+// import { SocketEventType } from '../commons/socket-eventType';
+
 // import * as http from "https";
+// import * as ioServer from "socket.io-client";
+
+// import { expect, assert } from "chai";
+
+// const fakePortNumber = 3005;
+// const fakeServerUrl = "http://localhost:" + `${fakePortNumber}`;
 // let httpServer: http.Server;
 
-// const NEW_GAME_DEMAND = "newGameDemand";
-// const INVALID_DEMAND = "invalidDemand";
-// const NAME_OR_SOCKET_ALREADY_EXISTS = "errorNameExists";
-// const INVALID_NAME = "errorInvalidName";
-// const PLAYERS_MISSING = "playersMissing";
+// let chai = require('chai'),
+//     mocha = require('mocha'),
+//     should = chai.should();
 
-// const SERVER_PORT_NUMBER = 3000;
+// let options = {
+//     transports: ['websocket'],
+//     forceNew: true
+// };
 
-// let service : SocketService;
+// let io = require('socket.io-client');
+// const SERVER_PORT_NUMBER = 3005;
+// let socketService: SocketService;
 
 // describe("Socket service testing properties", () => {
 
 //     beforeEach(() => {
-//         httpServer.listen(SERVER_PORT_NUMBER);
-//         service = new SocketService;
+//         httpServer.listen(SERVER_PORT_NUMBER, 'http://localhost:');
+//         socketService = new SocketService();
 //     });
 
 //     it("should correctly connect to the server", () => {
+//         socketService.subscribeToChannelEvent();
+
+
 //         expect(SocketService._socket).to.not.be.undefined;
 //     });
 
@@ -29,11 +44,10 @@
 //         assert.isString(SocketService._socket.id);
 //     });
 
-//     // after(() => {
-//     //     httpServer.close();
-//     //     httpServer = null;
-//     // });
-
+//     after(() => {
+//         httpServer.close();
+//         httpServer = null;
+//     });
 // });
 
 

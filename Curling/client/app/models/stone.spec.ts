@@ -62,6 +62,7 @@ describe("Stone tester should", () => {
         stone.direction = direction;
         function update() {
             stone.update(timePerFrame);
+
             ++frameNumber;
             if (frameNumber === totalNumberOfFrames) {
                 //toFixed method used to compare the 6 decimals of the numbers only due to the imprecision of floats.

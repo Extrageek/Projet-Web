@@ -2,7 +2,7 @@ import { SquareType } from './square-type';
 
 import { expect } from 'chai';
 
-describe("SqaureType", () => {
+describe("SquareType", () => {
     it("should always return strings", () => {
         expect(SquareType.star).to.be.a('string');
         expect(SquareType.normal).to.be.a('string');
