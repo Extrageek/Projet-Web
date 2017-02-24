@@ -19,6 +19,7 @@ export enum CameraType {
 export class RenderService {
 
     private static readonly NUMBER_OF_MODELS_TO_LOAD = 2;
+    private static readonly LINE_WAIT = 2;
 
     private _numberOfModelsLoaded: number;
     private _scene: Scene;
@@ -30,6 +31,7 @@ export class RenderService {
     private _mesh: Mesh;
     private _lineGeometry: Geometry;
     private _lineMaterial: THREE.LineDashedMaterial;
+    private _lineAnimationSlower: number;
     private _line: THREE.Line;
 
     private _clock: Clock;
@@ -99,6 +101,7 @@ export class RenderService {
         this._lineMaterial = material;
         this._line = new THREE.Line(this._lineGeometry, this._lineMaterial);
         this._scene.add(this._line);
+        this._lineAnimationSlower = 0;
     }
 
     public linkRenderServerToCanvas(container: HTMLElement) {
@@ -261,6 +264,12 @@ export class RenderService {
             this._lineMaterial.visible = false;
         } else {
             this._lineMaterial.visible = true;
+            if (this._lineAnimationSlower > RenderService.LINE_WAIT) {
+                this._lineMaterial.gapSize = ++this._lineMaterial.gapSize % 3 + 1;
+                this._lineAnimationSlower = 0;
+                console.log("up");
+            }
+            ++this._lineAnimationSlower;
             this._lineGeometry.vertices.pop();
             this._lineGeometry.vertices.push(new Vector3(this._stoneHandler.mousePositionPlaneXZ.x, 0.1, 22.4));
             this._lineGeometry.computeLineDistances();
