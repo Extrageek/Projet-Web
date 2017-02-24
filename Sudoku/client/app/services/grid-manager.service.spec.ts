@@ -518,7 +518,7 @@ describe('GridManagerService', () => {
 
                 gridManagerService.countFilledCell(fakePuzzle);
                 expect(gridManagerService.cellsToBeCompleted).to.be.equals(4);
-                gridManagerService.updateGridAfterDelete(fakePuzzle, 0, 0);
+                gridManagerService.updateGridAfterInsertOrDelete(fakePuzzle, 0, 0);
                 expect(gridManagerService.cellsToBeCompleted).to.be.equals(4);
             }))
     );

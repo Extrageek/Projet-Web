@@ -1,6 +1,6 @@
 import { expect } from "chai";
-import { ObjectLoader, Vector3 } from "three";
-import { Stone, StoneColor } from "./stone";
+import { MeshPhongMaterial, ObjectLoader, Vector3 } from "three";
+import { Stone, StoneColor, StoneSpin } from "./stone";
 
 describe("Stone tester should", () => {
 
@@ -13,6 +13,7 @@ describe("Stone tester should", () => {
     it("load red stone", done => {
         Stone.createStone(objectLoader, StoneColor.Red, new Vector3(0, 0, 0)).then((stone: Stone) => {
             expect(stone).to.be.instanceof(Stone);
+            expect(stone.material).exist;
             expect(stone.stoneColor).to.equals(StoneColor.Red);
             done();
         });
@@ -21,6 +22,24 @@ describe("Stone tester should", () => {
     it("load blue stone", done => {
         Stone.createStone(objectLoader, StoneColor.Blue, new Vector3(0, 0, 0)).then((stone: Stone) => {
             expect(stone).to.be.instanceof(Stone);
+
+            stone.sweeping = true;
+
+            expect(stone.isSweeping).to.equals(true);
+            expect(stone.stoneColor).to.equals(StoneColor.Blue);
+            done();
+        });
+    });
+
+    it("build stone with a clockwise spin then invert its spin", done => {
+        Stone.createStone(objectLoader, StoneColor.Blue, new Vector3(0, 0, 0)).then((stone: Stone) => {
+            expect(stone).to.be.instanceof(Stone);
+
+            expect(stone.spin).to.equals(StoneSpin.Clockwise);
+            stone.spin = StoneSpin.CounterClockwise;
+
+            expect(stone.spin).to.equals(StoneSpin.CounterClockwise);
+
             expect(stone.stoneColor).to.equals(StoneColor.Blue);
             done();
         });

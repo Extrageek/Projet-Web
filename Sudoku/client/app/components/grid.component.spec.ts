@@ -14,6 +14,9 @@ import {
     ConnectionBackend
 } from '@angular/http';
 
+
+import { RouterTestingModule } from '@angular/router/testing';
+
 import { MockBackend, MockConnection } from '@angular/http/testing';
 import { assert, expect } from 'chai';
 
@@ -33,6 +36,7 @@ import { PuzzleEventManagerService } from '../services/puzzle-event-manager.serv
 
 import { StopwatchService } from "../services/stopwatch.service";
 import { UserSettingService } from "../services/user-setting.service";
+import { Router } from "@angular/router";
 
 // Mock the REST API Service to give a fake result after a request.
 @Injectable()
@@ -56,16 +60,15 @@ describe('GridComponent', () => {
         TestBed.configureTestingModule({
             declarations: [GridComponent], // declare the test component
             schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-            imports: [FormsModule, HttpModule],
+            imports: [FormsModule, HttpModule, RouterTestingModule],
             providers: [
                 {   // Import the necessary providers
-                    provide: Http,
-
-                    // Add a factory for the backend
-                    useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
-                        return new Http(backend, defaultOptions);
-                    },
-                    deps: [MockBackend, BaseRequestOptions]
+                provide: Http, Router,
+                // Add a factory for the backend
+                useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
+                    return new Http(backend, defaultOptions);
+                },
+                deps: [MockBackend, BaseRequestOptions]
                 },
                 { provide: RestApiProxyService, useClass: MockRestApiService },
                 { provide: GridManagerService, PuzzleEventManagerService },
@@ -74,6 +77,7 @@ describe('GridComponent', () => {
                 BaseRequestOptions,
                 UserSettingService,
                 StopwatchService,
+
             ]
         })
             .compileComponents();

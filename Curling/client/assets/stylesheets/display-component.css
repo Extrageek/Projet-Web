@@ -9,6 +9,14 @@ my-gl {
     z-index: -1;
 }
 
+.hide-cursor {
+    position: absolute;
+    cursor: none;
+    width: 100vw;
+    min-height: 100vh;
+    z-index: 5; 
+}
+
 display-component {
     z-index: 1;
 }

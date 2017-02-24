@@ -21,26 +21,16 @@ export class DifficultyComponent implements OnInit {
 
     ngOnInit() {
         this._username = this.userSettingService.userSetting.name;
+        if (this._username === "") {
+            this.router.navigate(['/']);
+        }
         this._difficulty = "0";
     }
 
     @HostListener('window:beforeunload')
     public async logout() {
-        let str: string;
-        await this.api.removeUsername(this._username)
-            .then(result => {
-                if (result) {
-                    str = "done";
-                }
-                else {
-                    str = "not done";
-                }
-            })
-            .catch(error => {
-                console.log("error: ", error);
-                str = "error";
-            });
-        return str;
+        await this.api.removeUsername(this._username);
+        return "are you sure";
     }
 
     public launchGame() {

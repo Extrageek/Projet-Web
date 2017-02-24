@@ -7,6 +7,11 @@ export enum StoneColor {
     NumberOfColors = 2
 }
 
+export enum StoneSpin {
+    CounterClockwise = 0,
+    Clockwise = 1
+}
+
 export class Stone extends Group implements GameComponent {
 
     private static readonly STONES_PATH =
@@ -24,6 +29,7 @@ export class Stone extends Group implements GameComponent {
     private _speed: number;
     private _direction: Vector3;
     private _sweeping: boolean;
+    private _spin: StoneSpin;
     //Bounding sphere used for collisions. Only works if the stones are displaced on the XZ plane.
     private _boundingSphere: Sphere;
     private _lastBoundingSphere: Sphere;
@@ -55,6 +61,7 @@ export class Stone extends Group implements GameComponent {
         this._stoneColor = stoneColor;
         this._speed = 0;
         this._direction = new Vector3(0, 0, 1);
+        this._spin = StoneSpin.Clockwise;
         this._boundingSphere = new Sphere(this.position, Stone.BOUNDING_SPHERE_RADIUS);
         this._lastBoundingSphere = this._boundingSphere;
         this._lastPosition = this.position;
@@ -73,13 +80,16 @@ export class Stone extends Group implements GameComponent {
         return this._stoneColor;
     }
 
+    public get isSweeping(): boolean {
+        return this._sweeping;
+    }
+
     public set sweeping(sweep: boolean) {
         this._sweeping = sweep;
     }
 
     public set position(position: Vector3) {
         this.position = position;
-        // this.boundingSphere.center = position;
     }
 
     public get speed(): number {
@@ -102,6 +112,14 @@ export class Stone extends Group implements GameComponent {
             throw new Error("The direction is not a valid vector.");
         }
         this._direction = direction.normalize();
+    }
+
+    public get spin(): StoneSpin {
+        return this._spin;
+    }
+
+    public set spin(s: StoneSpin) {
+        this._spin = s;
     }
 
     public revertToLastPosition() {

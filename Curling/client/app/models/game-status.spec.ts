@@ -30,6 +30,10 @@ describe("GamesStatus should", () => {
         _gameStatus.usedStone();
         expect(_gameStatus.currentStonesPlayer).to.be.equal(8);
         expect(_gameStatus.currentStonesComputer).to.be.equal(7);
+        _gameStatus.nextPlayer();
+        _gameStatus.isShooting = true;
+        expect(_gameStatus.currentPlayer).to.be.equal(CurrentPlayer.BLUE);
+        expect(_gameStatus.isShooting).to.be.equal(true);
     });
 
     it("does not decrement number of stones left when used", () => {

@@ -28,19 +28,22 @@ export class GlComponent implements OnInit {
 
     @HostListener("window:keyup.space", ["$event"])
     public spaceKeyPressed(event: KeyboardEvent) {
-        this.renderService.switchCamera();
+        this._renderService.switchCamera();
     }
 
     @HostListener("window:visibilitychange", ["$event"])
     public toggleClock(event: Event) {
-        this.renderService.toogleFocus(document.hasFocus());
+        this._renderService.toogleFocus(document.hasFocus());
     }
 
     constructor(
-        private renderService: RenderService,
+        private _renderService: RenderService,
         private snackbar: MdSnackBar
     ) { }
 
+    public get renderService(): RenderService {
+        return this._renderService;
+    }
     // private displaceX(): void{
     //     this.renderService.translateMesh(this.xmodel, 0);
     // }

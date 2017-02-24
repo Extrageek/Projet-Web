@@ -25,7 +25,7 @@ export class UserSetting {
      *
      */
     constructor() {
-        this._name = '';
+        this._name = "";
         this._difficulty = Difficulty.NORMAL;
     }
 }

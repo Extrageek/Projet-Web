@@ -90,9 +90,7 @@ export class GridManagerService {
         this._cellsToBeCompleted = 0;
 
         for (let row = 0; row < puzzle._puzzle.length; ++row) {
-
             for (let column = 0; column < puzzle._puzzle.length; ++column) {
-
                 if (puzzle._puzzle[row][column]._hide) {
                     puzzle._puzzle[row][column]._value = null;
                     puzzle._puzzle[row][column]._isRed = false;
@@ -128,17 +126,41 @@ export class GridManagerService {
         });
     }
 
-    public updateGridAfterDelete(puzzle: Puzzle, rowIndexModif: number, colIndexModif: number): void {
+    public updateGridAfterInsertOrDelete(puzzle: Puzzle, rowIndexModif: number, colIndexModif: number): void {
+        this.updateRowAfterInsertOrDelete(puzzle, rowIndexModif);
+        this.updateColumnAfterInsertOrDelete(puzzle, colIndexModif);
+        this.updateSquareAfterInsertOrDelete(puzzle, rowIndexModif, colIndexModif);
+    }
 
+
+    public updateRowAfterInsertOrDelete(puzzle: Puzzle, rowIndexModif: number): void {
         for (let columnIndex = 0; columnIndex < puzzle._puzzle.length; ++columnIndex) {
             if (puzzle._puzzle[rowIndexModif][columnIndex]._hide === true) {
                 this.validateEnteredNumber(puzzle, rowIndexModif, columnIndex);
             }
         }
+    }
 
+    public updateColumnAfterInsertOrDelete(puzzle: Puzzle, colIndexModif: number): void {
         for (let rowIndex = 0; rowIndex < puzzle._puzzle.length; ++rowIndex) {
             if (puzzle._puzzle[rowIndex][colIndexModif]._hide === true) {
                 this.validateEnteredNumber(puzzle, rowIndex, colIndexModif);
+            }
+        }
+    }
+
+    public updateSquareAfterInsertOrDelete(puzzle: Puzzle, rowIndexModif: number, colIndexModif: number): void {
+        let squareMinRowIndex = Math.floor(rowIndexModif / 3) * 3;
+        let squareMaxRowIndex = squareMinRowIndex + 2;
+        let squareMinColumnIndex = Math.floor(colIndexModif / 3) * 3;
+        let squareMaxColumnIndex = squareMinColumnIndex + 2;
+
+        for (let rowId = squareMinRowIndex; rowId <= squareMaxRowIndex; ++rowId) {
+            for (let columnId = squareMinColumnIndex; columnId <= squareMaxColumnIndex; ++columnId) {
+                if (puzzle._puzzle[rowIndexModif][colIndexModif]._hide === true
+                    && columnId !== colIndexModif && rowId !== rowIndexModif) {
+                    this.validateEnteredNumber(puzzle, rowId, columnId);
+                }
             }
         }
     }
