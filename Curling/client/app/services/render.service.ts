@@ -12,7 +12,8 @@ import { StoneHandler } from "../models/stoneHandler";
 
 export enum CameraType {
     PERSPECTIVE_CAM = 0,
-    ORTHOGRAPHIC_CAM = 1
+    ORTHOGRAPHIC_CAM = 1,
+    NB_CAMERAS = 2
 }
 
 @Injectable()
@@ -225,7 +226,7 @@ export class RenderService {
 
     public switchCamera() {
         this._currentCamera = this._cameraService.nextCamera();
-        this._currentCameraType = (!this._currentCamera) ? CameraType.PERSPECTIVE_CAM : CameraType.ORTHOGRAPHIC_CAM;
+        this._currentCameraType = (this._currentCameraType + 1) % CameraType.NB_CAMERAS;
         this.onResize();
     }
 
