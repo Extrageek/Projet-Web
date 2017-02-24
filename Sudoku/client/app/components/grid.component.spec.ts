@@ -36,7 +36,7 @@ import { PuzzleEventManagerService } from '../services/puzzle-event-manager.serv
 
 import { StopwatchService } from "../services/stopwatch.service";
 import { UserSettingService } from "../services/user-setting.service";
-import {Router} from "@angular/router";
+import { Router } from "@angular/router";
 
 // Mock the REST API Service to give a fake result after a request.
 @Injectable()
