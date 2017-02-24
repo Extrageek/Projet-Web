@@ -267,7 +267,6 @@ export class RenderService {
             if (this._lineAnimationSlower > RenderService.LINE_WAIT) {
                 this._lineMaterial.gapSize = ++this._lineMaterial.gapSize % 3 + 1;
                 this._lineAnimationSlower = 0;
-                console.log("up");
             }
             ++this._lineAnimationSlower;
             this._lineGeometry.vertices.pop();
