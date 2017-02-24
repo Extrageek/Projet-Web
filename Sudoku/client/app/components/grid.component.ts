@@ -6,11 +6,12 @@
  */
 
 import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { Router } from '@angular/router';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/timer';
-
+import { Observable } from 'rxjs/Observable';
 
 import { RestApiProxyService } from '../services/rest-api-proxy.service';
 import { GridManagerService } from '../services/grid-manager.service';
@@ -22,9 +23,8 @@ import { PuzzleCommon } from '../commons/puzzle-common';
 import { Puzzle, PuzzleItem } from '../models/puzzle';
 import { Record } from '../models/record';
 import { UserSetting, Difficulty } from '../models/user-setting';
-
-import { Observable } from 'rxjs/Observable';
 import { Time } from "../models/time";
+
 
 @Component({
     moduleId: module.id,
@@ -52,14 +52,18 @@ export class GridComponent implements OnInit {
         private puzzleEventManager: PuzzleEventManagerService,
         private userSettingService: UserSettingService,
         private api: RestApiProxyService,
-        private stopwatchService: StopwatchService) {
+        private stopwatchService: StopwatchService,
+        private router: Router) {
     }
 
     // Initialization
     ngOnInit() {
+        this._userSetting = this.userSettingService.userSetting;
         this._isLoading = true;
         this._isFinished = false;
-        this._userSetting = this.userSettingService.userSetting;
+        if (this._userSetting.name === "") {
+            this.router.navigate(['/']);
+        }
         this._time = new Time();
         this.getNewPuzzle(this._userSetting.difficulty);
 
@@ -78,8 +82,8 @@ export class GridComponent implements OnInit {
 
     @HostListener('window:beforeunload')
     public async logout() {
-        let str: string;
         await this.api.removeUsername(this._userSetting.name);
+        return "are you sure";
     }
 
     public getNewPuzzle(difficulty: Difficulty) {
