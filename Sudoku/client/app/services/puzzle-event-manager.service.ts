@@ -42,10 +42,10 @@ export class PuzzleEventManagerService {
      */
     isDirection(keyCode: string): boolean {
         // If code of the key is an arrow (left/right/up/downArrowKeyCode)
-        return (keyCode == PuzzleCommon.downArrowKeyCode
-                || keyCode == PuzzleCommon.upArrowKeyCode
-                || keyCode == PuzzleCommon.leftArrowKeyCode
-                || keyCode == PuzzleCommon.rightArrowKeyCode) ;
+        return (keyCode === PuzzleCommon.downArrowKeyCode
+                || keyCode === PuzzleCommon.upArrowKeyCode
+                || keyCode === PuzzleCommon.leftArrowKeyCode
+                || keyCode === PuzzleCommon.rightArrowKeyCode) ;
     }
 
     /**

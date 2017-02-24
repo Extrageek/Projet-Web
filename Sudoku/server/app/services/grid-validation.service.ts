@@ -1,4 +1,4 @@
-import { Puzzle, PuzzleItem } from './../models/puzzle';
+import { PuzzleItem } from './../models/puzzle';
 
 const N_ROWS = 9;
 const N_COLUMNS = 9;
@@ -8,7 +8,9 @@ const N_SQUARES_BY_COLUMN = 3;
 module GridValidationService {
     export class GridValidationManager {
 
-        constructor() { }
+        constructor() {
+            //
+        }
 
         public validateGrid(puzzle: PuzzleItem[][]): boolean {
             return this.validateRows(puzzle) && this.validateColumns(puzzle) && this.validateSquares(puzzle);

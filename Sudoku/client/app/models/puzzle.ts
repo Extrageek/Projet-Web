@@ -14,11 +14,15 @@ export class Puzzle {
 }
 
 export class PuzzleItem {
+
     _value: number;
     _hide: boolean;
+    public _isRed: boolean;
 
     constructor(value: number, hide: boolean) {
         this._value = value;
         this._hide = hide;
+        this._isRed = false;
     }
+
 }

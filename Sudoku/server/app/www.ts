@@ -53,7 +53,7 @@ function onError(error: NodeJS.ErrnoException): void {
     throw error;
   }
   let bind = (typeof appPort === 'string') ? 'Pipe ' + appPort : 'Port ' + appPort;
-  switch(error.code) {
+  switch (error.code) {
     case 'EACCES':
       console.error(`${bind} requires elevated privileges`);
       process.exit(1);

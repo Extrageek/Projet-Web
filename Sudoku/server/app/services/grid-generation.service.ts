@@ -24,11 +24,13 @@ module GridGenerationService {
     }
 
     export class GridGenerationManager {
+        // UNUSED FOR NOW
+        // private _easySudoku: Array<Puzzle>;
+        // private _hardSudoku: Array<Puzzle>;
 
-        private _easySudoku: Array<Puzzle>;
-        private _hardSudoku: Array<Puzzle>;
-
-        constructor() {}
+        constructor() {
+            //
+        }
 
         public getNewPuzzle(difficulty: Difficulty): Puzzle {
             //this._easySudoku.push(this.generateNewPuzzle());
@@ -43,7 +45,7 @@ module GridGenerationService {
          * @method getNewPuzzle
          * @return newPuzzle
          */
-        public generateNewPuzzle(difficulty: Difficulty) {
+        public generateNewPuzzle(difficulty?: Difficulty) {
             let endTime = new Date().getTime() / 1000 + 5;
             let getRandomSudoku = getRandomInRange(1, 9);
             let newPuzzle: Puzzle = new Puzzle();
@@ -51,8 +53,8 @@ module GridGenerationService {
 
             for (let it = 0; it < NOMBRE_ITERATION + deltaIteration; ++it) {
                 // Rows swapping
-                let rowA;
-                let rowB;
+                let rowA: number;
+                let rowB: number;
                 do {
                     rowA = getRandomSudoku() - 1;
                     rowB = getRandomSudoku() - 1;
@@ -61,8 +63,8 @@ module GridGenerationService {
                 newPuzzle.swapRow(rowA, rowB);
 
                 // Column swapping
-                let columnA;
-                let columnB;
+                let columnA: number;
+                let columnB: number;
                 do {
                     columnA = getRandomSudoku() - 1;
                     columnB = getRandomSudoku() - 1;
@@ -76,7 +78,6 @@ module GridGenerationService {
                 // Vertical Symmetry
                 newPuzzle.verticalSymmetry();
             }
-            
             while (new Date().getTime() / 1000 < endTime) {
                 // Wait until five seconds
             }

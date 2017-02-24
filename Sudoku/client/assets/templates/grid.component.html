@@ -12,7 +12,7 @@
                             <td *ngFor="let cell of row, let j = index" [attr.id]="'cellId' + i + '' + j">
                                 <input #attrRead class="readOnlyCell" *ngIf="!cell._hide" readonly maxlength="1" type="text" name="inputCell" id="{{i}}{{j}}"
                                        [ngModel]="cell._value" (keydown)="onKeyDownEventHandler($event, attrRead.id)" />
-                                <input #attrWrite class="readWriteCell" *ngIf="cell._hide" maxlength="1" type="text" name="inputCell" id="{{i}}{{j}}" [(ngModel)]="cell._value"
+                                <input #attrWrite [ngClass]="{readWriteCell: !_puzzle._puzzle[i][j]._isRed, errorCell: _puzzle._puzzle[i][j]._isRed }"  *ngIf="cell._hide" maxlength="1" type="text" name="inputCell" id="{{i}}{{j}}" [(ngModel)]="cell._value"
                                        (keydown)="onKeyDownEventHandler($event, attrWrite.id)" (keyup)="onValueChange($event, attrWrite.id)"
                                        (keypress)="validateInputValue($event)" />
                             </td>

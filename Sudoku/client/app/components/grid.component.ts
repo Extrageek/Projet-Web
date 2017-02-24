@@ -19,7 +19,7 @@ import { PuzzleEventManagerService } from '../services/puzzle-event-manager.serv
 import { StopwatchService } from "../services/stopwatch.service";
 
 import { PuzzleCommon } from '../commons/puzzle-common';
-import { Puzzle } from '../models/puzzle';
+import { Puzzle, PuzzleItem } from '../models/puzzle';
 import { Record } from '../models/record';
 import { UserSetting, Difficulty } from '../models/user-setting';
 
@@ -62,6 +62,7 @@ export class GridComponent implements OnInit {
         this._userSetting = this.userSettingService.userSetting;
         this._time = new Time();
         this.getNewPuzzle(this._userSetting.difficulty);
+
         Observable.timer(0, 1000).subscribe(() => {
             if (!this._isLoading && !this._isFinished) {
                 this.stopwatchService.updateClock();
@@ -70,6 +71,7 @@ export class GridComponent implements OnInit {
                 this._time.hours = this.stopwatchService.hours;
             }
         });
+
         this._easyRecords = new Array<Record>();
         this._hardRecords = new Array<Record>();
     }
@@ -105,11 +107,9 @@ export class GridComponent implements OnInit {
 
     // Handle the input value changed event from grid
     public async onValueChange(event: KeyboardEvent, id: string) {
-
         let rowColIndex = id.split('');
         let rowIndex = Number(rowColIndex[PuzzleCommon.yPosition]);
         let colIndex = Number(rowColIndex[PuzzleCommon.xPosition]);
-
         if (this.puzzleEventManager.isDeleteKey(event.key)) {
             if (this._puzzle._puzzle[rowIndex][colIndex]._value !== null) {
                 this.gridManagerService.deleteCurrentValue(this._puzzle, rowIndex, colIndex);

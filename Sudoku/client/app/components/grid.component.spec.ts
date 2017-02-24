@@ -1,10 +1,11 @@
-import {Injectable, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import { Injectable, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import {
     fakeAsync,
     inject,
     ComponentFixture,
-    TestBed
+    TestBed,
+    async,
 } from '@angular/core/testing';
 import {
     HttpModule, Http, ResponseOptions,
@@ -51,7 +52,7 @@ describe('GridComponent', () => {
     const FAKE_INITIAL_PUZZLE = new Puzzle(INITIAL_PUZZLE_SEED);
     const FAKE_PUZZLE = new Puzzle(FAKE_PUZZLE_FEED);
 
-    beforeEach(async () => {
+    beforeEach(async (() => {
         TestBed.configureTestingModule({
             declarations: [GridComponent], // declare the test component
             schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
@@ -75,13 +76,11 @@ describe('GridComponent', () => {
                 StopwatchService,
             ]
         })
-            .compileComponents().then(()=> {
-        });  // compile template and stylesheets;
+            .compileComponents();
+    }));
 
-    });
-
-    beforeEach(inject([RestApiProxyService, MockBackend], fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
-
+    beforeEach(inject([RestApiProxyService, MockBackend],
+        fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
             mockBackend.connections.subscribe((connection: MockConnection) => {
                 // Send a fake data to the caller
                 connection.mockRespond(new Response(new ResponseOptions({ body: FAKE_PUZZLE_FEED })));

@@ -95,7 +95,6 @@ export class Application {
         router.post('/api/game-over', routeManager.saveGameRecord.bind(routeManager.saveGameRecord));
         router.post('/api/grid-validation', routeManager.validateGrid.bind(routeManager.validateGrid));
 
-        //use router middleware 
         this.app.use(router);
 
         // Gestion des erreurs

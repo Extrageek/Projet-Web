@@ -2,12 +2,6 @@ import { Injectable } from '@angular/core';
 
 import { Puzzle, PuzzleItem } from '../models/puzzle';
 
-declare var jQuery: any;
-
-export const CELL_ID_PREFIX = "#";
-export const CSS_BACKGROUND_PROPERTY = "background-color";
-export const CSS_BACKGROUND_VALUE = "#E57373 ";
-export const CSS_BACKGROUND_INIT = "";
 const SUDOKU_LENGTH = 9;
 @Injectable()
 export class GridManagerService {
@@ -31,20 +25,14 @@ export class GridManagerService {
         let isSquareValid = !this.isDuplicatedNumberInCurrentSquare(grid, rowIndex, columnIndex);
 
         if (isColumnValid && isRowValid && isSquareValid) {
-            this.updateCurrentCellFormat(rowIndex, columnIndex, true);
+            puzzle._puzzle[rowIndex][columnIndex]._isRed = false;
         } else {
             if ((!isSquareValid || !isColumnValid || !isRowValid)
                 && grid[rowIndex][columnIndex]._value !== null) {
-                this.updateCurrentCellFormat(rowIndex, columnIndex);
+                puzzle._puzzle[rowIndex][columnIndex]._isRed = true;
             }
         }
-        return (isRowValid && isColumnValid && isSquareValid);
-    }
-
-    public updateCurrentCellFormat(rowIndex: number, columnIndex: number, removeErrorCSS?: boolean) {
-        let borderPropertyValue = (!removeErrorCSS) ? CSS_BACKGROUND_VALUE : CSS_BACKGROUND_INIT;
-        let cellId = CELL_ID_PREFIX + rowIndex + columnIndex;
-        jQuery(cellId).css(CSS_BACKGROUND_PROPERTY, borderPropertyValue);
+        return (isColumnValid && isRowValid && isSquareValid);
     }
 
     public isDuplicatedNumberInCurrentRow(grid: PuzzleItem[][], rowIndex: number, columnIndex: number): boolean {
@@ -107,9 +95,9 @@ export class GridManagerService {
 
                 if (puzzle._puzzle[row][column]._hide) {
                     puzzle._puzzle[row][column]._value = null;
+                    puzzle._puzzle[row][column]._isRed = false;
                     this._cellsToBeCompleted++;
                 }
-                this.updateCurrentCellFormat(row, column, true);
             }
         }
     }
@@ -123,12 +111,8 @@ export class GridManagerService {
         else if (rowIndex >= SUDOKU_LENGTH || colIndex >= SUDOKU_LENGTH) {
             throw new Error("A row or a column index cannot be greater than (8)");
         }
-        // Get the id of the current input id and delete it value
-        let inputId = [CELL_ID_PREFIX, rowIndex, colIndex].join('');
 
-        jQuery(inputId).val("");
-        jQuery(inputId).css("background-color", "");
-
+        puzzle._puzzle[rowIndex][colIndex]._isRed = false;
         puzzle._puzzle[rowIndex][colIndex]._value = null;
         this._cellsToBeCompleted++;
     }

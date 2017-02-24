@@ -2,7 +2,7 @@
 import {
     fakeAsync,
     inject,
-    TestBed
+    TestBed, async
 } from '@angular/core/testing';
 
 import { assert } from 'chai';
@@ -12,14 +12,14 @@ import { PuzzleCommon } from '../commons/puzzle-common';
 
 describe('PuzzleEventManagerService', () => {
 
-    beforeEach(async () => {
+    beforeEach(async (() => {
         TestBed.configureTestingModule({
             providers: [
                 PuzzleEventManagerService,
                 GridManagerService
             ]
         });
-    });
+    }));
 
     it("isDeleteKey, Should return false",
         inject([PuzzleEventManagerService],
@@ -95,11 +95,11 @@ describe('PuzzleEventManagerService', () => {
     it("updateFocus, correctly change focus",
         inject([PuzzleEventManagerService],
             fakeAsync((eventManagerService: PuzzleEventManagerService) => {
-                let currentPosition = ["1","1"];
-                eventManagerService.updateFocus(currentPosition,"ArrowLeft");
-                eventManagerService.updateFocus(currentPosition,"ArrowRight");
-                eventManagerService.updateFocus(currentPosition,"ArrowUp");
-                eventManagerService.updateFocus(currentPosition,"ArrowDown");
+                let currentPosition = ["1", "1"];
+                eventManagerService.updateFocus(currentPosition, "ArrowLeft");
+                eventManagerService.updateFocus(currentPosition, "ArrowRight");
+                eventManagerService.updateFocus(currentPosition, "ArrowUp");
+                eventManagerService.updateFocus(currentPosition, "ArrowDown");
             }))
     );
 });

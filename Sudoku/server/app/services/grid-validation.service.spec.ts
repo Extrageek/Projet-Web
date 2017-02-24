@@ -1,9 +1,111 @@
-import { assert, expect } from 'chai';
+import { expect } from 'chai';
 
 import { GridValidationManager } from './grid-validation.service';
 import { Puzzle, PuzzleItem } from './../models/puzzle';
 
 let gridValidationManager = new GridValidationManager();
+
+
+
+const GRID_VALID = [
+    [
+        new PuzzleItem(4, true), new PuzzleItem(1, true), new PuzzleItem(5, true),
+        new PuzzleItem(6, true), new PuzzleItem(3, false), new PuzzleItem(8, true),
+        new PuzzleItem(9, true), new PuzzleItem(7, true), new PuzzleItem(2, false)
+    ],
+    [
+        new PuzzleItem(3, true), new PuzzleItem(6, false), new PuzzleItem(2, false),
+        new PuzzleItem(4, false), new PuzzleItem(7, true), new PuzzleItem(9, true),
+        new PuzzleItem(1, true), new PuzzleItem(8, false), new PuzzleItem(5, true)
+    ],
+    [
+        new PuzzleItem(7, false), new PuzzleItem(8, true), new PuzzleItem(9, true),
+        new PuzzleItem(2, false), new PuzzleItem(1, true), new PuzzleItem(5, false),
+        new PuzzleItem(3, true), new PuzzleItem(6, true), new PuzzleItem(4, true)
+    ],
+    [
+        new PuzzleItem(9, true), new PuzzleItem(2, true), new PuzzleItem(6, false),
+        new PuzzleItem(3, true), new PuzzleItem(4, true), new PuzzleItem(1, true),
+        new PuzzleItem(7, true), new PuzzleItem(5, true), new PuzzleItem(8, false)
+    ],
+    [
+        new PuzzleItem(1, true), new PuzzleItem(3, true), new PuzzleItem(8, true),
+        new PuzzleItem(7, true), new PuzzleItem(5, true), new PuzzleItem(6, true),
+        new PuzzleItem(4, true), new PuzzleItem(2, true), new PuzzleItem(9, true)
+    ],
+    [
+        new PuzzleItem(5, true), new PuzzleItem(7, false), new PuzzleItem(4, true),
+        new PuzzleItem(9, true), new PuzzleItem(8, true), new PuzzleItem(2, true),
+        new PuzzleItem(6, true), new PuzzleItem(3, false), new PuzzleItem(1, true)
+    ],
+    [
+        new PuzzleItem(2, false), new PuzzleItem(5, true), new PuzzleItem(7, true),
+        new PuzzleItem(1, false), new PuzzleItem(6, true), new PuzzleItem(4, false),
+        new PuzzleItem(8, false), new PuzzleItem(9, true), new PuzzleItem(3, true)
+    ],
+    [
+        new PuzzleItem(8, true), new PuzzleItem(4, true), new PuzzleItem(3, true),
+        new PuzzleItem(5, false), new PuzzleItem(9, true), new PuzzleItem(7, true),
+        new PuzzleItem(2, true), new PuzzleItem(1, true), new PuzzleItem(6, true)
+    ],
+    [
+        new PuzzleItem(6, true), new PuzzleItem(9, true), new PuzzleItem(1, true),
+        new PuzzleItem(8, false), new PuzzleItem(2, false), new PuzzleItem(3, true),
+        new PuzzleItem(5, true), new PuzzleItem(4, true), new PuzzleItem(7, false)
+    ]
+];
+
+// ERROR on the first row (two 4 : column 0 and 1)
+// ERROR on the first column (two 4 : row 0 and 3)
+// ERROR on the first square (two 4 : pos 00 and 01)
+const GRID_NOT_VALID = [
+    [
+        new PuzzleItem(4, true), new PuzzleItem(4, true), new PuzzleItem(5, true),
+        new PuzzleItem(6, true), new PuzzleItem(3, false), new PuzzleItem(8, true),
+        new PuzzleItem(9, true), new PuzzleItem(7, true), new PuzzleItem(2, false)
+    ],
+    [
+        new PuzzleItem(3, true), new PuzzleItem(6, false), new PuzzleItem(2, false),
+        new PuzzleItem(4, false), new PuzzleItem(7, true), new PuzzleItem(9, true),
+        new PuzzleItem(1, true), new PuzzleItem(8, false), new PuzzleItem(5, true)
+    ],
+    [
+        new PuzzleItem(7, false), new PuzzleItem(8, true), new PuzzleItem(9, true),
+        new PuzzleItem(2, false), new PuzzleItem(1, true), new PuzzleItem(5, false),
+        new PuzzleItem(3, true), new PuzzleItem(6, true), new PuzzleItem(4, true)
+    ],
+    [
+        new PuzzleItem(4, true), new PuzzleItem(2, true), new PuzzleItem(6, false),
+        new PuzzleItem(3, true), new PuzzleItem(4, true), new PuzzleItem(1, true),
+        new PuzzleItem(7, true), new PuzzleItem(5, true), new PuzzleItem(8, false)
+    ],
+    [
+        new PuzzleItem(1, true), new PuzzleItem(3, true), new PuzzleItem(8, true),
+        new PuzzleItem(7, true), new PuzzleItem(5, true), new PuzzleItem(6, true),
+        new PuzzleItem(4, true), new PuzzleItem(2, true), new PuzzleItem(9, true)
+    ],
+    [
+        new PuzzleItem(5, true), new PuzzleItem(7, false), new PuzzleItem(4, true),
+        new PuzzleItem(9, true), new PuzzleItem(8, true), new PuzzleItem(2, true),
+        new PuzzleItem(6, true), new PuzzleItem(3, false), new PuzzleItem(1, true)
+    ],
+    [
+        new PuzzleItem(2, false), new PuzzleItem(5, true), new PuzzleItem(7, true),
+        new PuzzleItem(1, false), new PuzzleItem(6, true), new PuzzleItem(4, false),
+        new PuzzleItem(8, false), new PuzzleItem(9, true), new PuzzleItem(3, true)
+    ],
+    [
+        new PuzzleItem(8, true), new PuzzleItem(4, true), new PuzzleItem(3, true),
+        new PuzzleItem(5, false), new PuzzleItem(9, true), new PuzzleItem(7, true),
+        new PuzzleItem(2, true), new PuzzleItem(1, true), new PuzzleItem(6, true)
+    ],
+    [
+        new PuzzleItem(6, true), new PuzzleItem(9, true), new PuzzleItem(1, true),
+        new PuzzleItem(8, false), new PuzzleItem(2, false), new PuzzleItem(3, true),
+        new PuzzleItem(5, true), new PuzzleItem(4, true), new PuzzleItem(7, false)
+    ]
+];
+
 
 describe('Grid Validation Manager', () => {
     it("isRowValid, Should return false because of a null value",
@@ -128,103 +230,3 @@ describe('Grid Validation Manager', () => {
         }
     );
 });
-
-
-const GRID_VALID = [
-    [
-        new PuzzleItem(4, true), new PuzzleItem(1, true), new PuzzleItem(5, true),
-        new PuzzleItem(6, true), new PuzzleItem(3, false), new PuzzleItem(8, true),
-        new PuzzleItem(9, true), new PuzzleItem(7, true), new PuzzleItem(2, false)
-    ],
-    [
-        new PuzzleItem(3, true), new PuzzleItem(6, false), new PuzzleItem(2, false),
-        new PuzzleItem(4, false), new PuzzleItem(7, true), new PuzzleItem(9, true),
-        new PuzzleItem(1, true), new PuzzleItem(8, false), new PuzzleItem(5, true)
-    ],
-    [
-        new PuzzleItem(7, false), new PuzzleItem(8, true), new PuzzleItem(9, true),
-        new PuzzleItem(2, false), new PuzzleItem(1, true), new PuzzleItem(5, false),
-        new PuzzleItem(3, true), new PuzzleItem(6, true), new PuzzleItem(4, true)
-    ],
-    [
-        new PuzzleItem(9, true), new PuzzleItem(2, true), new PuzzleItem(6, false),
-        new PuzzleItem(3, true), new PuzzleItem(4, true), new PuzzleItem(1, true),
-        new PuzzleItem(7, true), new PuzzleItem(5, true), new PuzzleItem(8, false)
-    ],
-    [
-        new PuzzleItem(1, true), new PuzzleItem(3, true), new PuzzleItem(8, true),
-        new PuzzleItem(7, true), new PuzzleItem(5, true), new PuzzleItem(6, true),
-        new PuzzleItem(4, true), new PuzzleItem(2, true), new PuzzleItem(9, true)
-    ],
-    [
-        new PuzzleItem(5, true), new PuzzleItem(7, false), new PuzzleItem(4, true),
-        new PuzzleItem(9, true), new PuzzleItem(8, true), new PuzzleItem(2, true),
-        new PuzzleItem(6, true), new PuzzleItem(3, false), new PuzzleItem(1, true)
-    ],
-    [
-        new PuzzleItem(2, false), new PuzzleItem(5, true), new PuzzleItem(7, true),
-        new PuzzleItem(1, false), new PuzzleItem(6, true), new PuzzleItem(4, false),
-        new PuzzleItem(8, false), new PuzzleItem(9, true), new PuzzleItem(3, true)
-    ],
-    [
-        new PuzzleItem(8, true), new PuzzleItem(4, true), new PuzzleItem(3, true),
-        new PuzzleItem(5, false), new PuzzleItem(9, true), new PuzzleItem(7, true),
-        new PuzzleItem(2, true), new PuzzleItem(1, true), new PuzzleItem(6, true)
-    ],
-    [
-        new PuzzleItem(6, true), new PuzzleItem(9, true), new PuzzleItem(1, true),
-        new PuzzleItem(8, false), new PuzzleItem(2, false), new PuzzleItem(3, true),
-        new PuzzleItem(5, true), new PuzzleItem(4, true), new PuzzleItem(7, false)
-    ]
-];
-
-// ERROR on the first row (two 4 : column 0 and 1)
-// ERROR on the first column (two 4 : row 0 and 3)
-// ERROR on the first square (two 4 : pos 00 and 01)
-const GRID_NOT_VALID = [
-    [
-        new PuzzleItem(4, true), new PuzzleItem(4, true), new PuzzleItem(5, true),
-        new PuzzleItem(6, true), new PuzzleItem(3, false), new PuzzleItem(8, true),
-        new PuzzleItem(9, true), new PuzzleItem(7, true), new PuzzleItem(2, false)
-    ],
-    [
-        new PuzzleItem(3, true), new PuzzleItem(6, false), new PuzzleItem(2, false),
-        new PuzzleItem(4, false), new PuzzleItem(7, true), new PuzzleItem(9, true),
-        new PuzzleItem(1, true), new PuzzleItem(8, false), new PuzzleItem(5, true)
-    ],
-    [
-        new PuzzleItem(7, false), new PuzzleItem(8, true), new PuzzleItem(9, true),
-        new PuzzleItem(2, false), new PuzzleItem(1, true), new PuzzleItem(5, false),
-        new PuzzleItem(3, true), new PuzzleItem(6, true), new PuzzleItem(4, true)
-    ],
-    [
-        new PuzzleItem(4, true), new PuzzleItem(2, true), new PuzzleItem(6, false),
-        new PuzzleItem(3, true), new PuzzleItem(4, true), new PuzzleItem(1, true),
-        new PuzzleItem(7, true), new PuzzleItem(5, true), new PuzzleItem(8, false)
-    ],
-    [
-        new PuzzleItem(1, true), new PuzzleItem(3, true), new PuzzleItem(8, true),
-        new PuzzleItem(7, true), new PuzzleItem(5, true), new PuzzleItem(6, true),
-        new PuzzleItem(4, true), new PuzzleItem(2, true), new PuzzleItem(9, true)
-    ],
-    [
-        new PuzzleItem(5, true), new PuzzleItem(7, false), new PuzzleItem(4, true),
-        new PuzzleItem(9, true), new PuzzleItem(8, true), new PuzzleItem(2, true),
-        new PuzzleItem(6, true), new PuzzleItem(3, false), new PuzzleItem(1, true)
-    ],
-    [
-        new PuzzleItem(2, false), new PuzzleItem(5, true), new PuzzleItem(7, true),
-        new PuzzleItem(1, false), new PuzzleItem(6, true), new PuzzleItem(4, false),
-        new PuzzleItem(8, false), new PuzzleItem(9, true), new PuzzleItem(3, true)
-    ],
-    [
-        new PuzzleItem(8, true), new PuzzleItem(4, true), new PuzzleItem(3, true),
-        new PuzzleItem(5, false), new PuzzleItem(9, true), new PuzzleItem(7, true),
-        new PuzzleItem(2, true), new PuzzleItem(1, true), new PuzzleItem(6, true)
-    ],
-    [
-        new PuzzleItem(6, true), new PuzzleItem(9, true), new PuzzleItem(1, true),
-        new PuzzleItem(8, false), new PuzzleItem(2, false), new PuzzleItem(3, true),
-        new PuzzleItem(5, true), new PuzzleItem(4, true), new PuzzleItem(7, false)
-    ]
-];

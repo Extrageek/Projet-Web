@@ -30,14 +30,14 @@ describe("Records tests", () => {
         record.time = time1;
 
         expect(record.time.seconds).to.not.equal(10, "did not change the time");
-        expect(record.time.seconds).to.equal(15, "did not correctly set the time")
+        expect(record.time.seconds).to.equal(15, "did not correctly set the time");
     });
 
     it("should set the username of a record object", () => {
         record = new Record("Clooney", difficulty, time);
         record.username = "Benedict";
         expect(record.username).to.not.equal("Clooney", "did not change the username");
-        expect(record.username).to.equal("Benedict", "did not correctly set the username")
+        expect(record.username).to.equal("Benedict", "did not correctly set the username");
     });
 
     it("should set the difficulty of a record object", () => {

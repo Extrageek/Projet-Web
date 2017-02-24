@@ -8,10 +8,12 @@
 export class PuzzleItem {
     _value: number;
     _hide: boolean;
+    _isRed: boolean;
 
     constructor(value: number, hide: boolean) {
         this._value = value;
         this._hide = hide;
+        this._isRed = false;
     }
 
     get isHidden(): boolean {
@@ -147,7 +149,7 @@ export class Puzzle {
         this._puzzle = puzzleSeed;
     }
 
-    /// For future use : 
+    /// For future use :
     // isValidSquare3b3(firstRow: number, firstColumn: number): boolean {
     //     let contained: number[];
     //     for (let i = 0; i < 3; ++i) {
