@@ -5,11 +5,11 @@ import { ScrabbleLetter } from '../../models/letter/scrabble-letter';
 declare var jQuery: any;
 
 export const INPUT_ID_PREFIX = '#easelCell_';
-const MIN_POSITION_INDEX = 0;
-const MAX_POSITION_INDEX = 6;
-const CSS_BORDER = 'border';
-const CSS_BOX_SHADOW = 'box-shadow';
-const CSS_OUT_LINE = 'out-line';
+export const MIN_POSITION_INDEX = 0;
+export const MAX_POSITION_INDEX = 6;
+export const CSS_BORDER = 'border';
+export const CSS_BOX_SHADOW = 'box-shadow';
+export const CSS_OUT_LINE = 'out-line';
 
 const EASEL_INIT_ELEMENT_CSS = {
     'border': '1px solid #000',
@@ -31,11 +31,25 @@ export class EaselManagerService {
     }
 
     public isDirection(keyCode: number): boolean {
-        return 37 === keyCode || keyCode === 39;
+        return EaselControl.leftArrowKeyCode === keyCode
+            || keyCode === EaselControl.rightArrowKeyCode;
     }
 
     public isScrabbleLetter(keyCode: number): boolean {
         return EaselControl.letterAKeyCode <= keyCode && keyCode <= EaselControl.letterZKeyCode;
+    }
+
+    public isScrabbleLetters(enteredLetters: Array<string>): boolean {
+        let notScrabbleLetters = new Array<string>();
+
+        if (enteredLetters.length === 0) {
+            return false;
+        }
+
+        notScrabbleLetters = enteredLetters.filter((value) => {
+            return !this.isScrabbleLetter(value.charCodeAt(0));
+        });
+        return (notScrabbleLetters.length === 0);
     }
 
     public isTabKey(keyCode: number): boolean {
@@ -97,9 +111,10 @@ export class EaselManagerService {
         }
     }
 
-    public getStringListofChar(texte: string): Array<string> {
+    public parseStringToListofChar(texte: string): Array<string> {
 
-        if (texte === null) {
+        if (texte === null
+            || texte === undefined) {
             throw new Error("Null argument error: The parameter cannot be null");
         }
         let listOfChar = new Array<string>();
@@ -107,5 +122,50 @@ export class EaselManagerService {
             listOfChar.push(texte[index].toUpperCase());
         }
         return listOfChar;
+    }
+
+    public parseScrabbleLettersToListofChar(scrabbleLetters: Array<ScrabbleLetter>): Array<string> {
+
+        if (scrabbleLetters === null) {
+            throw new Error("Null argument error: The parameter cannot be null");
+        }
+        let listOfChar = new Array<string>();
+        for (let index = 0; index < scrabbleLetters.length; ++index) {
+            listOfChar.push(scrabbleLetters[index].letter.toUpperCase());
+        }
+        return listOfChar;
+    }
+
+    public getScrabbleWordFromTheEasel(easelLetters: Array<ScrabbleLetter>, enteredLetters: Array<string>): Array<ScrabbleLetter> {
+        if (enteredLetters === null
+            || easelLetters === null) {
+            throw new Error("Null argument error: The parameter cannot be null");
+        }
+
+        let words = new Array<ScrabbleLetter>();
+        let tempEaselLetters = new Array<string>();
+
+        easelLetters.forEach((letter) => {
+            tempEaselLetters.push(letter.letter);
+        });
+
+        // Since the char '*' should be recognize has the blank letter,
+        // We have to check if the input list is not a '*' because the easel does not contains a '*' char.
+        for (let index = 0; index < enteredLetters.length; ++index) {
+            let letterIndex = tempEaselLetters.findIndex((letter) => {
+                return letter === enteredLetters[index]
+                    || enteredLetters[index] === '*'
+            });
+
+            console.log("Easel manager", letterIndex);
+
+            if (letterIndex !== -1) {
+                words.push(easelLetters[letterIndex]);
+                tempEaselLetters[letterIndex] = null;
+            }
+        }
+
+        words = (words.length === enteredLetters.length) ? words : null;
+        return words;
     }
 }

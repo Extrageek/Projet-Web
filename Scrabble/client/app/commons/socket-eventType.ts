@@ -26,9 +26,7 @@ export class SocketEventType {
 
     // A ready state event for a room.
     static roomReady = "roomReady";
-
     static message = "message";
-
     static playerLeftRoom = "playerLeftRoom";
 
     //Message sent by the server if the name already exists

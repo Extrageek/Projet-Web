@@ -64,10 +64,6 @@ export class GameComponent implements OnInit, OnDestroy {
 
         this.socketService.subscribeToChannelEvent(SocketEventType.roomReady)
             .subscribe(this.onRoomReady);
-
-        // this.socketService.subscribeToChannelEvent(SocketEventType.changeLettersRequest)
-        //     .subscribe(this.onChangedLettersReceived);
-
     }
 
     ngOnDestroy() {
@@ -115,16 +111,20 @@ export class GameComponent implements OnInit, OnDestroy {
         let commandType = this.commandsService.getInputCommandType(this._inputMessage);
 
         if (commandType === CommandType.InvalidCmd) {
+            console.log("Custom message: Invalid");
+
             this.socketService.emitMessage(SocketEventType.commandRequest,
                 { commandStatus: CommandStatus.Invalid, data: this._inputMessage });
 
             this._inputMessage = '';
-            console.log("Custom message: Invalid");
+
+        } else {
+            this.executeCommand(commandType, request);
         }
 
-        this.executeCommand(commandType, request);
     }
 
+    // Use to execute a custom event according to the command entered by the player
     private executeCommand(commandType: CommandType, requestValue: string) {
         try {
             switch (commandType) {
@@ -136,7 +136,7 @@ export class GameComponent implements OnInit, OnDestroy {
                     this._inputMessage = '';
                     break;
                 case CommandType.PlaceCmd:
-                    //TODO:
+                    this.executePlaceWordCommand(commandType, requestValue);
                     this._inputMessage = '';
                     break;
                 case CommandType.PassCmd:
@@ -173,7 +173,7 @@ export class GameComponent implements OnInit, OnDestroy {
         }
 
         let request = requestValue.split(EXCHANGE_COMMAND)[1].trim();
-        let listOfLettersToChange = this.easelManagerService.getStringListofChar(request);
+        let listOfLettersToChange = this.easelManagerService.parseStringToListofChar(request);
 
         let exchangeRequest = this.commandsService
             .createExchangeEaselLettersRequest(this._childEasel.letters, listOfLettersToChange);
@@ -200,6 +200,43 @@ export class GameComponent implements OnInit, OnDestroy {
 
             this._inputMessage = '';
             console.log("Custom message: SyntaxError");
+        }
+    }
+
+    private executePlaceWordCommand(commandType: CommandType, requestValue: string) {
+        if (requestValue === null) {
+            throw new Error("Null argument error: The parameter cannot be null");
+        }
+
+        let request = requestValue.split(PLACE_COMMAND)[1].trim();
+
+        //console.log("Command request:", request);
+        let placeWordRequest = this.commandsService
+            .createPlaceWordRequest(this._childEasel.letters, request);
+
+        //console.log("place word request:", placeWordRequest);
+        if (placeWordRequest._commandStatus === CommandStatus.Ok) {
+            let listOfLettersToPlace = this.easelManagerService
+                .parseScrabbleLettersToListofChar(placeWordRequest._response);
+
+            //console.log("list of letters to place", listOfLettersToPlace);
+            this.socketService.emitMessage(SocketEventType.commandRequest,
+                { commandType: commandType, commandStatus: CommandStatus.Ok, data: request });
+            this._inputMessage = '';
+            // console.log("Ok");
+
+        } else if (placeWordRequest._commandStatus === CommandStatus.NotAllowed) {
+            this.socketService.emitMessage(
+                SocketEventType.commandRequest,
+                { commandType: commandType, commandStatus: CommandStatus.NotAllowed, data: requestValue });
+            this._inputMessage = '';
+            // console.log("Custom message: NotAllowed");
+
+        } else if (placeWordRequest._commandStatus === CommandStatus.SynthaxeError) {
+            this.socketService.emitMessage(SocketEventType.commandRequest,
+                { commandType: commandType, commandStatus: CommandStatus.SynthaxeError, data: requestValue });
+            this._inputMessage = '';
+            // console.log("Custom message: SyntaxError");
         }
     }
 
