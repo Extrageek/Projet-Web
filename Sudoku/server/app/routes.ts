@@ -2,6 +2,8 @@ import * as express from 'express';
 
 import * as GridGenerationService from './services/grid-generation.service';
 import * as GridValidationService from './services/grid-validation.service';
+import { Puzzle } from "./models/puzzle";
+import { Difficulty } from "./services/grid-generation.service"
 import { DatabaseManager } from './database-management';
 
 module Route {
@@ -40,10 +42,14 @@ module Route {
         public getNewPuzzle(req: express.Request, res: express.Response, next: express.NextFunction) {
             // Get a new puzzle from the PuzzleManger service.
             let difficulty = req.params.difficulty;
+            if (difficulty == undefined) {
+                difficulty = Difficulty.NORMAL;
+            }
             let gridManager = new GridGenerationService.GridGenerationManager();
-            let newPuzzle = gridManager.getNewPuzzle(difficulty);
-
-            res.send(newPuzzle);
+            gridManager.getNewPuzzle(difficulty)
+                .then((newPuzzle: Puzzle) => {
+                    res.send(newPuzzle);
+                });
         }
 
         public async addUser(request: express.Request, response: express.Response, next: express.NextFunction) {

@@ -19,23 +19,41 @@ function getRandomInRange(min: number, max: number) {
 module GridGenerationService {
 
     export enum Difficulty {
-        NORMAL,
-        HARD
+        NORMAL = 0,
+        HARD = 1,
+        NUMBER_OF_DIFFICULTIES = 2
     }
 
     export class GridGenerationManager {
-        // UNUSED FOR NOW
-        // private _easySudoku: Array<Puzzle>;
-        // private _hardSudoku: Array<Puzzle>;
+
+        private static MILLISECONDS_TO_WAIT = 5000;
+
+        private _sudokuGenerated: Array<Array<Puzzle>>;
 
         constructor() {
-            //
+            this._sudokuGenerated = new Array<Array<Puzzle>>();
+            for (let i = 0; i < Difficulty.NUMBER_OF_DIFFICULTIES; ++i) {
+                this._sudokuGenerated.push(new Array<Puzzle>());
+            }
         }
 
-        public getNewPuzzle(difficulty: Difficulty): Puzzle {
-            //this._easySudoku.push(this.generateNewPuzzle());
-            //return this._easySudoku.pop();
-            return this.generateNewPuzzle(difficulty);
+        public getNewPuzzle(difficulty: Difficulty): Promise<Puzzle> {
+            return new Promise((resolve, reject) => {
+                if (this._sudokuGenerated[difficulty].length !== 0) {
+                    let sudokuGenerated = this._sudokuGenerated[difficulty].pop();
+                    //Launch a new sudoku generation after the sudokuGenerated is returned.
+                    resolve(sudokuGenerated);
+                    setTimeout(this._sudokuGenerated[difficulty].push(this.generateNewPuzzle(difficulty)), 0);
+                }
+                else {
+                    //Generate a new puzzle and wait until 5 seconds is elapsed to return the sudoku generated.
+                    let time = Date.now();
+                    let sudokuGenerated = this.generateNewPuzzle(difficulty);
+                    let intervalOfTimeForGeneration = Date.now() - time;
+                    let waitTime = (GridGenerationManager.MILLISECONDS_TO_WAIT - intervalOfTimeForGeneration)
+                    setTimeout(resolve.bind(resolve, sudokuGenerated), waitTime > 0 ? waitTime : 0);
+                }
+            });
         }
 
         /**
@@ -77,9 +95,6 @@ module GridGenerationService {
 
                 // Vertical Symmetry
                 newPuzzle.verticalSymmetry();
-            }
-            while (new Date().getTime() / 1000 < endTime) {
-                // Wait until five seconds
             }
             return this.createPuzzleHoles(newPuzzle);
         }
