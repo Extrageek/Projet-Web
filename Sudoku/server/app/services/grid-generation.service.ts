@@ -7,13 +7,9 @@
 
 import { Puzzle } from './../models/puzzle';
 
-const NOMBRE_ITERATION = 1;
-
 // Used to generate the type of transformation and to give a number of holes to dig in sudoku
-function getRandomInRange(min: number, max: number) {
-    return function (): number {
-        return Math.floor((Math.random() / Math.random() / Math.random()) % (max - min)) + min;
-    };
+function getRandomNumberInRange(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 module GridGenerationService {
@@ -27,7 +23,9 @@ module GridGenerationService {
     export class GridGenerationManager {
 
         private static readonly MILLISECONDS_TO_WAIT = 5000;
-        public static readonly NUMBER_OF_SUDOKUS_TO_GENERATE = 3;
+        private static readonly NUMBER_OF_SUDOKUS_TO_GENERATE = 3;
+        private static readonly NOMBRE_ITERATIONS_MIN = 1;
+        private static readonly NOMBRE_ITERATIONS_MAX = 200;
 
         private _sudokusGenerated: Array<Array<Puzzle>>;
 
@@ -85,58 +83,53 @@ module GridGenerationService {
          * @return newPuzzle
          */
         private generateNewPuzzle(difficulty?: Difficulty) {
-            let getRandomSudoku = getRandomInRange(1, 9);
             let newPuzzle: Puzzle = new Puzzle();
-            let deltaIteration: number = Math.round(NOMBRE_ITERATION * Math.random());
+            let nbIterations: number = getRandomNumberInRange(
+                GridGenerationManager.NOMBRE_ITERATIONS_MIN, GridGenerationManager.NOMBRE_ITERATIONS_MAX);
 
-            for (let it = 0; it < NOMBRE_ITERATION + deltaIteration; ++it) {
-                // Rows swapping
-                let rowA: number;
-                let rowB: number;
-                do {
-                    rowA = getRandomSudoku() - 1;
-                    rowB = getRandomSudoku() - 1;
-                } while (rowA === rowB || Math.floor(rowA / 3) * 3 !== Math.floor(rowB / 3) * 3);
-                // While the rows aren't in the same square (3x3) or while the rows are equal
-                newPuzzle.swapRow(rowA, rowB);
+            let operations = [
+                (puzzle: Puzzle) => {
+                    let [rowA, rowB] = this.numberGeneratorForSwaping();
+                    newPuzzle.swapRow(rowA, rowB);
+                },
 
-                // Column swapping
-                let columnA: number;
-                let columnB: number;
-                do {
-                    columnA = getRandomSudoku() - 1;
-                    columnB = getRandomSudoku() - 1;
-                } while (columnA === columnB || Math.floor(columnA / 3) * 3 !== Math.floor(columnB / 3) * 3);
-                // While the columns aren't in the same square (3x3) or while the columns are equal
-                newPuzzle.swapColumn(columnA, columnB);
+                (puzzle: Puzzle) => {
+                    let [columnA, columnB] = this.numberGeneratorForSwaping();
+                    newPuzzle.swapColumn(columnA, columnB);
+                },
 
-                // Horizontal Symmetry
-                newPuzzle.horizontalSymmetry();
+                (puzzle: Puzzle) => {
+                    newPuzzle.horizontalSymmetry();
+                },
 
-                // Vertical Symmetry
-                newPuzzle.verticalSymmetry();
+                (puzzle: Puzzle) => {
+                    newPuzzle.verticalSymmetry();
+                }
+            ];
+
+            for (let i = 0; i < nbIterations; ++i) {
+                let operationNumberToDo = getRandomNumberInRange(0, operations.length - 1);
+                operations[operationNumberToDo](newPuzzle);
             }
-            return this.createPuzzleHoles(newPuzzle);
+            newPuzzle.createPuzzleHoles();
+            return newPuzzle;
         }
 
-        /**
-         * The extractNewPuzzle function, extract the new puzzle without the solution.
-         *
-         * @class PuzzleManagerService
-         * @method createPuzzleHoles
-         * @return Puzzle
-         */
-        public createPuzzleHoles(puzzle: Puzzle) {
-
-            if (puzzle === null) {
-                throw new Error("The parameter cannot be null");
-            }
-            puzzle._puzzle.forEach((puzzleItems) => {
-                puzzleItems.forEach((puzzleItem) => {
-                    puzzleItem._value = (puzzleItem._hide) ? null : puzzleItem._value;
-                });
-            });
-            return puzzle;
+        //Generate 2 numbers. The first and the second numbers are one of the following :
+        //Between 0 and 2 and cannot be equals.
+        //Between 3 and 5 and cannot be equals.
+        //Between 6 and 8 and cannot be equals.
+        //They specifie the columns or rows of the same square to be changed.
+        private numberGeneratorForSwaping(): Array<number> {
+            let rowNumbers = [-1, -1];
+            let squareNumber: number;
+            rowNumbers[0] = getRandomNumberInRange(Puzzle.MIN_COLUMN_SIZE, Puzzle.SQUARE_LENGTH) - 1;
+            rowNumbers[1] = (rowNumbers[0] + getRandomNumberInRange(Puzzle.MIN_COLUMN_SIZE, Puzzle.SQUARE_LENGTH - 1))
+                % Puzzle.SQUARE_LENGTH;
+            squareNumber = getRandomNumberInRange(Puzzle.MIN_COLUMN_SIZE, Puzzle.SQUARE_LENGTH) - 1;
+            rowNumbers[0] = rowNumbers[0] + squareNumber * Puzzle.SQUARE_LENGTH;
+            rowNumbers[1] = rowNumbers[1] + squareNumber * Puzzle.SQUARE_LENGTH;
+            return rowNumbers;
         }
     }
 }

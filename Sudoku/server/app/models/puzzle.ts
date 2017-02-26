@@ -6,9 +6,9 @@
  */
 
 export class PuzzleItem {
-    _value: number;
-    _hide: boolean;
-    _isRed: boolean;
+    private _value: number;
+    private _hide: boolean;
+    private _isRed: boolean;
 
     constructor(value: number, hide: boolean) {
         this._value = value;
@@ -18,6 +18,18 @@ export class PuzzleItem {
 
     get isHidden(): boolean {
         return this._hide;
+    }
+
+    set isHidden(hidden: boolean) {
+        this._hide = hidden;
+    }
+
+    get value(): number {
+        return this._value;
+    }
+
+    set value(value: number) {
+        this._value = value;
     }
 
     public swap(other: PuzzleItem) {
@@ -135,15 +147,18 @@ export const puzzleSeed = [
 // 843597216
 // 691823547
 
-const MAX_ROW_SIZE = 9;
-const MAX_COLUMN_SIZE = 9;
-
-const MID_ROW_INDEX = Math.floor(MAX_ROW_SIZE / 2);
-const MID_COLUMN_INDEX = Math.floor(MAX_COLUMN_SIZE / 2);
-
 
 export class Puzzle {
-    _puzzle: Array<Array<PuzzleItem>>;
+
+    public static readonly MAX_ROW_SIZE = 9;
+    public static readonly MAX_COLUMN_SIZE = 9;
+    public static readonly MID_ROW_INDEX = Math.floor(Puzzle.MAX_ROW_SIZE / 2);
+    public static readonly MID_COLUMN_INDEX = Math.floor(Puzzle.MAX_COLUMN_SIZE / 2);
+    public static readonly SQUARE_LENGTH = 3;
+    public static readonly MIN_ROW_SIZE = 1;
+    public static readonly MIN_COLUMN_SIZE = 1;
+
+    public _puzzle: Array<Array<PuzzleItem>>;
 
     constructor() {
         this._puzzle = puzzleSeed;
@@ -189,14 +204,23 @@ export class Puzzle {
     }
 
     public horizontalSymmetry() {
-        for (let i = 0; i < MID_COLUMN_INDEX; ++i) {
-            this.swapRow(i, MAX_COLUMN_SIZE - i - 1);
+        for (let i = 0; i < Puzzle.MID_COLUMN_INDEX; ++i) {
+            this.swapRow(i, Puzzle.MAX_COLUMN_SIZE - i - 1);
         }
     }
 
     public verticalSymmetry() {
-        for (let j = 0; j < MID_ROW_INDEX; ++j) {
-            this.swapColumn(j, MAX_ROW_SIZE - j - 1);
+        for (let j = 0; j < Puzzle.MID_ROW_INDEX; ++j) {
+            this.swapColumn(j, Puzzle.MAX_ROW_SIZE - j - 1);
         }
+    }
+
+    //Erase the PuzzleItem marked hidden.
+    public createPuzzleHoles() {
+        this._puzzle.forEach((puzzleItems) => {
+            puzzleItems.forEach((puzzleItem) => {
+                puzzleItem.value = (puzzleItem.isHidden) ? null : puzzleItem.value;
+            });
+        });
     }
 }

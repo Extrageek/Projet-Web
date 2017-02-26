@@ -111,7 +111,7 @@ describe('Grid Validation Manager', () => {
     it("isRowValid, Should return false because of a null value",
         () => {
             let puzzle = new Puzzle();
-            puzzle._puzzle[0][0]._value = null;
+            puzzle._puzzle[0][0].value = null;
             expect(gridValidationManager.isRowValid(puzzle._puzzle, 0)).to.be.false;
         }
     );
@@ -147,7 +147,7 @@ describe('Grid Validation Manager', () => {
     it("isColumnValid, Should return false because of a null value",
         () => {
             let puzzle = new Puzzle();
-            puzzle._puzzle[0][0]._value = null;
+            puzzle._puzzle[0][0].value = null;
             expect(gridValidationManager.isColumnValid(puzzle._puzzle, 0)).to.be.false;
         }
     );
@@ -183,7 +183,7 @@ describe('Grid Validation Manager', () => {
     it("isSquareValid, Should return false because of a null value",
         () => {
             let puzzle = new Puzzle();
-            puzzle._puzzle[0][0]._value = null;
+            puzzle._puzzle[0][0].value = null;
             expect(gridValidationManager.isSquareValid(puzzle._puzzle, 0, 0)).to.be.false;
         }
     );

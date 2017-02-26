@@ -1,44 +1,139 @@
-import { assert } from 'chai';
+import { expect } from "chai";
+import { Puzzle, PuzzleItem, puzzleSeed } from "./puzzle";
 
-import { Puzzle, PuzzleItem, puzzleSeed } from './puzzle';
+const GRID_FULL = [
+    [
+        new PuzzleItem(4, true), new PuzzleItem(1, true), new PuzzleItem(5, true),
+        new PuzzleItem(6, true), new PuzzleItem(3, false), new PuzzleItem(8, true),
+        new PuzzleItem(9, true), new PuzzleItem(7, true), new PuzzleItem(2, false)
+    ],
+    [
+        new PuzzleItem(3, true), new PuzzleItem(6, false), new PuzzleItem(2, false),
+        new PuzzleItem(4, false), new PuzzleItem(7, true), new PuzzleItem(9, true),
+        new PuzzleItem(1, true), new PuzzleItem(8, false), new PuzzleItem(5, true)
+    ],
+    [
+        new PuzzleItem(7, false), new PuzzleItem(8, true), new PuzzleItem(9, true),
+        new PuzzleItem(2, false), new PuzzleItem(1, true), new PuzzleItem(5, false),
+        new PuzzleItem(3, true), new PuzzleItem(6, true), new PuzzleItem(4, true)
+    ],
+    [
+        new PuzzleItem(9, true), new PuzzleItem(2, true), new PuzzleItem(6, false),
+        new PuzzleItem(3, true), new PuzzleItem(4, true), new PuzzleItem(1, true),
+        new PuzzleItem(7, true), new PuzzleItem(5, true), new PuzzleItem(8, false)
+    ],
+    [
+        new PuzzleItem(1, true), new PuzzleItem(3, true), new PuzzleItem(8, true),
+        new PuzzleItem(7, true), new PuzzleItem(5, true), new PuzzleItem(6, true),
+        new PuzzleItem(4, true), new PuzzleItem(2, true), new PuzzleItem(9, true)
+    ],
+    [
+        new PuzzleItem(5, true), new PuzzleItem(7, false), new PuzzleItem(4, true),
+        new PuzzleItem(9, true), new PuzzleItem(8, true), new PuzzleItem(2, true),
+        new PuzzleItem(6, true), new PuzzleItem(3, false), new PuzzleItem(1, true)
+    ],
+    [
+        new PuzzleItem(2, false), new PuzzleItem(5, true), new PuzzleItem(7, true),
+        new PuzzleItem(1, false), new PuzzleItem(6, true), new PuzzleItem(4, false),
+        new PuzzleItem(8, false), new PuzzleItem(9, true), new PuzzleItem(3, true)
+    ],
+    [
+        new PuzzleItem(8, true), new PuzzleItem(4, true), new PuzzleItem(3, true),
+        new PuzzleItem(5, false), new PuzzleItem(9, true), new PuzzleItem(7, true),
+        new PuzzleItem(2, true), new PuzzleItem(1, true), new PuzzleItem(6, true)
+    ],
+    [
+        new PuzzleItem(6, true), new PuzzleItem(9, true), new PuzzleItem(1, true),
+        new PuzzleItem(8, false), new PuzzleItem(2, false), new PuzzleItem(3, true),
+        new PuzzleItem(5, true), new PuzzleItem(4, true), new PuzzleItem(7, false)
+    ]
+];
 
-describe('PuzzleItem', () => {
-    it('should be hidden and contain 1', () => {
+const GRID_HOLES = [
+    [
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(null, true), new PuzzleItem(3, false), new PuzzleItem(null, true),
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(2, false)
+    ],
+    [
+        new PuzzleItem(null, true), new PuzzleItem(6, false), new PuzzleItem(2, false),
+        new PuzzleItem(4, false), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(null, true), new PuzzleItem(8, false), new PuzzleItem(null, true)
+    ],
+    [
+        new PuzzleItem(7, false), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(2, false), new PuzzleItem(null, true), new PuzzleItem(5, false),
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(null, true)
+    ],
+    [
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(6, false),
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(8, false)
+    ],
+    [
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(null, true)
+    ],
+    [
+        new PuzzleItem(null, true), new PuzzleItem(7, false), new PuzzleItem(null, true),
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(null, true), new PuzzleItem(3, false), new PuzzleItem(null, true)
+    ],
+    [
+        new PuzzleItem(2, false), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(1, false), new PuzzleItem(null, true), new PuzzleItem(4, false),
+        new PuzzleItem(8, false), new PuzzleItem(null, true), new PuzzleItem(null, true)
+    ],
+    [
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(5, false), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(null, true)
+    ],
+    [
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(null, true),
+        new PuzzleItem(8, false), new PuzzleItem(2, false), new PuzzleItem(null, true),
+        new PuzzleItem(null, true), new PuzzleItem(null, true), new PuzzleItem(7, false)
+    ]
+];
+
+describe("PuzzleItem should", () => {
+    it("be hidden and contain 1", () => {
         let item: PuzzleItem = new PuzzleItem(1, true);
-        assert(item.isHidden === true, "should be hidden");
-        assert(item._value === 1, "should contain 1");
+        expect(item.isHidden, "should be hidden").to.equals(true);
+        expect(item.value, "should contain 1").to.equals(1);
     });
 
-    it('should be shown and contain null', () => {
+    it("be shown and contain null", () => {
         let item: PuzzleItem = new PuzzleItem(null, false);
-        assert(item.isHidden === false, "should be shown");
-        assert(item._value === null, "should contain null");
+        expect(item.isHidden, "should be shown").to.equals(false);
+        expect(item.value, "should contain null").to.equals(null);
     });
 
-    it('should swap and swap back', () => {
+    it("swap and swap back", () => {
         let item1: PuzzleItem = new PuzzleItem(1, true);
         let item2: PuzzleItem = new PuzzleItem(2, false);
         item1.swap(item2);
-        assert(item1.isHidden === false, "should not be hidden");
-        assert(item1._value === 2, "should contain 2");
-        assert(item2.isHidden === true, "should be hidden");
-        assert(item2._value === 1, "should contain 1");
+        expect(item1.isHidden, "should not be hidden").to.equals(false);
+        expect(item1.value, "should contain 2").to.equals(2);
+        expect(item2.isHidden, "should be hidden").to.equals(true);
+        expect(item2.value, "should contain 1").to.equals(1);
         item1.swap(item2);
-        assert(item1.isHidden === true, "should be hidden");
-        assert(item1._value === 1, "should contain 1");
-        assert(item2.isHidden === false, "should not be hidden");
-        assert(item2._value === 2, "should contain 2");
+        expect(item1.isHidden, "should be hidden").to.equals(true);
+        expect(item1.value, "should contain 1").to.equals(1);
+        expect(item2.isHidden, "should not be hidden").to.equals(false);
+        expect(item2.value, "should contain 2").to.equals(2);
     });
 });
 
-describe('Puzzle', () => {
-    it('should initialize grid and contain puzzleSeed', () => {
+describe("Puzzle should", () => {
+    it("initialize grid and contain puzzleSeed", () => {
         let puzzle: Puzzle = new Puzzle();
-        assert(puzzle._puzzle === puzzleSeed, "should contain puzzleSeed");
+        expect(puzzle._puzzle, "should contain puzzleSeed").to.be.deep.equal(puzzleSeed);
     });
 
     // Puzzle operations
-    it('should swap column 0 with 1', () => {
+    it("swap column 0 with 1", () => {
         let puzzle: Puzzle = new Puzzle();
         puzzle._puzzle = [
             [
@@ -48,18 +143,18 @@ describe('Puzzle', () => {
                 new PuzzleItem(3, false), new PuzzleItem(4, true)
             ]
         ];
-        let cell00 = puzzle._puzzle[0][1]._value;
-        let cell01 = puzzle._puzzle[0][0]._value;
-        let cell10 = puzzle._puzzle[1][1]._value;
-        let cell11 = puzzle._puzzle[1][0]._value;
+        let cell00 = puzzle._puzzle[0][1].value;
+        let cell01 = puzzle._puzzle[0][0].value;
+        let cell10 = puzzle._puzzle[1][1].value;
+        let cell11 = puzzle._puzzle[1][0].value;
         puzzle.swapColumn(0, 1);
-        assert(puzzle._puzzle[0][0]._value === cell00, "should have swapped");
-        assert(puzzle._puzzle[0][1]._value === cell01, "should have swapped");
-        assert(puzzle._puzzle[1][0]._value === cell10, "should have swapped");
-        assert(puzzle._puzzle[1][1]._value === cell11, "should have swapped");
+        expect(puzzle._puzzle[0][0].value, "should have swapped").to.equals(cell00);
+        expect(puzzle._puzzle[0][1].value, "should have swapped").to.equals(cell01);
+        expect(puzzle._puzzle[1][0].value, "should have swapped").to.equals(cell10);
+        expect(puzzle._puzzle[1][1].value, "should have swapped").to.equals(cell11);
     });
 
-    it('should swap row 0 with 1', () => {
+    it("swap row 0 with 1", () => {
         let puzzle: Puzzle = new Puzzle();
         puzzle._puzzle = [
             [
@@ -70,18 +165,18 @@ describe('Puzzle', () => {
             ]
         ];
 
-        let cell00 = puzzle._puzzle[1][0]._value;
-        let cell01 = puzzle._puzzle[1][1]._value;
-        let cell10 = puzzle._puzzle[0][0]._value;
-        let cell11 = puzzle._puzzle[0][1]._value;
+        let cell00 = puzzle._puzzle[1][0].value;
+        let cell01 = puzzle._puzzle[1][1].value;
+        let cell10 = puzzle._puzzle[0][0].value;
+        let cell11 = puzzle._puzzle[0][1].value;
         puzzle.swapRow(0, 1);
-        assert(puzzle._puzzle[0][0]._value === cell00, "should have swapped");
-        assert(puzzle._puzzle[0][1]._value === cell01, "should have swapped");
-        assert(puzzle._puzzle[1][0]._value === cell10, "should have swapped");
-        assert(puzzle._puzzle[1][1]._value === cell11, "should have swapped");
+        expect(puzzle._puzzle[0][0].value, "should have swapped").to.equals(cell00);
+        expect(puzzle._puzzle[0][1].value, "should have swapped").to.equals(cell01);
+        expect(puzzle._puzzle[1][0].value, "should have swapped").to.equals(cell10);
+        expect(puzzle._puzzle[1][1].value, "should have swapped").to.equals(cell11);
     });
 
-    it('should invert puzzle on horizontal axis', () => {
+    it("invert puzzle on horizontal axis", () => {
         let puzzle: Puzzle = new Puzzle();
         puzzle._puzzle = [
             [
@@ -92,18 +187,18 @@ describe('Puzzle', () => {
             ]
         ];
 
-        let cell00 = puzzle._puzzle[1][0]._value;
-        let cell01 = puzzle._puzzle[1][1]._value;
-        let cell10 = puzzle._puzzle[0][0]._value;
-        let cell11 = puzzle._puzzle[0][1]._value;
+        let cell00 = puzzle._puzzle[1][0].value;
+        let cell01 = puzzle._puzzle[1][1].value;
+        let cell10 = puzzle._puzzle[0][0].value;
+        let cell11 = puzzle._puzzle[0][1].value;
         puzzle.swapRow(0, 1);
-        assert(puzzle._puzzle[0][0]._value === cell00, "should have swapped");
-        assert(puzzle._puzzle[0][1]._value === cell01, "should have swapped");
-        assert(puzzle._puzzle[1][0]._value === cell10, "should have swapped");
-        assert(puzzle._puzzle[1][1]._value === cell11, "should have swapped");
+        expect(puzzle._puzzle[0][0].value, "should have swapped").to.equals(cell00);
+        expect(puzzle._puzzle[0][1].value, "should have swapped").to.equals(cell01);
+        expect(puzzle._puzzle[1][0].value, "should have swapped").to.equals(cell10);
+        expect(puzzle._puzzle[1][1].value, "should have swapped").to.equals(cell11);
     });
 
-    it('should swap column 0 with 1', () => {
+    it("swap column 0 with 1", () => {
         let puzzle: Puzzle = new Puzzle();
         puzzle._puzzle = [
             [
@@ -113,14 +208,23 @@ describe('Puzzle', () => {
                 new PuzzleItem(3, false), new PuzzleItem(4, true)
             ]
         ];
-        let cell00 = puzzle._puzzle[0][1]._value;
-        let cell01 = puzzle._puzzle[0][0]._value;
-        let cell10 = puzzle._puzzle[1][1]._value;
-        let cell11 = puzzle._puzzle[1][0]._value;
+        let cell00 = puzzle._puzzle[0][1].value;
+        let cell01 = puzzle._puzzle[0][0].value;
+        let cell10 = puzzle._puzzle[1][1].value;
+        let cell11 = puzzle._puzzle[1][0].value;
         puzzle.swapColumn(0, 1);
-        assert(puzzle._puzzle[0][0]._value === cell00, "should have swapped");
-        assert(puzzle._puzzle[0][1]._value === cell01, "should have swapped");
-        assert(puzzle._puzzle[1][0]._value === cell10, "should have swapped");
-        assert(puzzle._puzzle[1][1]._value === cell11, "should have swapped");
+        expect(puzzle._puzzle[0][0].value, "should have swapped").to.equals(cell00);
+        expect(puzzle._puzzle[0][1].value, "should have swapped").to.equals(cell01);
+        expect(puzzle._puzzle[1][0].value, "should have swapped").to.equals(cell10);
+        expect(puzzle._puzzle[1][1].value, "should have swapped").to.equals(cell11);
+    });
+
+    it("erase values from puzzleItem marked hidden", () => {
+        let puzzle = new Puzzle();
+        puzzle._puzzle = GRID_FULL;
+        let puzzleHoles = new Puzzle();
+        puzzleHoles._puzzle = GRID_HOLES;
+        puzzle.createPuzzleHoles();
+        expect(puzzle).to.be.deep.equal(puzzleHoles);
     });
 });
