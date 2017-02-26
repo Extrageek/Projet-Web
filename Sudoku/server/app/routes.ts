@@ -1,15 +1,14 @@
-import * as express from 'express';
-
-import * as GridGenerationService from './services/grid-generation.service';
-import * as GridValidationService from './services/grid-validation.service';
+import * as express from "express";
+import * as GridGenerationService from "./services/grid-generation.service";
+import * as GridValidationService from "./services/grid-validation.service";
+import { ServiceGetter } from "./services/serviceGetter";
 import { Puzzle } from "./models/puzzle";
-import { Difficulty } from "./services/grid-generation.service"
-import { DatabaseManager } from './database-management';
+import { Difficulty } from "./services/grid-generation.service";
+import { DatabaseManager } from "./database-management";
 
 module Route {
 
     export class RouteManager {
-        _databaseManager: DatabaseManager;
 
         /**
          * The default constructor
@@ -17,7 +16,7 @@ module Route {
          * @class RouteManager
          */
         constructor() {
-            // Default constructor
+            ServiceGetter.initializeService();
         }
 
         /**
@@ -42,11 +41,10 @@ module Route {
         public getNewPuzzle(req: express.Request, res: express.Response, next: express.NextFunction) {
             // Get a new puzzle from the PuzzleManger service.
             let difficulty = req.params.difficulty;
-            if (difficulty == undefined) {
+            if (difficulty === undefined) {
                 difficulty = Difficulty.NORMAL;
             }
-            let gridManager = new GridGenerationService.GridGenerationManager();
-            gridManager.getNewPuzzle(difficulty)
+            ServiceGetter.getGridGenerationManager().getNewPuzzle(difficulty)
                 .then((newPuzzle: Puzzle) => {
                     res.send(newPuzzle);
                 });

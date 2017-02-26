@@ -26,33 +26,54 @@ module GridGenerationService {
 
     export class GridGenerationManager {
 
-        private static MILLISECONDS_TO_WAIT = 5000;
+        private static readonly MILLISECONDS_TO_WAIT = 5000;
+        public static readonly NUMBER_OF_SUDOKUS_TO_GENERATE = 3;
 
-        private _sudokuGenerated: Array<Array<Puzzle>>;
+        private _sudokusGenerated: Array<Array<Puzzle>>;
 
         constructor() {
-            this._sudokuGenerated = new Array<Array<Puzzle>>();
+            this._sudokusGenerated = new Array<Array<Puzzle>>();
             for (let i = 0; i < Difficulty.NUMBER_OF_DIFFICULTIES; ++i) {
-                this._sudokuGenerated.push(new Array<Puzzle>());
+                this._sudokusGenerated.push(new Array<Puzzle>());
+                this.fillArrayWithSudokus(i);
+            }
+        }
+
+        private fillArrayWithSudokus(arrayIndex: number) {
+            for (let i = 0; i < GridGenerationManager.NUMBER_OF_SUDOKUS_TO_GENERATE; ++i) {
+                this.getNewPuzzle(arrayIndex).then((puzzle: Puzzle) => {
+                    this._sudokusGenerated[arrayIndex].push(puzzle);
+                });
             }
         }
 
         public getNewPuzzle(difficulty: Difficulty): Promise<Puzzle> {
             return new Promise((resolve, reject) => {
-                if (this._sudokuGenerated[difficulty].length !== 0) {
-                    let sudokuGenerated = this._sudokuGenerated[difficulty].pop();
-                    //Launch a new sudoku generation after the sudokuGenerated is returned.
+                if (this._sudokusGenerated[difficulty].length !== 0) {
+                    //Launch a new sudoku generation after the existing sudoku is returned.
+                    let sudokuGenerated = this._sudokusGenerated[difficulty].pop();
                     resolve(sudokuGenerated);
-                    setTimeout(this._sudokuGenerated[difficulty].push(this.generateNewPuzzle(difficulty)), 0);
+                    this.performGenerationWithDelay(difficulty).then((puzzle: Puzzle) => {
+                        this._sudokusGenerated[difficulty].push(puzzle);
+                    });
                 }
                 else {
-                    //Generate a new puzzle and wait until 5 seconds is elapsed to return the sudoku generated.
+                    //Launch a new sudoku generation and return the sudoku generated
+                    this.performGenerationWithDelay(difficulty).then((puzzle: Puzzle) => {
+                        resolve(puzzle);
+                    });
+                }
+            });
+        }
+
+        //Generate a new puzzle and wait until 5 seconds is elapsed to return the sudoku generated.
+        private performGenerationWithDelay(difficulty: Difficulty): Promise<Puzzle> {
+            return new Promise<Puzzle>((resolve, reject) => {
                     let time = Date.now();
                     let sudokuGenerated = this.generateNewPuzzle(difficulty);
                     let intervalOfTimeForGeneration = Date.now() - time;
-                    let waitTime = (GridGenerationManager.MILLISECONDS_TO_WAIT - intervalOfTimeForGeneration)
+                    let waitTime = (GridGenerationManager.MILLISECONDS_TO_WAIT - intervalOfTimeForGeneration);
                     setTimeout(resolve.bind(resolve, sudokuGenerated), waitTime > 0 ? waitTime : 0);
-                }
             });
         }
 
@@ -63,8 +84,7 @@ module GridGenerationService {
          * @method getNewPuzzle
          * @return newPuzzle
          */
-        public generateNewPuzzle(difficulty?: Difficulty) {
-            let endTime = new Date().getTime() / 1000 + 5;
+        private generateNewPuzzle(difficulty?: Difficulty) {
             let getRandomSudoku = getRandomInRange(1, 9);
             let newPuzzle: Puzzle = new Puzzle();
             let deltaIteration: number = Math.round(NOMBRE_ITERATION * Math.random());

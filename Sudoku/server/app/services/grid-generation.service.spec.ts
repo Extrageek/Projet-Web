@@ -111,14 +111,6 @@ describe('Puzzle Manager Service', () => {
             });
     });
 
-    it('generateNewPuzzle should generate a new puzzle', function (done) {
-        this.timeout(6000);
-        let puzzle = gridGenerationManager.generateNewPuzzle(Difficulty.NORMAL);
-        expect(puzzle).to.be.instanceof(Puzzle);
-        expect(puzzle._puzzle.length).to.be.equal(9);
-        done();
-    });
-
     it('createPuzzleHoles should remove value from puzzleItem to be guessed', () => {
         let puzzle = new Puzzle();
         puzzle._puzzle = GRID_FULL;
