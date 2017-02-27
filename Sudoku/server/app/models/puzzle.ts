@@ -45,51 +45,52 @@ export class PuzzleItem {
 }
 
 export const puzzleSeed = [
-    // [
-    //     new PuzzleItem(1, false), new PuzzleItem(2, false), new PuzzleItem(3, false),
-    //     new PuzzleItem(4, false), new PuzzleItem(5, false), new PuzzleItem(6, false),
-    //     new PuzzleItem(7, false), new PuzzleItem(8, false), new PuzzleItem(9, false)
-    // ],
-    // [
-    //     new PuzzleItem(4, false), new PuzzleItem(5, false), new PuzzleItem(6, false),
-    //     new PuzzleItem(7, false), new PuzzleItem(8, false), new PuzzleItem(9, false),
-    //     new PuzzleItem(1, false), new PuzzleItem(2, false), new PuzzleItem(3, false)
-    // ],
-    // [
-    //     new PuzzleItem(7, false), new PuzzleItem(8, false), new PuzzleItem(9, false),
-    //     new PuzzleItem(1, false), new PuzzleItem(2, false), new PuzzleItem(3, false),
-    //     new PuzzleItem(4, false), new PuzzleItem(5, false), new PuzzleItem(6, false)
-    // ],
-    // [
-    //     new PuzzleItem(2, false), new PuzzleItem(3, false), new PuzzleItem(4, false),
-    //     new PuzzleItem(5, false), new PuzzleItem(6, false), new PuzzleItem(7, false),
-    //     new PuzzleItem(8, false), new PuzzleItem(9, false), new PuzzleItem(1, false)
-    // ],
-    // [
-    //     new PuzzleItem(5, false), new PuzzleItem(6, false), new PuzzleItem(7, false),
-    //     new PuzzleItem(8, false), new PuzzleItem(9, false), new PuzzleItem(1, false),
-    //     new PuzzleItem(2, false), new PuzzleItem(3, false), new PuzzleItem(4, false)
-    // ],
-    // [
-    //     new PuzzleItem(8, false), new PuzzleItem(9, false), new PuzzleItem(1, false),
-    //     new PuzzleItem(2, false), new PuzzleItem(3, false), new PuzzleItem(4, false),
-    //     new PuzzleItem(5, false), new PuzzleItem(6, false), new PuzzleItem(7, false)
-    // ],
-    // [
-    //     new PuzzleItem(3, false), new PuzzleItem(4, false), new PuzzleItem(5, false),
-    //     new PuzzleItem(6, false), new PuzzleItem(7, false), new PuzzleItem(8, false),
-    //     new PuzzleItem(9, false), new PuzzleItem(1, false), new PuzzleItem(2, false)
-    // ],
-    // [
-    //     new PuzzleItem(6, false), new PuzzleItem(7, false), new PuzzleItem(8, false),
-    //     new PuzzleItem(9, false), new PuzzleItem(1, false), new PuzzleItem(2, false),
-    //     new PuzzleItem(3, false), new PuzzleItem(4, false), new PuzzleItem(5, false)
-    // ],
-    // [
-    //     new PuzzleItem(9, false), new PuzzleItem(1, false), new PuzzleItem(2, false),
-    //     new PuzzleItem(3, false), new PuzzleItem(4, false), new PuzzleItem(5, false),
-    //     new PuzzleItem(6, false), new PuzzleItem(7, false), new PuzzleItem(8, false)
-    // ]
+    [
+        new PuzzleItem(1, false), new PuzzleItem(2, false), new PuzzleItem(3, false),
+        new PuzzleItem(4, false), new PuzzleItem(5, false), new PuzzleItem(6, false),
+        new PuzzleItem(7, false), new PuzzleItem(8, false), new PuzzleItem(9, false)
+    ],
+    [
+        new PuzzleItem(4, false), new PuzzleItem(5, false), new PuzzleItem(6, false),
+        new PuzzleItem(7, false), new PuzzleItem(8, false), new PuzzleItem(9, false),
+        new PuzzleItem(1, false), new PuzzleItem(2, false), new PuzzleItem(3, false)
+    ],
+    [
+        new PuzzleItem(7, false), new PuzzleItem(8, false), new PuzzleItem(9, false),
+        new PuzzleItem(1, false), new PuzzleItem(2, false), new PuzzleItem(3, false),
+        new PuzzleItem(4, false), new PuzzleItem(5, false), new PuzzleItem(6, false)
+    ],
+    [
+        new PuzzleItem(2, false), new PuzzleItem(3, false), new PuzzleItem(4, false),
+        new PuzzleItem(5, false), new PuzzleItem(6, false), new PuzzleItem(7, false),
+        new PuzzleItem(8, false), new PuzzleItem(9, false), new PuzzleItem(1, false)
+    ],
+    [
+        new PuzzleItem(5, false), new PuzzleItem(6, false), new PuzzleItem(7, false),
+        new PuzzleItem(8, false), new PuzzleItem(9, false), new PuzzleItem(1, false),
+        new PuzzleItem(2, false), new PuzzleItem(3, false), new PuzzleItem(4, false)
+    ],
+    [
+        new PuzzleItem(8, false), new PuzzleItem(9, false), new PuzzleItem(1, false),
+        new PuzzleItem(2, false), new PuzzleItem(3, false), new PuzzleItem(4, false),
+        new PuzzleItem(5, false), new PuzzleItem(6, false), new PuzzleItem(7, false)
+    ],
+    [
+        new PuzzleItem(3, false), new PuzzleItem(4, false), new PuzzleItem(5, false),
+        new PuzzleItem(6, false), new PuzzleItem(7, false), new PuzzleItem(8, false),
+        new PuzzleItem(9, false), new PuzzleItem(1, false), new PuzzleItem(2, false)
+    ],
+    [
+        new PuzzleItem(6, false), new PuzzleItem(7, false), new PuzzleItem(8, false),
+        new PuzzleItem(9, false), new PuzzleItem(1, false), new PuzzleItem(2, false),
+        new PuzzleItem(3, false), new PuzzleItem(4, false), new PuzzleItem(5, false)
+    ],
+    [
+        new PuzzleItem(9, false), new PuzzleItem(1, false), new PuzzleItem(2, false),
+        new PuzzleItem(3, false), new PuzzleItem(4, false), new PuzzleItem(5, false),
+        new PuzzleItem(6, false), new PuzzleItem(7, false), new PuzzleItem(8, false)
+    ]
+/*
     [
         new PuzzleItem(4, true), new PuzzleItem(1, true), new PuzzleItem(5, true),
         new PuzzleItem(6, true), new PuzzleItem(3, false), new PuzzleItem(8, true),
@@ -135,6 +136,7 @@ export const puzzleSeed = [
         new PuzzleItem(8, false), new PuzzleItem(2, false), new PuzzleItem(3, true),
         new PuzzleItem(5, true), new PuzzleItem(4, true), new PuzzleItem(7, false)
     ]
+*/
 ];
 
 // 415638972
@@ -160,8 +162,35 @@ export class Puzzle {
 
     public _puzzle: Array<Array<PuzzleItem>>;
 
+    /*Initialize the following sudoku : 
+        1 2 3 | 4 5 6 | 7 8 9
+        4 5 6 | 7 8 9 | 1 2 3
+        7 8 9 | 1 2 3 | 4 5 6
+        ------+-------+------
+        2 3 4 | 5 6 7 | 8 9 1
+        5 6 7 | 8 9 1 | 2 3 4
+        8 9 1 | 2 3 4 | 5 6 7
+        ------+-------+------
+        3 4 5 | 6 7 8 | 9 1 2
+        6 7 8 | 9 1 2 | 3 4 5
+        9 1 2 | 3 4 5 | 6 7 8
+    */
     constructor() {
-        this._puzzle = puzzleSeed;
+        this._puzzle = new Array<Array<PuzzleItem>>();
+        for (let squareRow = 0; squareRow < Puzzle.SQUARE_LENGTH; ++squareRow) {
+            let numberShift = 0;
+            for (let insideSquare = 0; insideSquare < Puzzle.SQUARE_LENGTH; ++insideSquare) {
+                let rowIndex = squareRow * Puzzle.SQUARE_LENGTH + insideSquare;
+                this._puzzle[rowIndex] = new Array<PuzzleItem>();
+                let initialNumber = squareRow + numberShift;
+                for (let column = 0; column < Puzzle.MAX_ROW_SIZE; ++column) {
+                    this._puzzle[rowIndex][column] = new PuzzleItem(initialNumber % Puzzle.MAX_ROW_SIZE + 1, false);
+                    ++initialNumber;
+                }
+                numberShift += Puzzle.SQUARE_LENGTH;
+            }
+            numberShift += 1;
+        }
     }
 
     /// For future use :

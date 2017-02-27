@@ -47,8 +47,9 @@ module GridValidationService {
 
         public isRowValid(grid: PuzzleItem[][], rowIndex: number): boolean {
             let contained = new Array<number>();
+            console.log(Number(grid[rowIndex][0].value));
             for (let j = 0; j < N_COLUMNS; ++j) {
-                if (Number(grid[rowIndex][j].value) === null) {
+                if (grid[rowIndex][j].value === null) {
                     return false;
                 }
                 if (contained.indexOf(Number(grid[rowIndex][j].value)) === -1) {
@@ -63,7 +64,7 @@ module GridValidationService {
         public isColumnValid(grid: PuzzleItem[][], columnIndex: number): boolean {
             let contained = new Array<number>();
             for (let i = 0; i < N_ROWS; ++i) {
-                if (Number(grid[columnIndex][i].value) === null) {
+                if (grid[columnIndex][i].value === null) {
                     return false;
                 }
                 if (contained.indexOf(Number(grid[i][columnIndex].value)) === -1) {
@@ -85,7 +86,7 @@ module GridValidationService {
             let contained = new Array<number>();
             for (let rowId1 = squareMinRowIndex; rowId1 <= squareMaxRowIndex; ++rowId1) {
                 for (let columnId1 = squareMinColumnIndex; columnId1 <= squareMaxColumnIndex; ++columnId1) {
-                    if (Number(grid[rowId1][columnId1].value) === null) {
+                    if (grid[rowId1][columnId1].value === null) {
                         return false;
                     }
                     if (contained.indexOf(Number(grid[rowId1][columnId1].value)) === -1) {

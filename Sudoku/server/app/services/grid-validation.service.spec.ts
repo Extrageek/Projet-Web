@@ -209,7 +209,7 @@ describe('Grid Validation Manager', () => {
         }
     );
 
-    it("validateSquares, Should return false for a grid with at least an invalid sqaure",
+    it("validateSquares, Should return false for a grid with at least an invalid square",
         () => {
             // let validateSquares = gridValidationManagerRewire.__get__('validateSquares');
             expect(gridValidationManager.validateSquares(GRID_NOT_VALID)).to.be.false;
