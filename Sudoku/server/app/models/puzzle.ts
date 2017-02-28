@@ -31,17 +31,6 @@ export class PuzzleItem {
     set value(value: number) {
         this._value = value;
     }
-
-    public swap(other: PuzzleItem) {
-        let tempValue = this._value;
-        let tempHide = this._hide;
-
-        this._value = other._value;
-        this._hide = other._hide;
-
-        other._value = tempValue;
-        other._hide = tempHide;
-    }
 }
 
 export class Puzzle {
@@ -89,14 +78,14 @@ export class Puzzle {
     }
 
     public swapRow(rowA: number, rowB: number) {
-        for (let j = 0; j < this._puzzle.length; ++j) {
-            this._puzzle[rowA][j].swap(this._puzzle[rowB][j]);
+        for (let column = 0; column < this._puzzle.length; ++column) {
+            this.swapTwoTiles(rowA, column, rowB, column);
         }
     }
 
     public swapColumn(columnA: number, columnB: number) {
-        for (let i = 0; i < this._puzzle.length; ++i) {
-            this._puzzle[i][columnA].swap(this._puzzle[i][columnB]);
+        for (let row = 0; row < this._puzzle.length; ++row) {
+            this.swapTwoTiles(row, columnA, row, columnB);
         }
     }
 
@@ -110,6 +99,28 @@ export class Puzzle {
         for (let j = 0; j < Puzzle.MID_ROW_INDEX; ++j) {
             this.swapColumn(j, Puzzle.MAX_ROW_SIZE - j - 1);
         }
+    }
+
+    public diagonal1Symmetry() {
+        for (let row = Puzzle.MIN_ROW_SIZE - 1; row <= Puzzle.MAX_ROW_SIZE - 1; ++row) {
+            for (let column = row; column <= Puzzle.MAX_COLUMN_SIZE - 1; ++column) {
+                this.swapTwoTiles(row, column, column, row);
+            }
+        }
+    }
+
+    public diagonal2Symmetry() {
+        for (let row = Puzzle.MIN_ROW_SIZE - 1; row <= Puzzle.MAX_ROW_SIZE - 1; ++row) {
+            for (let column = Puzzle.MIN_COLUMN_SIZE - 1; column <= Puzzle.MAX_COLUMN_SIZE - 1 - row; ++column) {
+                this.swapTwoTiles(row, column, Puzzle.MAX_ROW_SIZE - 1 - column, Puzzle.MAX_ROW_SIZE - 1 - row);
+            }
+        }
+    }
+
+    private swapTwoTiles(rowA: number, columnA: number, rowB: number, columnB: number) {
+        let temp = this._puzzle[rowA][columnA];
+        this._puzzle[rowA][columnA] = this._puzzle[rowB][columnB];
+        this._puzzle[rowB][columnB] = temp;
     }
 
     //Erase the PuzzleItem marked hidden.

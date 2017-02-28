@@ -157,21 +157,6 @@ describe("PuzzleItem should", () => {
         expect(item.isHidden, "should be shown").to.equals(false);
         expect(item.value, "should contain null").to.equals(null);
     });
-
-    it("swap and swap back", () => {
-        let item1: PuzzleItem = new PuzzleItem(1, true);
-        let item2: PuzzleItem = new PuzzleItem(2, false);
-        item1.swap(item2);
-        expect(item1.isHidden, "should not be hidden").to.equals(false);
-        expect(item1.value, "should contain 2").to.equals(2);
-        expect(item2.isHidden, "should be hidden").to.equals(true);
-        expect(item2.value, "should contain 1").to.equals(1);
-        item1.swap(item2);
-        expect(item1.isHidden, "should be hidden").to.equals(true);
-        expect(item1.value, "should contain 1").to.equals(1);
-        expect(item2.isHidden, "should not be hidden").to.equals(false);
-        expect(item2.value, "should contain 2").to.equals(2);
-    });
 });
 
 describe("Puzzle constructor should", () => {
@@ -246,30 +231,34 @@ describe("Puzzle should", () => {
         let cell10 = puzzle._puzzle[0][0].value;
         let cell11 = puzzle._puzzle[0][1].value;
         puzzle.swapRow(0, 1);
-        expect(puzzle._puzzle[0][0].value, "should have swapped").to.equals(cell00);
-        expect(puzzle._puzzle[0][1].value, "should have swapped").to.equals(cell01);
-        expect(puzzle._puzzle[1][0].value, "should have swapped").to.equals(cell10);
-        expect(puzzle._puzzle[1][1].value, "should have swapped").to.equals(cell11);
+        expect(puzzle._puzzle[0][0].value, "should have swapped 1").to.equals(cell00);
+        expect(puzzle._puzzle[0][1].value, "should have swapped 2").to.equals(cell01);
+        expect(puzzle._puzzle[1][0].value, "should have swapped 3").to.equals(cell10);
+        expect(puzzle._puzzle[1][1].value, "should have swapped 4").to.equals(cell11);
     });
 
-    it("swap column 0 with 1", () => {
-        puzzle._puzzle = [
-            [
-                new PuzzleItem(1, true), new PuzzleItem(2, false)
-            ],
-            [
-                new PuzzleItem(3, false), new PuzzleItem(4, true)
-            ]
-        ];
-        let cell00 = puzzle._puzzle[0][1].value;
-        let cell01 = puzzle._puzzle[0][0].value;
-        let cell10 = puzzle._puzzle[1][1].value;
-        let cell11 = puzzle._puzzle[1][0].value;
-        puzzle.swapColumn(0, 1);
-        expect(puzzle._puzzle[0][0].value, "should have swapped").to.equals(cell00);
-        expect(puzzle._puzzle[0][1].value, "should have swapped").to.equals(cell01);
-        expect(puzzle._puzzle[1][0].value, "should have swapped").to.equals(cell10);
-        expect(puzzle._puzzle[1][1].value, "should have swapped").to.equals(cell11);
+    it("invertPuzzle on diagonal 1", () => {
+        let cell00 = puzzle._puzzle[0][0].value;
+        let cell01 = puzzle._puzzle[0][1].value;
+        let cell10 = puzzle._puzzle[1][0].value;
+        let cell52 = puzzle._puzzle[5][2].value;
+        puzzle.diagonal1Symmetry();
+        expect(puzzle._puzzle[0][0].value, "should not have swapped").to.equals(cell00);
+        expect(puzzle._puzzle[1][0].value, "should have swapped 1").to.equals(cell01);
+        expect(puzzle._puzzle[0][1].value, "should have swapped 2").to.equals(cell10);
+        expect(puzzle._puzzle[2][5].value, "should have swapped 3").to.equals(cell52);
+    });
+
+    it("invertPuzzle on diagonal 2", () => {
+        let cell08 = puzzle._puzzle[0][8].value;
+        let cell00 = puzzle._puzzle[0][0].value;
+        let cell88 = puzzle._puzzle[8][8].value;
+        let cell32 = puzzle._puzzle[3][2].value;
+        puzzle.diagonal2Symmetry();
+        expect(puzzle._puzzle[0][8].value, "should not have swapped").to.equals(cell08);
+        expect(puzzle._puzzle[8][8].value, "should have swapped 1").to.equals(cell00);
+        expect(puzzle._puzzle[0][0].value, "should have swapped 2").to.equals(cell88);
+        expect(puzzle._puzzle[6][5].value, "should have swapped 3").to.equals(cell32);
     });
 
     it("erase values from puzzleItem marked hidden", () => {
