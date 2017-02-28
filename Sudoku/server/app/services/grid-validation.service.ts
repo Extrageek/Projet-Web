@@ -47,7 +47,6 @@ module GridValidationService {
 
         public isRowValid(grid: PuzzleItem[][], rowIndex: number): boolean {
             let contained = new Array<number>();
-            console.log(Number(grid[rowIndex][0].value));
             for (let j = 0; j < N_COLUMNS; ++j) {
                 if (grid[rowIndex][j].value === null) {
                     return false;

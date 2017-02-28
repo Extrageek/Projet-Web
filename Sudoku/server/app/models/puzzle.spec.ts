@@ -1,5 +1,53 @@
 import { expect } from "chai";
-import { Puzzle, PuzzleItem, puzzleSeed } from "./puzzle";
+import { Puzzle, PuzzleItem } from "./puzzle";
+
+const puzzleSeed = [
+    [
+        new PuzzleItem(1, false), new PuzzleItem(2, false), new PuzzleItem(3, false),
+        new PuzzleItem(4, false), new PuzzleItem(5, false), new PuzzleItem(6, false),
+        new PuzzleItem(7, false), new PuzzleItem(8, false), new PuzzleItem(9, false)
+    ],
+    [
+        new PuzzleItem(4, false), new PuzzleItem(5, false), new PuzzleItem(6, false),
+        new PuzzleItem(7, false), new PuzzleItem(8, false), new PuzzleItem(9, false),
+        new PuzzleItem(1, false), new PuzzleItem(2, false), new PuzzleItem(3, false)
+    ],
+    [
+        new PuzzleItem(7, false), new PuzzleItem(8, false), new PuzzleItem(9, false),
+        new PuzzleItem(1, false), new PuzzleItem(2, false), new PuzzleItem(3, false),
+        new PuzzleItem(4, false), new PuzzleItem(5, false), new PuzzleItem(6, false)
+    ],
+    [
+        new PuzzleItem(2, false), new PuzzleItem(3, false), new PuzzleItem(4, false),
+        new PuzzleItem(5, false), new PuzzleItem(6, false), new PuzzleItem(7, false),
+        new PuzzleItem(8, false), new PuzzleItem(9, false), new PuzzleItem(1, false)
+    ],
+    [
+        new PuzzleItem(5, false), new PuzzleItem(6, false), new PuzzleItem(7, false),
+        new PuzzleItem(8, false), new PuzzleItem(9, false), new PuzzleItem(1, false),
+        new PuzzleItem(2, false), new PuzzleItem(3, false), new PuzzleItem(4, false)
+    ],
+    [
+        new PuzzleItem(8, false), new PuzzleItem(9, false), new PuzzleItem(1, false),
+        new PuzzleItem(2, false), new PuzzleItem(3, false), new PuzzleItem(4, false),
+        new PuzzleItem(5, false), new PuzzleItem(6, false), new PuzzleItem(7, false)
+    ],
+    [
+        new PuzzleItem(3, false), new PuzzleItem(4, false), new PuzzleItem(5, false),
+        new PuzzleItem(6, false), new PuzzleItem(7, false), new PuzzleItem(8, false),
+        new PuzzleItem(9, false), new PuzzleItem(1, false), new PuzzleItem(2, false)
+    ],
+    [
+        new PuzzleItem(6, false), new PuzzleItem(7, false), new PuzzleItem(8, false),
+        new PuzzleItem(9, false), new PuzzleItem(1, false), new PuzzleItem(2, false),
+        new PuzzleItem(3, false), new PuzzleItem(4, false), new PuzzleItem(5, false)
+    ],
+    [
+        new PuzzleItem(9, false), new PuzzleItem(1, false), new PuzzleItem(2, false),
+        new PuzzleItem(3, false), new PuzzleItem(4, false), new PuzzleItem(5, false),
+        new PuzzleItem(6, false), new PuzzleItem(7, false), new PuzzleItem(8, false)
+    ]
+];
 
 const GRID_FULL = [
     [
@@ -126,15 +174,23 @@ describe("PuzzleItem should", () => {
     });
 });
 
-describe("Puzzle should", () => {
+describe("Puzzle constructor should", () => {
     it("initialize grid and contain puzzleSeed", () => {
         let puzzle: Puzzle = new Puzzle();
         expect(puzzle._puzzle, "should contain puzzleSeed").to.be.deep.equal(puzzleSeed);
     });
+});
+
+describe("Puzzle should", () => {
+
+    let puzzle: Puzzle;
+
+    beforeEach(() => {
+        puzzle = new Puzzle();
+    });
 
     // Puzzle operations
     it("swap column 0 with 1", () => {
-        let puzzle: Puzzle = new Puzzle();
         puzzle._puzzle = [
             [
                 new PuzzleItem(1, true), new PuzzleItem(2, false)
@@ -155,7 +211,6 @@ describe("Puzzle should", () => {
     });
 
     it("swap row 0 with 1", () => {
-        let puzzle: Puzzle = new Puzzle();
         puzzle._puzzle = [
             [
                 new PuzzleItem(1, true), new PuzzleItem(2, false)
@@ -177,7 +232,6 @@ describe("Puzzle should", () => {
     });
 
     it("invert puzzle on horizontal axis", () => {
-        let puzzle: Puzzle = new Puzzle();
         puzzle._puzzle = [
             [
                 new PuzzleItem(1, true), new PuzzleItem(2, false)
@@ -199,7 +253,6 @@ describe("Puzzle should", () => {
     });
 
     it("swap column 0 with 1", () => {
-        let puzzle: Puzzle = new Puzzle();
         puzzle._puzzle = [
             [
                 new PuzzleItem(1, true), new PuzzleItem(2, false)
@@ -220,11 +273,33 @@ describe("Puzzle should", () => {
     });
 
     it("erase values from puzzleItem marked hidden", () => {
-        let puzzle = new Puzzle();
         puzzle._puzzle = GRID_FULL;
         let puzzleHoles = new Puzzle();
         puzzleHoles._puzzle = GRID_HOLES;
         puzzle.createPuzzleHoles();
         expect(puzzle).to.be.deep.equal(puzzleHoles);
+    });
+
+    it("throw exception due to invalid parameters", () => {
+        expect(puzzle.hideAllItemsInRange.bind(puzzle, -1, 8, 0, 8)).to.throw(Error);
+        expect(puzzle.hideAllItemsInRange.bind(puzzle, 0, 9, 0, 8)).to.throw(Error);
+        expect(puzzle.hideAllItemsInRange.bind(puzzle, 0, 8, -1, 8)).to.throw(Error);
+        expect(puzzle.hideAllItemsInRange.bind(puzzle, 0, 8, 0, 9)).to.throw(Error);
+        expect(puzzle.hideAllItemsInRange.bind(puzzle, 7, 6, 0, 8)).to.throw(Error);
+        expect(puzzle.hideAllItemsInRange.bind(puzzle, 0, 8, 4, 3)).to.throw(Error);
+    });
+
+    it("hide 1 item", () => {
+        puzzle.hideAllItemsInRange(4, 4, 8, 8);
+        expect(puzzle._puzzle[4][8].isHidden).to.equal(true);
+    });
+
+    it("hide some items", () => {
+        puzzle.hideAllItemsInRange(0, 4, 6, 8);
+        for (let row = 0; row <= 4; ++row) {
+            for (let column = 6; column <= 8; ++column) {
+                expect(puzzle._puzzle[row][column].isHidden).to.equal(true);
+            }
+        }
     });
 });
