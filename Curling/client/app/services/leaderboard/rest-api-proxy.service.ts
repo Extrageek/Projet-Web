@@ -3,9 +3,9 @@ import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import { UserSetting } from '../models/user/user-setting';
-import { GameStatus } from '../models/game-status/game-status';
-import { Record } from '../models/leaderboard/record';
+import { UserSetting } from './../../models/user/user-setting';
+import { GameStatus } from './../../models/game-status/game-status';
+import { Record } from './../../models/leaderboard/record';
 
 
 @Injectable()

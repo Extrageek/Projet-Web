@@ -14,11 +14,11 @@ import { DisplayComponent } from '../components/display.component';
 
 import { ModifierDirective } from '../directives/modifier.directive';
 
-import { RenderService } from '../services/render.service';
-import { RestApiProxyService } from '../services/rest-api-proxy.service';
-import { UserSettingService } from '../services/user-setting.service';
-import { GameStatusService } from '../services/game-status.service';
-import { CameraService } from '../services/cameras.service';
+import { RenderService } from './../services/game-physics/render.service';
+import { RestApiProxyService } from './../services/leaderboard/rest-api-proxy.service';
+import { UserSettingService } from './../services/user/user-setting.service';
+import { GameStatusService } from './../services/game-status/game-status.service';
+import { CameraService } from './../services/views/cameras.service';
 
 @NgModule({
   imports: [ BrowserModule, FormsModule, AppRoutingModule, MaterialModule.forRoot()],

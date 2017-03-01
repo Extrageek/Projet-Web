@@ -1,7 +1,7 @@
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-import { UserSettingService } from './services/user-setting.service';
-import { GameStatusService } from './services/game-status.service';
+import { UserSettingService } from './services/user/user-setting.service';
+import { GameStatusService } from './services/game-status/game-status.service';
 
 import { AppModule } from './modules/app.module';
 
