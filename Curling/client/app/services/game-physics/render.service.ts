@@ -2,19 +2,15 @@ import { Injectable } from "@angular/core";
 import { Scene, PerspectiveCamera, WebGLRenderer, Renderer, ObjectLoader, FontLoader, Geometry, CubeGeometry,
     TextGeometry, MeshBasicMaterial, MeshFaceMaterial, MeshPhongMaterial, MultiMaterial, Mesh, SpotLight, Group,
     Font, ImageUtils, BackSide, FlatShading, SmoothShading, Vector3, Clock } from "three";
-import { GameStatusService } from "./../game-status/game-status.service";
-import { CameraService } from "./../views/cameras.service";
-import { Arena } from "./../../models/scenery/arena";
-import { Rink } from "./../../models/scenery/rink";
-import { Stone, StoneColor } from "./../../models/stone/stone";
-import { RinkInfo } from "./../../models/scenery/rinkInfo.interface";
-import { StoneHandler } from "./stoneHandler";
-
-export enum CameraType {
-    PERSPECTIVE_CAM = 0,
-    ORTHOGRAPHIC_CAM = 1,
-    NB_CAMERAS = 2
-}
+import { GameStatusService } from './../game-status/game-status.service';
+import { CameraService } from './../views/cameras.service';
+import { Arena } from './../../models/scenery/arena';
+import { Rink } from './../../models/scenery/rink';
+import { Stone } from './../../models/stone/stone';
+import { StoneColor } from './../../models/stone/stone-color';
+import { RinkInfo } from './../../models/scenery/rinkInfo.interface';
+import { StoneHandler } from './stone-handler';
+import { CameraType } from './camera-type';
 
 @Injectable()
 export class RenderService {

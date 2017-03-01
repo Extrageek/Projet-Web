@@ -1,8 +1,10 @@
-import { Clock, ObjectLoader, Vector3 } from "three";
-import { RinkInfo } from "./../../models/scenery/rinkInfo.interface";
-import { Stone, StoneColor, StoneSpin } from "./../../models//stone/stone";
-import { GameComponent } from "./../../models/stone/gameComponent.interface";
-import { CameraType } from "./render.service";
+import { Clock, ObjectLoader, Vector3 } from 'three';
+import { RinkInfo } from './../../models/scenery/rinkInfo.interface';
+import { Stone } from './../../models//stone/stone';
+import { StoneColor } from './../../models/stone/stone-color';
+import { StoneSpin } from './../../models/stone/stone-spin';
+import { GameComponent } from './../../models/stone/gameComponent.interface';
+import { CameraType } from './camera-type';
 
 export interface Points {
     player: number;
