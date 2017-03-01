@@ -4,11 +4,11 @@ import { Scene, PerspectiveCamera, WebGLRenderer, Renderer, ObjectLoader, FontLo
     Font, ImageUtils, BackSide, FlatShading, SmoothShading, Vector3, Clock } from "three";
 import { GameStatusService } from "./game-status.service";
 import { CameraService } from "./cameras.service";
-import { Arena } from "../models/arena";
-import { Rink } from "../models/rink";
-import { Stone, StoneColor } from "../models/stone";
-import { RinkInfo } from "../models/rinkInfo.interface";
-import { StoneHandler } from "../models/stoneHandler";
+import { Arena } from "../models/scenery/arena";
+import { Rink } from "../models/scenery/rink";
+import { Stone, StoneColor } from "../models/stone/stone";
+import { RinkInfo } from "../models/scenery/rinkInfo.interface";
+import { StoneHandler } from "./stoneHandler";
 
 export enum CameraType {
     PERSPECTIVE_CAM = 0,

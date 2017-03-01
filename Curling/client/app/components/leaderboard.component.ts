@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import { RestApiProxyService } from '../services/rest-api-proxy.service';
 
-import { Record } from '../models/record';
+import { Record } from '../models/leaderboard/record';
 
 @Component({
     selector: 'leaderboard-component',

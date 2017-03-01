@@ -6,10 +6,10 @@ import {
     BaseRequestOptions,
     ConnectionBackend
 } from '@angular/http';
-import { UserSetting } from '../models/user-setting';
+import { UserSetting } from '../models/user/user-setting';
 
 import { MockBackend, MockConnection } from '@angular/http/testing';
-import { Difficulty } from '../models/user-setting';
+import { Difficulty } from '../models/user/user-setting';
 import { expect } from "chai";
 import { TestBed, tick, inject, fakeAsync } from "@angular/core/testing";
 

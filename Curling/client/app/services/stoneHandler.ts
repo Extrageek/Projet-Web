@@ -1,7 +1,7 @@
 import { Clock, ObjectLoader, Vector3 } from "three";
-import { RinkInfo } from "./rinkInfo.interface";
-import { Stone, StoneColor, StoneSpin } from "./stone";
-import { GameComponent } from "./gameComponent.interface";
+import { RinkInfo } from "./../models/scenery/rinkInfo.interface";
+import { Stone, StoneColor, StoneSpin } from "./../models//stone/stone";
+import { GameComponent } from "./../models/stone/gameComponent.interface";
 import { CameraType } from "./../services/render.service";
 
 export interface Points {
