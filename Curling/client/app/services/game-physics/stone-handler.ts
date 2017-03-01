@@ -3,7 +3,7 @@ import { RinkInfo } from './../../models/scenery/rinkInfo.interface';
 import { Stone } from './../../models//stone/stone';
 import { StoneColor } from './../../models/stone/stone-color';
 import { StoneSpin } from './../../models/stone/stone-spin';
-import { GameComponent } from './../../models/stone/gameComponent.interface';
+import { GameComponent } from './../../models/stone/game-component.interface';
 import { CameraType } from './camera-type';
 
 export interface Points {

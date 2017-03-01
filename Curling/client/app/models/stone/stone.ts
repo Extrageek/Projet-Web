@@ -1,5 +1,5 @@
 import { ObjectLoader, Group, MeshPhongMaterial, Object3D, Sphere, Vector3 } from "three";
-import { GameComponent } from "./gameComponent.interface";
+import { GameComponent } from "./game-component.interface";
 import { StoneColor } from './stone-color';
 import { StoneSpin } from './stone-spin';
 
