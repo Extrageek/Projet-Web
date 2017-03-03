@@ -20,10 +20,13 @@ export class SocketService {
 
     private initializeClient() {
         this.activatedRoute.params.subscribe(params => {
-           // console.log(params['id']);
+            // console.log(params['id']);
 
             if (SocketService._socket === null) {
                 SocketService._socket = io.connect(this._serverUri, { 'forceNew': false });
+                if (this.activatedRoute.params["id"] !== null) {
+                    this.router.navigate(["/", ]);
+                }
             }
         });
     }

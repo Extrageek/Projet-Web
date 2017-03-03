@@ -4,8 +4,8 @@ import { Route, ActivatedRoute } from '@angular/router';
 import { SocketService } from "../services/socket-service";
 import { EaselManagerService } from '../services/easel/easel-manager.service';
 import { GameRoomManagerService } from "../services/gameRoom/game-room-manager.service";
-import { CommandsService} from "../services/commands/commands.service";
-import { CommandsHelper} from "../services/commands/commands-helper";
+import { CommandsService } from "../services/commands/commands.service";
+import { CommandsHelper } from "../services/commands/commands-helper";
 
 import { IExchangeCommandRequest } from "../services/commands/command-request";
 import { CommandStatus } from "../services/commands/command-status";
