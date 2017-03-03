@@ -5,15 +5,11 @@ import { ScrabbleLetter } from '../../models/letter/scrabble-letter';
 import { Alphabet } from '../../models/letter/alphabet';
 import { CommandType } from './command-type';
 import { CommandStatus } from './command-status';
-import { ICommandRequest } from './command-request';
 import { CommandsService } from './commands.service';
+import { CommandsHelper } from './commands-helper';
+import { ICommandRequest } from './command-request';
 
 import { expect } from "chai";
-
-export const EXCHANGE_COMMAND = '!changer';
-export const PLACE_COMMAND = '!placer';
-export const PASS_COMMAND = '!passer';
-export const GUIDE = '!aide';
 
 let _commandService: CommandsService;
 let _easelManagerService: EaselManagerService;
@@ -38,22 +34,22 @@ describe("CommandService should", () => {
     });
 
     it("reconize the input to add a new word", () => {
-        let verification = _commandService.getCommandType(PLACE_COMMAND);
+        let verification = _commandService.getCommandType(CommandsHelper.PLACE_COMMAND);
         expect(verification).to.be.equal(CommandType.PlaceCmd);
     });
 
     it("reconize the input to exchange letters", () => {
-        let verification = _commandService.getCommandType(EXCHANGE_COMMAND);
+        let verification = _commandService.getCommandType(CommandsHelper.EXCHANGE_COMMAND);
         expect(verification).to.be.equal(CommandType.ExchangeCmd);
     });
 
     it("reconize the input to let a player pass it's turn", () => {
-        let verification = _commandService.getCommandType(PASS_COMMAND);
+        let verification = _commandService.getCommandType(CommandsHelper.PASS_COMMAND);
         expect(verification).to.be.equal(CommandType.PassCmd);
     });
 
     it("reconize the input to open help menu", () => {
-        let verification = _commandService.getCommandType(GUIDE);
+        let verification = _commandService.getCommandType(CommandsHelper.GUIDE);
         expect(verification).to.be.equal(CommandType.Guide);
     });
 

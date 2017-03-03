@@ -4,7 +4,8 @@ import { Route, ActivatedRoute } from '@angular/router';
 import { SocketService } from "../services/socket-service";
 import { EaselManagerService } from '../services/easel/easel-manager.service';
 import { GameRoomManagerService } from "../services/gameRoom/game-room-manager.service";
-import { CommandsService, EXCHANGE_COMMAND, PLACE_COMMAND } from "../services/commands/commands.service";
+import { CommandsService} from "../services/commands/commands.service";
+import { CommandsHelper} from "../services/commands/commands-helper";
 
 import { IExchangeCommandRequest } from "../services/commands/command-request";
 import { CommandStatus } from "../services/commands/command-status";
@@ -41,7 +42,7 @@ export class GameComponent implements OnInit, OnDestroy {
     _inputMessage: string;
 
     constructor(
-        private route: ActivatedRoute,
+        private activatedRoute: ActivatedRoute,
         private socketService: SocketService,
         private gameRoomEventManagerService: GameRoomManagerService,
         private easelManagerService: EaselManagerService,
@@ -51,7 +52,7 @@ export class GameComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.route.params.subscribe(params => {
+        this.activatedRoute.params.subscribe(params => {
             this._username = params['id'];
         });
 
@@ -172,7 +173,7 @@ export class GameComponent implements OnInit, OnDestroy {
             throw new Error("Null argument error: The parameter cannot be null");
         }
 
-        let request = requestValue.split(EXCHANGE_COMMAND)[1].trim();
+        let request = requestValue.split(CommandsHelper.EXCHANGE_COMMAND)[1].trim();
         let listOfLettersToChange = this.easelManagerService.parseStringToListofChar(request);
 
         console.log(request, listOfLettersToChange);
@@ -205,16 +206,16 @@ export class GameComponent implements OnInit, OnDestroy {
         }
     }
 
-    private executePlaceWordCommand(commandType: CommandType, requestValue: string) {
-        if (requestValue === null) {
+    private executePlaceWordCommand(commandType: CommandType, parameters: string) {
+        if (parameters === null) {
             throw new Error("Null argument error: The parameter cannot be null");
         }
 
-        let request = requestValue.split(PLACE_COMMAND)[1].trim();
+        let parameter = parameters.split(CommandsHelper.PLACE_COMMAND)[1].trim();
 
         //console.log("Command request:", request);
         let placeWordRequest = this.commandsService
-            .createPlaceWordRequest(this._childEasel.letters, request);
+            .createPlaceWordRequest(this._childEasel.letters, parameter);
 
         //console.log("place word request:", placeWordRequest);
         if (placeWordRequest._commandStatus === CommandStatus.Ok) {
@@ -223,20 +224,20 @@ export class GameComponent implements OnInit, OnDestroy {
 
             //console.log("list of letters to place", listOfLettersToPlace);
             this.socketService.emitMessage(SocketEventType.commandRequest,
-                { commandType: commandType, commandStatus: CommandStatus.Ok, data: request });
+                { commandType: commandType, commandStatus: CommandStatus.Ok, data: parameter });
             this._inputMessage = '';
             // console.log("Ok");
 
         } else if (placeWordRequest._commandStatus === CommandStatus.NotAllowed) {
             this.socketService.emitMessage(
                 SocketEventType.commandRequest,
-                { commandType: commandType, commandStatus: CommandStatus.NotAllowed, data: requestValue });
+                { commandType: commandType, commandStatus: CommandStatus.NotAllowed, data: parameters });
             this._inputMessage = '';
             // console.log("Custom message: NotAllowed");
 
         } else if (placeWordRequest._commandStatus === CommandStatus.SynthaxeError) {
             this.socketService.emitMessage(SocketEventType.commandRequest,
-                { commandType: commandType, commandStatus: CommandStatus.SynthaxeError, data: requestValue });
+                { commandType: commandType, commandStatus: CommandStatus.SynthaxeError, data: parameters });
             this._inputMessage = '';
             // console.log("Custom message: SyntaxError");
         }
