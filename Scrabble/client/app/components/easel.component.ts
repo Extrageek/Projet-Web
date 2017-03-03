@@ -1,18 +1,18 @@
 import { Component, OnInit, OnDestroy, EventEmitter, Input, Output } from "@angular/core";
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from "rxjs/Subscription";
 
 import { ScrabbleLetter } from "../models/letter/scrabble-letter";
-import { EaselManagerService } from '../services/easel/easel-manager.service';
-import { EaselControl } from '../commons/easel-control';
+import { EaselManagerService } from "../services/easel/easel-manager.service";
+import { EaselControl } from "../commons/easel-control";
 import { SocketService } from "../services/socket-service";
 import { CommandType } from "../services/commands/command-type";
 import { SocketEventType } from "../commons/socket-eventType";
-import { IGameMessage } from '../commons/messages/game-message-interface';
-import { ICommandMessage } from '../commons/messages/command-message';
+import { IGameMessage } from "../commons/messages/game-message-interface";
+import { ICommandMessage } from "../commons/messages/command-message";
 
 declare var jQuery: any;
 
-import { Alphabet } from '../models/letter/alphabet';
+import { Alphabet } from "../models/letter/alphabet";
 
 @Component({
     moduleId: module.id,

@@ -1,21 +1,21 @@
 import { Component, OnInit, OnDestroy, Output, ViewChild, EventEmitter } from "@angular/core";
-import { Route, ActivatedRoute } from '@angular/router';
+import { Route, ActivatedRoute } from "@angular/router";
 
 import { SocketService } from "../services/socket-service";
-import { EaselManagerService } from '../services/easel/easel-manager.service';
+import { EaselManagerService } from "../services/easel/easel-manager.service";
 import { GameRoomManagerService } from "../services/gameRoom/game-room-manager.service";
 import { CommandsService, EXCHANGE_COMMAND, PLACE_COMMAND } from "../services/commands/commands.service";
 
 import { IExchangeCommandRequest } from "../services/commands/command-request";
 import { CommandStatus } from "../services/commands/command-status";
-import { CommandType } from '../services/commands/command-type';
+import { CommandType } from "../services/commands/command-type";
 
-import { EaselComponent } from './easel.component';
-import { ChatroomComponent } from './chatroom.component';
-import { SocketEventType } from '../commons/socket-eventType';
-import { IRoomMessage } from '../commons/messages/room-message';
+import { EaselComponent } from "./easel.component";
+import { ChatroomComponent } from "./chatroom.component";
+import { SocketEventType } from "../commons/socket-eventType";
+import { IRoomMessage } from "../commons/messages/room-message";
 import { ScrabbleLetter } from "../models/letter/scrabble-letter";
-import { EaselControl } from '../commons/easel-control';
+import { EaselControl } from "../commons/easel-control";
 
 
 declare var jQuery: any;
@@ -154,7 +154,7 @@ export class GameComponent implements OnInit, OnDestroy {
                     break;
             }
         } catch (error) {
-            console.log('invalid request', error);
+            console.log("invalid request", error);
         }
     }
 

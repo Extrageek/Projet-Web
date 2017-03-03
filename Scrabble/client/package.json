@@ -30,6 +30,8 @@
     "socket.io": "^1.7.2",
     "socket.io-client": "^1.7.2",
     "systemjs": "0.19.41",
+    "tslint": "^4.5.1",
+    "typescript": "^2.2.1",
     "zone.js": "^0.7.6"
   },
   "devDependencies": {

@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 
-import { EaselManagerService } from '../easel/easel-manager.service';
-import { EaselControl } from '../../commons/easel-control';
-import { ScrabbleLetter } from '../../models/letter/scrabble-letter';
-import { CommandType } from './command-type';
-import { CommandStatus } from './command-status';
-import { ICommandRequest } from './command-request';
+import { EaselManagerService } from "../easel/easel-manager.service";
+import { EaselControl } from "../../commons/easel-control";
+import { ScrabbleLetter } from "../../models/letter/scrabble-letter";
+import { CommandType } from "./command-type";
+import { CommandStatus } from "./command-status";
+import { ICommandRequest } from "./command-request";
 
 export const EXCHANGE_COMMAND = '!changer';
 export const PLACE_COMMAND = '!placer';

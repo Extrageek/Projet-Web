@@ -1,7 +1,7 @@
 import { expect, assert } from "chai";
 import { Room } from "./room";
 import { Player } from "../players/player";
-import { LetterBankHandler } from '../../services/lettersBank/letterbank-handler';
+import { LetterBankHandler } from "../../services/lettersBank/letterbank-handler";
 
 let fakeSocketId = "fakeId@33md401";
 

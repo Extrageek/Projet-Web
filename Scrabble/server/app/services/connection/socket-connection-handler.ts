@@ -2,14 +2,14 @@ import * as http from "http";
 import * as io from "socket.io";
 
 import { RoomHandler } from "../../services/rooms/room-handler";
-import { Room } from '../../models/rooms/room';
+import { Room } from "../../models/rooms/room";
 import { Player } from "../../models/players/Player";
-import { Letter } from '../../models/lettersBank/letter';
-import { SocketEventType } from '../../commons/socket-eventType';
-import { CommandType } from '../../commons/command-type';
-import { CommandStatus } from '../../commons/command-status';
-import { IRoomMessage } from '../../commons/messages/room-message';
-import { ICommandMessage } from '../../commons/messages/command-message';
+import { Letter } from "../../models/lettersBank/letter";
+import { SocketEventType } from "../../commons/socket-eventType";
+import { CommandType } from "../../commons/command-type";
+import { CommandStatus } from "../../commons/command-status";
+import { IRoomMessage } from "../../commons/messages/room-message";
+import { ICommandMessage } from "../../commons/messages/command-message";
 
 export class SocketConnectionHandler {
 

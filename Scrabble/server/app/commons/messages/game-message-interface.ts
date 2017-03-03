@@ -1,4 +1,5 @@
-import { CommandType } from '../command-type';
+import { CommandType } from "../command-type";
+
 export class IGameMessage {
     _username: string;
     _message: string;

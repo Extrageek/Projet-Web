@@ -1,4 +1,5 @@
-import { Room } from '../rooms/room';
+import { Room } from "../rooms/room";
+
 export class Player {
 
     private _username: string;

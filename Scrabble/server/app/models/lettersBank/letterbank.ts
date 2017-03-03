@@ -1,7 +1,7 @@
-import { Letter } from './letter';
-import { Alphabet } from './alphabet';
-import { AlphabetPoint } from '../../commons/alphabet-point';
-import { AlphabetQuantity } from '../../commons/alphabet-quantity';
+import { Letter } from "./letter";
+import { Alphabet } from "./alphabet";
+import { AlphabetPoint } from "../../commons/alphabet-point";
+import { AlphabetQuantity } from "../../commons/alphabet-quantity";
 
 const INCREMENT_QUANTITY = 1;
 const DECREMENT_QUANTITY = -1;

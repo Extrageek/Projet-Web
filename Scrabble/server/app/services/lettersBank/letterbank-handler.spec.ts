@@ -1,11 +1,11 @@
-import { Alphabet } from '../../models/lettersBank/alphabet';
-import { AlphabetPoint } from '../../commons/alphabet-point';
-import { AlphabetQuantity } from '../../commons/alphabet-quantity';
-import { Letter } from '../../models/lettersBank/letter';
-import { LetterBank } from '../../models/lettersBank/letterbank';
-import { LetterBankHandler } from './letterbank-handler';
+import { Alphabet } from "../../models/lettersBank/alphabet";
+import { AlphabetPoint } from "../../commons/alphabet-point";
+import { AlphabetQuantity } from "../../commons/alphabet-quantity";
+import { Letter } from "../../models/lettersBank/letter";
+import { LetterBank } from "../../models/lettersBank/letterbank";
+import { LetterBankHandler } from "./letterbank-handler";
 
-import { expect } from 'chai';
+import { expect } from "chai";
 
 let _bankHandler: LetterBankHandler;
 

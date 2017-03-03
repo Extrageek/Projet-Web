@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 
-import { EaselManagerService } from '../easel/easel-manager.service';
-import { ScrabbleLetter } from '../../models/letter/scrabble-letter';
-import { Alphabet } from '../../models/letter/alphabet';
-import { CommandType } from './command-type';
-import { CommandStatus } from './command-status';
-import { ICommandRequest } from './command-request';
-import { CommandsService } from './commands.service';
+import { EaselManagerService } from "../easel/easel-manager.service";
+import { ScrabbleLetter } from "../../models/letter/scrabble-letter";
+import { Alphabet } from "../../models/letter/alphabet";
+import { CommandType } from "./command-type";
+import { CommandStatus } from "./command-status";
+import { ICommandRequest } from "./command-request";
+import { CommandsService } from "./commands.service";
 
 import { expect } from "chai";
 

@@ -3,8 +3,8 @@ import { Router } from "@angular/router";
 import { Subscription } from 'rxjs/Subscription';
 
 import { SocketService } from "../services/socket-service";
-import { SocketEventType } from '../commons/socket-eventType';
-import { IRoomMessage } from '../commons/messages/room-message';
+import { SocketEventType } from "../commons/socket-eventType";
+import { IRoomMessage } from "../commons/messages/room-message";
 
 @Component({
     moduleId: module.id,

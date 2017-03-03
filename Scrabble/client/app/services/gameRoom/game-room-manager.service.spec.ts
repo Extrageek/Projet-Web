@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { ScrabbleLetter } from "../../models/letter/scrabble-letter";
 import { EaselControl } from "../../commons/easel-control";
 import { GameRoomManagerService } from "./game-room-manager.service";
 
-import { expect } from 'chai';
+import { expect } from "chai";
 
 describe("GameRoomManagerService should", () => {
     let service: GameRoomManagerService;

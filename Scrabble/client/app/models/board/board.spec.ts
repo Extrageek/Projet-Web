@@ -1,7 +1,7 @@
-import { Board } from './board';
-import { Square } from '../square/square';
+import { Board } from "./board";
+import { Square } from "../square/square";
 
-import { expect } from 'chai';
+import { expect } from "chai";
 
 describe("Board object should", () => {
 
