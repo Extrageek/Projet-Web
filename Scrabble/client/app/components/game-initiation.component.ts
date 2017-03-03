@@ -55,6 +55,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
             .subscribe((roomMessage: IRoomMessage) => {
                 console.log("Joined the room", roomMessage);
                 if (roomMessage._roomIsReady) {
+                    this.socketService.emitMessage(SocketEventType.initializeEasel, this._username);
                     this.router.navigate(["/game-room", this._username]);
                 } else {
                     alert("waiting for a missing member before starting the game");

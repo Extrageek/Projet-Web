@@ -31,7 +31,7 @@ export class SocketEventType {
 
     //Message sent by the server if the name already exists
     static usernameAlreadyExist = "usernameAlreadyExist";
-
+    static initializeEasel = "initializeEasel";
     static changeLettersRequest = "!changer";
     static placeWordCommandRequest = "!place";
     // static passCommandRequest = "!passer";

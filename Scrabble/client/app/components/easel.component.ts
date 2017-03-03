@@ -31,7 +31,8 @@ export class EaselComponent implements OnInit, OnDestroy {
     private _letters: Array<ScrabbleLetter>;
     private _indexOflettersToExchange: Array<number>;
     private _keyEventKeyCode: string;
-    private _exchangeLetter: Subscription;
+    private _exchangeLetterSubmission: Subscription;
+    private _initializeEaselSubmission: Subscription;
 
     public get indexOfLettersToChange(): Array<number> {
         return this._indexOflettersToExchange;
@@ -61,49 +62,42 @@ export class EaselComponent implements OnInit, OnDestroy {
     constructor(
         private easelEventManagerService: EaselManagerService,
         private socketService: SocketService) {
-
-        this._letters = new Array<ScrabbleLetter>();
         this._indexOflettersToExchange = new Array<number>();
-
-        // TODO: Check with RAMI, We should generate the letters from the server
-        let fakeLetters = ['A', 'E', 'M', 'N', 'U', 'A', 'A'];
-        fakeLetters.forEach((letter) => {
-            this.letters.push(new ScrabbleLetter(letter));
-        });
     }
 
     ngOnInit() {
-        this.socketService.subscribeToChannelEvent(SocketEventType.changeLettersRequest)
-            .subscribe((lettersResponse: any) => {
+        this._exchangeLetterSubmission = this.onExchangeLetterRequest();
+        this._initializeEaselSubmission = this.initializeEaselOnConnection();
+    }
 
-                console.log("iii", lettersResponse._data);
+    ngOnDestroy() {
+        //this._exchangeLetterSubmission.unsubscribe();
+    }
+
+    private initializeEaselOnConnection(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.initializeEasel)
+            .subscribe((initialsLetters: Array<string>) => {
+                this._letters = new Array<ScrabbleLetter>();
+                initialsLetters.forEach((letter) => {
+                    this.letters.push(new ScrabbleLetter(letter));
+                });
+            });
+    }
+
+    private onExchangeLetterRequest(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.changeLettersRequest)
+            .subscribe((response: any) => {
 
                 for (let index = 0; index < this._indexOflettersToExchange.length; ++index) {
                     console.log("in easel", this._indexOflettersToExchange[index]);
 
                     this.letters[this._indexOflettersToExchange[index]] =
-                        new ScrabbleLetter(lettersResponse._data[index]);
+                        new ScrabbleLetter(response._data[index]);
                     console.log(this.letters);
                 }
             });
     }
 
-
-
-    // onChangedLetterCommand(): Subscription {
-    //     return this.socketService.subscribeToChannelEvent(SocketEventType.changeLettersRequest)
-    //         .subscribe((response: ICommandMessage<Array<string>>) => {
-    //             if (response !== undefined && response._message !== null) {
-    //                 this._messageArray.push(response);
-    //                 console.log("Changed letters a work ", response._message);
-    //             }
-    //         });
-    //}
-
-
-    ngOnDestroy() {
-        //this._exchangeLetter.unsubscribe();
-    }
 
     public onKeyDownEventHandler(
         event: KeyboardEvent,

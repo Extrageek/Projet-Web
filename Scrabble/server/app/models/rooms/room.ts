@@ -109,4 +109,8 @@ export class Room {
     public exchangeThePlayerLetters(letterToBeExchange: Array<string>): Array<string> {
         return this.letterBankHandler.exchangeLetters(letterToBeExchange);
     }
+
+    public getInitialsLetters(): Array<string> {
+        return this.letterBankHandler.initializeEasel();
+    }
 }

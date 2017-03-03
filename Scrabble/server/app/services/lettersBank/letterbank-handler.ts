@@ -20,9 +20,9 @@ export class LetterBankHandler {
         this._bank = new LetterBank();
     }
 
-    public initializeEasel(): Array<Letter> {
+    public initializeEasel(): Array<string> {
         let newEasel = this.getLetterFromBank(FULL_EASEL);
-        return newEasel;
+        return this.parseFromListOfLetterToListOfString(newEasel);
     }
 
     public exchangeLetters(lettersToBeChanged: Array<string>): Array<string> {
