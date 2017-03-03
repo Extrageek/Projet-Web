@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { Router, ActivatedRoute } from "@angular/router";
 import { Subject } from "rxjs/Subject";
 import { Observable } from "rxjs/Observable";
 import * as io from "socket.io-client";
@@ -13,11 +14,23 @@ export class SocketService {
     static _socket: SocketIOClient.Socket = null;
     private _serverUri: string = 'http://localhost:' + SERVER_PORT;
 
-    constructor() {
-        if (SocketService._socket === null) {
-            SocketService._socket = io.connect(this._serverUri, { 'forceNew': false });
-        }
+    constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+        this.initializeClient();
     }
+
+    private initializeClient() {
+        this.activatedRoute.params.subscribe(params => {
+            // console.log(params['id']);
+
+            if (SocketService._socket === null) {
+                SocketService._socket = io.connect(this._serverUri, { 'forceNew': false });
+                if (this.activatedRoute.params["id"] !== null) {
+                    this.router.navigate(["/", ]);
+                }
+            }
+        });
+    }
+
 
     public emitMessage(socketEventType: SocketEventType, data: Object) {
         SocketService._socket.emit(socketEventType.toString(), data);

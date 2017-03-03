@@ -3,32 +3,12 @@ import { Injectable } from "@angular/core";
 import { EaselManagerService } from "../easel/easel-manager.service";
 import { EaselControl } from "../../commons/easel-control";
 import { ScrabbleLetter } from "../../models/letter/scrabble-letter";
+
 import { CommandType } from "./command-type";
 import { CommandStatus } from "./command-status";
 import { ICommandRequest } from "./command-request";
+import { CommandsHelper } from "./commands-helper";
 
-export const EXCHANGE_COMMAND = '!changer';
-export const PLACE_COMMAND = '!placer';
-export const PASS_COMMAND = '!passer';
-export const GUIDE = '!aide';
-
-const MIN_EASEL_POSITION_INDEX = 0;
-const MAX_EASEL_POSITION_INDEX = 6;
-const MIN_BOARD_POSITION_INDEX = 1;
-const MAX_BOARD_POSITION_INDEX = 15;
-
-const MIN_POSITION_VALUE = 3;
-const MAX_POSITION_VALUE = 4;
-
-const FIRST_INDEX = 0;
-const SECOND_INDEX = 1;
-const THIRD_INDEX = 2;
-const FOURTH_INDEX = 3;
-
-const VERTICAL_ORIENTATION = 'v';
-const HORIZONTAL_ORIENTATION = 'h';
-const BLANK_VALUE = '*';
-const BLANK_WORD = 'blank';
 
 @Injectable()
 export class CommandsService {
@@ -41,19 +21,19 @@ export class CommandsService {
         this.throwsErrorIfParameterIsNull(enteredValue);
         let texte = enteredValue.trim();
 
-        if (texte.startsWith(PLACE_COMMAND)) {
+        if (texte.startsWith(CommandsHelper.PLACE_COMMAND)) {
             return CommandType.PlaceCmd;
 
-        } else if (texte.startsWith(EXCHANGE_COMMAND)) {
+        } else if (texte.startsWith(CommandsHelper.EXCHANGE_COMMAND)) {
             return CommandType.ExchangeCmd;
 
-        } else if (texte.startsWith(PASS_COMMAND)) {
+        } else if (texte.startsWith(CommandsHelper.PASS_COMMAND)) {
             return CommandType.PassCmd;
 
-        } else if (texte.startsWith(GUIDE)) {
+        } else if (texte.startsWith(CommandsHelper.GUIDE)) {
             return CommandType.Guide;
 
-        } else if (texte.startsWith('!') && !texte.startsWith(PLACE_COMMAND)) {
+        } else if (texte.startsWith('!') && !texte.startsWith(CommandsHelper.PLACE_COMMAND)) {
             return CommandType.InvalidCmd;
 
         } else if (texte !== null && texte !== '') {
@@ -83,8 +63,8 @@ export class CommandsService {
             });
 
             for (let index = 0; index < enteredletters.length; ++index) {
-                if (enteredletters[index] === BLANK_VALUE) {
-                    enteredletters[index] = BLANK_WORD;
+                if (enteredletters[index] === CommandsHelper.BLANK_VALUE) {
+                    enteredletters[index] = CommandsHelper.BLANK_WORD;
                 }
 
                 let letterIndex = tempEaselLetters.findIndex((letter: string) =>
@@ -111,18 +91,17 @@ export class CommandsService {
 
         this.throwsErrorIfParameterIsNull(lettersInEasel);
 
-        // get the differents section of the request
+        // get the differents sections of the request
         let requestElement = request.split(' ');
 
         // Get the position of the word to be placed
-        let wordPosition = requestElement[FIRST_INDEX].split('');
-        let enteredWord = requestElement[SECOND_INDEX];
-        let wordToBePlaced = this.getCommandPlacedParameters(enteredWord);
+        let wordPosition = requestElement[CommandsHelper.FIRST_INDEX].split('');
+        let enteredWord = requestElement[CommandsHelper.SECOND_INDEX];
+        let wordToBePlaced = this.getPlacedWordCommandParameters(enteredWord);
 
         if (!this.isValidPosition(wordPosition)
             || !this.isScrabbleLetters(wordToBePlaced)) {
-            commandRequest._commandStatus = CommandStatus.SynthaxeError;
-            commandRequest._response = null;
+            commandRequest = { _commandStatus: CommandStatus.SynthaxeError, _response: null };
             return commandRequest;
         }
 
@@ -133,23 +112,21 @@ export class CommandsService {
         if (wordFromEasel === null
             || wordFromEasel === undefined
             || wordFromEasel.length === 0) {
-            commandRequest._commandStatus = CommandStatus.NotAllowed;
-            commandRequest._response = null;
+            commandRequest = { _commandStatus: CommandStatus.NotAllowed, _response: null };
             return commandRequest;
         }
 
-        commandRequest._commandStatus = CommandStatus.Ok;
-        commandRequest._response = wordFromEasel;
+        commandRequest = { _commandStatus: CommandStatus.Ok, _response: wordFromEasel };
         return commandRequest;
     }
 
-    private getCommandPlacedParameters(enteredWord: string): Array<string> {
+    private getPlacedWordCommandParameters(enteredWord: string): Array<string> {
         let wordToBePlaced: Array<string>;
         if (enteredWord !== undefined) {
             wordToBePlaced = this.easelManagerService.parseStringToListofChar(enteredWord);
             wordToBePlaced.forEach((letter) => {
-                if (letter === BLANK_VALUE) {
-                    letter = BLANK_WORD;
+                if (letter === CommandsHelper.BLANK_VALUE) {
+                    letter = CommandsHelper.BLANK_WORD;
                 }
             });
             return wordToBePlaced;
@@ -157,15 +134,15 @@ export class CommandsService {
     }
 
     private isValidPosition(wordPosition: Array<string>): boolean {
-        if (wordPosition.length < MIN_POSITION_VALUE || wordPosition.length > MAX_POSITION_VALUE) {
+        if (wordPosition.length < CommandsHelper.MIN_POSITION_VALUE || wordPosition.length > CommandsHelper.MAX_POSITION_VALUE) {
             return false;
         }
-        // Get the word position to be placed
-        let rowIndex = wordPosition[FIRST_INDEX];
-        let colIndex = Number(wordPosition[SECOND_INDEX]);
+        // Get the position of the word to be placed
+        let rowIndex = wordPosition[CommandsHelper.FIRST_INDEX];
+        let colIndex = Number(wordPosition[CommandsHelper.SECOND_INDEX]);
 
-        if (wordPosition.length === MAX_POSITION_VALUE) {
-            colIndex = Number([wordPosition[SECOND_INDEX], wordPosition[THIRD_INDEX]].join(''));
+        if (wordPosition.length === CommandsHelper.MAX_POSITION_VALUE) {
+            colIndex = Number([wordPosition[CommandsHelper.SECOND_INDEX], wordPosition[CommandsHelper.THIRD_INDEX]].join(''));
         }
 
         let wordOrientation = wordPosition[wordPosition.length - 1];
@@ -185,15 +162,15 @@ export class CommandsService {
     private isValidColumnPosition(index: number): boolean {
         this.throwsErrorIfParameterIsNull(index);
         return index !== 0
-            && index >= MIN_BOARD_POSITION_INDEX
-            && index <= MAX_BOARD_POSITION_INDEX;
+            && index >= CommandsHelper.MIN_BOARD_POSITION_INDEX
+            && index <= CommandsHelper.MAX_BOARD_POSITION_INDEX;
     }
 
     private isValidOrientation(orientation: string): boolean {
         //console.log("-", orientation);
         this.throwsErrorIfParameterIsNull(orientation);
-        return orientation === VERTICAL_ORIENTATION
-            || orientation === HORIZONTAL_ORIENTATION;
+        return orientation === CommandsHelper.VERTICAL_ORIENTATION
+            || orientation === CommandsHelper.HORIZONTAL_ORIENTATION;
     }
 
     public isScrabbleLetters(enteredLetters: Array<string>): boolean {
@@ -204,7 +181,7 @@ export class CommandsService {
         }
 
         notScrabbleLetters = enteredLetters.filter((value) => {
-            return !this.easelManagerService.isScrabbleLetter(value.charCodeAt(0)) && value !== BLANK_VALUE;
+            return !this.easelManagerService.isScrabbleLetter(value.charCodeAt(0)) && value !== CommandsHelper.BLANK_VALUE;
         });
         return (notScrabbleLetters.length === 0);
     }
