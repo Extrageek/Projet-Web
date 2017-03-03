@@ -27,45 +27,45 @@ describe("CommandService should", () => {
     });
 
     it("throw an exception when an input command is null", () => {
-        let verification = () => _commandService.getInputCommandType(null);
+        let verification = () => _commandService.getCommandType(null);
         expect(verification).to.throw(Error);
     });
 
     it("throw an exception when an input command is empty", () => {
         let input = "";
-        let verification = () => _commandService.getInputCommandType(null);
+        let verification = () => _commandService.getCommandType(null);
         expect(verification).to.throw(Error);
     });
 
     it("reconize the input to add a new word", () => {
-        let verification = _commandService.getInputCommandType(PLACE_COMMAND);
+        let verification = _commandService.getCommandType(PLACE_COMMAND);
         expect(verification).to.be.equal(CommandType.PlaceCmd);
     });
 
     it("reconize the input to exchange letters", () => {
-        let verification = _commandService.getInputCommandType(EXCHANGE_COMMAND);
+        let verification = _commandService.getCommandType(EXCHANGE_COMMAND);
         expect(verification).to.be.equal(CommandType.ExchangeCmd);
     });
 
     it("reconize the input to let a player pass it's turn", () => {
-        let verification = _commandService.getInputCommandType(PASS_COMMAND);
+        let verification = _commandService.getCommandType(PASS_COMMAND);
         expect(verification).to.be.equal(CommandType.PassCmd);
     });
 
     it("reconize the input to open help menu", () => {
-        let verification = _commandService.getInputCommandType(GUIDE);
+        let verification = _commandService.getCommandType(GUIDE);
         expect(verification).to.be.equal(CommandType.Guide);
     });
 
     it("reconize an invalid command", () => {
         let input = "!";
-        let verification = _commandService.getInputCommandType(input);
+        let verification = _commandService.getCommandType(input);
         expect(verification).to.be.equal(CommandType.InvalidCmd);
     });
 
     it("reconize the input of a valid message when it's not empty", () => {
         let input = "Hello World";
-        let verification = _commandService.getInputCommandType(input);
+        let verification = _commandService.getCommandType(input);
         expect(verification).to.be.equal(CommandType.MessageCmd);
     });
 

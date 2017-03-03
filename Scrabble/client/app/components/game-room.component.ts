@@ -108,7 +108,7 @@ export class GameComponent implements OnInit, OnDestroy {
     // A callback fonction for the chat message submit button
     public submitMessage() {
         let request = this._inputMessage.trim();
-        let commandType = this.commandsService.getInputCommandType(this._inputMessage);
+        let commandType = this.commandsService.getCommandType(this._inputMessage);
 
         if (commandType === CommandType.InvalidCmd) {
             console.log("Custom message: Invalid");
@@ -125,18 +125,18 @@ export class GameComponent implements OnInit, OnDestroy {
     }
 
     // Use to execute a custom event according to the command entered by the player
-    private executeCommand(commandType: CommandType, requestValue: string) {
+    private executeCommand(commandType: CommandType, parameters: string) {
         try {
             switch (commandType) {
                 case CommandType.MessageCmd:
                     this.executeSendMessageCommand(commandType);
                     break;
                 case CommandType.ExchangeCmd:
-                    this.executeExchangeLettersCommand(commandType, requestValue);
+                    this.executeExchangeLettersCommand(commandType, parameters);
                     this._inputMessage = '';
                     break;
                 case CommandType.PlaceCmd:
-                    this.executePlaceWordCommand(commandType, requestValue);
+                    this.executePlaceWordCommand(commandType, parameters);
                     this._inputMessage = '';
                     break;
                 case CommandType.PassCmd:
@@ -174,6 +174,8 @@ export class GameComponent implements OnInit, OnDestroy {
 
         let request = requestValue.split(EXCHANGE_COMMAND)[1].trim();
         let listOfLettersToChange = this.easelManagerService.parseStringToListofChar(request);
+
+        console.log(request, listOfLettersToChange);
 
         let exchangeRequest = this.commandsService
             .createExchangeEaselLettersRequest(this._childEasel.letters, listOfLettersToChange);

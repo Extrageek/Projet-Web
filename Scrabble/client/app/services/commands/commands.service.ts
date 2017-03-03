@@ -37,10 +37,8 @@ export class CommandsService {
         // Default constructor
     }
 
-    public getInputCommandType(enteredValue: string): CommandType {
-
+    public getCommandType(enteredValue: string): CommandType {
         this.throwsErrorIfParameterIsNull(enteredValue);
-
         let texte = enteredValue.trim();
 
         if (texte.startsWith(PLACE_COMMAND)) {
@@ -67,47 +65,43 @@ export class CommandsService {
         lettersInEasel: Array<ScrabbleLetter>,
         enteredletters: Array<string>): ICommandRequest<Array<number>> {
 
-        let request: ICommandRequest<Array<number>> = { _commandStatus: null, _response: null };
+        let commandRequest: ICommandRequest<Array<number>> = { _commandStatus: null, _response: null };
         let indexOfLettersToChange = new Array<number>();
 
         this.throwsErrorIfParameterIsNull(lettersInEasel);
 
         if (enteredletters === null || enteredletters.length > lettersInEasel.length) {
             return { _commandStatus: CommandStatus.SynthaxeError, _response: null };
-        }
 
-        if (enteredletters.length === 0) {
+        } else if (enteredletters.length === 0) {
             return { _commandStatus: CommandStatus.NotAllowed, _response: null };
+
+        } else {
+            let tempEaselLetters = new Array<string>();
+            lettersInEasel.forEach((letter) => {
+                tempEaselLetters.push(letter.letter);
+            });
+
+            for (let index = 0; index < enteredletters.length; ++index) {
+                if (enteredletters[index] === BLANK_VALUE) {
+                    enteredletters[index] = BLANK_WORD;
+                }
+
+                let letterIndex = tempEaselLetters.findIndex((letter: string) =>
+                    letter.toUpperCase() === enteredletters[index].toUpperCase());
+
+                if (letterIndex === -1 || letterIndex === undefined) {
+                    commandRequest = { _commandStatus: CommandStatus.NotAllowed, _response: null };
+                    return commandRequest;
+                }
+
+                tempEaselLetters[letterIndex] = '-1';
+                indexOfLettersToChange.push(letterIndex);
+            }
         }
 
-        let tempEaselLetters = new Array<string>();
-        lettersInEasel.forEach((letter) => {
-            tempEaselLetters.push(letter.letter);
-        });
-
-        for (let index = 0; index < enteredletters.length; ++index) {
-            if (enteredletters[index] === BLANK_VALUE) {
-                enteredletters[index] = BLANK_WORD;
-            }
-
-            // TODO: Check, a bug is found when changing several occurance of a letters
-            // Style get the first occurance
-            let letterIndex = tempEaselLetters.findIndex((letter: string) =>
-                letter.toUpperCase() === enteredletters[index].toUpperCase());
-
-            if (letterIndex === -1 || letterIndex === undefined) {
-                request._commandStatus = CommandStatus.NotAllowed;
-                request._response = null;
-                return request;
-            }
-
-            tempEaselLetters[letterIndex] = '-1';
-            indexOfLettersToChange.push(letterIndex);
-        }
-
-        request._commandStatus = CommandStatus.Ok;
-        request._response = indexOfLettersToChange;
-        return request;
+        commandRequest = { _commandStatus: CommandStatus.Ok, _response: indexOfLettersToChange };
+        return commandRequest;
     }
 
     public createPlaceWordRequest(lettersInEasel: Array<ScrabbleLetter>, request: string):
@@ -123,7 +117,7 @@ export class CommandsService {
         // Get the position of the word to be placed
         let wordPosition = requestElement[FIRST_INDEX].split('');
         let enteredWord = requestElement[SECOND_INDEX];
-        let wordToBePlaced = this.extractWordToBePlaced(enteredWord);
+        let wordToBePlaced = this.getCommandPlacedParameters(enteredWord);
 
         if (!this.isValidPosition(wordPosition)
             || !this.isScrabbleLetters(wordToBePlaced)) {
@@ -149,7 +143,7 @@ export class CommandsService {
         return commandRequest;
     }
 
-    private extractWordToBePlaced(enteredWord: string): Array<string> {
+    private getCommandPlacedParameters(enteredWord: string): Array<string> {
         let wordToBePlaced: Array<string>;
         if (enteredWord !== undefined) {
             wordToBePlaced = this.easelManagerService.parseStringToListofChar(enteredWord);
@@ -162,8 +156,7 @@ export class CommandsService {
         }
     }
 
-
-    private isValidPosition(wordPosition: Array<string>) {
+    private isValidPosition(wordPosition: Array<string>): boolean {
         if (wordPosition.length < MIN_POSITION_VALUE || wordPosition.length > MAX_POSITION_VALUE) {
             return false;
         }
@@ -176,10 +169,6 @@ export class CommandsService {
         }
 
         let wordOrientation = wordPosition[wordPosition.length - 1];
-
-        // console.log("--", this.isValidRowPosition(rowIndex),
-        //     this.isValidColumnPosition(colIndex),
-        //     this.isValidOrientation(wordOrientation));
 
         return (this.isValidRowPosition(rowIndex)
             && this.isValidColumnPosition(colIndex)

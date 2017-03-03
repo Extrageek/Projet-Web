@@ -101,14 +101,14 @@ export class SocketConnectionHandler {
             _username: username,
             _roomId: room.roomId,
             _numberOfMissingPlayers: room.numberOfMissingPlayers(),
-            _roomIsReady: false,
+            _roomIsReady: room.isFull(),
             _message: `${username}` + ` joined the room`,
             _date: new Date(),
             _commandType: CommandType.MessageCmd
         };
 
         // Emit to all the player in the room.
-        socket.to(room.roomId).emit(SocketEventType.joinRoom, roomMessage);
+        this._socket.to(room.roomId).emit(SocketEventType.joinRoom, roomMessage);
     }
 
     // Handle a message sent by a member of a room

@@ -54,6 +54,12 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
         return this.socketService.subscribeToChannelEvent(SocketEventType.joinRoom)
             .subscribe((roomMessage: IRoomMessage) => {
                 console.log("Joined the room", roomMessage);
+                
+                if (roomMessage._roomIsReady) {
+                    this.router.navigate(["/game-room", this._username]);
+                } else {
+                    alert("waiting for a missing member before starting the game");
+                }
             });
     }
 
@@ -62,14 +68,6 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
         return this.socketService.subscribeToChannelEvent(SocketEventType.leaveRoom)
             .subscribe((roomMessage: IRoomMessage) => {
                 console.log("Left the room", roomMessage);
-            });
-    }
-
-    // A callback function when the room of the user is full and the game is ready to be started
-    private onRoomReady(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.roomReady)
-            .subscribe((roomMessage: IRoomMessage) => {
-                console.log("Room ready");
             });
     }
 
@@ -85,7 +83,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
     private onUsernameAlreadyExists(): Subscription {
         return this.socketService.subscribeToChannelEvent(SocketEventType.usernameAlreadyExist)
             .subscribe(() => {
-                console.log("This username is already taken, please choose another username.");
+                alert("This username is already taken, please choose another username.");
             });
     }
 
@@ -107,7 +105,12 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
         this.socketService.emitMessage(
             SocketEventType.newGameRequest,
             { 'username': username, 'gameType': Number(numberOfPlayers) });
+    }
 
-        this.router.navigate(["/game-room", this._username]);
+    public waitingForMissingMember(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.connectError)
+            .subscribe((error) => {
+                alert("Waiting for missing member: The server is not reachable");
+            });
     }
 }
