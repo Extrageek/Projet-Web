@@ -54,7 +54,6 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
         return this.socketService.subscribeToChannelEvent(SocketEventType.joinRoom)
             .subscribe((roomMessage: IRoomMessage) => {
                 console.log("Joined the room", roomMessage);
-                
                 if (roomMessage._roomIsReady) {
                     this.router.navigate(["/game-room", this._username]);
                 } else {
