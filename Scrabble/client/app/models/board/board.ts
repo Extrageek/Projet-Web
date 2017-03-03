@@ -1,8 +1,8 @@
-import { BoardRows } from './board-rows';
-import { BoardColumn } from './board-column';
-import { Square } from '../square/square';
-import { SquarePosition } from '../square/square-position';
-import { SquareType } from '../square/square-type';
+import { BoardRows } from "./board-rows";
+import { BoardColumn } from "./board-column";
+import { Square } from "../square/square";
+import { SquarePosition } from "../square/square-position";
+import { SquareType } from "../square/square-type";
 
 const BOARD_SIZE = 15;
 

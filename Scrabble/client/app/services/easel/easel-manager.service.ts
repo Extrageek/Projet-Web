@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { EaselControl } from '../../commons/easel-control';
-import { ScrabbleLetter } from '../../models/letter/scrabble-letter';
+import { Injectable } from "@angular/core";
+import { EaselControl } from "../../commons/easel-control";
+import { ScrabbleLetter } from "../../models/letter/scrabble-letter";
 
 declare var jQuery: any;
 

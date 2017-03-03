@@ -1,5 +1,5 @@
-import { IGameMessage } from './game-message-interface';
-import { CommandStatus } from '../command-status';
+import { IGameMessage } from "./game-message-interface";
+import { CommandStatus } from "../command-status";
 
 export class ICommandMessage<T> extends IGameMessage {
     _commandStatus: CommandStatus;

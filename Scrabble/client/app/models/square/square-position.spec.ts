@@ -1,8 +1,8 @@
-import { SquarePosition } from './square-position';
-import { BoardRows } from '../board/board-rows';
-import { BoardColumn } from '../board/board-column';
+import { SquarePosition } from "./square-position";
+import { BoardRows } from "../board/board-rows";
+import { BoardColumn } from "../board/board-column";
 
-import { expect } from 'chai';
+import { expect } from "chai";
 
 let _row: BoardRows;
 let _column: BoardColumn;

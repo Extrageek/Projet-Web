@@ -1,6 +1,6 @@
-import { CommandType } from '../../services/commands/command-type';
-import { IGameMessage } from './game-message-interface';
-import { expect } from 'chai';
+import { CommandType } from "../../services/commands/command-type";
+import { IGameMessage } from "./game-message-interface";
+import { expect } from "chai";
 
 let _savedName = "Rami";
 let _savedMessage = "!change abc";

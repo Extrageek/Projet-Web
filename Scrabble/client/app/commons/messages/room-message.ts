@@ -1,4 +1,4 @@
-import { IGameMessage } from './game-message-interface';
+import { IGameMessage } from "./game-message-interface";
 
 export interface IRoomMessage extends IGameMessage {
     _roomId: string;

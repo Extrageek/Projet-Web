@@ -1,11 +1,11 @@
-import { SquarePosition } from './square-position';
-import { BoardRows } from '../board/board-rows';
-import { BoardColumn } from '../board/board-column';
-import { SquareType } from './square-type';
-import { ScrabbleLetter } from '../letter/scrabble-letter';
-import { Alphabet } from '../letter/alphabet';
-import { Square } from './square';
-import { expect } from 'chai';
+import { SquarePosition } from "./square-position";
+import { BoardRows } from "../board/board-rows";
+import { BoardColumn } from "../board/board-column";
+import { SquareType } from "./square-type";
+import { ScrabbleLetter } from "../letter/scrabble-letter";
+import { Alphabet } from "../letter/alphabet";
+import { Square } from "./square";
+import { expect } from "chai";
 
 let _square: Square;
 let _letter: ScrabbleLetter;

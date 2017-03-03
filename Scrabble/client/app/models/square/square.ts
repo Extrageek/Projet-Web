@@ -1,6 +1,6 @@
-import { SquarePosition } from './square-position';
-import { ScrabbleLetter } from './../letter/scrabble-letter';
-import { SquareType } from './square-type';
+import { SquarePosition } from "./square-position";
+import { ScrabbleLetter } from "./../letter/scrabble-letter";
+import { SquareType } from "./square-type";
 
 export class Square {
     private _letter: ScrabbleLetter;

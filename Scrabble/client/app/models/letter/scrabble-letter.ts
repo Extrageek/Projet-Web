@@ -1,4 +1,4 @@
-import { Alphabet } from './alphabet';
+import { Alphabet } from "./alphabet";
 
 export class ScrabbleLetter {
     private _letter: string;

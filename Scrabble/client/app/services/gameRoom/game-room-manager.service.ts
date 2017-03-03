@@ -5,7 +5,7 @@
  * @date 2017/01/22
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { ScrabbleLetter } from "../../models/letter/scrabble-letter";
 import { EaselControl } from "../../commons/easel-control";
 

@@ -1,5 +1,5 @@
-import { Alphabet } from './alphabet';
-import { AlphabetPoint } from '../../commons/alphabet-point';
+import { Alphabet } from "./alphabet";
+import { AlphabetPoint } from "../../commons/alphabet-point";
 
 export class Letter {
     private _alphabetLetter: string;

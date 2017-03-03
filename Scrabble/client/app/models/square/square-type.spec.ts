@@ -1,6 +1,6 @@
-import { SquareType } from './square-type';
+import { SquareType } from "./square-type";
 
-import { expect } from 'chai';
+import { expect } from "chai";
 
 describe("SquareType", () => {
     it("should always return strings", () => {

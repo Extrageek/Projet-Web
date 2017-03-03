@@ -1,6 +1,7 @@
 import { Player } from "../players/player";
-import { Letter } from '../../models/lettersBank/letter';
-import { LetterBankHandler } from '../../services/lettersBank/letterbank-handler';
+import { Letter } from "../../models/lettersBank/letter";
+import { LetterBankHandler } from "../../services/lettersBank/letterbank-handler";
+
 let uuid = require('node-uuid');
 
 export class Room {

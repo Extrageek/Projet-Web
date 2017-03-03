@@ -1,4 +1,4 @@
-import { CommandType } from '../../services/commands/command-type';
+import { CommandType } from "../../services/commands/command-type";
 
 export interface IGameMessage {
     _username: string;

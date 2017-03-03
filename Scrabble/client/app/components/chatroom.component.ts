@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy, AfterViewChecked, ElementRef, ViewChild } from "@angular/core";
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from "rxjs/Subscription";
 
-import { Route, ActivatedRoute } from '@angular/router';
+import { Route, ActivatedRoute } from "@angular/router";
 import { SocketService } from "../services/socket-service";
-import { SocketEventType } from '../commons/socket-eventType';
-import { IGameMessage } from '../commons/messages/game-message-interface';
-import { IRoomMessage } from '../commons/messages/room-message';
-import { ICommandMessage } from '../commons/messages/command-message';
+import { SocketEventType } from "../commons/socket-eventType";
+import { IGameMessage } from "../commons/messages/game-message-interface";
+import { IRoomMessage } from "../commons/messages/room-message";
+import { ICommandMessage } from "../commons/messages/command-message";
 
 @Component({
     moduleId: module.id,

@@ -6,7 +6,7 @@ import { RouteModule } from "./routing-app.module";
 import { GameRoomModule } from "./game-room.module";
 import { AppComponent } from "./../components/app.component";
 import { GameInitiationComponent } from "./../components/game-initiation.component";
-import { SocketService } from './../services/socket-service';
+import { SocketService } from "./../services/socket-service";
 
 @NgModule({
     imports: [

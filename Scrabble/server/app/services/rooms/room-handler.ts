@@ -1,5 +1,5 @@
 import { Room } from "../../models/rooms/room";
-import { Letter } from '../../models/lettersBank/letter';
+import { Letter } from "../../models/lettersBank/letter";
 import { Player } from "../../models/players/player";
 
 export class RoomHandler {
