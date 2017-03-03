@@ -5,4 +5,3 @@ export class ICommandMessage<T> extends IGameMessage {
     _commandStatus: CommandStatus;
     _data: T;
 }
-  

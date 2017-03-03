@@ -134,15 +134,18 @@ export class CommandsService {
     }
 
     private isValidPosition(wordPosition: Array<string>): boolean {
-        if (wordPosition.length < CommandsHelper.MIN_POSITION_VALUE || wordPosition.length > CommandsHelper.MAX_POSITION_VALUE) {
-            return false;
+        if (wordPosition.length < CommandsHelper.MIN_POSITION_VALUE
+            || wordPosition.length > CommandsHelper.MAX_POSITION_VALUE) {
+                return false;
         }
         // Get the position of the word to be placed
         let rowIndex = wordPosition[CommandsHelper.FIRST_INDEX];
         let colIndex = Number(wordPosition[CommandsHelper.SECOND_INDEX]);
 
         if (wordPosition.length === CommandsHelper.MAX_POSITION_VALUE) {
-            colIndex = Number([wordPosition[CommandsHelper.SECOND_INDEX], wordPosition[CommandsHelper.THIRD_INDEX]].join(''));
+            colIndex = Number(
+                [wordPosition[CommandsHelper.SECOND_INDEX], wordPosition[CommandsHelper.THIRD_INDEX]].join('')
+            );
         }
 
         let wordOrientation = wordPosition[wordPosition.length - 1];
@@ -181,7 +184,8 @@ export class CommandsService {
         }
 
         notScrabbleLetters = enteredLetters.filter((value) => {
-            return !this.easelManagerService.isScrabbleLetter(value.charCodeAt(0)) && value !== CommandsHelper.BLANK_VALUE;
+            return !this.easelManagerService.isScrabbleLetter(value.charCodeAt(0))
+                && value !== CommandsHelper.BLANK_VALUE;
         });
         return (notScrabbleLetters.length === 0);
     }
