@@ -6,6 +6,7 @@
  */
 
 import { Puzzle } from "./../models/puzzle";
+import { GridSolver } from "./grid-solver.service";
 
 // Used to generate the type of transformation and to give a number of holes to dig in sudoku
 function getRandomNumberInRange(min: number, max: number): number {
@@ -23,9 +24,10 @@ module GridGenerationService {
     export class GridGenerationManager {
 
         private static readonly MILLISECONDS_TO_WAIT = 5000;
-        private static readonly NUMBER_OF_SUDOKUS_TO_GENERATE = 3;
+        private static readonly NUMBER_OF_SUDOKUS_TO_GENERATE = 1;
         private static readonly NOMBRE_ITERATIONS_MIN = 1;
         private static readonly NOMBRE_ITERATIONS_MAX = 200;
+        private static readonly NUMBERS_TO_REMOVE = [45, 50];
 
         private _sudokusGenerated: Array<Array<Puzzle>>;
 
@@ -48,12 +50,17 @@ module GridGenerationService {
         public getNewPuzzle(difficulty: Difficulty): Promise<Puzzle> {
             return new Promise((resolve, reject) => {
                 if (this._sudokusGenerated[difficulty].length !== 0) {
+                    console.log("have a sudoku!");
                     //Launch a new sudoku generation after the existing sudoku is returned.
                     let sudokuGenerated = this._sudokusGenerated[difficulty].pop();
                     resolve(sudokuGenerated);
-                    this.performGenerationWithDelay(difficulty).then((puzzle: Puzzle) => {
-                        this._sudokusGenerated[difficulty].push(puzzle);
-                    });
+
+                    setTimeout(() => {
+                        this.performGenerationWithDelay(difficulty)
+                        .then((puzzle: Puzzle) => {
+                            this._sudokusGenerated[difficulty].push(puzzle);
+                        })
+                    }, 0);
                 }
                 else {
                     //Launch a new sudoku generation and return the sudoku generated
@@ -119,6 +126,8 @@ module GridGenerationService {
                 let operationNumberToDo = getRandomNumberInRange(0, operations.length - 1);
                 operations[operationNumberToDo](newPuzzle);
             }
+            this.hideNumbers(newPuzzle, GridGenerationManager.NUMBERS_TO_REMOVE[difficulty]);
+            //this.hideNumbers(newPuzzle, 40);
             newPuzzle.createPuzzleHoles();
             return newPuzzle;
         }
@@ -131,13 +140,52 @@ module GridGenerationService {
         private numberGeneratorForSwaping(): Array<number> {
             let rowNumbers = [-1, -1];
             let squareNumber: number;
-            rowNumbers[0] = getRandomNumberInRange(Puzzle.MIN_COLUMN_SIZE, Puzzle.SQUARE_LENGTH) - 1;
-            rowNumbers[1] = (rowNumbers[0] + getRandomNumberInRange(Puzzle.MIN_COLUMN_SIZE, Puzzle.SQUARE_LENGTH - 1))
+            rowNumbers[0] = getRandomNumberInRange(Puzzle.MIN_COLUMN_INDEX, Puzzle.SQUARE_LENGTH - 1);
+            rowNumbers[1] = (rowNumbers[0]
+                + getRandomNumberInRange(Puzzle.MIN_COLUMN_INDEX + 1, Puzzle.SQUARE_LENGTH - 1))
                 % Puzzle.SQUARE_LENGTH;
-            squareNumber = getRandomNumberInRange(Puzzle.MIN_COLUMN_SIZE, Puzzle.SQUARE_LENGTH) - 1;
+            squareNumber = getRandomNumberInRange(Puzzle.MIN_COLUMN_INDEX, Puzzle.SQUARE_LENGTH - 1);
             rowNumbers[0] = rowNumbers[0] + squareNumber * Puzzle.SQUARE_LENGTH;
             rowNumbers[1] = rowNumbers[1] + squareNumber * Puzzle.SQUARE_LENGTH;
             return rowNumbers;
+        }
+
+        private hideNumbers(newPuzzle: Puzzle, numbersToRemove: number) {
+            let gridSolver = new GridSolver(newPuzzle);
+            let validIndexesRow = [0, 1, 2, 3 , 4, 5, 6, 7, 8];
+            let validIndexesColumn = [[0, 1, 2, 3 , 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3 , 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3 , 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3 , 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3 , 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3 , 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3 , 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3 , 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3 , 4, 5, 6, 7, 8]];
+            let numberOfRemovedNumbers = 0;
+            console.log("-----------------");
+            while (validIndexesRow.length > 0 && numberOfRemovedNumbers < numbersToRemove) {
+                let rowValidIndex = getRandomNumberInRange(0, validIndexesRow.length - 1);
+                let rowIndex = validIndexesRow[rowValidIndex];
+                let columnValidIndex = getRandomNumberInRange(0, validIndexesColumn[rowIndex].length - 1);
+                let columnIndex = validIndexesColumn[rowIndex][columnValidIndex];
+
+                newPuzzle.setPuzzleTileVisibility(rowIndex, columnIndex, true);
+                console.log("removing number at " + rowIndex + ", " + columnIndex);
+                if (gridSolver.getNumberOfSolutionsAfterRemovingNumber(rowIndex, columnIndex) !== 1) {
+                    newPuzzle.setPuzzleTileVisibility(rowIndex, columnIndex, false);
+                }
+                else {
+                    ++numberOfRemovedNumbers;
+                }
+                if (validIndexesColumn[rowIndex].length === 1) {
+                    validIndexesRow.splice(rowValidIndex, 1);
+                }
+                validIndexesColumn[rowIndex].splice(columnValidIndex, 1);
+                console.log(validIndexesRow);
+                console.log(validIndexesColumn);
+            }
+            console.log("numbers removed : " + numberOfRemovedNumbers.toString());
         }
     }
 }
