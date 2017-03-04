@@ -23,23 +23,23 @@ export class SocketConnectionHandler {
             throw new Error("Invalid server parameter.");
         }
 
-        this._socket = io.listen(server);
         this._roomHandler = new RoomHandler();
-        this.initializeAllListeners();
+        this._socket = io.listen(server);
+        this.initializeListeners();
     }
 
-    private initializeAllListeners() {
+    private initializeListeners() {
         this._socket.sockets.on(SocketEventType.connection, (socket: SocketIO.Socket) => {
-
             console.log("a new connection to the server", socket.id);
 
             try {
-                this.onNewGameRequest(socket);
-                this.onMessage(socket);
-                this.onDisconnect(socket);
+
+                this.subscribeToNewGameEvent(socket);
                 this.onInitializeEasel(socket);
-                this.onExchangeLetters(socket);
-                this.onExecuteCommandRequest(socket);
+                this.subscribeToMessageEvent(socket);
+                this.subscribeToExchangeLettersEvent(socket);
+                this.subscribeToCommandEvent(socket);
+                this.onDisconnect(socket);
 
             } catch (error) {
                 this._socket.emit(SocketEventType.connectError);
@@ -47,8 +47,47 @@ export class SocketConnectionHandler {
         });
     }
 
+    private subscribeToMessageEvent(socket: SocketIO.Socket) {
+        socket.on(SocketEventType.message, (data: {
+            commandType: CommandType, username: string, message: string
+        }) => {
+            let response = this.createRoomMessageResponse(data);
+            this._socket.to(response._roomId).emit(SocketEventType.message, response);
+        });
+    }
+
+    // A listener for an Exchange letter request
+    private subscribeToExchangeLettersEvent(socket: SocketIO.Socket) {
+        socket.on(SocketEventType.changeLettersRequest, (data: {
+            commandType: CommandType,
+            listOfLettersToChange: Array<string>
+        }) => {
+            let response = this.createExchangeLettersResponse(socket.id, data);
+            if (response !== null) {
+                // Emit a message with the new letters to the sender
+                this._socket.to(response._roomId).emit(SocketEventType.changeLettersRequest, response);
+
+            } else {
+                socket.emit(SocketEventType.invalidRequest);
+            }
+        });
+    }
+
+    private subscribeToCommandEvent(socket: SocketIO.Socket) {
+        socket.on(SocketEventType.commandRequest,
+            (data: { commandType: CommandType, commandStatus: CommandStatus, data: string }) => {
+                let response = this.createCommandResponse(socket.id, data);
+
+                if (response !== null) {
+                    // Emit a message with the new letters to the sender
+                    this._socket.to(response._roomId).emit(SocketEventType.commandRequest, response);
+                } else {
+
+                }
+            });
+    }
     // En event when a player ask for a new game
-    private onNewGameRequest(socket: SocketIO.Socket) {
+    private subscribeToNewGameEvent(socket: SocketIO.Socket) {
         if (socket === null) {
             throw new Error("The socket value cannot be null.");
         }
@@ -75,7 +114,7 @@ export class SocketConnectionHandler {
 
                     // Join the room
                     socket.join(room.roomId);
-                    this.sendWelcomeMessageOnPlayerJoinedRoom(player.username, room, socket);
+                    this.subscribeToJoinedRoomMessage(player.username, room, socket);
 
                 }
                 else {
@@ -88,7 +127,7 @@ export class SocketConnectionHandler {
     }
 
     // Use to send a message to a specific room members
-    private sendWelcomeMessageOnPlayerJoinedRoom(username: string, room: Room, socket: SocketIO.Socket) {
+    private subscribeToJoinedRoomMessage(username: string, room: Room, socket: SocketIO.Socket) {
 
         if (username === null) {
             throw new Error("The username cannot be null.");
@@ -114,85 +153,102 @@ export class SocketConnectionHandler {
     }
 
     // Handle a message sent by a member of a room
-    private onMessage(socket: SocketIO.Socket) {
-        if (socket === null) {
+    private createRoomMessageResponse(roomMessage: { commandType: CommandType, username: string, message: string }): IRoomMessage {
+
+        if (roomMessage === null) {
             throw new Error("The socket value cannot be null.");
         }
 
-        socket.on(SocketEventType.message,
-            (sentMessage: { commandType: CommandType, username: string, message: string }) => {
-                let currentRoom = this._roomHandler.getRoomByUsername(sentMessage.username);
+        let currentRoom = this._roomHandler.getRoomByUsername(roomMessage.username);
+        if (currentRoom == null || currentRoom === undefined) {
+            // TODO: Maybe emit an error to the sender
+            throw new Error("Error, we should not be here, never, ever");
+        }
 
-                console.log("Room message :", sentMessage);
+        // Create a response for the room members
+        let response: IRoomMessage = {
+            _username: roomMessage.username,
+            _roomId: currentRoom.roomId,
+            _numberOfMissingPlayers: currentRoom.numberOfMissingPlayers(),
+            _roomIsReady: currentRoom.isFull(),
+            _message: roomMessage.message,
+            _date: new Date(),
+            _commandType: roomMessage.commandType
+        };
 
-                if (currentRoom == null || currentRoom === undefined) {
-                    // TODO: Maybe emit an error to the sender
-                    throw new Error("Error, we should not be here, never, ever");
-                }
-
-                // Create a response for the room members
-                let chatMessage: IRoomMessage = {
-                    _username: sentMessage.username,
-                    _roomId: currentRoom.roomId,
-                    _numberOfMissingPlayers: currentRoom.numberOfMissingPlayers(),
-                    _roomIsReady: currentRoom.isFull(),
-                    _message: sentMessage.message,
-                    _date: new Date(),
-                    _commandType: sentMessage.commandType
-                };
-
-                this._socket.to(currentRoom.roomId).emit(SocketEventType.message, chatMessage);
-            });
+        return response;
     }
 
     // Use to exchange the letters of a player
-    private onExchangeLetters(socket: SocketIO.Socket) {
+    private createExchangeLettersResponse(socketId: string, data: {
+        commandType: CommandType,
+        listOfLettersToChange: Array<string>
+    }): ICommandMessage<Array<string>> {
 
-        if (socket === null) {
+        if (socketId === null || data.listOfLettersToChange === null) {
+            throw new Error("Null argument exception: the parameter cannot be null be null.");
+        }
+
+        let changedLetters = this._roomHandler
+            .exchangeLetterOfCurrentPlayer(socketId, data.listOfLettersToChange);
+        let commandMessage: ICommandMessage<Array<string>>;
+        let playerRoom = this._roomHandler.getRoomBySocketId(socketId);
+
+        if (playerRoom === null
+            && changedLetters === null
+            && changedLetters.length !== data.listOfLettersToChange.length) {
+            commandMessage = null;
+
+        } else {
+            let player = this._roomHandler.getPlayerBySocketId(socketId);
+            //let newPlayersOrder = playerRoom.getAndUpdatePlayersOrder();
+            //let newPlayersOrder =playerRoom;
+            // console.log("newOrder", newPlayersOrder);
+
+            let message = `$: <!changer` + ' ' + `${data.listOfLettersToChange.toString()}>`;
+
+            commandMessage = {
+                _commandType: data.commandType,
+                _commandStatus: CommandStatus.Ok,
+                _username: player.username,
+                _message: message,
+                _data: changedLetters,
+                _roomId: playerRoom.roomId,
+                _date: new Date()
+            };
+        }
+
+        return commandMessage;
+    }
+
+    private createCommandResponse(socketId: string, data: {
+        commandType: CommandType, commandStatus: CommandStatus, data: string
+    }): ICommandMessage<string> {
+        if (socketId === null) {
             throw new Error("The socket value cannot be null.");
         }
 
-        socket.on(SocketEventType.changeLettersRequest,
-            (sentMessage: {
-                commandType: CommandType,
-                listOfLettersToChange: Array<string>
-            }) => {
+        let playerRoom = this._roomHandler.getRoomBySocketId(socketId);
+        let player = this._roomHandler.getPlayerBySocketId(socketId);
+        let message = `$: ${CommandStatus[data.commandStatus]}` + ': ' + `<${data.data}>`;
+        let commandMessage: ICommandMessage<string>;
 
-                if (sentMessage.listOfLettersToChange === null) {
-                    throw new Error("The letters to be changed cannot be null");
-                }
+        if (playerRoom === null || player === null) {
+            commandMessage = null;
+        } else {
+            commandMessage = {
+                _commandType: data.commandType,
+                _commandStatus: data.commandStatus,
+                _username: player.username,
+                _message: message,
+                _data: null,
+                _roomId: playerRoom.roomId,
+                _date: new Date(),
+            };
+        }
 
-                let changedLetters = this._roomHandler.exchangeLetterOfCurrentPlayer(
-                    socket.id,
-                    sentMessage.listOfLettersToChange);
-
-                let playerRoom = this._roomHandler.getRoomBySocketId(socket.id);
-
-                if (playerRoom !== null
-                    && changedLetters !== null
-                    && changedLetters.length === sentMessage.listOfLettersToChange.length) {
-
-                    let player = this._roomHandler.getPlayerBySocketId(socket.id);
-                    let newPlayersOrder = playerRoom.getAndUpdatePlayersOrder();
-                    //let newPlayersOrder =playerRoom;
-                    // console.log("newOrder", newPlayersOrder);
-
-                    let message = `$: <!changer` + ' ' + `${sentMessage.listOfLettersToChange.toString()}>`;
-
-                    let commandMessage: ICommandMessage<Array<string>> = {
-                        _commandStatus: CommandStatus.Ok,
-                        _date: new Date(),
-                        _message: message,
-                        _data: changedLetters,
-                        _username: player.username,
-                        _commandType: sentMessage.commandType
-                    };
-                    // Emit a message with the new letters to the sender
-                    this._socket.to(playerRoom.roomId).emit(SocketEventType.changeLettersRequest, commandMessage);
-                } else {
-                    throw new Error("An error occured when trying to exchange the letters");
-                }
-            });
+        console
+        return commandMessage;
     }
 
     // Use to inialize the easel of the player
@@ -209,10 +265,9 @@ export class SocketConnectionHandler {
                     throw new Error("The letters to be changed cannot be null");
                 }
 
-                let playerRoom = this._roomHandler.getRoomBySocketId(socket.id);
-
-                if (playerRoom !== null) {
-                    let initialsLetters = playerRoom.getInitialsLetters();
+                let room = this._roomHandler.getRoomBySocketId(socket.id);
+                if (room !== null) {
+                    let initialsLetters = room.getInitialsLetters();
 
                     // Emit a message with the new letters to the sender
                     socket.emit(SocketEventType.initializeEasel, initialsLetters);
@@ -220,32 +275,6 @@ export class SocketConnectionHandler {
                 } else {
                     throw new Error("An error occured when trying to exchange the letters");
                 }
-            });
-    }
-
-    private onExecuteCommandRequest(socket: SocketIO.Socket) {
-
-        if (socket === null) {
-            throw new Error("The socket value cannot be null.");
-        }
-
-        socket.on(SocketEventType.commandRequest,
-            (commandRequest: { commandType: CommandType, commandStatus: CommandStatus, data: string }) => {
-                let playerRoom = this._roomHandler.getRoomBySocketId(socket.id);
-                let player = this._roomHandler.getPlayerBySocketId(socket.id);
-                let message = `$: ${CommandStatus[commandRequest.commandStatus]}` + ': ' + `<${commandRequest.data}>`;
-
-                let commandMessage: ICommandMessage<string> = {
-                    _commandStatus: commandRequest.commandStatus,
-                    _date: new Date(),
-                    _message: message,
-                    _data: null,
-                    _username: player.username,
-                    _commandType: commandRequest.commandType
-                };
-
-                // Emit a message with the new letters to the sender
-                this._socket.to(playerRoom.roomId).emit(SocketEventType.commandRequest, commandMessage);
             });
     }
 
@@ -257,9 +286,7 @@ export class SocketConnectionHandler {
         }
 
         socket.on(SocketEventType.disconnect, () => {
-
             let leavingPlayer = this._roomHandler.getPlayerBySocketId(socket.id);
-
             if (leavingPlayer !== null) {
 
                 console.log("send a request", leavingPlayer.username);

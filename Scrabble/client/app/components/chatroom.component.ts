@@ -71,7 +71,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
             .subscribe((response: ICommandMessage<any>) => {
                 if (response !== undefined && response._message !== null) {
                     this._messageArray.push(response);
-                    console.log("CommandRequest Chatroom", response._message);
+                    console.log("CommandRequest Chatroom", response);
                 }
             });
     }

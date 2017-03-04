@@ -29,11 +29,9 @@ describe("Room Handler", () => {
     it("addPlayer, should add a new player in a room", () => {
         // Add the player and get his room
         let room = roomHandler.addPlayer(player1);
-
         assert(room.roomCapacity === player1.numberOfPlayers);
 
         let currentPlayer = room.players.dequeue();
-
         // Check if the room contains the player
         assert(currentPlayer.username === fakeName1);
         assert(currentPlayer.numberOfPlayers === numberOfPlayers);
@@ -62,6 +60,12 @@ describe("Room Handler", () => {
         expect(roomPlayer1).not.to.deep.equals(roomPlayer2);
         assert(roomPlayer1.roomCapacity === player1.numberOfPlayers);
         assert(roomPlayer2.roomCapacity === player2.numberOfPlayers);
+    });
+
+    it("addPlayer, should not add a player with out of range capacity", () => {
+        player1.numberOfPlayers = 6;
+        let addPlayer = () => roomHandler.addPlayer(player1);
+        expect(addPlayer).throw(Error, "An error occured when adding the player into the room");
     });
 
     it("addPlayer, should not add two players with same name", () => {

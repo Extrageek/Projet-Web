@@ -85,9 +85,6 @@ export class Room {
         }
 
         playerRemoved = this._playersQueue.remove(player);
-
-        console.log("removed", playerRemoved);
-
         return playerRemoved;
     }
 
@@ -111,15 +108,15 @@ export class Room {
         return this.letterBankHandler.exchangeLetters(letterToBeExchange);
     }
 
-    public getAndUpdatePlayersOrder(): Array<string> {
-        let newPlayerOrder = new Array<string>();
-        let players = this._playersQueue.updateAndGetQueuePriorities();
+    // public getAndUpdatePlayersOrder(): Array<string> {
+    //     let newPlayerOrder = new Array<string>();
+    //     let players = this._playersQueue.updateAndGetQueuePriorities();
 
-        players.forEach((player) => {
-            newPlayerOrder.push(player.username);
-        });
-        return newPlayerOrder;
-    }
+    //     players.forEach((player) => {
+    //         newPlayerOrder.push(player.username);
+    //     });
+    //     return newPlayerOrder;
+    // }
 
     public getInitialsLetters(): Array<string> {
         return this.letterBankHandler.initializeEasel();

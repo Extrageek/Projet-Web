@@ -81,6 +81,12 @@ describe("BankLetterHandler should", () => {
         expect(_bankHandler.getNumberOfLettersInBank()).to.be.equal(95);
     });
 
+    it("should not be able to return letter from the bank", () => {
+        expect(_bankHandler.getNumberOfLettersInBank()).to.be.equal(102);
+        // let fakeEasel = _bankHandler.getLetterFromBank(103);
+        // expect(fakeEasel).to.be.null;
+    });
+
     it("not parse null arrays of letters and throw an erro", () => {
         let getLefakeStringParsedtters = () => { _bankHandler.parseFromListOfLetterToListOfString(null); };
         expect(getLefakeStringParsedtters).to.throw(Error, "Null argument error, the parameter cannot be null");

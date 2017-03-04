@@ -189,6 +189,7 @@ describe("Room", () => {
         let fakeLetterBankHandler = new LetterBankHandler();
         expect(fakeRoom.letterBankHandler).to.be.deep.equals(fakeLetterBankHandler);
     });
+
     it("handle the letter bank to change a player's letters", () => {
         let roomCapacity = 2;
         let fakeRoom = new Room(roomCapacity);
@@ -198,5 +199,14 @@ describe("Room", () => {
         fakeLettersReceived = fakeRoom.exchangeThePlayerLetters(fakeLettersToChange);
         expect(fakeLettersReceived).to.be.an.instanceOf(Array);
         expect(fakeLettersToChange.length).to.be.equal(fakeLettersReceived.length);
+    });
+
+    it("should return initial 7 letters to initialize the player easel", () => {
+        let roomCapacity = 2;
+        let room = new Room(roomCapacity);
+        let initialLetters = room.getInitialsLetters();
+
+        expect(initialLetters).to.be.an.instanceOf(Array);
+        expect(initialLetters.length).to.be.equal(7);
     });
 });
