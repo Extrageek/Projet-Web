@@ -1,6 +1,7 @@
 import { expect, assert } from "chai";
 import { Room } from "./room";
 import { Player } from "../players/player";
+import { QueueCollection } from "../queue-collection";
 import { LetterBankHandler } from "../../services/lettersBank/letterbank-handler";
 
 let fakeSocketId = "fakeId@33md401";
@@ -42,10 +43,15 @@ describe("Room", () => {
         room.addPlayer(player1);
         room.addPlayer(player2);
 
-        assert(room.players[0].username === fakeName1);
-        assert(room.players[0].numberOfPlayers === numberOfPlayers);
-        assert(room.players[1].username === fakeName2);
-        assert(room.players[1].numberOfPlayers === numberOfPlayers);
+        assert(room.roomCapacity === numberOfPlayers);
+
+        let roomFirstPlayer = room.players.dequeue();
+        assert(roomFirstPlayer.username === fakeName1);
+        assert(roomFirstPlayer.numberOfPlayers === numberOfPlayers);
+
+        let roomSecondPlayer = room.players.dequeue();
+        assert(roomSecondPlayer.username === fakeName2);
+        assert(roomSecondPlayer.numberOfPlayers === numberOfPlayers);
     });
 
     it("addPlayer, should not accept a new player", () => {
@@ -145,14 +151,14 @@ describe("Room", () => {
         room.addPlayer(player2);
 
         let removedPlayer = room.removePlayer(player1);
-
         assert(removedPlayer.username === player1.username);
         assert(removedPlayer.numberOfPlayers === player1.numberOfPlayers);
+        assert(room.players.count === 1, "The list of player should be empty");
 
-        assert(room.players[0].username === player2.username);
-        assert(room.players[0].numberOfPlayers === player2.numberOfPlayers);
+        let secondPlayer = room.players.dequeue();
+        assert(secondPlayer.username === player2.username);
+        assert(secondPlayer.numberOfPlayers === player2.numberOfPlayers);
 
-        assert(room.players.length === 1, "The list of player should be empty");
     });
 
     it("removePlayer, should throw a null argument error", () => {
@@ -171,9 +177,9 @@ describe("Room", () => {
     it("set a new list of players in room", () => {
         let roomCapacity = 2;
         let fakeRoom = new Room(roomCapacity);
-        let newPlayers = new Array<Player>();
-        newPlayers.push(new Player("rami", 2, "1234"));
-        newPlayers.push(new Player("mathieu", 2, "12345"));
+        let newPlayers = new QueueCollection<Player>();
+        newPlayers.enqueue(new Player("rami", 2, "1234"));
+        newPlayers.enqueue(new Player("mathieu", 2, "12345"));
         fakeRoom.players = newPlayers;
         expect(fakeRoom.players).to.be.equal(newPlayers);
     });

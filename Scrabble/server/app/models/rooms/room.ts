@@ -1,4 +1,5 @@
 import { Player } from "../players/player";
+import { QueueCollection } from "../../models/queue-collection";
 import { Letter } from "../../models/lettersBank/letter";
 import { LetterBankHandler } from "../../services/lettersBank/letterbank-handler";
 
@@ -9,7 +10,7 @@ export class Room {
     static roomMinCapacity = 1;
     static roomMaxCapacity = 4;
 
-    private _players: Array<Player>;
+    private _playersQueue: QueueCollection<Player>;
     private _letterBankHandler: LetterBankHandler;
     private _roomCapacity: number;
     private _roomId: string;
@@ -21,17 +22,17 @@ export class Room {
         }
 
         this._roomCapacity = roomCapacity;
-        this._players = new Array<Player>();
+        this._playersQueue = new QueueCollection<Player>();
         this._letterBankHandler = new LetterBankHandler();
         this._roomId = uuid.v1(); // Generate a v1 (time-based) id
     }
 
     // The player of the room
-    public get players(): Array<Player> {
-        return this._players;
+    public get players(): QueueCollection<Player> {
+        return this._playersQueue;
     }
-    public set players(value: Array<Player>) {
-        this._players = value;
+    public set players(value: QueueCollection<Player>) {
+        this._playersQueue = value;
     }
 
     public get letterBankHandler(): LetterBankHandler {
@@ -50,7 +51,7 @@ export class Room {
 
     // Check if the room is full or not
     public isFull(): boolean {
-        return this._players.length === this._roomCapacity;
+        return this._playersQueue.count === this._roomCapacity;
     }
 
     // Add a new player to the current room
@@ -68,29 +69,24 @@ export class Room {
             throw new Error("The username already exist in this room");
         }
 
-        this._players.push(player);
+        this._playersQueue.enqueue(player);
     }
 
     // Get the number of missing player before the game
     public numberOfMissingPlayers(): number {
-        return this._roomCapacity - this._players.length;
+        return this._roomCapacity - this._playersQueue.count;
     }
 
     // Remove a player from the current room
     public removePlayer(player: Player): Player {
-        let playerRemoved: Player;
-        playerRemoved = null;
+        let playerRemoved: Player = null;
         if (player === null || player === undefined) {
             throw new Error("Argument error: the player cannot be null");
         }
 
-        let index = this._players.findIndex((element) => {
-            return (element === player);
-        });
+        playerRemoved = this._playersQueue.remove(player);
 
-        if (index !== -1) {
-            playerRemoved = this._players.splice(index, 1)[0];
-        }
+        console.log("removed", playerRemoved);
 
         return playerRemoved;
     }
@@ -100,15 +96,29 @@ export class Room {
         if (username === null) {
             throw new Error("Argument error: the username cannot be null");
         }
+        let exist = false;
+        this._playersQueue.forEach((player:Player) => {
+            if (player.username === username) {
+                exist = true;
+            }
+        });
 
-        let matchPlayer = this._players.filter((player) => (player.username === username))[0];
-
-        return (matchPlayer !== null && matchPlayer !== undefined) ? true : false;
+        return exist;
     }
 
     // Use to exchange letters from the a player easel
     public exchangeThePlayerLetters(letterToBeExchange: Array<string>): Array<string> {
         return this.letterBankHandler.exchangeLetters(letterToBeExchange);
+    }
+
+    public getAndUpdatePlayersOrder(): Array<string> {
+        let newPlayerOrder = new Array<string>();
+        let players = this._playersQueue.updateAndGetQueuePriorities();
+
+        players.forEach((player) => {
+            newPlayerOrder.push(player.username);
+        });
+        return newPlayerOrder;
     }
 
     public getInitialsLetters(): Array<string> {

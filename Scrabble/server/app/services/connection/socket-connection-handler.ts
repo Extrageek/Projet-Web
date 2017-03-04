@@ -5,15 +5,16 @@ import { RoomHandler } from "../../services/rooms/room-handler";
 import { Room } from "../../models/rooms/room";
 import { Player } from "../../models/players/Player";
 import { Letter } from "../../models/lettersBank/letter";
+
 import { SocketEventType } from "../../commons/socket-eventType";
 import { CommandType } from "../../commons/command-type";
 import { CommandStatus } from "../../commons/command-status";
-import { IRoomMessage } from "../../commons/messages/room-message";
-import { ICommandMessage } from "../../commons/messages/command-message";
+import { IRoomMessage } from "../../commons/messages/room-message.interface";
+import { ICommandMessage } from "../../commons/messages/command-message.interface";
 
 export class SocketConnectionHandler {
 
-    _roomHandler: RoomHandler; // TODO: Find a way to make this private please
+    private _roomHandler: RoomHandler;
     private _socket: SocketIO.Server;
 
     constructor(server: http.Server) {
@@ -152,14 +153,18 @@ export class SocketConnectionHandler {
         }
 
         socket.on(SocketEventType.changeLettersRequest,
-            (sentMessage: { commandType: CommandType, listOfLettersToChange: Array<string> }) => {
+            (sentMessage: {
+                commandType: CommandType,
+                listOfLettersToChange: Array<string>
+            }) => {
 
                 if (sentMessage.listOfLettersToChange === null) {
                     throw new Error("The letters to be changed cannot be null");
                 }
 
-                let changedLetters =
-                    this._roomHandler.exchangeLetterOfCurrentPlayer(socket.id, sentMessage.listOfLettersToChange);
+                let changedLetters = this._roomHandler.exchangeLetterOfCurrentPlayer(
+                    socket.id,
+                    sentMessage.listOfLettersToChange);
 
                 let playerRoom = this._roomHandler.getRoomBySocketId(socket.id);
 
@@ -168,6 +173,10 @@ export class SocketConnectionHandler {
                     && changedLetters.length === sentMessage.listOfLettersToChange.length) {
 
                     let player = this._roomHandler.getPlayerBySocketId(socket.id);
+                    let newPlayersOrder = playerRoom.getAndUpdatePlayersOrder();
+                    //let newPlayersOrder =playerRoom;
+                    // console.log("newOrder", newPlayersOrder);
+
                     let message = `$: <!changer` + ' ' + `${sentMessage.listOfLettersToChange.toString()}>`;
 
                     let commandMessage: ICommandMessage<Array<string>> = {
@@ -203,13 +212,11 @@ export class SocketConnectionHandler {
                 let playerRoom = this._roomHandler.getRoomBySocketId(socket.id);
 
                 if (playerRoom !== null) {
-
-                    //let player = this._roomHandler.getPlayerBySocketId(socket.id);
-                    let message = `Easel initialized`;
                     let initialsLetters = playerRoom.getInitialsLetters();
 
                     // Emit a message with the new letters to the sender
                     socket.emit(SocketEventType.initializeEasel, initialsLetters);
+
                 } else {
                     throw new Error("An error occured when trying to exchange the letters");
                 }
@@ -266,7 +273,7 @@ export class SocketConnectionHandler {
 
                     playerRoom.removePlayer(leavingPlayer);
 
-                    if (playerRoom.players.length === 0) {
+                    if (playerRoom.players.count === 0) {
                         this._roomHandler.removeRoom(playerRoom);
                         // TODO: Should be handle in a next User Story
                         // Maybe in a logger

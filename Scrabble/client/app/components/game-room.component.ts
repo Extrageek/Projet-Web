@@ -14,7 +14,7 @@ import { CommandType } from "../services/commands/command-type";
 import { EaselComponent } from "./easel.component";
 import { ChatroomComponent } from "./chatroom.component";
 import { SocketEventType } from "../commons/socket-eventType";
-import { IRoomMessage } from "../commons/messages/room-message";
+import { IRoomMessage } from "../commons/messages/room-message.interface";
 import { ScrabbleLetter } from "../models/letter/scrabble-letter";
 import { EaselControl } from "../commons/easel-control";
 

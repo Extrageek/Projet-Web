@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, EventEmitter, Input, Output } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 
 import { ScrabbleLetter } from "../models/letter/scrabble-letter";
@@ -7,8 +8,8 @@ import { EaselControl } from "../commons/easel-control";
 import { SocketService } from "../services/socket-service";
 import { CommandType } from "../services/commands/command-type";
 import { SocketEventType } from "../commons/socket-eventType";
-import { IGameMessage } from "../commons/messages/game-message-interface";
-import { ICommandMessage } from "../commons/messages/command-message";
+import { IGameMessage } from "../commons/messages/game-message.interface";
+import { ICommandMessage } from "../commons/messages/command-message.interface";
 
 declare var jQuery: any;
 
@@ -61,7 +62,8 @@ export class EaselComponent implements OnInit, OnDestroy {
 
     constructor(
         private easelEventManagerService: EaselManagerService,
-        private socketService: SocketService) {
+        private socketService: SocketService,
+        private activatedRoute: ActivatedRoute) {
         this._indexOflettersToExchange = new Array<number>();
     }
 
@@ -88,13 +90,18 @@ export class EaselComponent implements OnInit, OnDestroy {
         return this.socketService.subscribeToChannelEvent(SocketEventType.changeLettersRequest)
             .subscribe((response: any) => {
 
-                for (let index = 0; index < this._indexOflettersToExchange.length; ++index) {
-                    console.log("in easel", this._indexOflettersToExchange[index]);
+                // TODO: Find another way, like using a session to handle the user info
+                this.activatedRoute.params.subscribe(params => {
+                    if (params['id'] === response._username) {
+                        for (let index = 0; index < this._indexOflettersToExchange.length; ++index) {
+                            console.log("in easel", this._indexOflettersToExchange[index]);
 
-                    this.letters[this._indexOflettersToExchange[index]] =
-                        new ScrabbleLetter(response._data[index]);
-                    console.log(this.letters);
-                }
+                            this.letters[this._indexOflettersToExchange[index]] =
+                                new ScrabbleLetter(response._data[index]);
+                            console.log(this.letters);
+                        }
+                    }
+                });
             });
     }
 

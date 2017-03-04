@@ -81,7 +81,11 @@ export class RoomHandler {
 
         // Look for a player in each room with the given socket
         this._rooms.forEach((room) => {
-            currentPlayer = room.players.filter((player) => (player.username === username))[0];
+            room.players.forEach((player) => {
+                if (player.username === username) {
+                    currentPlayer = player;
+                }
+            });
         });
 
         return (typeof (currentPlayer) !== "undefined") ? currentPlayer : null;
@@ -96,12 +100,13 @@ export class RoomHandler {
 
         let availableRoom: Room;
 
+        // Look for a player in each room with the given socket
         this._rooms.forEach((room) => {
-            let currentPlayer = room.players.filter((player) => (player.username === username))[0];
-
-            if (currentPlayer !== null && currentPlayer !== undefined) {
-                availableRoom = room;
-            }
+            room.players.forEach((player) => {
+                if (player.username === username) {
+                    availableRoom = room;
+                }
+            });
         });
 
         return (typeof (availableRoom) !== "undefined") ? availableRoom : null;
@@ -115,18 +120,12 @@ export class RoomHandler {
         }
 
         let availableRoom: Room;
-
         this._rooms.forEach((room) => {
-            let currentPlayer = room.players.filter((player) => {
-
-                //console.log("dd", player.socketId, "-", socketId);
-
-                return (player.socketId === socketId);
-            })[0];
-
-            if (currentPlayer !== null && currentPlayer !== undefined) {
-                availableRoom = room;
-            }
+            room.players.forEach((player) => {
+                if (player.socketId === socketId) {
+                    availableRoom = room;
+                }
+            });
         });
 
         return (typeof (availableRoom) !== "undefined") ? availableRoom : null;
@@ -139,17 +138,17 @@ export class RoomHandler {
             throw new Error("Argument error: the socketId cannot be null");
         }
 
-        let availablePlayer: Player;
-
+        let currentPlayer: Player;
+        // Look for a player in each room with the given socket
         this._rooms.forEach((room) => {
-            let currentPlayer = room.players.filter((player) => (player.socketId === socketId))[0];
-
-            if (currentPlayer !== null && currentPlayer !== undefined) {
-                availablePlayer = currentPlayer;
-            }
+            room.players.forEach((player) => {
+                if (player.socketId === socketId) {
+                    currentPlayer = player;
+                }
+            });
         });
 
-        return (typeof (availablePlayer) !== "undefined") ? availablePlayer : null;
+        return (typeof (currentPlayer) !== "undefined") ? currentPlayer : null;
     }
 
     public exchangeLetterOfCurrentPlayer(socketId: string, lettersToBeExchange: Array<string>): Array<string> {

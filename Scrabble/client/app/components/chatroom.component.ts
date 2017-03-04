@@ -4,9 +4,9 @@ import { Subscription } from "rxjs/Subscription";
 import { Route, ActivatedRoute } from "@angular/router";
 import { SocketService } from "../services/socket-service";
 import { SocketEventType } from "../commons/socket-eventType";
-import { IGameMessage } from "../commons/messages/game-message-interface";
-import { IRoomMessage } from "../commons/messages/room-message";
-import { ICommandMessage } from "../commons/messages/command-message";
+import { IGameMessage } from "../commons/messages/game-message.interface";
+import { IRoomMessage } from "../commons/messages/room-message.interface";
+import { ICommandMessage } from "../commons/messages/command-message.interface";
 
 @Component({
     moduleId: module.id,
@@ -118,8 +118,6 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
                 }
             });
     }
-
-
 
     // Use to add a scroller to the chatroom
     private scrollToBottom() {

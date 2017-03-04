@@ -76,7 +76,7 @@ describe("BankLetterHandler should", () => {
 
     it("get the number of letters in bank correctly", () => {
         expect(_bankHandler.getNumberOfLettersInBank()).to.be.equal(102);
-        let fakeEasel = new Array<Letter>();
+        let fakeEasel = new Array<string>();
         fakeEasel = _bankHandler.initializeEasel();
         expect(_bankHandler.getNumberOfLettersInBank()).to.be.equal(95);
     });
