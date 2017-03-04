@@ -4,7 +4,13 @@ import { Player } from "../players/player";
 import { QueueCollection } from "../queue-collection";
 import { LetterBankHandler } from "../../services/lettersBank/letterbank-handler";
 
-let fakeSocketId = "fakeId@33md401";
+let fakeSocketId1 = "fakeId@33md401";
+let fakeSocketId2 = "fakeId@3300001";
+let fakename1 = "mat";
+let fakename2 = "jul";
+let numberOfPlayers = 2;
+let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+let player2 = new Player(fakename2, numberOfPlayers, fakeSocketId2);
 
 describe("Room", () => {
 
@@ -33,24 +39,17 @@ describe("Room", () => {
         let roomCapacity = 2;
         let room = new Room(roomCapacity);
 
-        let fakeName1 = "testname1";
-        let fakeName2 = "testname2";
-        let numberOfPlayers = 2;
-
-        let player1 = new Player(fakeName1, numberOfPlayers, fakeSocketId);
-        let player2 = new Player(fakeName2, numberOfPlayers, fakeSocketId);
-
         room.addPlayer(player1);
         room.addPlayer(player2);
 
         assert(room.roomCapacity === numberOfPlayers);
 
         let roomFirstPlayer = room.players.dequeue();
-        assert(roomFirstPlayer.username === fakeName1);
+        assert(roomFirstPlayer.username === fakename1);
         assert(roomFirstPlayer.numberOfPlayers === numberOfPlayers);
 
         let roomSecondPlayer = room.players.dequeue();
-        assert(roomSecondPlayer.username === fakeName2);
+        assert(roomSecondPlayer.username === fakename2);
         assert(roomSecondPlayer.numberOfPlayers === numberOfPlayers);
     });
 
@@ -62,8 +61,8 @@ describe("Room", () => {
         let fakeName2 = "testname2";
         let numberOfPlayers = 1;
 
-        let player1 = new Player(fakeName1, numberOfPlayers, fakeSocketId);
-        let player2 = new Player(fakeName2, numberOfPlayers, fakeSocketId);
+        let player1 = new Player(fakeName1, numberOfPlayers, fakeSocketId1);
+        let player2 = new Player(fakeName2, numberOfPlayers, fakeSocketId2);
 
         room.addPlayer(player1);
         assert(room.isFull() === true, "The room must be full at this state");
@@ -87,11 +86,9 @@ describe("Room", () => {
         let room = new Room(roomCapacity);
 
         let fakeName = "fakename";
-        let numberOfPlayers = 2;
-        let player1 = new Player(fakeName, numberOfPlayers, fakeSocketId);
-        let player2 = new Player(fakeName, numberOfPlayers, fakeSocketId);
 
         room.addPlayer(player1);
+        player2.username = player1.username;
         let playerWithDuplicatedUsername = () => room.addPlayer(player2);
 
         expect(playerWithDuplicatedUsername).to.throw(Error, "The username already exist in this room");
@@ -103,8 +100,8 @@ describe("Room", () => {
 
         let fakeName = "fakename";
         let numberOfPlayers = 2;
-        let player1 = new Player(fakeName, numberOfPlayers, fakeSocketId);
-        let player2 = new Player(fakeName, numberOfPlayers, fakeSocketId);
+        let player1 = new Player(fakeName, numberOfPlayers, fakeSocketId1);
+        let player2 = new Player(fakeName, numberOfPlayers, fakeSocketId2);
 
         room.addPlayer(player1);
 
@@ -114,22 +111,12 @@ describe("Room", () => {
     it("usernameAlreadyExist, should throw a null argument error", () => {
         let roomCapacity = 2;
         let room = new Room(roomCapacity);
-
-        let fakeName = "fakename";
-        let numberOfPlayers = 2;
-        let player1 = new Player(fakeName, numberOfPlayers, fakeSocketId);
-
         room.addPlayer(player1);
 
         expect(() => room.isUsernameAlreadyExist(null)).to.throw(Error, "Argument error: the username cannot be null");
     });
 
-    it("isFull, should be true", () => {
-
-        let fakeName = "fakename";
-        let numberOfPlayers = 2;
-        let player1 = new Player(fakeName, numberOfPlayers, fakeSocketId);
-
+    it("isFull, should be false", () => {
         let roomCapacity = 2;
         let room = new Room(roomCapacity);
         room.addPlayer(player1);
@@ -138,15 +125,11 @@ describe("Room", () => {
     });
 
     it("removePlayer, should remove with success", () => {
-
-        let fakeName1 = "testname1";
-        let fakeName2 = "testname2";
-        let numberOfPlayers = 2;
-        let player1 = new Player(fakeName1, numberOfPlayers, fakeSocketId);
-        let player2 = new Player(fakeName2, numberOfPlayers, fakeSocketId);
-
         let roomCapacity = 2;
         let room = new Room(roomCapacity);
+        let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+        let player2 = new Player(fakename2, numberOfPlayers, fakeSocketId2);
+
         room.addPlayer(player1);
         room.addPlayer(player2);
 
@@ -162,14 +145,9 @@ describe("Room", () => {
     });
 
     it("removePlayer, should throw a null argument error", () => {
-
-        let fakeName = "testname1";
-        let numberOfPlayers = 1;
-        let player = new Player(fakeName, numberOfPlayers, fakeSocketId);
-
         let roomCapacity = 1;
         let room = new Room(roomCapacity);
-        room.addPlayer(player);
+        room.addPlayer(player1);
 
         let mustFailFunction = () => room.removePlayer(null);
         expect(mustFailFunction).to.throw(Error, "Argument error: the player cannot be null");
@@ -195,6 +173,7 @@ describe("Room", () => {
         let fakeRoom = new Room(roomCapacity);
         let fakeLettersToChange: Array<string>;
         let fakeLettersReceived: Array<string>;
+
         fakeLettersToChange = ['A', 'B', 'C'];
         fakeLettersReceived = fakeRoom.exchangeThePlayerLetters(fakeLettersToChange);
         expect(fakeLettersReceived).to.be.an.instanceOf(Array);
@@ -208,5 +187,136 @@ describe("Room", () => {
 
         expect(initialLetters).to.be.an.instanceOf(Array);
         expect(initialLetters.length).to.be.equal(7);
+    });
+
+    it("should return initial 7 letters to initialize the player easel", () => {
+        let roomCapacity = 2;
+        let room = new Room(roomCapacity);
+        let initialLetters = room.getInitialsLetters();
+
+        expect(initialLetters).to.be.an.instanceOf(Array);
+        expect(initialLetters.length).to.be.equal(7);
+    });
+
+    it("should not change the order of the unique players", () => {
+        let roomCapacity = 2;
+        let room = new Room(roomCapacity);
+        let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+        let player2 = new Player(fakename2, numberOfPlayers, fakeSocketId2);
+
+        room.addPlayer(player1);
+        room.addPlayer(player2);
+
+        // Should change the order of the list
+        let priorityList = room.getAndUpdatePlayersOrder();
+        expect(priorityList[0]).to.deep.equals(player2.username);
+        expect(priorityList[1]).to.deep.equals(player1.username);
+
+        // Should invert the order of the list
+        priorityList = room.getAndUpdatePlayersOrder();
+        expect(priorityList[0]).to.deep.equals(player1.username);
+        expect(priorityList[1]).to.deep.equals(player2.username);
+    });
+
+    it("should change the order of 2 players", () => {
+        let roomCapacity = 2;
+        let room = new Room(roomCapacity);
+        let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+        let player2 = new Player(fakename2, numberOfPlayers, fakeSocketId2);
+
+        room.addPlayer(player1);
+        room.addPlayer(player2);
+
+        // Should change the order of the list
+        let priorityList = room.getAndUpdatePlayersOrder();
+        expect(priorityList[0]).to.deep.equals(player2.username);
+        expect(priorityList[1]).to.deep.equals(player1.username);
+
+        // Should invert the order of the list
+        priorityList = room.getAndUpdatePlayersOrder();
+        expect(priorityList[0]).to.deep.equals(player1.username);
+        expect(priorityList[1]).to.deep.equals(player2.username);
+    });
+
+    it("should change the order of 3 players", () => {
+        let roomCapacity = 3;
+        let numberOfPlayers = 3;
+        let fakename3 = "fakename3";
+        let fakeSocketId3 = "fafa78777f9a79fa";
+
+        let room = new Room(roomCapacity);
+        let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+        let player2 = new Player(fakename2, numberOfPlayers, fakeSocketId2);
+        let player3 = new Player(fakename3, numberOfPlayers, fakeSocketId3);
+
+        room.addPlayer(player1);
+        room.addPlayer(player2);
+        room.addPlayer(player3);
+
+        // Should change the order and put the player 2 at the first position
+        let priorityList = room.getAndUpdatePlayersOrder();
+        expect(priorityList[0]).to.deep.equals(player2.username);
+        expect(priorityList[1]).to.deep.equals(player3.username);
+        expect(priorityList[2]).to.deep.equals(player1.username);
+
+        // Should invert the order and put the player 3 at the first position
+        priorityList = room.getAndUpdatePlayersOrder();
+        expect(priorityList[0]).to.deep.equals(player3.username);
+        expect(priorityList[1]).to.deep.equals(player1.username);
+        expect(priorityList[2]).to.deep.equals(player2.username);
+
+        // Should invert the order and put the player 1 first position
+        priorityList = room.getAndUpdatePlayersOrder();
+        expect(priorityList[0]).to.deep.equals(player1.username);
+        expect(priorityList[1]).to.deep.equals(player2.username);
+        expect(priorityList[2]).to.deep.equals(player3.username);
+    });
+
+    it("should change the order of 4 players", () => {
+        let roomCapacity = 4;
+        let numberOfPlayers = 4;
+        let fakename3 = "fakename3";
+        let fakename4 = "fakename4";
+        let fakeSocketId3 = "fafa78777f9a79fa";
+        let fakeSocketId4 = "fafa00000000000a";
+
+        let room = new Room(roomCapacity);
+        let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+        let player2 = new Player(fakename2, numberOfPlayers, fakeSocketId2);
+        let player3 = new Player(fakename3, numberOfPlayers, fakeSocketId3);
+        let player4 = new Player(fakename4, numberOfPlayers, fakeSocketId4);
+
+        room.addPlayer(player1);
+        room.addPlayer(player2);
+        room.addPlayer(player3);
+        room.addPlayer(player4);
+
+        // Should change the order and put the player 2 at the first position
+        let priorityList = room.getAndUpdatePlayersOrder();
+        expect(priorityList[0]).to.deep.equals(player2.username);
+        expect(priorityList[1]).to.deep.equals(player3.username);
+        expect(priorityList[2]).to.deep.equals(player4.username);
+        expect(priorityList[3]).to.deep.equals(player1.username);
+
+        // Should invert the order and put the player 3 at the first position
+        priorityList = room.getAndUpdatePlayersOrder();
+        expect(priorityList[0]).to.deep.equals(player3.username);
+        expect(priorityList[1]).to.deep.equals(player4.username);
+        expect(priorityList[2]).to.deep.equals(player1.username);
+        expect(priorityList[3]).to.deep.equals(player2.username);
+
+        // Should invert the order and put the player 4 first position
+        priorityList = room.getAndUpdatePlayersOrder();
+        expect(priorityList[0]).to.deep.equals(player4.username);
+        expect(priorityList[1]).to.deep.equals(player1.username);
+        expect(priorityList[2]).to.deep.equals(player2.username);
+        expect(priorityList[3]).to.deep.equals(player3.username);
+
+        // Should invert the order and put the player 1 first position
+        priorityList = room.getAndUpdatePlayersOrder();
+        expect(priorityList[0]).to.deep.equals(player1.username);
+        expect(priorityList[1]).to.deep.equals(player2.username);
+        expect(priorityList[2]).to.deep.equals(player3.username);
+        expect(priorityList[3]).to.deep.equals(player4.username);
     });
 });

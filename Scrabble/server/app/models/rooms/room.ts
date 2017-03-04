@@ -94,7 +94,7 @@ export class Room {
             throw new Error("Argument error: the username cannot be null");
         }
         let exist = false;
-        this._playersQueue.forEach((player:Player) => {
+        this._playersQueue.forEach((player: Player) => {
             if (player.username === username) {
                 exist = true;
             }
@@ -108,15 +108,15 @@ export class Room {
         return this.letterBankHandler.exchangeLetters(letterToBeExchange);
     }
 
-    // public getAndUpdatePlayersOrder(): Array<string> {
-    //     let newPlayerOrder = new Array<string>();
-    //     let players = this._playersQueue.updateAndGetQueuePriorities();
+    public getAndUpdatePlayersOrder(): Array<string> {
+        let newPlayerOrder = new Array<string>();
+        let players = this._playersQueue.updateAndGetQueuePriorities();
 
-    //     players.forEach((player) => {
-    //         newPlayerOrder.push(player.username);
-    //     });
-    //     return newPlayerOrder;
-    // }
+        for (let index = 0; index < players.length; ++index) {
+            newPlayerOrder[index] = players[index].username;
+        }
+        return newPlayerOrder;
+    }
 
     public getInitialsLetters(): Array<string> {
         return this.letterBankHandler.initializeEasel();

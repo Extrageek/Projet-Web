@@ -207,9 +207,10 @@ export class SocketConnectionHandler {
 
         } else {
             let player = this._roomHandler.getPlayerBySocketId(socketId);
-            //let newPlayersOrder = playerRoom.getAndUpdatePlayersOrder();
+            let newPlayersOrder = playerRoom.getAndUpdatePlayersOrder();
             //let newPlayersOrder =playerRoom;
-            // console.log("newOrder", newPlayersOrder);
+            console.log("----")
+            console.log("newOrder 2", newPlayersOrder);
 
             let message = `$: <!changer` + ' ' + `${data.listOfLettersToChange.toString()}>`;
 
