@@ -5,5 +5,4 @@ export interface IGameMessage {
     _username: string;
     _message: string;
     _date: Date;
-    _roomId: string;
 }
