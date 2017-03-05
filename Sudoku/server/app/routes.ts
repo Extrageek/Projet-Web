@@ -1,7 +1,6 @@
 import * as express from "express";
-import * as GridGenerationService from "./services/grid-generation.service";
-import * as GridValidationService from "./services/grid-validation.service";
-import { ServiceGetter } from "./services/serviceGetter";
+import { GridGenerationManager } from "./services/grid-generation.service";
+import { GridValidationManager } from "./services/grid-validation.service";
 import { Puzzle } from "./models/puzzle";
 import { Difficulty } from "./services/grid-generation.service";
 import { DatabaseManager } from "./database-management";
@@ -10,13 +9,12 @@ module Route {
 
     export class RouteManager {
 
-        /**
-         * The default constructor
-         *
-         * @class RouteManager
-         */
-        constructor() {
-            ServiceGetter.initializeService();
+        private _gridGenerationManager: GridGenerationManager;
+        private _databaseManager: DatabaseManager;
+
+        constructor(gridGenerationManager: GridGenerationManager, databaseManager: DatabaseManager) {
+            this._gridGenerationManager = gridGenerationManager;
+            this._databaseManager = databaseManager;
         }
 
         /**
@@ -26,7 +24,7 @@ module Route {
          * @method index
          * @return Server side main page
          */
-        public index(req: express.Request, res: express.Response, next: express.NextFunction) {
+        public index(request: express.Request, res: express.Response, next: express.NextFunction) {
             //res.sendFile(path.join(__dirname, '../dist/index.html'));
             res.send("Server Side Control Panel");
         }
@@ -38,13 +36,13 @@ module Route {
          * @method getNewPuzzle
          * @return newPuzzle
          */
-        public getNewPuzzle(req: express.Request, res: express.Response, next: express.NextFunction) {
+        public getNewPuzzle(request: express.Request, res: express.Response, next: express.NextFunction) {
             // Get a new puzzle from the PuzzleManger service.
-            let difficulty = req.params.difficulty;
-            if (difficulty === undefined) {
+            let difficulty = request.params.difficulty;
+            if (!GridGenerationManager.isValidDifficulty(difficulty)) {
                 difficulty = Difficulty.NORMAL;
             }
-            ServiceGetter.getGridGenerationManager().getNewPuzzle(difficulty)
+            this._gridGenerationManager.getNewPuzzle(difficulty)
                 .then((newPuzzle: Puzzle) => {
                     res.send(newPuzzle);
                 });
@@ -52,7 +50,7 @@ module Route {
 
         public async addUser(request: express.Request, response: express.Response, next: express.NextFunction) {
             try {
-                await DatabaseManager.addUser(request.body)
+                await this._databaseManager.addUser(request.body)
                     .then((result: any) => {
                         if (result === true) {
                             response.sendStatus(HttpStatus.SUCCESS);
@@ -71,7 +69,7 @@ module Route {
 
         public async removeUser(request: express.Request, response: express.Response, next: express.NextFunction) {
             try {
-                await DatabaseManager.removeUser(request.body)
+                await this._databaseManager.removeUser(request.body)
                     .then((result: any) => {
                         if (result === true) {
                             response.sendStatus(HttpStatus.SUCCESS);
@@ -90,7 +88,7 @@ module Route {
 
         public async getTopRecords(request: express.Request, response: express.Response, next: express.NextFunction) {
             try {
-                let records: Array<Array<any>> = await DatabaseManager.getTopRecords();
+                let records: Array<Array<any>> = await this._databaseManager.getTopRecords();
                 response.status(records === null ? HttpStatus.ERROR : HttpStatus.SUCCESS).send(records);
             } catch (error) {
                 response.status(HttpStatus.ERROR)
@@ -101,7 +99,7 @@ module Route {
         public async saveGameRecord(request: express.Request, response: express.Response, next: express.NextFunction) {
             try {
                 console.log("-- INDEX saveGameRecord --");
-                await DatabaseManager.saveGameRecord(request.body)
+                await this._databaseManager.saveGameRecord(request.body)
                     .then((result: any) => {
                         if (result === true) {
                             console.log("-- INDEX saveGameRecord retour succes --");
@@ -120,7 +118,7 @@ module Route {
         }
 
         public validateGrid(request: express.Request, response: express.Response, next: express.NextFunction) {
-            let gridValidationManager = new GridValidationService.GridValidationManager();
+            let gridValidationManager = new GridValidationManager();
             let isGridValid: boolean;
             try {
                 isGridValid = gridValidationManager.validateGrid(request.body.puzzle);
