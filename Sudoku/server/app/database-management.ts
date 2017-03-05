@@ -1,10 +1,10 @@
 //import * as express from 'express';
 
 import { MongoClient, InsertOneWriteOpResult, DeleteWriteOpResultObject, Db } from "mongodb";
-const url = "mongodb://sudoku23:log2990-23@ds147599.mlab.com:47599/sudoku";
 
 export class DatabaseManager {
 
+    private static readonly url = "mongodb://sudoku23:log2990-23@ds147599.mlab.com:47599/sudoku";
     private _dbConnection: Db;
 
     /**
@@ -14,7 +14,7 @@ export class DatabaseManager {
      */
     public static createDatabaseManager(): Promise<DatabaseManager> {
         return new Promise<DatabaseManager>((resolve, reject) => {
-            MongoClient.connect(url)
+            MongoClient.connect(DatabaseManager.url)
                 .then((db: Db) => {
                     resolve(new DatabaseManager(db));
                 })
@@ -26,6 +26,22 @@ export class DatabaseManager {
 
     private constructor(dbConnection: Db) {
         this._dbConnection = dbConnection;
+        console.log("passed here!");
+        this._dbConnection.on("close", this.reconnectToDatabase.bind(this));
+    }
+
+    private reconnectToDatabase() {
+        console.log("Trying to reconnect to database server...");
+        MongoClient.connect(DatabaseManager.url)
+            .then((db: Db) => {
+                console.log("Reconnected succesfully.");
+                this._dbConnection = db;
+            })
+            .catch((reason: any) => {
+                console.log("Can't connect to the server. " + reason);
+                console.log("Retrying in 30 seconds.");
+                setTimeout(this.reconnectToDatabase.bind(this), 30000);
+            });
     }
 
     public async addUser(body: any): Promise<boolean> {
