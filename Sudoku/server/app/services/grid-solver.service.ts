@@ -74,14 +74,15 @@ export class GridSolver {
             }
             else {
                 let numberIndex = 0;
-                while (numberIndex < numbersFittingInTheHoles[0].numbersThatFit.length && numberOfAlreadyFoundedSolutions < 2) {
-                    let row = numbersFittingInTheHoles[0].row;
-                    let column = numbersFittingInTheHoles[0].column;
-                    let numberToPut = numbersFittingInTheHoles[0].numbersThatFit[numberIndex];
-                    this._puzzleToSolve.setPuzzleTileValue(row, column, numberToPut);
-                    this._puzzleToSolve.setPuzzleTileVisibility(row, column, false);
-                    numberOfAlreadyFoundedSolutions = this.fillSudoku(numberOfAlreadyFoundedSolutions);
-                    ++numberIndex;
+                while (numberIndex < numbersFittingInTheHoles[0].numbersThatFit.length
+                    && numberOfAlreadyFoundedSolutions < 2) {
+                        let row = numbersFittingInTheHoles[0].row;
+                        let column = numbersFittingInTheHoles[0].column;
+                        let numberToPut = numbersFittingInTheHoles[0].numbersThatFit[numberIndex];
+                        this._puzzleToSolve.setPuzzleTileValue(row, column, numberToPut);
+                        this._puzzleToSolve.setPuzzleTileVisibility(row, column, false);
+                        numberOfAlreadyFoundedSolutions = this.fillSudoku(numberOfAlreadyFoundedSolutions);
+                        ++numberIndex;
                 }
             }
         }
@@ -114,7 +115,7 @@ export class GridSolver {
 
     public findPossibleValuesAtAPosition(rowIndex: number, columnIndex: number): Array<number> {
         if (!this._puzzleToSolve.getPuzzleTileVisibility(rowIndex, columnIndex)) {
-            throw new Error("The number at the rowIndex = " + rowIndex + " and columnIndex = "+ columnIndex);
+            throw new Error("The number at the rowIndex = " + rowIndex + " and columnIndex = " + columnIndex);
         }
         let rowPresentValues = this.getPresentValuesInARange(rowIndex, rowIndex
             , Puzzle.MIN_COLUMN_INDEX, Puzzle.MAX_COLUMN_INDEX);

@@ -210,7 +210,7 @@ describe("GridSolver should", () => {
         puzzleUsed.setPuzzleTileValue(6, 1, 9);
         puzzleUsed.setPuzzleTileVisibility(6, 4, false);
         puzzleUsed.setPuzzleTileValue(6, 4, 7);
-        
+
         puzzleUsed.setPuzzleTileVisibility(7, 1, false);
         puzzleUsed.setPuzzleTileValue(7, 1, 8);
         puzzleUsed.setPuzzleTileVisibility(7, 2, false);

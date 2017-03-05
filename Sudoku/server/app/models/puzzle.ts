@@ -116,7 +116,7 @@ export class Puzzle {
             throw new RangeError("Invalid row or column index.");
         }
         if (Puzzle.MIN_ROW_INDEX + 1 > newValue || Puzzle.MAX_ROW_INDEX + 1 < newValue) {
-            throw new RangeError("Invalid number. The number entered is " + newValue.toString() 
+            throw new RangeError("Invalid number. The number entered is " + newValue.toString()
             + ". It must be between " + (Puzzle.MIN_ROW_INDEX + 1).toString() + " and "
             + (Puzzle.MAX_ROW_INDEX + 1).toString() + "inclusively.");
         }

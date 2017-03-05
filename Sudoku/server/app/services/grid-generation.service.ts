@@ -60,7 +60,7 @@ export class GridGenerationManager {
                     this.performGenerationWithDelay(difficulty)
                     .then((puzzle: Puzzle) => {
                         this._sudokusGenerated[difficulty].push(puzzle);
-                    })
+                    });
                 }, 0);
             }
             else {

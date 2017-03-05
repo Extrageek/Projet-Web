@@ -198,8 +198,8 @@ describe("Puzzle should", () => {
             , "Puzzle setter tile visibility should throw exception with invalid column.").to.throw(RangeError);
         expect(puzzle.setPuzzleTileVisibility.bind(puzzle, 1, 1, null)
             , "Puzzle setter tile visibility should throw exception with invalid value.").to.throw(RangeError);
-        expect(puzzle.setPuzzleTileVisibility.bind(puzzle, 1, 1, true), "Puzzle setter tile visibility should accept the value")
-            .to.not.throw(RangeError);
+        expect(puzzle.setPuzzleTileVisibility.bind(puzzle, 1, 1, true)
+            , "Puzzle setter tile visibility should accept the value").to.not.throw(RangeError);
 
         expect(puzzle.getPuzzleTileValue.bind(puzzle, -1, 1)
             , "Puzzle getter tile value should throw exception with invalid row.").to.throw(RangeError);
@@ -336,7 +336,7 @@ describe("Puzzle should", () => {
 
     it("have the right number of holes", () => {
         expect(puzzle.getNumberOfHoles(), "Initial puzzle should have 0 holes.").to.be.equal(0);
-        puzzle.setPuzzleTileVisibility(4, 5, true)
+        puzzle.setPuzzleTileVisibility(4, 5, true);
         expect(puzzle.getNumberOfHoles(), "Puzzle should have 1 hole.").to.be.equal(1);
         puzzle.setPuzzleTileVisibility(4, 5, false);
         puzzle.setPuzzleTileVisibility(6, 6, true);
