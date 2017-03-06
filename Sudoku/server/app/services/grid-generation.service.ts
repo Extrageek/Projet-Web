@@ -22,10 +22,10 @@ export enum Difficulty {
 export class GridGenerationManager {
 
     private static readonly MILLISECONDS_TO_WAIT = 5000;
-    private static readonly NUMBER_OF_SUDOKUS_TO_GENERATE = 1;
+    private static readonly NUMBER_OF_SUDOKUS_TO_GENERATE = 3;
     private static readonly NOMBRE_ITERATIONS_MIN = 1;
     private static readonly NOMBRE_ITERATIONS_MAX = 200;
-    private static readonly NUMBERS_TO_REMOVE = [45, 50];
+    private static readonly NUMBERS_TO_REMOVE = [45, 60];
 
     private _sudokusGenerated: Array<Array<Puzzle>>;
 
