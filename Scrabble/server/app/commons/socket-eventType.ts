@@ -36,10 +36,8 @@ export class SocketEventType {
     static initializeEasel = "initializeEasel";
     static changeLettersRequest = "!changer";
     static placeWordCommandRequest = "!place";
-    // static passCommandRequest = "!passer";
+    static passCommandRequest = "!passer";
 
     static commandRequest = "commandRequest";
-    // static syntaxErrorRequest = "synthaxeError";
-    // static invalidCommandRequest = "invalidCommand";
-    // static notAllowedCommandRequest = "notAllowedCommand";
+    static invalidCommandRequest = "invalidCommand";
 }

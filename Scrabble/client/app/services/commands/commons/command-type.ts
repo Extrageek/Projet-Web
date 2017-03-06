@@ -4,5 +4,6 @@ export enum CommandType {
     PlaceCmd = 2,
     PassCmd = 3,
     Guide = 4,
-    InvalidCmd = 5
+    InvalidCmd = 5,
+    Unknown
 }

@@ -54,6 +54,7 @@ export class LetterBankHandler {
                 chosenLetter = this.bank.getLetterFromBank(randomLetter);
                 newEasel.push(chosenLetter);
             } else {
+                // Check of this is necessary, we will have an infinite loop here
                 index--;
             }
         }

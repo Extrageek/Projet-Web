@@ -49,14 +49,10 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
         this._onJoinedRoomSubscription = this.onJoinedRoom();
         this._onLeaveRoomSubscription = this.onLeaveRoom();
         this._onReceivedMessageSubscription = this.onReceivedMessage();
-
-        // this._onPlaceWordSubscription = this.onCommandRequest();
-        this._onChangedLetterCommandSubscription = this.onChangedLetterCommand();
-        // this._onPassCommandSubscription = this.onPassCommand();
+        // this._onChangedLetterCommandSubscription = this.onChangedLetterCommand();
+        // this.onPlaceWordCommand();
 
         this._onCommandRequest = this.onCommandRequest();
-        // this._onNotAllowedCommandSubscription = this.onNotAllowedCommand();
-        // this._onInvalidCommandSubscription = this.onInvalidCommand();
     }
 
     ngOnDestroy() {
@@ -66,25 +62,35 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
         // this._onReceivedMessageSubscription.unsubscribe();
     }
 
-    onCommandRequest(): Subscription {
+    private onCommandRequest(): Subscription {
         return this.socketService.subscribeToChannelEvent(SocketEventType.commandRequest)
             .subscribe((response: ICommandMessage<any>) => {
                 if (response !== undefined && response._message !== null) {
                     this._messageArray.push(response);
-                    console.log("CommandRequest Chatroom", response);
+                    console.log("CommandRequest Chatroom", response._data);
                 }
             });
     }
 
-    onChangedLetterCommand(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.changeLettersRequest)
-            .subscribe((response: ICommandMessage<Array<string>>) => {
-                if (response !== undefined && response._message !== null) {
-                    this._messageArray.push(response);
-                    console.log("Changed letters ", response._message);
-                }
-            });
-    }
+    // private onChangedLetterCommand(): Subscription {
+    //     return this.socketService.subscribeToChannelEvent(SocketEventType.changeLettersRequest)
+    //         .subscribe((response: ICommandMessage<Array<Array<string>>>) => {
+    //             if (response !== undefined && response._message !== null) {
+    //                 this._messageArray.push(response);
+    //                 console.log("Changed letters ", response._message);
+    //             }
+    //         });
+    // }
+
+    // private onPlaceWordCommand(): Subscription {
+    //     return this.socketService.subscribeToChannelEvent(SocketEventType.placeWordCommandRequest)
+    //         .subscribe((response: ICommandMessage<Array<Array<string>>>) => {
+    //             if (response !== undefined) {
+    //                 this._messageArray.push(response);
+    //                 console.log("Place Word response from the server ", response);
+    //             }
+    //         });
+    // }
 
     // A callback when the player join a room
     private onJoinedRoom(): Subscription {
@@ -98,7 +104,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
     }
 
     // A callback when the player leave a room
-    public onLeaveRoom(): Subscription {
+    private onLeaveRoom(): Subscription {
         return this.socketService.subscribeToChannelEvent(SocketEventType.leaveRoom)
             .subscribe((response: IRoomMessage) => {
                 if (response !== undefined && response._message !== null) {

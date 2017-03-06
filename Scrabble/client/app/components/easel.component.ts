@@ -6,10 +6,12 @@ import { ScrabbleLetter } from "../models/letter/scrabble-letter";
 import { EaselManagerService } from "../services/easel/easel-manager.service";
 import { EaselControl } from "../commons/easel-control";
 import { SocketService } from "../services/socket-service";
-import { CommandType } from "../services/commands/command-type";
+import { CommandType } from "../services/commands/commons/command-type";
 import { SocketEventType } from "../commons/socket-eventType";
 import { IGameMessage } from "../commons/messages/game-message.interface";
 import { ICommandMessage } from "../commons/messages/command-message.interface";
+import { ICommandRequest } from "../services/commands/commons/command-request";
+import { CommandStatus } from "../services/commands/commons/command-status";
 
 declare var jQuery: any;
 
@@ -32,8 +34,8 @@ export class EaselComponent implements OnInit, OnDestroy {
     private _letters: Array<ScrabbleLetter>;
     private _indexOflettersToExchange: Array<number>;
     private _keyEventKeyCode: string;
-    private _exchangeLetterSubmission: Subscription;
-    private _initializeEaselSubmission: Subscription;
+    private _exchangeLetterSubcription: Subscription;
+    private _initializeEaselSubscription: Subscription;
 
     public get indexOfLettersToChange(): Array<number> {
         return this._indexOflettersToExchange;
@@ -68,8 +70,8 @@ export class EaselComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this._exchangeLetterSubmission = this.onExchangeLetterRequest();
-        this._initializeEaselSubmission = this.initializeEaselOnConnection();
+        this._exchangeLetterSubcription = this.onExchangeLetterRequest();
+        this._initializeEaselSubscription = this.initializeEaselOnConnection();
     }
 
     ngOnDestroy() {
@@ -97,14 +99,13 @@ export class EaselComponent implements OnInit, OnDestroy {
                             console.log("in easel", this._indexOflettersToExchange[index]);
 
                             this.letters[this._indexOflettersToExchange[index]] =
-                                new ScrabbleLetter(response._data[index]);
+                                new ScrabbleLetter(response._data[0][index]);
                             console.log(this.letters);
                         }
                     }
                 });
             });
     }
-
 
     public onKeyDownEventHandler(
         event: KeyboardEvent,
@@ -203,5 +204,19 @@ export class EaselComponent implements OnInit, OnDestroy {
 
         let firstLetterIndex = 0;
         this.easelEventManagerService.setFocusToElementWithGivenIndex(this.letters.length, firstLetterIndex);
+    }
+
+    public changeLetters(commandRequest: ICommandRequest<
+        { indexOfLettersToChange: Array<number>, lettersToChange: Array<string> }>) {
+        this.indexOfLettersToChange = commandRequest._response.indexOfLettersToChange;
+        let listOfLettersToChange = commandRequest._response.lettersToChange;
+
+        let outputRequest = {
+            commandType: CommandType.ExchangeCmd,
+            commandStatus: commandRequest._commandStatus,
+            data: listOfLettersToChange
+        }
+
+        this.socketService.emitMessage(SocketEventType.changeLettersRequest, outputRequest);
     }
 }

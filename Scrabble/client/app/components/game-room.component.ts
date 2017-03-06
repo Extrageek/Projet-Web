@@ -5,18 +5,18 @@ import { SocketService } from "../services/socket-service";
 import { EaselManagerService } from "../services/easel/easel-manager.service";
 import { GameRoomManagerService } from "../services/gameRoom/game-room-manager.service";
 import { CommandsService } from "../services/commands/commands.service";
-import { CommandsHelper } from "../services/commands/commands-helper";
+import { CommandsHelper } from "../services/commands/commons/commands-helper";
+import { CommandStatus } from "../services/commands/commons/command-status";
+import { CommandType } from "../services/commands/commons/command-type";
 
-import { IExchangeCommandRequest } from "../services/commands/command-request";
-import { CommandStatus } from "../services/commands/command-status";
-import { CommandType } from "../services/commands/command-type";
+import { IRoomMessage } from "../commons/messages/room-message.interface";
+import { EaselControl } from "../commons/easel-control";
+import { SocketEventType } from "../commons/socket-eventType";
 
 import { EaselComponent } from "./easel.component";
 import { ChatroomComponent } from "./chatroom.component";
-import { SocketEventType } from "../commons/socket-eventType";
-import { IRoomMessage } from "../commons/messages/room-message.interface";
+import { BoardComponent } from "./board.component";
 import { ScrabbleLetter } from "../models/letter/scrabble-letter";
-import { EaselControl } from "../commons/easel-control";
 
 
 declare var jQuery: any;
@@ -34,9 +34,11 @@ export class GameComponent implements OnInit, OnDestroy {
     // Create an event emitter to interact with the Easel Component
     @Output() tabKeyEvent = new EventEmitter();
 
+    @ViewChild(BoardComponent)
+    private _childBoardComponent: BoardComponent;
+
     @ViewChild(EaselComponent)
-    private _childEasel: EaselComponent;
-    private _chatRoom: ChatroomComponent;
+    private _childEaselComponent: EaselComponent;
 
     _username: string;
     _inputMessage: string;
@@ -108,138 +110,49 @@ export class GameComponent implements OnInit, OnDestroy {
 
     // A callback fonction for the chat message submit button
     public submitMessage() {
-        let request = this._inputMessage.trim();
-        let commandType = this.commandsService.getCommandType(this._inputMessage);
+        let commandRequest = this._inputMessage.trim();
+        let commandParameters = this.commandsService.extractCommandParameters(this._inputMessage);
 
-        if (commandType === CommandType.InvalidCmd) {
+        if (commandParameters.commandType === CommandType.InvalidCmd) {
             console.log("Custom message: Invalid");
-
-            this.socketService.emitMessage(SocketEventType.commandRequest,
-                { commandStatus: CommandStatus.Invalid, data: this._inputMessage });
-
-            this._inputMessage = '';
+            this.socketService.emitMessage(SocketEventType.invalidCommandRequest,
+                { commandType: CommandType.InvalidCmd, commandStatus: CommandStatus.Invalid, data: this._inputMessage });
 
         } else {
-            this.executeCommand(commandType, request);
+            this.handleInputCommand(commandParameters);
         }
-
+        this._inputMessage = '';
     }
 
-    // Use to execute a custom event according to the command entered by the player
-    private executeCommand(commandType: CommandType, parameters: string) {
-        try {
-            switch (commandType) {
-                case CommandType.MessageCmd:
-                    this.executeSendMessageCommand(commandType);
-                    break;
-                case CommandType.ExchangeCmd:
-                    this.executeExchangeLettersCommand(commandType, parameters);
-                    this._inputMessage = '';
-                    break;
-                case CommandType.PlaceCmd:
-                    this.executePlaceWordCommand(commandType, parameters);
-                    this._inputMessage = '';
-                    break;
-                case CommandType.PassCmd:
-                    // TODO: for the next sprint
-                    this._inputMessage = '';
-                    break;
-                case CommandType.Guide:
-                    // TODO: for the next sprint
-                    this._inputMessage = '';
-                    break;
-                case CommandType.InvalidCmd:
-                    this._inputMessage = '';
-                    break;
-                default:
-                    break;
-            }
-        } catch (error) {
-            console.log("invalid request", error);
-        }
-    }
+    public handleInputCommand(commandParameters: { commandType: CommandType, parameters: string }) {
 
-    private executeSendMessageCommand(commandType: CommandType) {
-        if (this._inputMessage.trim() !== "" && this._inputMessage.trim().length) {
-            this.socketService.emitMessage(
-                SocketEventType.message,
-                { commandType: commandType, username: this._username, message: this._inputMessage });
-            this._inputMessage = '';
-        }
-    }
-
-    private executeExchangeLettersCommand(commandType: CommandType, requestValue: string) {
-        if (requestValue === null) {
-            throw new Error("Null argument error: The parameter cannot be null");
-        }
-
-        let request = requestValue.split(CommandsHelper.EXCHANGE_COMMAND)[1].trim();
-        let listOfLettersToChange = this.easelManagerService.parseStringToListofChar(request);
-
-        console.log(request, listOfLettersToChange);
-
-        let exchangeRequest = this.commandsService
-            .createExchangeEaselLettersRequest(this._childEasel.letters, listOfLettersToChange);
-
-        if (exchangeRequest._commandStatus === CommandStatus.Ok) {
-            this._childEasel.indexOfLettersToChange = exchangeRequest._response;
-            this.socketService.emitMessage(SocketEventType.changeLettersRequest,
-                { commandType: commandType, listOfLettersToChange: listOfLettersToChange });
-
-            this._inputMessage = '';
-            console.log("Ok");
-
-        } else if (exchangeRequest._commandStatus === CommandStatus.NotAllowed) {
-            this.socketService.emitMessage(
-                SocketEventType.commandRequest,
-                { commandType: commandType, commandStatus: CommandStatus.NotAllowed, data: requestValue });
-
-            this._inputMessage = '';
-            console.log("Custom message: NotAllowed");
-
-        } else if (exchangeRequest._commandStatus === CommandStatus.SynthaxeError) {
-            this.socketService.emitMessage(SocketEventType.commandRequest,
-                { commandType: commandType, commandStatus: CommandStatus.SynthaxeError, data: requestValue });
-
-            this._inputMessage = '';
-            console.log("Custom message: SyntaxError");
-        }
-    }
-
-    private executePlaceWordCommand(commandType: CommandType, parameters: string) {
-        if (parameters === null) {
-            throw new Error("Null argument error: The parameter cannot be null");
-        }
-
-        let parameter = parameters.split(CommandsHelper.PLACE_COMMAND)[1].trim();
-
-        //console.log("Command request:", request);
-        let placeWordRequest = this.commandsService
-            .createPlaceWordRequest(this._childEasel.letters, parameter);
-
-        //console.log("place word request:", placeWordRequest);
-        if (placeWordRequest._commandStatus === CommandStatus.Ok) {
-            let listOfLettersToPlace = this.easelManagerService
-                .parseScrabbleLettersToListofChar(placeWordRequest._response);
-
-            //console.log("list of letters to place", listOfLettersToPlace);
-            this.socketService.emitMessage(SocketEventType.commandRequest,
-                { commandType: commandType, commandStatus: CommandStatus.Ok, data: parameter });
-            this._inputMessage = '';
-            // console.log("Ok");
-
-        } else if (placeWordRequest._commandStatus === CommandStatus.NotAllowed) {
-            this.socketService.emitMessage(
-                SocketEventType.commandRequest,
-                { commandType: commandType, commandStatus: CommandStatus.NotAllowed, data: parameters });
-            this._inputMessage = '';
-            // console.log("Custom message: NotAllowed");
-
-        } else if (placeWordRequest._commandStatus === CommandStatus.SynthaxeError) {
-            this.socketService.emitMessage(SocketEventType.commandRequest,
-                { commandType: commandType, commandStatus: CommandStatus.SynthaxeError, data: parameters });
-            this._inputMessage = '';
-            // console.log("Custom message: SyntaxError");
+        switch (commandParameters.commandType) {
+            case CommandType.MessageCmd:
+                this.commandsService.invokeAndExecuteMessageCommand(this.socketService, commandParameters.parameters);
+                break;
+            case CommandType.ExchangeCmd:
+                this.commandsService.invokeAndExecuteExchangeCommand(
+                    this._childEaselComponent,
+                    commandParameters.parameters);
+                break;
+            case CommandType.PlaceCmd:
+                this.commandsService.invokeAndExecutePlaceCommand(
+                    this._childEaselComponent,
+                    this._childBoardComponent,
+                    commandParameters.parameters);
+                break;
+            case CommandType.PassCmd:
+                this.commandsService.invokeAndExecutePassCommand(
+                    this.socketService,
+                    commandParameters.parameters);
+                break;
+            case CommandType.Guide:
+                // TODO: for the next sprint
+                break;
+            case CommandType.InvalidCmd:
+                break;
+            default:
+                break;
         }
     }
 
@@ -254,7 +167,7 @@ export class GameComponent implements OnInit, OnDestroy {
         let keyCode = event.which;
 
         if (this.gameRoomEventManagerService.isTabKey(keyCode)) {
-            this._childEasel.getNotificationOnTabKeyPress(keyCode);
+            this._childEaselComponent.getNotificationOnTabKeyPress(keyCode);
         }
     }
 }
