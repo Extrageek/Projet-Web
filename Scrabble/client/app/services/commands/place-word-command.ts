@@ -12,22 +12,14 @@ import { CommandsHelper } from "./commons/commands-helper";
 export class PlaceWordCommand implements ICommand {
 
     private _easelManagerService: EaselManagerService;
-
     private _commandRequest: ICommandRequest<Array<ScrabbleLetter>>;
     private _parameters: string;
 
     public get commandRequest(): ICommandRequest<Array<ScrabbleLetter>> {
         return this._commandRequest;
     }
-    public set commandRequest(v: ICommandRequest<Array<ScrabbleLetter>>) {
-        this._commandRequest = v;
-    }
-
     public get parameters(): string {
         return this._parameters;
-    }
-    public set parameters(v: string) {
-        this._parameters = v;
     }
 
     constructor(
@@ -35,13 +27,12 @@ export class PlaceWordCommand implements ICommand {
         private boardComponent: BoardComponent,
         params: string) {
 
-        if (easelComponent === null
-            || boardComponent === null
-            || params === null) {
-            throw new Error("Null argument error: the parameters cannot be null");
-        }
+        this.throwsErrorIfParameterIsNull(easelComponent);
+        this.throwsErrorIfParameterIsNull(boardComponent);
+        this.throwsErrorIfParameterIsNull(params);
+        this.throwsErrorIfParameterIsEmpty(params);
 
-        this.parameters = params;
+        this._parameters = params;
         this._commandRequest = {
             _commandType: CommandType.PlaceCmd,
             _commandStatus: CommandStatus.Unknown,
@@ -52,13 +43,14 @@ export class PlaceWordCommand implements ICommand {
     }
 
     public execute() {
-        let commandRequest = this.createPlaceWordRequest();
+        let lettersInEasel = this.easelComponent.letters;
+        let commandRequest = this.createPlaceWordRequest(lettersInEasel);
         this.boardComponent.placeWordInBoard(commandRequest);
     }
 
-    public createPlaceWordRequest(): ICommandRequest<Array<ScrabbleLetter>> {
+    public createPlaceWordRequest(lettersInEasel: Array<ScrabbleLetter>)
+        : ICommandRequest<Array<ScrabbleLetter>> {
 
-        let lettersInEasel = this.easelComponent.letters;
         this.throwsErrorIfParameterIsNull(lettersInEasel);
 
         // get the differents sections of the request
@@ -76,12 +68,11 @@ export class PlaceWordCommand implements ICommand {
         }
 
         // Get the word to be placed from the easel;
-        let wordFromEasel = this._easelManagerService.getScrabbleWordFromTheEasel(lettersInEasel, wordToBePlaced);
+        let wordFromEasel = new Array<ScrabbleLetter>();
+        wordFromEasel = this._easelManagerService.getScrabbleWordFromTheEasel(lettersInEasel, wordToBePlaced);
 
         // Check if the word to be placed exist in the current state of the easel
-        if (wordFromEasel === null
-            || wordFromEasel === undefined
-            || wordFromEasel.length === 0) {
+        if (wordFromEasel === null) {
             this.commandRequest._commandStatus = CommandStatus.NotAllowed;
 
         } else {
@@ -93,14 +84,15 @@ export class PlaceWordCommand implements ICommand {
     }
 
     private isValidPosition(wordPosition: Array<string>): boolean {
-        if (wordPosition.length < CommandsHelper.MIN_POSITION_VALUE
-            || wordPosition.length > CommandsHelper.MAX_POSITION_VALUE) {
-            return false;
-        }
+        // if (wordPosition.length < CommandsHelper.MIN_POSITION_VALUE
+        //     || wordPosition.length > CommandsHelper.MAX_POSITION_VALUE) {
+        //     return false;
+        // }
         // Get the position of the word to be placed
         let rowIndex = wordPosition[CommandsHelper.FIRST_INDEX];
         let colIndex = Number(wordPosition[CommandsHelper.SECOND_INDEX]);
 
+        console.log(rowIndex, colIndex);
         if (wordPosition.length === CommandsHelper.MAX_POSITION_VALUE) {
             colIndex = Number(
                 [wordPosition[CommandsHelper.SECOND_INDEX], wordPosition[CommandsHelper.THIRD_INDEX]].join('')
@@ -123,7 +115,7 @@ export class PlaceWordCommand implements ICommand {
 
     private isValidColumnPosition(index: number): boolean {
         this.throwsErrorIfParameterIsNull(index);
-        return index !== 0
+        return index !== 0 && !isNaN(Number(index))
             && index >= CommandsHelper.MIN_BOARD_POSITION_INDEX
             && index <= CommandsHelper.MAX_BOARD_POSITION_INDEX;
     }
@@ -162,10 +154,15 @@ export class PlaceWordCommand implements ICommand {
             return wordToBePlaced;
         }
     }
-
     private throwsErrorIfParameterIsNull(parameter: any) {
         if (parameter === null) {
-            throw new Error("Null argument error: the letter entered cannot be null");
+            throw new Error("Null argument error: the parameters cannot be null");
+        }
+    }
+
+    private throwsErrorIfParameterIsEmpty(parameter: any) {
+        if (parameter === "") {
+            throw new Error("Null argument error: the parameters cannot be empty");
         }
     }
 }

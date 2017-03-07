@@ -13,7 +13,7 @@ import { async, TestBed } from "@angular/core/testing";
 const MIN_POSITION_INDEX = 0;
 const MAX_POSITION_INDEX = 6;
 
-describe("EaselManagerService should", () => {
+describe("EaselManagerService", () => {
     let service: EaselManagerService;
 
     beforeEach(() => {

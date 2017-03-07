@@ -5,6 +5,7 @@ import { CommandStatus } from './commons/command-status';
 import { CommandType } from './commons/command-type';
 import { CommandsHelper } from "./commons/commands-helper";
 import { SocketEventType } from "../../commons/socket-eventType";
+import { GameComponent } from "../../components/game-room.component";
 
 export class PassCommand implements ICommand {
 
@@ -15,27 +16,13 @@ export class PassCommand implements ICommand {
     public get commandRequest(): ICommandRequest<string> {
         return this._commandRequest;
     }
-    public set commandRequest(v: ICommandRequest<string>) {
-        this._commandRequest = v;
-    }
-
-    public get parameters(): string {
-        return this._parameters;
-    }
-    public set parameters(v: string) {
-        this._parameters = v;
-    }
 
     constructor(
-        private socketService: SocketService,
+        private gameComponent: GameComponent,
         params: string) {
+        this.throwsErrorIfParameterIsNull(gameComponent);
 
-        if (socketService === null
-            || params === null) {
-            throw new Error("Null argument error: the parameters cannot be null");
-        }
-
-        this.parameters = params;
+        this._parameters = params;
         this._commandRequest = {
             _commandType: CommandType.PassCmd,
             _commandStatus: CommandStatus.Ok,
@@ -47,8 +34,15 @@ export class PassCommand implements ICommand {
         let request = {
             commandType: this._commandRequest._commandType,
             commandStatus: this._commandRequest._commandStatus,
-            data: ""
+            data: this._parameters
         }
-        this.socketService.emitMessage(SocketEventType.passCommandRequest, request);
+        this.gameComponent.passCurrentPlayerTurn(request);
     }
+
+    private throwsErrorIfParameterIsNull(parameter: any) {
+        if (parameter === null) {
+            throw new Error("Null argument error: the parameters cannot be null");
+        }
+    }
+
 }

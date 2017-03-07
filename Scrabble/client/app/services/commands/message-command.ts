@@ -5,9 +5,9 @@ import { CommandStatus } from './commons/command-status';
 import { CommandType } from './commons/command-type';
 import { CommandsHelper } from "./commons/commands-helper";
 import { SocketEventType } from "../../commons/socket-eventType";
+import { ChatroomComponent } from "../../components/chatroom.component";
 
 export class MessageCommand implements ICommand {
-
 
     private _commandRequest: ICommandRequest<string>;
     private _parameters: string;
@@ -15,27 +15,20 @@ export class MessageCommand implements ICommand {
     public get commandRequest(): ICommandRequest<string> {
         return this._commandRequest;
     }
-    public set commandRequest(v: ICommandRequest<string>) {
-        this._commandRequest = v;
-    }
 
     public get parameters(): string {
         return this._parameters;
     }
-    public set parameters(v: string) {
-        this._parameters = v;
-    }
 
     constructor(
-        private socketService: SocketService,
+        private chatroomComponent: ChatroomComponent,
         params: string) {
 
-        if (socketService === null
-            || params === null) {
-            throw new Error("Null argument error: the parameters cannot be null");
-        }
+        this.throwsErrorIfParameterIsNull(chatroomComponent);
+        this.throwsErrorIfParameterIsNull(params);
+        this.throwsErrorIfParameterIsEmpty(params);
 
-        this.parameters = params;
+        this._parameters = params;
         this._commandRequest = {
             _commandType: CommandType.MessageCmd,
             _commandStatus: CommandStatus.Ok,
@@ -48,6 +41,18 @@ export class MessageCommand implements ICommand {
             commandType: this._commandRequest._commandType,
             message: this._commandRequest._response
         }
-        this.socketService.emitMessage(SocketEventType.message, request);
+        this.chatroomComponent.sendMessage(request);
+    }
+
+    private throwsErrorIfParameterIsNull(parameter: any) {
+        if (parameter === null) {
+            throw new Error("Null argument error: the parameters cannot be null");
+        }
+    }
+
+    private throwsErrorIfParameterIsEmpty(parameter: any) {
+        if (parameter === "") {
+            throw new Error("Null argument error: the parameters cannot be empty");
+        }
     }
 }

@@ -1,5 +1,6 @@
 import { EaselComponent } from "../../components/easel.component";
 import { EaselManagerService } from "../easel/easel-manager.service";
+import { ScrabbleLetter } from "../../models/letter/scrabble-letter";
 import { ICommand } from "./command.interface";
 import { CommandStatus } from './commons/command-status';
 import { CommandType } from './commons/command-type';
@@ -7,6 +8,7 @@ import { ICommandRequest } from "./commons/command-request";
 import { CommandsHelper } from "./commons/commands-helper";
 
 export class ChangeLettersCommand implements ICommand {
+
     private _easelManagerService: EaselManagerService;
     private _commandRequest: ICommandRequest<
     { indexOfLettersToChange: Array<number>, lettersToChange: Array<string> }>;
@@ -16,27 +18,19 @@ export class ChangeLettersCommand implements ICommand {
         { indexOfLettersToChange: Array<number>, lettersToChange: Array<string> }> {
         return this._commandRequest;
     }
-    public set commandRequest(v: ICommandRequest<
-        { indexOfLettersToChange: Array<number>, lettersToChange: Array<string> }>) {
-        this._commandRequest = v;
-    }
 
     public get parameters(): string {
         return this._parameters;
     }
-    public set parameters(v: string) {
-        this._parameters = v;
-    }
 
     constructor(private easelComponent: EaselComponent, params: string) {
-        if (easelComponent === null
-            || params === null) {
-            throw new Error("Null argument error: the parameters cannot be null");
-        }
 
-        this.parameters = params;
+        this.throwsErrorIfParameterIsNull(easelComponent);
+        this.throwsErrorIfParameterIsNull(params);
+
+        this._parameters = params;
         this._commandRequest = {
-            _commandType: CommandType.Unknown,
+            _commandType: CommandType.ExchangeCmd,
             _commandStatus: CommandStatus.Unknown,
             _response: { indexOfLettersToChange: new Array<number>(), lettersToChange: new Array<string>() }
         };
@@ -45,15 +39,15 @@ export class ChangeLettersCommand implements ICommand {
     }
 
     public execute() {
-        let commandRequest = this.createExchangeEaselLettersRequest();
+        let lettersInEasel = this.easelComponent.letters;
+        let commandRequest = this.createExchangeEaselLettersRequest(lettersInEasel);
         this.easelComponent.changeLetters(commandRequest);
     }
 
-    public createExchangeEaselLettersRequest(): ICommandRequest<
+    public createExchangeEaselLettersRequest(lettersInEasel: Array<ScrabbleLetter>): ICommandRequest<
         { indexOfLettersToChange: Array<number>, lettersToChange: Array<string> }> {
 
         let enteredletters = this._easelManagerService.parseStringToListofChar(this.parameters);
-        let lettersInEasel = this.easelComponent.letters;
         let indexOfLettersToChange = new Array<number>();
         this.commandRequest._response.lettersToChange = enteredletters;
 
@@ -62,6 +56,7 @@ export class ChangeLettersCommand implements ICommand {
 
         } else if (enteredletters.length === 0
             || this.parameters === null) {
+
             this.commandRequest._commandStatus = CommandStatus.NotAllowed;
 
         } else {
@@ -97,7 +92,7 @@ export class ChangeLettersCommand implements ICommand {
 
     private throwsErrorIfParameterIsNull(parameter: any) {
         if (parameter === null) {
-            throw new Error("Null argument error: the letter entered cannot be null");
+            throw new Error("Null argument error: the parameters cannot be null");
         }
     }
 }

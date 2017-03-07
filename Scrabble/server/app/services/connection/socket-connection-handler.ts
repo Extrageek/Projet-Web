@@ -139,7 +139,7 @@ export class SocketConnectionHandler {
         }
 
         socket.on(SocketEventType.placeWordCommandRequest, (data: {
-            commandType: CommandType, commandStatus: CommandStatus, listOfLettersToPlace: Array<string>
+            commandType: CommandType, commandStatus: CommandStatus, data: Array<string>
         }) => {
             let response = this.createPlaceWordResponse(socket.id, data);
 

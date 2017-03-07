@@ -7,6 +7,7 @@ import { SocketEventType } from "../commons/socket-eventType";
 import { IGameMessage } from "../commons/messages/game-message.interface";
 import { IRoomMessage } from "../commons/messages/room-message.interface";
 import { ICommandMessage } from "../commons/messages/command-message.interface";
+import { CommandType } from '../services/commands/commons/command-type';
 
 @Component({
     moduleId: module.id,
@@ -123,6 +124,18 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
                     console.log("Chat room: ", response.message, response.date);
                 }
             });
+    }
+
+    public sendMessage(request: {
+        commandType: CommandType,
+        message: string
+    }) {
+
+        if (request.commandType === null
+            || request.message == null) {
+            throw new Error("Null argument error: the parameters cannot be null");
+        }
+        this.socketService.emitMessage(SocketEventType.message, request);
     }
 
     // Use to add a scroller to the chatroom

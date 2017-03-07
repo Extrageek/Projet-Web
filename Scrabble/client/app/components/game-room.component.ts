@@ -40,6 +40,9 @@ export class GameComponent implements OnInit, OnDestroy {
     @ViewChild(EaselComponent)
     private _childEaselComponent: EaselComponent;
 
+    @ViewChild(ChatroomComponent)
+    private _childChatroomComponent: ChatroomComponent;
+
     _username: string;
     _inputMessage: string;
 
@@ -116,7 +119,11 @@ export class GameComponent implements OnInit, OnDestroy {
         if (commandParameters.commandType === CommandType.InvalidCmd) {
             console.log("Custom message: Invalid");
             this.socketService.emitMessage(SocketEventType.invalidCommandRequest,
-                { commandType: CommandType.InvalidCmd, commandStatus: CommandStatus.Invalid, data: this._inputMessage });
+                {
+                    commandType: CommandType.InvalidCmd,
+                    commandStatus: CommandStatus.Invalid,
+                    data: this._inputMessage
+                });
 
         } else {
             this.handleInputCommand(commandParameters);
@@ -128,22 +135,28 @@ export class GameComponent implements OnInit, OnDestroy {
 
         switch (commandParameters.commandType) {
             case CommandType.MessageCmd:
-                this.commandsService.invokeAndExecuteMessageCommand(this.socketService, commandParameters.parameters);
+                this.commandsService
+                    .invokeAndExecuteMessageCommand(
+                    this._childChatroomComponent,
+                    commandParameters.parameters);
                 break;
             case CommandType.ExchangeCmd:
-                this.commandsService.invokeAndExecuteExchangeCommand(
+                this.commandsService
+                    .invokeAndExecuteExchangeCommand(
                     this._childEaselComponent,
                     commandParameters.parameters);
                 break;
             case CommandType.PlaceCmd:
-                this.commandsService.invokeAndExecutePlaceCommand(
+                this.commandsService
+                    .invokeAndExecutePlaceCommand(
                     this._childEaselComponent,
                     this._childBoardComponent,
                     commandParameters.parameters);
                 break;
             case CommandType.PassCmd:
-                this.commandsService.invokeAndExecutePassCommand(
-                    this.socketService,
+                this.commandsService
+                    .invokeAndExecutePassCommand(
+                    this,
                     commandParameters.parameters);
                 break;
             case CommandType.Guide:
@@ -154,6 +167,14 @@ export class GameComponent implements OnInit, OnDestroy {
             default:
                 break;
         }
+    }
+
+    public passCurrentPlayerTurn(request: {
+        commandType: CommandType,
+        commandStatus: CommandStatus,
+        data: string
+    }) {
+        this.socketService.emitMessage(SocketEventType.passCommandRequest, request);
     }
 
     public onTabKeyEventFromEasel(letter: any) {

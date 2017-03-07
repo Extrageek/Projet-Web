@@ -49,13 +49,13 @@ export class BoardComponent implements OnInit {
             commandType: CommandType.PlaceCmd,
             commandStatus: commandRequest._commandStatus,
             data: new Array<string>()
-        }
+        };
 
         commandRequest._response.forEach((letter) => {
             outputRequest.data.push(letter.letter);
         });
 
-        if (commandRequest._commandStatus == CommandStatus.Ok) {
+        if (commandRequest._commandStatus === CommandStatus.Ok) {
             // TODO: Place the word from here in the board if everything is ok
         }
         this.socketService.emitMessage(SocketEventType.placeWordCommandRequest, outputRequest);

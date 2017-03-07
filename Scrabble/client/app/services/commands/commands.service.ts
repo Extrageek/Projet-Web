@@ -3,6 +3,8 @@ import { SocketService } from '../socket-service';
 
 import { EaselComponent } from "../../components/easel.component";
 import { BoardComponent } from "../../components/board.component";
+import { ChatroomComponent } from "../../components/chatroom.component";
+import { GameComponent } from "../../components/game-room.component";
 
 import { EaselManagerService } from "../easel/easel-manager.service";
 import { EaselControl } from "../../commons/easel-control";
@@ -21,19 +23,19 @@ import { PassCommand } from './pass-command';
 @Injectable()
 export class CommandsService {
 
-    constructor(private easelManagerService: EaselManagerService) {
-        // Default constructor
-    }
+    constructor(private easelManagerService: EaselManagerService) { }
 
     public invokeAndExecuteMessageCommand(
-        receiverSocketService: SocketService,
+        receiverChatRoom: ChatroomComponent,
         params: string) {
 
-        if (receiverSocketService === null
-            || params === null) {
-            throw new Error("Null argument errr: the parameters cannot be null");
+        if (receiverChatRoom === null
+            || params === null
+            || params === "") {
+            throw new Error("Null argument error: the parameters cannot be null");
         }
-        let messageCommand = new MessageCommand(receiverSocketService, params);
+
+        let messageCommand = new MessageCommand(receiverChatRoom, params);
         messageCommand.execute();
     }
 
@@ -42,9 +44,11 @@ export class CommandsService {
         params: string) {
 
         if (receiverEaselCompoment === null
-            || params === null) {
-            throw new Error("Null argument errr: the parameters cannot be null");
+            || params === null
+            || params === "") {
+            throw new Error("Null argument error: the parameters cannot be null");
         }
+
         let changeCommand = new ChangeLettersCommand(receiverEaselCompoment, params);
         changeCommand.execute();
     }
@@ -56,7 +60,8 @@ export class CommandsService {
 
         if (receiverEaselCompoment === null
             || receiverBoardComponent === null
-            || params === null) {
+            || params === null
+            || params === "") {
             throw new Error("Null argument error: the parameters cannot be null");
         }
 
@@ -64,18 +69,19 @@ export class CommandsService {
             receiverEaselCompoment,
             receiverBoardComponent,
             params);
+
         placeWordCommand.execute();
     }
 
     public invokeAndExecutePassCommand(
-        receiverSocketService: SocketService,
+        receiverGameComponent: GameComponent,
         params: string) {
 
-        if (receiverSocketService === null
-            || params === null) {
+        if (receiverGameComponent === null) {
             throw new Error("Null argument error: the parameters cannot be null");
         }
-        let passCommand = new PassCommand(receiverSocketService, params);
+
+        let passCommand = new PassCommand(receiverGameComponent, params);
         passCommand.execute();
     }
 
@@ -98,13 +104,13 @@ export class CommandsService {
 
         } else if (texte.startsWith(CommandsHelper.GUIDE)) {
             request.commandType = CommandType.Guide;
-            request.parameters = texte.split(CommandsHelper.arguments)[1].trim();
+            request.parameters = texte.split(CommandsHelper.GUIDE)[1].trim();
 
         } else if (texte.startsWith('!') && !texte.startsWith(CommandsHelper.PLACE_COMMAND)) {
             request.commandType = CommandType.InvalidCmd;
             request.parameters = texte.trim();
 
-        } else if (texte !== null && texte !== '') {
+        } else if (texte !== null && texte !== "") {
             request.commandType = CommandType.MessageCmd;
             request.parameters = texte.trim();
         }

@@ -4,8 +4,9 @@ import { Subscription } from "rxjs/Subscription";
 
 import { ScrabbleLetter } from "../models/letter/scrabble-letter";
 import { EaselManagerService } from "../services/easel/easel-manager.service";
-import { EaselControl } from "../commons/easel-control";
 import { SocketService } from "../services/socket-service";
+
+import { EaselControl } from "../commons/easel-control";
 import { CommandType } from "../services/commands/commons/command-type";
 import { SocketEventType } from "../commons/socket-eventType";
 import { IGameMessage } from "../commons/messages/game-message.interface";
@@ -67,6 +68,7 @@ export class EaselComponent implements OnInit, OnDestroy {
         private socketService: SocketService,
         private activatedRoute: ActivatedRoute) {
         this._indexOflettersToExchange = new Array<number>();
+        this._letters = new Array<ScrabbleLetter>();
     }
 
     ngOnInit() {
@@ -215,7 +217,7 @@ export class EaselComponent implements OnInit, OnDestroy {
             commandType: CommandType.ExchangeCmd,
             commandStatus: commandRequest._commandStatus,
             data: listOfLettersToChange
-        }
+        };
 
         this.socketService.emitMessage(SocketEventType.changeLettersRequest, outputRequest);
     }

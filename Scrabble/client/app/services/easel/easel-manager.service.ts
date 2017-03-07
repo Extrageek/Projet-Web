@@ -72,6 +72,8 @@ export class EaselManagerService {
             this.setFocusToElementWithGivenIndex(easelLength, newPosition);
         }
 
+        console.log("new position", newPosition);
+
         return newPosition;
     }
 
