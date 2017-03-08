@@ -14,7 +14,7 @@ export class Stone extends Group implements GameComponent {
     public static readonly SPEED_DIMINUTION_NUMBER_WITH_SWEEP = 0.09;
     private static readonly MINIMUM_SPEED = 0.001;
 
-    private _material: MeshPhongMaterial;
+    public _material: MeshPhongMaterial;
     private _stoneColor: StoneColor;
     //Speed orientation and quantity in meters per second
     private _speed: number;
@@ -113,6 +113,7 @@ export class Stone extends Group implements GameComponent {
         this._spin = s;
     }
 
+
     public revertToLastPosition() {
         this._boundingSphere = this._lastBoundingSphere;
         this.position.copy(this._lastPosition);
@@ -149,5 +150,13 @@ export class Stone extends Group implements GameComponent {
 
     private calculateNewBoundingSphere() {
         this._boundingSphere.set(this.position, Stone.BOUNDING_SPHERE_RADIUS);
+    }
+
+    public changeStoneOpacity(): number {
+      for (let i = 0; i < this.children.length; i ++) {
+          (<THREE.Mesh>this.children[i]).material.transparent = true;
+          (<THREE.Mesh>this.children[i]).material.opacity = 0.5 + 0.5 * Math.sin(new Date().getTime() * .0025);
+      }
+        return (<THREE.Mesh>this.children[0]).material.opacity;
     }
 }

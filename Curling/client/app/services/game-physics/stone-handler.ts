@@ -1,10 +1,11 @@
 import { Clock, ObjectLoader, Vector3 } from 'three';
 import { RinkInfo } from './../../models/scenery/rinkInfo.interface';
-import { Stone } from './../../models//stone/stone';
+import { Stone } from './../../models/stone/stone';
 import { StoneColor } from './../../models/stone/stone-color';
 import { StoneSpin } from './../../models/stone/stone-spin';
 import { GameComponent } from './../../models/stone/game-component.interface';
 import { CameraType } from './camera-type';
+import Box3 = THREE.Box3;
 
 export interface Points {
     player: number;
@@ -27,28 +28,36 @@ export class StoneHandler implements GameComponent {
     private _currentPlayer: StoneColor;
     private _objectLoader: ObjectLoader;
     private _stoneOnTheGame: Stone[];
+    private _stonesToBeRemoved : Stone[];
     private _powerTimer: Clock;
     private _power: number;
     private _currentSpin: StoneSpin;
     private _mouseIsPressed: boolean;
     private _mousePositionPlaneXZ: Vector3;
     private _callbackAfterShotFinished: Function;
+    private _boundingRink: Box3;
 
     constructor(objectLoader: ObjectLoader, rinkInfo: RinkInfo, firstPlayer: StoneColor) {
         this._rinkInfo = rinkInfo;
         this._currentPlayer = firstPlayer - 1;
         this._objectLoader = objectLoader;
         this._stoneOnTheGame = new Array<Stone>();
+        this._stonesToBeRemoved = new Array<Stone>();
         this._power = 0;
         this._powerTimer = new THREE.Clock();
         this._currentSpin = StoneSpin.Clockwise;
         this._mouseIsPressed = false;
         this._mousePositionPlaneXZ = new Vector3(0, 0, 0);
         this._callbackAfterShotFinished = null;
+        this._boundingRink = new Box3( new Vector3(-2.25, 0, -22.5), new Vector3(2.25, 0, 22.5));
     }
 
     public get stoneOnTheGame(): Stone[] {
         return this._stoneOnTheGame;
+    }
+
+    public get stoneToBeRemoved(): Stone[] {
+        return this._stonesToBeRemoved;
     }
 
     public get power(): number {
@@ -58,7 +67,6 @@ export class StoneHandler implements GameComponent {
     public get currentSpin(): StoneSpin {
         return this._currentSpin;
     }
-
 
     public get mousePositionPlaneXZ(): Vector3 {
         return this._mousePositionPlaneXZ;
@@ -170,11 +178,27 @@ export class StoneHandler implements GameComponent {
                 }
                 aStoneIsMoving = aStoneIsMoving || stone.speed !== 0;
             });
+            this.verifyOutOfBounds();
             if (!aStoneIsMoving && !isCollision) {
                 this._callbackAfterShotFinished();
                 this._callbackAfterShotFinished = null;
             }
         }
+    }
+
+    private verifyOutOfBounds() {
+        this._stoneOnTheGame.map((stone: Stone) => {
+            if (!(this._boundingRink.intersectsSphere(stone.boundingSphere))) {
+                let opacity = stone.changeStoneOpacity();
+                if (opacity < 0.001) {
+                    this._stoneOnTheGame.splice(this._stoneOnTheGame.
+                    findIndex((elem : Stone) => {
+                        return stone === elem;
+                    }), 1);
+                    this._stonesToBeRemoved.push(stone);
+                }
+            }
+        });
     }
 
     private resolveCollisions(stoneToVerify: Stone) {
