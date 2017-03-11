@@ -106,11 +106,4 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
             SocketEventType.newGameRequest,
             { 'username': username, 'gameType': Number(numberOfPlayers) });
     }
-
-    public waitingForMissingMember(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.connectError)
-            .subscribe((error) => {
-                alert("Waiting for missing member: The server is not reachable");
-            });
-    }
 }

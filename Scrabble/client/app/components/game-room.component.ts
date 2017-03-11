@@ -115,19 +115,25 @@ export class GameComponent implements OnInit, OnDestroy {
     public submitMessage() {
         let commandRequest = this._inputMessage.trim();
         let commandParameters = this.commandsService.extractCommandParameters(this._inputMessage);
+        let currentPlayerName = this.socketService.getCurrentPlayer();
 
-        if (commandParameters.commandType === CommandType.InvalidCmd) {
-            console.log("Custom message: Invalid");
+        // If the player try a command and it's not his turn to play, let him know
+        if (currentPlayerName !== this._username
+            && commandParameters.commandType !== CommandType.MessageCmd) {
+            let message = `Veuillez attendre votre tour après ${currentPlayerName} pour pouvoir jouer`;
+
+            // Ask if it's necessary to send this to the server, I'm not sure we can just push it to the chatroom
             this.socketService.emitMessage(SocketEventType.invalidCommandRequest,
                 {
                     commandType: CommandType.InvalidCmd,
-                    commandStatus: CommandStatus.Invalid,
-                    data: this._inputMessage
+                    commandStatus: CommandStatus.NotAllowed,
+                    data: message
                 });
-
-        } else {
+        }
+        else {
             this.handleInputCommand(commandParameters);
         }
+
         this._inputMessage = '';
     }
 
@@ -160,9 +166,10 @@ export class GameComponent implements OnInit, OnDestroy {
                     commandParameters.parameters);
                 break;
             case CommandType.Guide:
-                // TODO: for the next sprint
+                // TODO: 
                 break;
             case CommandType.InvalidCmd:
+                this.executeInvalidCommand();
                 break;
             default:
                 break;
@@ -175,6 +182,16 @@ export class GameComponent implements OnInit, OnDestroy {
         data: string
     }) {
         this.socketService.emitMessage(SocketEventType.passCommandRequest, request);
+    }
+
+    public executeInvalidCommand() {
+        console.log("Custom message: Invalid");
+        this.socketService.emitMessage(SocketEventType.invalidCommandRequest,
+            {
+                commandType: CommandType.InvalidCmd,
+                commandStatus: CommandStatus.Invalid,
+                data: this._inputMessage
+            });
     }
 
     public onTabKeyEventFromEasel(letter: any) {

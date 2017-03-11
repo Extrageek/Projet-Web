@@ -208,12 +208,12 @@ describe("Room", () => {
         room.addPlayer(player2);
 
         // Should change the order of the list
-        let priorityList = room.getAndUpdatePlayersOrder();
+        let priorityList = room.getAndUpdatePlayersQueue();
         expect(priorityList[0]).to.deep.equals(player2.username);
         expect(priorityList[1]).to.deep.equals(player1.username);
 
         // Should invert the order of the list
-        priorityList = room.getAndUpdatePlayersOrder();
+        priorityList = room.getAndUpdatePlayersQueue();
         expect(priorityList[0]).to.deep.equals(player1.username);
         expect(priorityList[1]).to.deep.equals(player2.username);
     });
@@ -228,12 +228,12 @@ describe("Room", () => {
         room.addPlayer(player2);
 
         // Should change the order of the list
-        let priorityList = room.getAndUpdatePlayersOrder();
+        let priorityList = room.getAndUpdatePlayersQueue();
         expect(priorityList[0]).to.deep.equals(player2.username);
         expect(priorityList[1]).to.deep.equals(player1.username);
 
         // Should invert the order of the list
-        priorityList = room.getAndUpdatePlayersOrder();
+        priorityList = room.getAndUpdatePlayersQueue();
         expect(priorityList[0]).to.deep.equals(player1.username);
         expect(priorityList[1]).to.deep.equals(player2.username);
     });
@@ -254,19 +254,19 @@ describe("Room", () => {
         room.addPlayer(player3);
 
         // Should change the order and put the player 2 at the first position
-        let priorityList = room.getAndUpdatePlayersOrder();
+        let priorityList = room.getAndUpdatePlayersQueue();
         expect(priorityList[0]).to.deep.equals(player2.username);
         expect(priorityList[1]).to.deep.equals(player3.username);
         expect(priorityList[2]).to.deep.equals(player1.username);
 
         // Should invert the order and put the player 3 at the first position
-        priorityList = room.getAndUpdatePlayersOrder();
+        priorityList = room.getAndUpdatePlayersQueue();
         expect(priorityList[0]).to.deep.equals(player3.username);
         expect(priorityList[1]).to.deep.equals(player1.username);
         expect(priorityList[2]).to.deep.equals(player2.username);
 
         // Should invert the order and put the player 1 first position
-        priorityList = room.getAndUpdatePlayersOrder();
+        priorityList = room.getAndUpdatePlayersQueue();
         expect(priorityList[0]).to.deep.equals(player1.username);
         expect(priorityList[1]).to.deep.equals(player2.username);
         expect(priorityList[2]).to.deep.equals(player3.username);
@@ -292,28 +292,28 @@ describe("Room", () => {
         room.addPlayer(player4);
 
         // Should change the order and put the player 2 at the first position
-        let priorityList = room.getAndUpdatePlayersOrder();
+        let priorityList = room.getAndUpdatePlayersQueue();
         expect(priorityList[0]).to.deep.equals(player2.username);
         expect(priorityList[1]).to.deep.equals(player3.username);
         expect(priorityList[2]).to.deep.equals(player4.username);
         expect(priorityList[3]).to.deep.equals(player1.username);
 
         // Should invert the order and put the player 3 at the first position
-        priorityList = room.getAndUpdatePlayersOrder();
+        priorityList = room.getAndUpdatePlayersQueue();
         expect(priorityList[0]).to.deep.equals(player3.username);
         expect(priorityList[1]).to.deep.equals(player4.username);
         expect(priorityList[2]).to.deep.equals(player1.username);
         expect(priorityList[3]).to.deep.equals(player2.username);
 
         // Should invert the order and put the player 4 first position
-        priorityList = room.getAndUpdatePlayersOrder();
+        priorityList = room.getAndUpdatePlayersQueue();
         expect(priorityList[0]).to.deep.equals(player4.username);
         expect(priorityList[1]).to.deep.equals(player1.username);
         expect(priorityList[2]).to.deep.equals(player2.username);
         expect(priorityList[3]).to.deep.equals(player3.username);
 
         // Should invert the order and put the player 1 first position
-        priorityList = room.getAndUpdatePlayersOrder();
+        priorityList = room.getAndUpdatePlayersQueue();
         expect(priorityList[0]).to.deep.equals(player1.username);
         expect(priorityList[1]).to.deep.equals(player2.username);
         expect(priorityList[2]).to.deep.equals(player3.username);

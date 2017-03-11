@@ -1,3 +1,5 @@
+const RANDOM_PRIORITY_ITERATION = 20;
+
 export class QueueCollection<AnyType> {
     private _list: AnyType[];
     private head: number;
@@ -68,8 +70,16 @@ export class QueueCollection<AnyType> {
         return foundItem;
     }
 
-    private randomizeTheListOfThePriorities() {
-        // TODO: to be completed to set a random order
+    public randomizeTheListOfThePriorities() {
+        for (let index = 0; index < RANDOM_PRIORITY_ITERATION; ++index) {
+            let firstItemIndex = this.getRandomNumber(0, this.count);
+            let secondItemIndex = this.getRandomNumber(0, this.count);
+
+            // Exchange the two item
+            let tempItem = this._list[firstItemIndex];
+            this._list[firstItemIndex] = this._list[secondItemIndex];
+            this._list[secondItemIndex] = tempItem;
+        }
     }
 
     public updateAndGetQueuePriorities(): Array<AnyType> {
@@ -86,5 +96,14 @@ export class QueueCollection<AnyType> {
         this._list = [];
         this.head = 0;
         this._count = 0;
+    }
+
+    private getRandomNumber(minValue: number, maxValue: number): number {
+        if (minValue < 0 || maxValue <= 0) {
+            throw new Error("Invalid argument");
+        }
+
+        let offset = maxValue - minValue;
+        return Math.floor((Math.random() * offset) + minValue);
     }
 }

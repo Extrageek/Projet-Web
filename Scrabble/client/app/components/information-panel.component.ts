@@ -20,7 +20,8 @@ const ONE_SECOND = 1000;
 })
 
 export class InformationPanelComponent implements OnInit, AfterViewInit {
-    player = "default";
+    playingUser: string;
+    nextPlayer: string;
     score: number;
     lettersOnEasel: number;
     lettersInBank: number;
@@ -38,13 +39,11 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        this.onCommandRequest();
-        //this.onExchangeLetterResponse();
+        this.onUpdatePlayersQueueEvent();
     }
 
     ngAfterViewInit() {
         setInterval(() => {
-            // TODO Should only start when room is full and game ready to begin
             if (this.timerService.timerIsRunning()) {
                 this.timerService.updateClock();
                 this.seconds = this.timerService.seconds;
@@ -55,12 +54,25 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
         }, ONE_SECOND);
     }
 
-    private onCommandRequest(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.commandRequest)
-            .subscribe((response: ICommandMessage<any>) => {
-                if (response !== undefined && response._message !== null) {
-                    this.player = response._data[1][0];
+    private onUpdatePlayersQueueEvent(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.updatePlayersQueue)
+            .subscribe((response: Array<string>) => {
+                if (response !== undefined && response !== null) {
+                    // console.log("playingUser", this.socketService.getCurrentPlayer());
+                    // console.log("NextPlayer in Queue", this.socketService.getCurrentPlayer());
+
+
+                    console.log("d", response);
+
+                    // Temporary settings, we can use a manager to
+                    this.socketService.playersPriorityQueue = response;
+                    this.playingUser = response[0];
+                    this.nextPlayer = response[1];
+
+                    // this.playingUser = this.socketService.getCurrentPlayer();
+                    // this.nextPlayer = this.socketService.getNextPlayer();
                 }
+
             });
     }
 

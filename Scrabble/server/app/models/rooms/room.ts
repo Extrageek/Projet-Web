@@ -70,6 +70,14 @@ export class Room {
         }
 
         this._playersQueue.enqueue(player);
+
+        if (this.isFull()) {
+            console.log("is full");
+            this._playersQueue.randomizeTheListOfThePriorities();
+
+        } else {
+            console.log("is not full");
+        }
     }
 
     // Get the number of missing player before the game
@@ -108,13 +116,14 @@ export class Room {
         return this.letterBankHandler.exchangeLetters(letterToBeExchange);
     }
 
-    public getAndUpdatePlayersOrder(): Array<string> {
+    public getAndUpdatePlayersQueue(): Array<string> {
         let newPlayerOrder = new Array<string>();
         let players = this._playersQueue.updateAndGetQueuePriorities();
 
         for (let index = 0; index < players.length; ++index) {
             newPlayerOrder[index] = players[index].username;
         }
+
         return newPlayerOrder;
     }
 

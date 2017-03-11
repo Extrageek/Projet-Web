@@ -9,8 +9,8 @@ import { Letter } from "../../models/lettersBank/letter";
 import { SocketEventType } from "../../commons/socket-eventType";
 import { CommandType } from "../../commons/command-type";
 import { CommandStatus } from "../../commons/command-status";
-import { IRoomMessage } from "../../commons/messages/room-message.interface";
 import { ICommandMessage } from "../../commons/messages/command-message.interface";
+import { IRoomMessage } from "../../commons/messages/room-message.interface";
 
 export class SocketConnectionHandler {
 
@@ -47,14 +47,14 @@ export class SocketConnectionHandler {
                 //     }
                 // }
 
-                this.subscribeToNewGameEvent(socket);
-                this.onInitializeEasel(socket);
+                this.subscribeToNewGameRequestEvent(socket);
+                this.subscribeToInitializeEaselEvent(socket);
                 this.subscribeToMessageEvent(socket);
                 this.subscribeToExchangeLettersEvent(socket);
                 this.subscribeToPlaceWordEvent(socket);
                 this.subscribeToPassEvent(socket);
                 this.subscribeToInvalidCommandEvent(socket);
-                this.onDisconnect(socket);
+                this.subscribeToDisconnectEvent(socket);
 
             } catch (error) {
                 this._socket.emit(SocketEventType.connectError);
@@ -62,7 +62,7 @@ export class SocketConnectionHandler {
         });
     }
 
-    private subscribeToNewGameEvent(socket: SocketIO.Socket) {
+    private subscribeToNewGameRequestEvent(socket: SocketIO.Socket) {
         if (socket === null) {
             throw new Error("The socket value cannot be null.");
         }
@@ -76,10 +76,17 @@ export class SocketConnectionHandler {
                 socket.emit(SocketEventType.invalidRequest);
             }
             else {
-                let response = this.createJoinedRoomMessage(socket.id, connectionInfos);
-                if (response !== null) {
-                    // Join the room
+
+                if (this._roomHandler.getPlayerByUsername(connectionInfos.username) === null) {
+                    // Create a new player and return his new room.
+                    let player = new Player(connectionInfos.username, connectionInfos.gameType, socket.id);
+                    let room = this._roomHandler.addPlayer(player);
+                    let message = `${player.username}` + ` joined the room`;
+
+                    let response = this.createRoomMessageResponse(player.username, CommandType.MessageCmd, message);
+
                     socket.join(response._roomId);
+
                     // Emit to all the player in the room.
                     this._socket.to(response._roomId).emit(SocketEventType.joinRoom, response);
 
@@ -123,9 +130,15 @@ export class SocketConnectionHandler {
         }) => {
             let response = this.createExchangeLettersResponse(socket.id, data);
             if (response !== null) {
-                this._socket.to(response._roomId).emit(SocketEventType.commandRequest, response);
+                this._socket.to(response._room.roomId).emit(SocketEventType.commandRequest, response);
                 // Emit a message with the new letters to the sender
-                this._socket.to(response._roomId).emit(SocketEventType.changeLettersRequest, response);
+                this._socket.to(response._room.roomId).emit(SocketEventType.changeLettersRequest, response);
+
+                // Update the players queues for everyone in the room
+                let playersQueues = response._room.getAndUpdatePlayersQueue();
+                this._socket.to(response._room.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
+
+                console.log("exchange queue ", playersQueues);
 
             } else {
                 socket.emit(SocketEventType.invalidRequest);
@@ -145,8 +158,15 @@ export class SocketConnectionHandler {
 
             if (response !== null) {
                 // Emit a message with the new letters to the sender
-                this._socket.to(response._roomId).emit(SocketEventType.commandRequest, response);
-                this._socket.to(response._roomId).emit(SocketEventType.placeWordCommandRequest, response);
+                this._socket.to(response._room.roomId).emit(SocketEventType.commandRequest, response);
+                this._socket.to(response._room.roomId).emit(SocketEventType.placeWordCommandRequest, response);
+
+                // Update the players queues for everyone in the room
+                let playersQueues = response._room.getAndUpdatePlayersQueue();
+                this._socket.to(response._room.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
+
+                console.log("place queue ", playersQueues);
+
             } else {
                 // TODO:
             }
@@ -164,7 +184,17 @@ export class SocketConnectionHandler {
             let response = this.createCommandResponse(socket.id, data);
             if (response !== null) {
                 // Emit a message with the new letters to the sender
-                this._socket.to(response._roomId).emit(SocketEventType.commandRequest, response);
+                this._socket.to(response._room.roomId).emit(SocketEventType.commandRequest, response);
+
+
+                console.log("Before ", response._room.players);
+
+                // Update the players queues for everyone in the room
+                let playersQueues = response._room.getAndUpdatePlayersQueue();
+                this._socket.to(response._room.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
+
+                console.log("after ", response._room.players);
+                console.log("pass queue ", playersQueues);
             } else {
                 // TODO:
             }
@@ -182,7 +212,7 @@ export class SocketConnectionHandler {
             let response = this.createCommandResponse(socket.id, data);
             if (response !== null) {
                 // Emit a message with the new letters to the sender
-                this._socket.to(response._roomId).emit(SocketEventType.commandRequest, response);
+                this._socket.to(response._room.roomId).emit(SocketEventType.commandRequest, response);
             } else {
                 // TODO:
             }
@@ -190,34 +220,34 @@ export class SocketConnectionHandler {
     }
 
     // En event when a player ask for a new game
-    private createJoinedRoomMessage(
-        socketId: string,
-        connectionInfos: {
-            username: string,
-            gameType: number
-        }) {
-        if (connectionInfos === null) {
-            throw new Error("The socket value cannot be null.");
-        }
+    // private createJoinedRoomMessage(
+    //     socketId: string,
+    //     connectionInfos: {
+    //         username: string,
+    //         gameType: number
+    //     }) {
+    //     if (connectionInfos === null) {
+    //         throw new Error("The socket value cannot be null.");
+    //     }
 
-        let response: IRoomMessage;
+    //     let response: ICommandMessage<string>;
 
-        // Check if the username is already taken or not
-        if (this._roomHandler.getPlayerByUsername(connectionInfos.username) === null) {
-            // Create a new player and return his new room.
-            let player = new Player(connectionInfos.username, connectionInfos.gameType, socketId);
+    //     // Check if the username is already taken or not
+    //     if (this._roomHandler.getPlayerByUsername(connectionInfos.username) === null) {
+    //         // Create a new player and return his new room.
+    //         let player = new Player(connectionInfos.username, connectionInfos.gameType, socketId);
 
-            console.log(player);
-            let room = this._roomHandler.addPlayer(player);
-            let message = `${player.username}` + ` joined the room`;
-            response = this.createRoomMessageResponse(player.username, CommandType.MessageCmd, message);
-        }
-        else {
-            response = null;
-        }
+    //         console.log(player);
+    //         let room = this._roomHandler.addPlayer(player);
+    //         let message = `${player.username}` + ` joined the room`;
+    //         response = this.createRoomMessageResponse(player.username, CommandType.MessageCmd, message);
+    //     }
+    //     else {
+    //         response = null;
+    //     }
 
-        return response;
-    }
+    //     return response;
+    // }
 
     // Handle a message sent by a member of a room
     private createRoomMessageResponse(
@@ -229,23 +259,24 @@ export class SocketConnectionHandler {
             || commandType == null) {
             throw new Error("The message cannot be null.");
         }
-        let currentRoom = this._roomHandler.getRoomByUsername(username);
-        if (currentRoom == null || currentRoom === undefined) {
+        let playerRoom = this._roomHandler.getRoomByUsername(username);
+        if (playerRoom == null || playerRoom === undefined) {
+
             // TODO: Maybe emit an error to the sender
+            // .... To be removed after a clean debug
             throw new Error("Error, we should not be here, never, ever");
         }
 
         // Create a response for the room members
         let response: IRoomMessage = {
+            _commandType: commandType,
             _username: username,
-            _roomId: currentRoom.roomId,
-            _numberOfMissingPlayers: currentRoom.numberOfMissingPlayers(),
-            _roomIsReady: currentRoom.isFull(),
             _message: message,
             _date: new Date(),
-            _commandType: commandType
+            _roomId: playerRoom.roomId,
+            _numberOfMissingPlayers: playerRoom.numberOfMissingPlayers(),
+            _roomIsReady: playerRoom.isFull(),
         };
-
         return response;
     }
 
@@ -256,7 +287,7 @@ export class SocketConnectionHandler {
             commandType: CommandType,
             commandStatus: CommandStatus
             data: Array<string>
-        }): ICommandMessage<Array<Array<string>>> {
+        }): ICommandMessage<Array<string>> {
 
         if (socketId === null || request.data === null) {
             throw new Error("Null argument exception: the parameter cannot be null be null.");
@@ -264,7 +295,7 @@ export class SocketConnectionHandler {
 
         let changedLetters = this._roomHandler
             .exchangeLetterOfCurrentPlayer(socketId, request.data);
-        let exchangeCommandResponse: ICommandMessage<Array<Array<string>>>;
+        let exchangeCommandResponse: ICommandMessage<Array<string>>;
         let playerRoom = this._roomHandler.getRoomBySocketId(socketId);
 
         if (playerRoom === null
@@ -274,7 +305,6 @@ export class SocketConnectionHandler {
 
         } else {
             let player = this._roomHandler.getPlayerBySocketId(socketId);
-            let playersStatus = playerRoom.getAndUpdatePlayersOrder();
             let message: string;
 
             if (request.commandStatus == CommandStatus.Ok) {
@@ -291,8 +321,8 @@ export class SocketConnectionHandler {
                 _commandStatus: request.commandStatus,
                 _username: player.username,
                 _message: message,
-                _data: [changedLetters, playersStatus],
-                _roomId: playerRoom.roomId,
+                _data: changedLetters,
+                _room: playerRoom,
                 _date: new Date()
             };
         }
@@ -307,14 +337,14 @@ export class SocketConnectionHandler {
             commandType: CommandType,
             commandStatus: CommandStatus
             data: Array<string>
-        }): ICommandMessage<Array<Array<string>>> {
+        }): ICommandMessage<Array<string>> {
 
         if (socketId === null || request.data === null) {
             throw new Error("Null argument exception: the parameter cannot be null be null.");
         }
 
         // TODO: To be completed
-        let commandMessage: ICommandMessage<Array<Array<string>>>;
+        let commandMessage: ICommandMessage<Array<string>>;
         let playerRoom = this._roomHandler.getRoomBySocketId(socketId);
 
         if (playerRoom === null) {
@@ -322,7 +352,6 @@ export class SocketConnectionHandler {
 
         } else {
             let player = this._roomHandler.getPlayerBySocketId(socketId);
-            let playersStatus = playerRoom.getAndUpdatePlayersOrder();
             let message: string;
 
             if (request.commandStatus == CommandStatus.Ok) {
@@ -338,8 +367,8 @@ export class SocketConnectionHandler {
                 _commandStatus: request.commandStatus,
                 _username: player.username,
                 _message: message,
-                _data: [request.data, playersStatus],
-                _roomId: playerRoom.roomId,
+                _data: request.data,
+                _room: playerRoom,
                 _date: new Date()
             };
         }
@@ -353,7 +382,7 @@ export class SocketConnectionHandler {
             commandType: CommandType,
             commandStatus: CommandStatus,
             data: string
-        }): ICommandMessage<Array<Array<string>>> {
+        }): ICommandMessage<Array<string>> {
         if (socketId === null) {
             throw new Error("The socket value cannot be null.");
         }
@@ -372,8 +401,7 @@ export class SocketConnectionHandler {
                 + `<${request.data}>`;
         }
 
-        let commandMessage: ICommandMessage<Array<Array<string>>>;
-        let playersStatus = playerRoom.getAndUpdatePlayersOrder();
+        let commandMessage: ICommandMessage<Array<string>>;
 
         if (playerRoom === null || player === null) {
             commandMessage = null;
@@ -383,8 +411,8 @@ export class SocketConnectionHandler {
                 _commandStatus: request.commandStatus,
                 _username: player.username,
                 _message: message,
-                _data: [null, playersStatus],
-                _roomId: playerRoom.roomId,
+                _data: null,
+                _room: playerRoom,
                 _date: new Date(),
             };
         }
@@ -393,7 +421,7 @@ export class SocketConnectionHandler {
     }
 
     // Use to inialize the easel of the player
-    private onInitializeEasel(socket: SocketIO.Socket) {
+    private subscribeToInitializeEaselEvent(socket: SocketIO.Socket) {
 
         if (socket === null) {
             throw new Error("The socket value cannot be null.");
@@ -413,6 +441,10 @@ export class SocketConnectionHandler {
                     // Emit a message with the new letters to the sender
                     socket.emit(SocketEventType.initializeEasel, initialsLetters);
 
+                    // Update the players queue for everyone in the room
+                    let playersQueues = room.getAndUpdatePlayersQueue();
+                    this._socket.to(room.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
+
                 } else {
                     throw new Error("An error occured when trying to exchange the letters");
                 }
@@ -420,7 +452,7 @@ export class SocketConnectionHandler {
     }
 
     // On player disconnect event
-    private onDisconnect(socket: SocketIO.Socket) {
+    private subscribeToDisconnectEvent(socket: SocketIO.Socket) {
 
         if (socket === null) {
             throw new Error("The socket value cannot be null.");

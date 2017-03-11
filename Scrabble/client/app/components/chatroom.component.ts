@@ -73,26 +73,6 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
             });
     }
 
-    // private onChangedLetterCommand(): Subscription {
-    //     return this.socketService.subscribeToChannelEvent(SocketEventType.changeLettersRequest)
-    //         .subscribe((response: ICommandMessage<Array<Array<string>>>) => {
-    //             if (response !== undefined && response._message !== null) {
-    //                 this._messageArray.push(response);
-    //                 console.log("Changed letters ", response._message);
-    //             }
-    //         });
-    // }
-
-    // private onPlaceWordCommand(): Subscription {
-    //     return this.socketService.subscribeToChannelEvent(SocketEventType.placeWordCommandRequest)
-    //         .subscribe((response: ICommandMessage<Array<Array<string>>>) => {
-    //             if (response !== undefined) {
-    //                 this._messageArray.push(response);
-    //                 console.log("Place Word response from the server ", response);
-    //             }
-    //         });
-    // }
-
     // A callback when the player join a room
     private onJoinedRoom(): Subscription {
         return this.socketService.subscribeToChannelEvent(SocketEventType.joinRoom)

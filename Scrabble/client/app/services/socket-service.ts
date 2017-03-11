@@ -13,29 +13,44 @@ export class SocketService {
 
     static _socket: SocketIOClient.Socket = null;
     private _serverUri: string = 'http://localhost:' + SERVER_PORT;
+    private _playersPriorityQueue: Array<string>;
+
+    // Must be removed after a clean debug
+    public set playersPriorityQueue(players: Array<string>) {
+        this._playersPriorityQueue = players;
+    }
 
     constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+        this._playersPriorityQueue = new Array<string>();
         this.initializeClient();
     }
 
     private initializeClient() {
-        //console.log("ActivatedRoute", this.activatedRoute);
-         if (SocketService._socket === null) {
-                SocketService._socket = io.connect(this._serverUri, { 'forceNew': false });
-                // TODO: Leave this for now, I'm working on it
-                // if (this.activatedRoute.params["id"] !== null) {
-                //     this.router.navigate(["/",]);
-                //}
-            }
-        // this.activatedRoute.params.subscribe(params => {
-        //     if (SocketService._socket === null) {
+        // //console.log("ActivatedRoute", this.activatedRoute);
+        //  if (SocketService._socket === null) {
         //         SocketService._socket = io.connect(this._serverUri, { 'forceNew': false });
         //         // TODO: Leave this for now, I'm working on it
-        //         if (this.activatedRoute.params["id"] !== null) {
-        //             this.router.navigate(["/",]);
-        //         }
+        //         // if (this.activatedRoute.params["id"] !== null) {
+        //         //     this.router.navigate(["/",]);
+        //         //}
         //     }
-        // });
+
+        this.activatedRoute.params.subscribe(params => {
+            if (SocketService._socket === null) {
+                SocketService._socket = io.connect(this._serverUri, { 'forceNew': false });
+
+                // this.subscribeToChannelEvent(SocketEventType.updatePlayersQueue).subscribe((players: Array<string>) => {
+                //     this._playersPriorityQueue = players;
+                // });
+
+                // TODO: Leave this for now, I'm working on it
+                if (this.activatedRoute.params["id"] !== null) {
+                    this.router.navigate(["/",]);
+                }
+            }
+        });
+
+
     }
 
     public emitMessage(socketEventType: SocketEventType, data?: Object) {
@@ -54,5 +69,15 @@ export class SocketService {
             };
         });
         return observable;
+    }
+
+    public getCurrentPlayer(): string {
+        console.log("-", this._playersPriorityQueue, this._playersPriorityQueue[0]);
+        return this._playersPriorityQueue[0];
+    }
+
+    public getNextPlayer(): string {
+        console.log("-", this._playersPriorityQueue, this._playersPriorityQueue[1];
+        return this._playersPriorityQueue[1];
     }
 }
