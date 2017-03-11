@@ -191,7 +191,6 @@ export class RenderService {
             this._rinkInfo = rink;
             this._mesh.add(rink);
             this.loadStoneHandler();
-
             this.loadStone();
         });
     }
@@ -335,6 +334,7 @@ export class RenderService {
                     this.loadStone();
                     this._gameStatusService.gameStatus.isShooting = false;
                 });
+                this.removeOutOfBoundsStones();
             } catch (e) {
                 if (e instanceof (RangeError)) {
                     this._gameStatusService.gameStatus.isShooting = false;
@@ -389,6 +389,11 @@ export class RenderService {
 
     public print() {
         console.log(this);
+    }
+    private removeOutOfBoundsStones() {
+        for (let stone of this._stoneHandler.stoneToBeRemoved) {
+            this._scene.remove(stone);
+        }
     }
 
     public translateMesh(x: number, y: number) {
