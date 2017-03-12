@@ -1,0 +1,150 @@
+
+import { Room } from "../../models/rooms/room";
+import { Player } from "../../models/players/player";
+import { CommandType } from "../commons/command-type";
+import { CommandStatus } from "../commons/command-status";
+import { ICommandMessage } from "../messages/commons/command-message.interface";
+import { IRoomMessage } from "../messages/commons/room-message.interface";
+
+export class MessageHandler {
+
+    constructor() {
+        // Constructor
+    }
+
+    public createRoomMessageResponse(
+        username: string,
+        room: Room,
+        message: string)
+        : IRoomMessage {
+
+        this.throwNullArgumentException(username);
+        this.throwNullArgumentException(room);
+        this.throwNullArgumentException(message);
+
+        let missingPlayers = room.numberOfMissingPlayers();
+
+        // Create a response for the room members
+        let response: IRoomMessage = {
+            _commandType: CommandType.MessageCmd,
+            _username: username,
+            _message: message,
+            _date: new Date(),
+            _roomId: room.roomId,
+            _numberOfMissingPlayers: missingPlayers,
+            _roomIsReady: room.isFull(),
+        };
+        return response;
+    }
+
+    public createPlaceWordResponse(
+        room: Room,
+        username: string,
+        commandStatus: CommandStatus,
+        data: Array<string>
+    ): ICommandMessage<Array<string>> {
+
+        this.throwNullArgumentException(room);
+        this.throwNullArgumentException(username);
+        this.throwNullArgumentException(commandStatus);
+        this.throwNullArgumentException(data);
+
+        let commandMessage: ICommandMessage<Array<string>>;
+        let message: string;
+
+        if (commandStatus == CommandStatus.Ok) {
+            message = `$: <!placer> ` + ' ' + `${data.toString()}`;
+
+        } else {
+            message = `$: ${CommandStatus[commandStatus]} `
+                + `<!placer> ` + ' ' + `${data.toString()}`;
+        }
+
+        commandMessage = {
+            _commandType: CommandType.PlaceCmd,
+            _commandStatus: commandStatus,
+            _username: username,
+            _message: message,
+            _data: data,
+            _room: room,
+            _date: new Date()
+        };
+
+        return commandMessage;
+    }
+
+    public createExchangeLettersResponse(
+        username: string,
+        room: Room,
+        commandStatus: CommandStatus,
+        lettersToChange: Array<string>,
+        newsLettersToSend: Array<string>
+    ): ICommandMessage<Array<string>> {
+
+        this.throwNullArgumentException(username);
+        this.throwNullArgumentException(room);
+        this.throwNullArgumentException(commandStatus);
+        this.throwNullArgumentException(lettersToChange);
+        this.throwNullArgumentException(newsLettersToSend);
+
+        let exchangeCommandResponse: ICommandMessage<Array<string>>;
+
+        let message = (commandStatus == CommandStatus.Ok) ?
+            `$: <!changer> ` + ' ' + `${lettersToChange.toString()}` :
+            `$: ${CommandStatus[commandStatus]} `
+            + `<!changer> ` + ' '
+            + `${lettersToChange.toString()}`;
+
+        exchangeCommandResponse = {
+            _commandType: CommandType.ExchangeCmd,
+            _commandStatus: commandStatus,
+            _username: username,
+            _message: message,
+            _data: newsLettersToSend,
+            _room: room,
+            _date: new Date()
+        };
+
+        return exchangeCommandResponse;
+    }
+
+    public createCommandResponse(
+        username: string,
+        room: Room,
+        commandType: CommandType,
+        commandStatus: CommandStatus,
+        data: string
+    ): ICommandMessage<Array<string>> {
+
+        this.throwNullArgumentException(username);
+        this.throwNullArgumentException(room);
+        this.throwNullArgumentException(commandType);
+        this.throwNullArgumentException(commandStatus);
+
+        let message = (commandStatus == CommandStatus.Ok) ?
+            `$: <!${CommandType[commandType]}>` + ' '
+            + `${data}` : `$: ${CommandStatus[commandStatus]} ` + ' '
+            + `<${data}>`;
+
+        let commandMessage: ICommandMessage<Array<string>>;
+
+        commandMessage = {
+            _commandType: commandType,
+            _commandStatus: commandStatus,
+            _username: username,
+            _message: message,
+            _data: null,
+            _room: room,
+            _date: new Date(),
+        };
+
+        return commandMessage;
+    }
+
+    private throwNullArgumentException(param: any) {
+        if (param === null || param === undefined) {
+            // TODO: Get the parameter name on compile time and insert it in the message
+            throw new Error("Null argument exception: the parameters cannot be null be null.");
+        }
+    }
+}

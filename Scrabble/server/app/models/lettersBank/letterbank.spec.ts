@@ -1,6 +1,6 @@
 import { Alphabet } from "./alphabet";
-import { AlphabetPoint } from "../../commons/alphabet-point";
-import { AlphabetQuantity } from "../../commons/alphabet-quantity";
+import { AlphabetPoint } from "./commons/alphabet-point";
+import { AlphabetQuantity } from "./commons/alphabet-quantity";
 import { Letter } from "./letter";
 import { LetterBank } from "./letterbank";
 

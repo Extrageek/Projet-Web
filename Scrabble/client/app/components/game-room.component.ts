@@ -64,12 +64,6 @@ export class GameComponent implements OnInit, OnDestroy {
         // TODO: unsubscribe all the event in the ngOnDestroy
         this.socketService.subscribeToChannelEvent(SocketEventType.connectError)
             .subscribe(this.onConnectionError);
-
-        this.socketService.subscribeToChannelEvent(SocketEventType.joinRoom)
-            .subscribe(this.onJoinedRoom);
-
-        this.socketService.subscribeToChannelEvent(SocketEventType.roomReady)
-            .subscribe(this.onRoomReady);
     }
 
     ngOnDestroy() {
@@ -81,29 +75,11 @@ export class GameComponent implements OnInit, OnDestroy {
         console.log("Connection Error: The server is not reachable");
     }
 
-    // A callback when the player join a room
-    public onJoinedRoom(roomMessage: IRoomMessage): void {
-
-        // For debug
-        console.log("In Room", roomMessage);
-    }
-
     // A callback when the player leave a room
     public onLeaveRoom(roomMessage: IRoomMessage): void {
 
         // For debug
         console.log("In Room", roomMessage);
-    }
-
-    // A callback function when the room of the user is full and the game is ready to be started
-    private onRoomReady(roomMessage: IRoomMessage): void {
-
-        // For debug
-        console.log("In Room", roomMessage);
-    }
-
-    private onChangedLettersReceived(changedLetters: Object) {
-        console.log("In Room", "Hey! I received new letters from the server: ", changedLetters);
     }
 
     // A callback function when in case of invalid request.
@@ -166,7 +142,7 @@ export class GameComponent implements OnInit, OnDestroy {
                     commandParameters.parameters);
                 break;
             case CommandType.Guide:
-                // TODO: 
+                // TODO:
                 break;
             case CommandType.InvalidCmd:
                 this.executeInvalidCommand();

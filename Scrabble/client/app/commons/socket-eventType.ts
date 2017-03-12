@@ -33,7 +33,7 @@ export class SocketEventType {
     static usernameAlreadyExist = "usernameAlreadyExist";
     static initializeEasel = "initializeEasel";
 
-    static updatePlayersQueue = "updatePlayersQueue";   
+    static updatePlayersQueue = "updatePlayersQueue";
     static changeLettersRequest = "!changer";
     static placeWordCommandRequest = "!place";
     static passCommandRequest = "!passer";

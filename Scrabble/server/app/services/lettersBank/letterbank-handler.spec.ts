@@ -1,6 +1,6 @@
 import { Alphabet } from "../../models/lettersBank/alphabet";
-import { AlphabetPoint } from "../../commons/alphabet-point";
-import { AlphabetQuantity } from "../../commons/alphabet-quantity";
+import { AlphabetPoint } from "../../models/lettersBank/commons/alphabet-point";
+import { AlphabetQuantity } from "../../models/lettersBank/commons/alphabet-quantity";
 import { Letter } from "../../models/lettersBank/letter";
 import { LetterBank } from "../../models/lettersBank/letterbank";
 import { LetterBankHandler } from "./letterbank-handler";

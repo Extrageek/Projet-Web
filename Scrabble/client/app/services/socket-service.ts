@@ -39,17 +39,17 @@ export class SocketService {
             if (SocketService._socket === null) {
                 SocketService._socket = io.connect(this._serverUri, { 'forceNew': false });
 
-                // this.subscribeToChannelEvent(SocketEventType.updatePlayersQueue).subscribe((players: Array<string>) => {
-                //     this._playersPriorityQueue = players;
-                // });
+                // this.subscribeToChannelEvent(SocketEventType.updatePlayersQueue)
+                //     .subscribe((players: Array<string>) => {
+                //         this._playersPriorityQueue = players;
+                //     });
 
                 // TODO: Leave this for now, I'm working on it
                 if (this.activatedRoute.params["id"] !== null) {
-                    this.router.navigate(["/",]);
+                    this.router.navigate(["/", ]);
                 }
             }
         });
-
 
     }
 
@@ -72,12 +72,10 @@ export class SocketService {
     }
 
     public getCurrentPlayer(): string {
-        console.log("-", this._playersPriorityQueue, this._playersPriorityQueue[0]);
         return this._playersPriorityQueue[0];
     }
 
     public getNextPlayer(): string {
-        console.log("-", this._playersPriorityQueue, this._playersPriorityQueue[1];
         return this._playersPriorityQueue[1];
     }
 }

@@ -3,11 +3,11 @@ import * as http from "http";
 let ioClient = require('socket.io-client');
 
 import { SocketConnectionHandler } from "./socket-connection-handler";
-import { SocketEventType } from "../../commons/socket-eventType";
-import { CommandType } from "../../commons/command-type";
-import { CommandStatus } from "../../commons/command-status";
-import { IRoomMessage } from "../../commons/messages/room-message.interface";
-import { ICommandMessage } from "../../commons/messages/command-message.interface";
+import { SocketEventType } from "./socket-eventType";
+import { CommandType } from "../commons/command-type";
+import { CommandStatus } from "../commons/command-status";
+import { IRoomMessage } from "../messages/commons/room-message.interface";
+import { ICommandMessage } from "../messages/commons/command-message.interface";
 
 const fakePortNumber = 5000;
 const fakeServerUrl = "http://0.0.0.0:" + `${fakePortNumber}`;
