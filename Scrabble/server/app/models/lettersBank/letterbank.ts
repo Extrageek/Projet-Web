@@ -58,10 +58,13 @@ export class LetterBank {
 
     public letterIsAvailable(chosenLetter: Letter): boolean {
         let indexOfChosenLetter = this.findIndexOfChosenLetter(chosenLetter);
-        return this.bank[indexOfChosenLetter].quantity > 0;
+        return (indexOfChosenLetter !== null) ? this.bank[indexOfChosenLetter].quantity > 0 : false;
     }
 
     public getLetterFromBank(chosenLetter: Letter): Letter {
+        // I found a bug 
+        // The Letterbank try to exchange and send null letters, and decrement even if the quantity is 0.
+        // This must be fixed to return the same letter in this case
         let indexOfChosenLetter = this.findIndexOfChosenLetter(chosenLetter);
         this.modifyQuantityOfLetter(indexOfChosenLetter, DECREMENT_QUANTITY);
         return this.bank[indexOfChosenLetter];
@@ -78,11 +81,7 @@ export class LetterBank {
     }
 
     private findIndexOfChosenLetter(chosenLetter: Letter): number {
-        let indexOfChosenLetter: number;
-        if (chosenLetter !== null) {
-            indexOfChosenLetter = this.bank.findIndex(
-                (letter) => letter.alphabetLetter === chosenLetter.alphabetLetter);
-        }
-        return indexOfChosenLetter;
+        return (chosenLetter !== null) ?
+            this.bank.findIndex((letter) => letter.alphabetLetter === chosenLetter.alphabetLetter) : null;
     }
 }
