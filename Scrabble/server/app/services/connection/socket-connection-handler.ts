@@ -32,37 +32,39 @@ export class SocketConnectionHandler {
     }
 
     private initializeListeners() {
-        this._socket.sockets.on(SocketEventType.connection, (socket: SocketIO.Socket) => {
-            console.log("a new connection to the server", socket.id);
+        this._socket.sockets.on(SocketEventType.connection, this.onConnectionCallback);
+    }
 
-            try {
+    private onConnectionCallback(socket: SocketIO.Socket) {
+        // console.log("a new connection to the server", socket.id);
 
-                // TODO: Leave this please, I'm working on it
+        try {
 
-                // let clientUrl = socket.handshake.headers.referer.toString().split('/');
-                // let lastParameter = clientUrl[clientUrl.length - 1];
-                // console.log("username from socket", lastParameter);
-                // if (lastParameter !== null) {
-                //     let player = this._roomHandler.getPlayerByUsername(lastParameter);
-                //     if (player !== null) {
-                //         console.log("currentId", player.socketId, "newId", socket.id);
-                //         player.socketId = socket.id;
-                //     }
-                // }
+            // TODO: Leave this please, I'm working on it
 
-                this.subscribeToNewGameRequestEvent(socket);
-                this.subscribeToInitializeEaselEvent(socket);
-                this.subscribeToMessageEvent(socket);
-                this.subscribeToExchangeLettersEvent(socket);
-                this.subscribeToPlaceWordEvent(socket);
-                this.subscribeToPassEvent(socket);
-                this.subscribeToInvalidCommandEvent(socket);
-                this.subscribeToDisconnectEvent(socket);
+            // let clientUrl = socket.handshake.headers.referer.toString().split('/');
+            // let lastParameter = clientUrl[clientUrl.length - 1];
+            // console.log("username from socket", lastParameter);
+            // if (lastParameter !== null) {
+            //     let player = this._roomHandler.getPlayerByUsername(lastParameter);
+            //     if (player !== null) {
+            //         console.log("currentId", player.socketId, "newId", socket.id);
+            //         player.socketId = socket.id;
+            //     }
+            // }
 
-            } catch (error) {
-                this._socket.emit(SocketEventType.connectError);
-            }
-        });
+            this.subscribeToNewGameRequestEvent(socket);
+            this.subscribeToInitializeEaselEvent(socket);
+            this.subscribeToMessageEvent(socket);
+            this.subscribeToExchangeLettersEvent(socket);
+            this.subscribeToPlaceWordEvent(socket);
+            this.subscribeToPassEvent(socket);
+            this.subscribeToInvalidCommandEvent(socket);
+            this.subscribeToDisconnectEvent(socket);
+
+        } catch (error) {
+            this._socket.emit(SocketEventType.connectError);
+        }
     }
 
     private subscribeToNewGameRequestEvent(socket: SocketIO.Socket) {
@@ -71,6 +73,9 @@ export class SocketConnectionHandler {
         }
 
         socket.on(SocketEventType.newGameRequest, (connectionInfos: { username: string, gameType: number }) => {
+
+            // console.log("new game request", socket.id);
+
             if (typeof (connectionInfos) !== "object"
                 || typeof (connectionInfos.username) !== "string"
                 || typeof (connectionInfos.gameType) !== "number") {
@@ -152,9 +157,11 @@ export class SocketConnectionHandler {
                 // Emit a message with the new letters to the sender
                 this._socket.to(room.roomId).emit(SocketEventType.changeLettersRequest, response);
 
-                // Update the players queues for everyone in the room
-                let playersQueues = room.getAndUpdatePlayersQueue();
-                this._socket.to(room.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
+                if (response._commandStatus === CommandStatus.Ok) {
+                    // Update the players queues for everyone in the room
+                    let playersQueues = room.getAndUpdatePlayersQueue();
+                    this._socket.to(room.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
+                }
 
             } else {
                 socket.emit(SocketEventType.invalidRequest);
@@ -173,16 +180,18 @@ export class SocketConnectionHandler {
 
             let room = this._roomHandler.getRoomBySocketId(socket.id);
             let player = this._roomHandler.getPlayerBySocketId(socket.id);
-            let response = this._messageHandler.createPlaceWordResponse(room, player.username, data.commandStatus, data.data);
+            let response = this._messageHandler.createPlaceWordResponse(player.username, room, data.commandStatus, data.data);
 
             if (response !== null) {
                 // Emit a message with the new letters to the sender
                 this._socket.to(response._room.roomId).emit(SocketEventType.commandRequest, response);
                 this._socket.to(response._room.roomId).emit(SocketEventType.placeWordCommandRequest, response);
 
-                // Update the players queues for everyone in the room
-                let playersQueues = response._room.getAndUpdatePlayersQueue();
-                this._socket.to(response._room.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
+                if (response._commandStatus === CommandStatus.Ok) {
+                    // Update the players queues for everyone in the room
+                    let playersQueues = room.getAndUpdatePlayersQueue();
+                    this._socket.to(room.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
+                }
 
             } else {
                 // TODO:
@@ -291,8 +300,6 @@ export class SocketConnectionHandler {
         socket.on(SocketEventType.disconnect, () => {
             let leavingPlayer = this._roomHandler.getPlayerBySocketId(socket.id);
             if (leavingPlayer !== null) {
-
-                console.log("send a request", leavingPlayer.username);
 
                 let playerRoom = this._roomHandler.getRoomByUsername(leavingPlayer.username);
 

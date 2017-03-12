@@ -30,7 +30,6 @@ export class PlaceWordCommand implements ICommand {
         this.throwsErrorIfParameterIsNull(easelComponent);
         this.throwsErrorIfParameterIsNull(boardComponent);
         this.throwsErrorIfParameterIsNull(params);
-        this.throwsErrorIfParameterIsEmpty(params);
 
         this._parameters = params;
         this._commandRequest = {
@@ -61,7 +60,10 @@ export class PlaceWordCommand implements ICommand {
         let enteredWord = requestElement[CommandsHelper.SECOND_INDEX];
         let wordToBePlaced = this.getPlacedWordCommandParameters(enteredWord);
 
-        if (!this.isValidPosition(wordPosition)
+        if (this._parameters === null
+            || this._parameters === ""
+            || this.parameters === undefined
+            || !this.isValidPosition(wordPosition)
             || !this.isScrabbleLetters(wordToBePlaced)) {
             this.commandRequest._commandStatus = CommandStatus.SynthaxeError;
             return this.commandRequest;

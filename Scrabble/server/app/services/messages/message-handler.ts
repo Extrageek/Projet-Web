@@ -38,8 +38,8 @@ export class MessageHandler {
     }
 
     public createPlaceWordResponse(
-        room: Room,
         username: string,
+        room: Room,
         commandStatus: CommandStatus,
         data: Array<string>
     ): ICommandMessage<Array<string>> {
@@ -85,7 +85,6 @@ export class MessageHandler {
         this.throwNullArgumentException(room);
         this.throwNullArgumentException(commandStatus);
         this.throwNullArgumentException(lettersToChange);
-        this.throwNullArgumentException(newsLettersToSend);
 
         let exchangeCommandResponse: ICommandMessage<Array<string>>;
 
@@ -142,7 +141,7 @@ export class MessageHandler {
     }
 
     private throwNullArgumentException(param: any) {
-        if (param === null || param === undefined) {
+        if (param === null || param === undefined || param === "") {
             // TODO: Get the parameter name on compile time and insert it in the message
             throw new Error("Null argument exception: the parameters cannot be null be null.");
         }

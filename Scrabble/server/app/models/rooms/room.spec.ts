@@ -41,7 +41,6 @@ describe("Room", () => {
 
         room.addPlayer(player1);
         room.addPlayer(player2);
-
         assert(room.roomCapacity === numberOfPlayers);
 
         let roomFirstPlayer = room.players.dequeue();
@@ -198,7 +197,7 @@ describe("Room", () => {
         expect(initialLetters.length).to.be.equal(7);
     });
 
-    it("should not change the order of the unique players", () => {
+    it("should not change the order of 2 player and revert them after", () => {
         let roomCapacity = 2;
         let room = new Room(roomCapacity);
         let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
@@ -318,5 +317,29 @@ describe("Room", () => {
         expect(priorityList[1]).to.deep.equals(player2.username);
         expect(priorityList[2]).to.deep.equals(player3.username);
         expect(priorityList[3]).to.deep.equals(player4.username);
+    });
+
+    it("should create a random order of 2 players in the queue", () => {
+        let roomCapacity = 2;
+        let room = new Room(roomCapacity);
+        let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+        let player2 = new Player(fakename2, numberOfPlayers, fakeSocketId2);
+
+        room.addPlayer(player1);
+        room.addPlayer(player2);
+
+        let isFind = false;
+
+        // Loop multiple time to be sure that we will get a change, since the priority is randomized
+        for (let index = 0; index < 10 && !isFind; ++index) {
+            room.randomizePlayersPriorities();
+            if (room.players.peek().username === player2.username) {
+                isFind = true;
+            }
+        }
+
+        // Should invert the order of the list
+        expect(room.players.dequeue().username).to.deep.equals(player2.username);
+        expect(room.players.dequeue().username).to.deep.equals(player1.username);
     });
 });

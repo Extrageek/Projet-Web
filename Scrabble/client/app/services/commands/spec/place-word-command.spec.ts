@@ -84,11 +84,6 @@ describe("PlaceWordCommand", function () {
         expect(commandConstructor).throw(Error, "Null argument error: the parameters cannot be null");
     });
 
-    it("PlaceWordCommand should  throw a null argument error with empty parameters", () => {
-        let commandConstructor = () => new PlaceWordCommand(easelComponent, boardComponent, "");
-        expect(commandConstructor).throw(Error, "Null argument error: the parameters cannot be empty");
-    });
-
     it("PlaceWordCommand should initialize the command correctly", () => {
         let placeWordCommand = new PlaceWordCommand(easelComponent, boardComponent, "abcd");
         expect(placeWordCommand.commandRequest._commandStatus === CommandStatus.Unknown);

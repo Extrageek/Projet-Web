@@ -18,15 +18,14 @@ export class PassCommand implements ICommand {
     }
 
     constructor(
-        private gameComponent: GameComponent,
-        params: string) {
+        private gameComponent: GameComponent) {
         this.throwsErrorIfParameterIsNull(gameComponent);
 
-        this._parameters = params;
+        this._parameters = "";
         this._commandRequest = {
             _commandType: CommandType.PassCmd,
             _commandStatus: CommandStatus.Ok,
-            _response: ""
+            _response: this._parameters
         };
     }
 
@@ -34,7 +33,7 @@ export class PassCommand implements ICommand {
         let request = {
             commandType: this._commandRequest._commandType,
             commandStatus: this._commandRequest._commandStatus,
-            data: this._parameters
+            data: this._commandRequest._response,
         }
         this.gameComponent.passCurrentPlayerTurn(request);
     }

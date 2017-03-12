@@ -106,8 +106,8 @@ describe("Room Handler", () => {
 
     it("getAvailableRoom, should return a new room with the capacity of the player", () => {
         player1.numberOfPlayers = 1;
-        roomHandler._rooms = new Array<Room>();
-        roomHandler._rooms.push(new Room(1));
+        roomHandler.rooms = new Array<Room>();
+        roomHandler.rooms.push(new Room(1));
         let newRoom = roomHandler.getAvailableRoom(player1.numberOfPlayers);
 
         expect(newRoom).not.to.be.undefined;
@@ -118,8 +118,8 @@ describe("Room Handler", () => {
 
     it("getAvailableRoom, should not find a room with 2 capacity", () => {
         player1.numberOfPlayers = 2;
-        roomHandler._rooms = new Array<Room>();
-        roomHandler._rooms.push(new Room(1));
+        roomHandler.rooms = new Array<Room>();
+        roomHandler.rooms.push(new Room(1));
         let newRoom = roomHandler.getAvailableRoom(player1.numberOfPlayers);
 
         expect(newRoom).not.to.be.undefined;
@@ -141,7 +141,7 @@ describe("Room Handler", () => {
     });
 
     it("getRoomByUsername, should return a null value", () => {
-        roomHandler._rooms = new Array<Room>();
+        roomHandler.rooms = new Array<Room>();
         player1.username = "fakename1";
         let unexistingName = "nameNotExit";
         roomHandler.addPlayer(player1);
@@ -181,12 +181,12 @@ describe("Room Handler", () => {
         let room1 = new Room(roomCapacity);
 
         // Initialize the the handler with a room
-        roomHandler._rooms = [room1];
+        roomHandler.rooms = [room1];
         let room2 = roomHandler.addPlayer(player2);
         roomHandler.removeRoom(room1);
 
         // Expect 1 room in the list if the first one is deleted.
-        assert(roomHandler._rooms.length === 1);
+        assert(roomHandler.rooms.length === 1);
         expect(roomHandler.getRoomByUsername(player2.username)).to.deep.equals(room2);
     });
 
@@ -196,16 +196,16 @@ describe("Room Handler", () => {
         let roomCapacity = 1;
         let room1 = new Room(roomCapacity);
 
-        roomHandler._rooms = [room1];
+        roomHandler.rooms = [room1];
         let room2 = roomHandler.addPlayer(player2);
         roomHandler.removeRoom(room2);
 
         // Expect 1 room in the list if the second one is deleted.
-        assert(roomHandler._rooms.length === 1);
+        assert(roomHandler.rooms.length === 1);
     });
 
     it("getPlayerBySocketId, should return a null value", () => {
-        roomHandler._rooms = new Array<Room>();
+        roomHandler.rooms = new Array<Room>();
         let notExistingSocketId = "socketIdNotExist";
         roomHandler.addPlayer(player1);
         expect(roomHandler.getPlayerBySocketId(notExistingSocketId)).to.be.null;
@@ -257,7 +257,7 @@ describe("Room Handler", () => {
         let room1 = new Room(roomCapacityRoom1);
         let room2 = new Room(roomCapacityRoom2);
 
-        roomHandler._rooms = [room1, room2];
+        roomHandler.rooms = [room1, room2];
         roomHandler.addPlayer(player1);
         roomHandler.addPlayer(player2);
 

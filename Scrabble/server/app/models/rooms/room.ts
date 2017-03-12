@@ -70,14 +70,6 @@ export class Room {
         }
 
         this._playersQueue.enqueue(player);
-
-        if (this.isFull()) {
-            console.log("is full");
-            this._playersQueue.randomizeTheListOfThePriorities();
-
-        } else {
-            console.log("is not full");
-        }
     }
 
     // Get the number of missing player before the game
@@ -125,6 +117,12 @@ export class Room {
         }
 
         return newPlayerOrder;
+    }
+
+    public randomizePlayersPriorities() {
+        if (this._playersQueue.count > 1) {
+            this._playersQueue.randomizeTheListOfThePriorities();
+        }
     }
 
     public getInitialsLetters(): Array<string> {

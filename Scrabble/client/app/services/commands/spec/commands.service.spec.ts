@@ -181,16 +181,6 @@ describe("CommandService", function () {
         expect(wrapper).throw(Error, "Null argument error: the parameters cannot be null");
     });
 
-    it("invokeAndExecuteExchangeCommand, should throw a null argument error with a empty letters", () => {
-        let wrapper = () => commandsService.invokeAndExecuteExchangeCommand(easelComponent, "");
-        expect(wrapper).throw(Error, "Null argument error: the parameters cannot be null");
-    });
-
-    it("invokeAndExecuteExchangeCommand, should throw a null argument error with a null letters", () => {
-        let wrapper = () => commandsService.invokeAndExecuteExchangeCommand(easelComponent, null);
-        expect(wrapper).throw(Error, "Null argument error: the parameters cannot be null");
-    });
-
     it("invokeAndExecuteExchangeCommand, should invoke the ExchangeLettersCommand without error", () => {
         let wrapper = () => commandsService.invokeAndExecuteExchangeCommand(easelComponent, "abcd");
         expect(wrapper()).to.not.throw;
@@ -206,39 +196,24 @@ describe("CommandService", function () {
         expect(wrapper).throw(Error, "Null argument error: the parameters cannot be null");
     });
 
-    it("invokeAndExecutePlaceCommand, should throw a null argument error with a empty letters", () => {
-        let wrapper = () => commandsService.invokeAndExecutePlaceCommand(easelComponent, boardComponent, "");
-        expect(wrapper).throw(Error, "Null argument error: the parameters cannot be null");
-    });
-
-    it("invokeAndExecutePlaceCommand, should throw a null argument error with a null letters", () => {
-        let wrapper = () => commandsService.invokeAndExecutePlaceCommand(easelComponent, boardComponent, null);
-        expect(wrapper).throw(Error, "Null argument error: the parameters cannot be null");
-    });
-
     it("invokeAndExecutePlaceCommand, should invoke the ExchangeLettersCommand without error", () => {
         let wrapper = () => commandsService.invokeAndExecutePlaceCommand(easelComponent, boardComponent, "abcd");
         expect(wrapper()).to.not.throw;
     });
 
-    it("invokeAndExecutePassCommand, should throw a null argument error with a null gameComponent", () => {
-        let wrapper = () => commandsService.invokeAndExecutePassCommand(null, "fake message");
-        expect(wrapper).throw(Error, "Null argument error: the parameters cannot be null");
+    it("invokeAndExecutePassCommand, should throw a null argument error with a empty letters", () => {
+        let wrapper = () => commandsService.invokeAndExecutePassCommand(gameComponent);
+        expect(wrapper).not.to.throw;
     });
 
-    it("invokeAndExecutePassCommand, should throw a null argument error with a empty letters", () => {
-        let wrapper = () => commandsService.invokeAndExecutePassCommand(gameComponent, "");
+    it("invokeAndExecutePassCommand, should throw a null argument error with a null gameComponent", () => {
+        let wrapper = () => commandsService.invokeAndExecutePassCommand(null);
         expect(wrapper).throw(Error, "Null argument error: the parameters cannot be null");
     });
 
     it("invokeAndExecutePassCommand, should throw a null argument error with a null letters", () => {
-        let wrapper = () => commandsService.invokeAndExecutePassCommand(gameComponent, null);
+        let wrapper = () => commandsService.invokeAndExecutePassCommand(undefined);
         expect(wrapper).throw(Error, "Null argument error: the parameters cannot be null");
-    });
-
-    it("invokeAndExecutePassCommand, should invoke the ExchangeLettersCommand without error", () => {
-        let wrapper = () => commandsService.invokeAndExecutePassCommand(gameComponent, "abcd");
-        expect(wrapper()).to.not.throw;
     });
 
 });

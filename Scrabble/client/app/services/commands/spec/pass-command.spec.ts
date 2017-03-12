@@ -55,7 +55,7 @@ describe("PassCommand", function () {
     beforeEach(() => {
         fixture = TestBed.createComponent(GameComponent);
         gameComponent = fixture.componentInstance;
-        passCommand = new PassCommand(gameComponent, "empty");
+        passCommand = new PassCommand(gameComponent);
     });
 
     it("PassCommand should create an instance of a PassCommand", () => {
@@ -63,7 +63,7 @@ describe("PassCommand", function () {
     });
 
     it("PassCommand should a null argument error with a null SocketService", () => {
-        let commandConstructor = () => new PassCommand(null, "empty");
+        let commandConstructor = () => new PassCommand(null);
         expect(commandConstructor).throw(Error, "Null argument error: the parameters cannot be null");
     });
 

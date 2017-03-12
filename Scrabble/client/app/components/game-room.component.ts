@@ -138,8 +138,7 @@ export class GameComponent implements OnInit, OnDestroy {
             case CommandType.PassCmd:
                 this.commandsService
                     .invokeAndExecutePassCommand(
-                    this,
-                    commandParameters.parameters);
+                    this);
                 break;
             case CommandType.Guide:
                 // TODO:

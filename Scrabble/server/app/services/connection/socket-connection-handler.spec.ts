@@ -19,8 +19,9 @@ let chai = require('chai'),
     should = chai.should();
 
 let socketHandler: SocketConnectionHandler;
-//  let clientConnection1: SocketIOClient.Socket;
-//  let clientConnection2: SocketIOClient.Socket;
+let client1: SocketIO.Socket;
+let client2: SocketIO.Socket;
+
 let options = {
     transports: ['websocket'],
     forceNew: true
@@ -51,6 +52,11 @@ describe("SocketConnectionHandler, should create a socket connection handler", (
         httpServer = null;
     });
 
+    it("SocketConnectionHandler, should throw a null argument paramater error", () => {
+        let wrapper = () => new SocketConnectionHandler(null);
+        expect(wrapper).to.throw(Error, "Invalid server parameter.");
+    });
+
     it("should create socketHandler", () => {
         socketHandler = new SocketConnectionHandler(httpServer);
         expect(socketHandler).to.be.instanceof(SocketConnectionHandler);
@@ -69,23 +75,28 @@ describe("SocketConnectionHandler, should create a socket connection handler", (
         // console.log(createResponse);
     });
 
-    // it("SocketConnectionHandler, should add a player and emit a message to player", (done) => {
-    //     clientConnection1 = ioClient(fakeServerUrl, options);
+    it("SocketConnectionHandler, should add a player and emit a message to player", () => {
+        client1 = ioClient.connect(fakeServerUrl, options);
+        client2 = ioClient.connect(fakeServerUrl, options);
 
-    //     clientConnection1.once(SocketEventType.connect, function () {
-    //         clientConnection1.emit(SocketEventType.newGameRequest, { username: playerName1, gameType: 2 });
-    //     });
+        // client1.emit(SocketEventType.newGameRequest, { username: playerName1, gameType: 2 });
 
-    //     clientConnection1.once(SocketEventType.joinRoom, function (roomMessage: RoomMessage) {
-    //         //console.log("test 1 join", roomMessage);
-    //         roomMessage.message.should.equal(`${playerName1}` + ` joined the room`);
-    //         // clientConnection1.disconnect();
-    //         // clientConnection1.close();
-    //     });
+        // client1.on(SocketEventType.joinRoom, function () {
+        //     console.log("Joined", client1);
+        // });
 
-    //     done();
+        // client1.once(SocketEventType.joinRoom, function (roomMessage: RoomMessage) {
+        //     //console.log("test 1 join", roomMessage);
+        //     roomMessage.message.should.equal(`${playerName1}` + ` jined the room`);
 
-    // });
+
+        // });
+
+        // client1.disconnect();
+        // client1.close();
+
+        //done();
+    });
 
     // describe("test", () => {
 

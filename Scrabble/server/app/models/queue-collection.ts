@@ -88,6 +88,10 @@ export class QueueCollection<AnyType> {
         return this._list;
     }
 
+    public peek(): AnyType {
+        return this._list[this.head];
+    }
+
     public get count(): number {
         return this._count;
     }
@@ -99,10 +103,6 @@ export class QueueCollection<AnyType> {
     }
 
     private getRandomNumber(minValue: number, maxValue: number): number {
-        if (minValue < 0 || maxValue <= 0) {
-            throw new Error("Invalid argument");
-        }
-
         let offset = maxValue - minValue;
         return Math.floor((Math.random() * offset) + minValue);
     }

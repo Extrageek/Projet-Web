@@ -104,11 +104,6 @@ describe("ChangeLetterCommand", function () {
         expect(commandConstructor).throw(Error, "Null argument error: the parameters cannot be null");
     });
 
-    it("ChangeLettersCommand should a null argument error with a null parameters", () => {
-        let commandConstructor = () => new ChangeLettersCommand(easelComponent, null);
-        expect(commandConstructor).throw(Error, "Null argument error: the parameters cannot be null");
-    });
-
     it("ChangeLettersCommand should create an instance of a ChangeLettersCommand with default values", () => {
         changeLettersCommand = new ChangeLettersCommand(easelComponent, "abc");
         expect(changeLettersCommand).to.be.not.undefined;
@@ -159,12 +154,22 @@ describe("ChangeLetterCommand", function () {
         expect(changeLettersCommand.commandRequest._commandType).to.be.equal(CommandType.ExchangeCmd);
     });
 
-    it("ChangeLettersCommand should execute and send SynthaxeError request with not existing letters in the easel", () => {
-        changeLettersCommand = new ChangeLettersCommand(easelComponent, "abc*efdgf");
+    it("ChangeLettersCommand should execute and send NotAllowed request with not existing letters in the easel", () => {
+        changeLettersCommand = new ChangeLettersCommand(easelComponent, "az*jw");
         changeLettersCommand.execute();
 
         assert(changeLettersCommand.commandRequest._response.indexOfLettersToChange.length === 0);
-        expect(changeLettersCommand.commandRequest._response.lettersToChange).to.be.deep.equals(['A', 'B', 'C', '*', 'E', 'F', 'D', 'G', 'F']);
+        expect(changeLettersCommand.commandRequest._response.lettersToChange).to.be.deep.equals(['A', 'Z', '*', 'J', 'W']);
+        expect(changeLettersCommand.commandRequest._commandStatus).to.be.equal(CommandStatus.NotAllowed);
+        expect(changeLettersCommand.commandRequest._commandType).to.be.equal(CommandType.ExchangeCmd);
+    });
+
+    it("ChangeLettersCommand should execute and send SynthaxeError request if we have more than 7 letters to change", () => {
+        changeLettersCommand = new ChangeLettersCommand(easelComponent, "abcd*abcd");
+        changeLettersCommand.execute();
+
+        assert(changeLettersCommand.commandRequest._response.indexOfLettersToChange.length === 0);
+        expect(changeLettersCommand.commandRequest._response.lettersToChange).to.be.deep.equals(['A', 'B', 'C', 'D', 'blank', 'A', 'B', 'C', 'D']);
         expect(changeLettersCommand.commandRequest._commandStatus).to.be.equal(CommandStatus.SynthaxeError);
         expect(changeLettersCommand.commandRequest._commandType).to.be.equal(CommandType.ExchangeCmd);
     });
@@ -204,7 +209,7 @@ describe("ChangeLetterCommand", function () {
         assert(commandRequest._response.indexOfLettersToChange.length === 0);
     });
 
-    it("return a syntax error response if there are more letters to change than in the easel", () => {
+    it("return a syntax error response if there are more letters to change than what we are in the easel", () => {
         changeLettersCommand = new ChangeLettersCommand(easelComponent, "a*e");
         let lettersInEasel = new Array<ScrabbleLetter>();
         lettersInEasel.push(new ScrabbleLetter(Alphabet.letterO));
@@ -220,7 +225,7 @@ describe("ChangeLetterCommand", function () {
         lettersInEasel.push(new ScrabbleLetter(Alphabet.letterO));
 
         commandRequest = changeLettersCommand.createExchangeEaselLettersRequest(lettersInEasel);
-        expect(commandRequest._commandStatus).to.be.equal(CommandStatus.NotAllowed);
+        expect(commandRequest._commandStatus).to.be.equal(CommandStatus.SynthaxeError);
         assert(commandRequest._response.indexOfLettersToChange.length === 0);
     });
 

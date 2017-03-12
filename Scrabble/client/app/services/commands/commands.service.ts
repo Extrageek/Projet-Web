@@ -20,6 +20,8 @@ import { ChangeLettersCommand } from './change-letters-command';
 import { PlaceWordCommand } from './place-word-command';
 import { PassCommand } from './pass-command';
 
+const PARAM_INDEX = 1;
+
 @Injectable()
 export class CommandsService {
 
@@ -43,9 +45,7 @@ export class CommandsService {
         receiverEaselCompoment: EaselComponent,
         params: string) {
 
-        if (receiverEaselCompoment === null
-            || params === null
-            || params === "") {
+        if (receiverEaselCompoment === null) {
             throw new Error("Null argument error: the parameters cannot be null");
         }
 
@@ -59,9 +59,7 @@ export class CommandsService {
         params: string) {
 
         if (receiverEaselCompoment === null
-            || receiverBoardComponent === null
-            || params === null
-            || params === "") {
+            || receiverBoardComponent === null) {
             throw new Error("Null argument error: the parameters cannot be null");
         }
 
@@ -73,15 +71,14 @@ export class CommandsService {
         placeWordCommand.execute();
     }
 
-    public invokeAndExecutePassCommand(
-        receiverGameComponent: GameComponent,
-        params: string) {
+    public invokeAndExecutePassCommand(receiverGameComponent: GameComponent) {
 
-        if (receiverGameComponent === null) {
+        if (receiverGameComponent === null
+            || receiverGameComponent === undefined) {
             throw new Error("Null argument error: the parameters cannot be null");
         }
 
-        let passCommand = new PassCommand(receiverGameComponent, params);
+        let passCommand = new PassCommand(receiverGameComponent);
         passCommand.execute();
     }
 
@@ -92,19 +89,19 @@ export class CommandsService {
 
         if (texte.startsWith(CommandsHelper.PLACE_COMMAND)) {
             request.commandType = CommandType.PlaceCmd;
-            request.parameters = texte.split(CommandsHelper.PLACE_COMMAND)[1].trim();
+            request.parameters = texte.split(CommandsHelper.PLACE_COMMAND)[PARAM_INDEX].trim();
 
         } else if (texte.startsWith(CommandsHelper.EXCHANGE_COMMAND)) {
             request.commandType = CommandType.ExchangeCmd;
-            request.parameters = texte.split(CommandsHelper.EXCHANGE_COMMAND)[1].trim();
+            request.parameters = texte.split(CommandsHelper.EXCHANGE_COMMAND)[PARAM_INDEX].trim();
 
         } else if (texte.startsWith(CommandsHelper.PASS_COMMAND)) {
             request.commandType = CommandType.PassCmd;
-            request.parameters = texte.split(CommandsHelper.PASS_COMMAND)[1].trim();
+            request.parameters = texte.split(CommandsHelper.PASS_COMMAND)[PARAM_INDEX].trim();
 
         } else if (texte.startsWith(CommandsHelper.GUIDE)) {
             request.commandType = CommandType.Guide;
-            request.parameters = texte.split(CommandsHelper.GUIDE)[1].trim();
+            request.parameters = texte.split(CommandsHelper.GUIDE)[PARAM_INDEX].trim();
 
         } else if (texte.startsWith('!') && !texte.startsWith(CommandsHelper.PLACE_COMMAND)) {
             request.commandType = CommandType.InvalidCmd;

@@ -5,8 +5,15 @@ import { Player } from "../../models/players/player";
 export class RoomHandler {
 
     // The current rooms of the game
-    _rooms: Array<Room>;
+    private _rooms: Array<Room>;
 
+    public get rooms(): Array<Room> {
+        return this._rooms;
+    }
+
+    public set rooms(rooms: Array<Room>) {
+        this._rooms = rooms;
+    }
     // The constructor of the handler
     public constructor() {
         this._rooms = new Array<Room>();
@@ -35,8 +42,11 @@ export class RoomHandler {
                     room = new Room(player.numberOfPlayers);
                     room.addPlayer(player);
                     this._rooms.push(room);
-                }
 
+                    if (room.isFull()) {
+                        room.randomizePlayersPriorities();
+                    }
+                }
                 return room;
 
             } else {

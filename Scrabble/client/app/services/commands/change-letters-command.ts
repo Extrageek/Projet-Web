@@ -26,7 +26,6 @@ export class ChangeLettersCommand implements ICommand {
     constructor(private easelComponent: EaselComponent, params: string) {
 
         this.throwsErrorIfParameterIsNull(easelComponent);
-        this.throwsErrorIfParameterIsNull(params);
 
         this._parameters = params;
         this._commandRequest = {
@@ -44,22 +43,20 @@ export class ChangeLettersCommand implements ICommand {
         this.easelComponent.changeLetters(commandRequest);
     }
 
-    public createExchangeEaselLettersRequest(lettersInEasel: Array<ScrabbleLetter>): ICommandRequest<
-        { indexOfLettersToChange: Array<number>, lettersToChange: Array<string> }> {
+    public createExchangeEaselLettersRequest(lettersInEasel: Array<ScrabbleLetter>):
+        ICommandRequest<{ indexOfLettersToChange: Array<number>, lettersToChange: Array<string> }> {
 
         let enteredletters = this._easelManagerService.parseStringToListofChar(this.parameters);
-        let indexOfLettersToChange = new Array<number>();
-        this.commandRequest._response.lettersToChange = enteredletters;
-
-        if (enteredletters === null || enteredletters.length > lettersInEasel.length) {
+        if (enteredletters === null
+            || enteredletters.length === 0
+            || enteredletters.length > lettersInEasel.length) {
             this.commandRequest._commandStatus = CommandStatus.SynthaxeError;
 
-        } else if (enteredletters.length === 0
-            || this.parameters === null) {
-
-            this.commandRequest._commandStatus = CommandStatus.NotAllowed;
-
         } else {
+
+            let indexOfLettersToChange = new Array<number>();
+            this.commandRequest._response.lettersToChange = enteredletters;
+
             let tempEaselLetters = new Array<string>();
             lettersInEasel.forEach((letter) => {
                 tempEaselLetters.push(letter.letter);
