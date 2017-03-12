@@ -27,29 +27,29 @@ export class SocketService {
 
     private initializeClient() {
         //console.log("ActivatedRoute", this.activatedRoute);
-         if (SocketService._socket === null) {
-                SocketService._socket = io.connect(this._serverUri, { 'forceNew': false });
-                // TODO: Leave this for now, I'm working on it
-                // if (this.activatedRoute.params["id"] !== null) {
-                //     this.router.navigate(["/",]);
-                //}
-            }
-
-        // this.activatedRoute.params.subscribe(params => {
-        //     if (SocketService._socket === null) {
+        //  if (SocketService._socket === null) {
         //         SocketService._socket = io.connect(this._serverUri, { 'forceNew': false });
-
-        //         // this.subscribeToChannelEvent(SocketEventType.updatePlayersQueue)
-        //         //     .subscribe((players: Array<string>) => {
-        //         //         this._playersPriorityQueue = players;
-        //         //     });
-
         //         // TODO: Leave this for now, I'm working on it
-        //         if (this.activatedRoute.params["id"] !== null) {
-        //             this.router.navigate(["/", ]);
-        //         }
+        //         // if (this.activatedRoute.params["id"] !== null) {
+        //         //     this.router.navigate(["/",]);
+        //         //}
         //     }
-        // });
+
+        this.activatedRoute.params.subscribe(params => {
+            if (SocketService._socket === null) {
+                SocketService._socket = io.connect(this._serverUri, { 'forceNew': false });
+
+                // this.subscribeToChannelEvent(SocketEventType.updatePlayersQueue)
+                //     .subscribe((players: Array<string>) => {
+                //         this._playersPriorityQueue = players;
+                //     });
+
+                // TODO: Leave this for now, I'm working on it
+                if (this.activatedRoute.params["id"] !== null) {
+                    this.router.navigate(["/", ]);
+                }
+            }
+        });
 
     }
 

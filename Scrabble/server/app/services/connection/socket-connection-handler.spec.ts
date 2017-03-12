@@ -75,15 +75,18 @@ describe("SocketConnectionHandler, should create a socket connection handler", (
         // console.log(createResponse);
     });
 
-    it("SocketConnectionHandler, should add a player and emit a message to player", () => {
+    it("SocketConnectionHandler, should add a player and emit a message to player", (done) => {
         client1 = ioClient.connect(fakeServerUrl, options);
         client2 = ioClient.connect(fakeServerUrl, options);
 
-        // client1.emit(SocketEventType.newGameRequest, { username: playerName1, gameType: 2 });
+        // setTimeout(function () {
 
-        // client1.on(SocketEventType.joinRoom, function () {
-        //     console.log("Joined", client1);
-        // });
+        //     client1.emit(SocketEventType.newGameRequest, { username: playerName1, gameType: 2 });
+
+        //     // client1.on(SocketEventType.joinRoom, function () {
+        //     //     console.log("Joined", client1);
+        //     // });
+        // }, 5000);
 
         // client1.once(SocketEventType.joinRoom, function (roomMessage: RoomMessage) {
         //     //console.log("test 1 join", roomMessage);
@@ -95,7 +98,7 @@ describe("SocketConnectionHandler, should create a socket connection handler", (
         // client1.disconnect();
         // client1.close();
 
-        //done();
+        done();
     });
 
     // describe("test", () => {

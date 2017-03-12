@@ -32,39 +32,37 @@ export class SocketConnectionHandler {
     }
 
     private initializeListeners() {
-        this._socket.sockets.on(SocketEventType.connection, this.onConnectionCallback);
-    }
+        this._socket.sockets.on(SocketEventType.connection, (socket: SocketIO.Socket) => {
+            // console.log("a new connection to the server", socket.id);
 
-    private onConnectionCallback(socket: SocketIO.Socket) {
-        // console.log("a new connection to the server", socket.id);
+            try {
 
-        try {
+                // TODO: Leave this please, I'm working on it
 
-            // TODO: Leave this please, I'm working on it
+                // let clientUrl = socket.handshake.headers.referer.toString().split('/');
+                // let lastParameter = clientUrl[clientUrl.length - 1];
+                // console.log("username from socket", lastParameter);
+                // if (lastParameter !== null) {
+                //     let player = this._roomHandler.getPlayerByUsername(lastParameter);
+                //     if (player !== null) {
+                //         console.log("currentId", player.socketId, "newId", socket.id);
+                //         player.socketId = socket.id;
+                //     }
+                // }
 
-            // let clientUrl = socket.handshake.headers.referer.toString().split('/');
-            // let lastParameter = clientUrl[clientUrl.length - 1];
-            // console.log("username from socket", lastParameter);
-            // if (lastParameter !== null) {
-            //     let player = this._roomHandler.getPlayerByUsername(lastParameter);
-            //     if (player !== null) {
-            //         console.log("currentId", player.socketId, "newId", socket.id);
-            //         player.socketId = socket.id;
-            //     }
-            // }
+                this.subscribeToNewGameRequestEvent(socket);
+                this.subscribeToInitializeEaselEvent(socket);
+                this.subscribeToMessageEvent(socket);
+                this.subscribeToExchangeLettersEvent(socket);
+                this.subscribeToPlaceWordEvent(socket);
+                this.subscribeToPassEvent(socket);
+                this.subscribeToInvalidCommandEvent(socket);
+                this.subscribeToDisconnectEvent(socket);
 
-            this.subscribeToNewGameRequestEvent(socket);
-            this.subscribeToInitializeEaselEvent(socket);
-            this.subscribeToMessageEvent(socket);
-            this.subscribeToExchangeLettersEvent(socket);
-            this.subscribeToPlaceWordEvent(socket);
-            this.subscribeToPassEvent(socket);
-            this.subscribeToInvalidCommandEvent(socket);
-            this.subscribeToDisconnectEvent(socket);
-
-        } catch (error) {
-            this._socket.emit(SocketEventType.connectError);
-        }
+            } catch (error) {
+                this._socket.emit(SocketEventType.connectError);
+            }
+        });
     }
 
     private subscribeToNewGameRequestEvent(socket: SocketIO.Socket) {
@@ -72,9 +70,10 @@ export class SocketConnectionHandler {
             throw new Error("The socket value cannot be null.");
         }
 
+            
         socket.on(SocketEventType.newGameRequest, (connectionInfos: { username: string, gameType: number }) => {
 
-            // console.log("new game request", socket.id);
+            console.log("new game request", socket.id);
 
             if (typeof (connectionInfos) !== "object"
                 || typeof (connectionInfos.username) !== "string"
