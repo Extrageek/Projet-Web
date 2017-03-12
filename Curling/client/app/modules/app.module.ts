@@ -19,12 +19,14 @@ import { RestApiProxyService } from './../services/leaderboard/rest-api-proxy.se
 import { UserSettingService } from './../services/user/user-setting.service';
 import { GameStatusService } from './../services/game-status/game-status.service';
 import { CameraService } from './../services/views/cameras.service';
+import { LightingService } from './../services/scenery/ligthing.service';
 
 @NgModule({
   imports: [ BrowserModule, FormsModule, AppRoutingModule, MaterialModule.forRoot()],
   declarations: [ AppComponent, GlComponent, LeaderboardComponent, ModifierDirective,
                   UsernameComponent, DifficultyComponent, DisplayComponent],
-  providers: [ RenderService, RestApiProxyService, UserSettingService, GameStatusService, CameraService ],
+  providers: [ RenderService, RestApiProxyService, UserSettingService,
+               GameStatusService, CameraService, LightingService ],
   bootstrap: [ AppComponent ]
 })
 

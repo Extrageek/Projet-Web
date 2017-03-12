@@ -12,6 +12,8 @@ import { RinkInfo } from './../../models/scenery/rinkInfo.interface';
 import { StoneHandler } from './stone-handler';
 import { CameraType } from './camera-type';
 
+import { LightingService } from './../scenery/ligthing.service';
+
 @Injectable()
 export class RenderService {
 
@@ -47,7 +49,10 @@ export class RenderService {
     private _objectLoader: ObjectLoader;
     private _animationStarted: boolean;
 
-    constructor(private _gameStatusService: GameStatusService, private _cameraService: CameraService) {
+    constructor(
+        private _gameStatusService: GameStatusService,
+        private _cameraService: CameraService,
+        private _lightingService: LightingService) {
         this._scene = new Scene();
         this._animationStarted = false;
         this._numberOfModelsLoaded = 0;
@@ -65,7 +70,8 @@ export class RenderService {
         this._currentCameraType = CameraType.PERSPECTIVE_CAM;
 
         //Part 2: Scenery
-        this.setUpLighting(); //Because lighting is everything
+        //this.setUpLighting(); //Because lighting is everything
+        this._lightingService.setUpLighting(this._scene);
         this.generateSkybox();
 
         //Part 3: Components
