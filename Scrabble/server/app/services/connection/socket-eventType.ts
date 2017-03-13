@@ -36,6 +36,8 @@ export class SocketEventType {
     static commandRequest = "commandRequest";
     static invalidCommandRequest = "invalidCommand";
 
+    static timerEvent = "timerEvent";
+
     static changeLettersRequest = "!changer";
     static placeWordCommandRequest = "!place";
     static passCommandRequest = "!passer";

@@ -64,7 +64,7 @@ describe("CommandService", function () {
             declarations: [],
             providers: [
                 { provide: APP_BASE_HREF, useValue: '/game-room/test' },
-                SocketService,
+                
                 EaselManagerService,
             ],
 

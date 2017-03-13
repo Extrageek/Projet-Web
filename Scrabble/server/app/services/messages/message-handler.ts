@@ -110,26 +110,28 @@ export class MessageHandler {
     public createCommandResponse(
         username: string,
         room: Room,
-        commandType: CommandType,
-        commandStatus: CommandStatus,
-        data: string
+        request: {
+            commandType: CommandType,
+            commandStatus: CommandStatus,
+            data: string
+        }
     ): ICommandMessage<Array<string>> {
 
         this.throwNullArgumentException(username);
         this.throwNullArgumentException(room);
-        this.throwNullArgumentException(commandType);
-        this.throwNullArgumentException(commandStatus);
+        this.throwNullArgumentException(request.commandType);
+        this.throwNullArgumentException(request.commandStatus);
 
-        let message = (commandStatus == CommandStatus.Ok) ?
-            `$: <!${CommandType[commandType]}>` + ' '
-            + `${data}` : `$: ${CommandStatus[commandStatus]} ` + ' '
-            + `<${data}>`;
+        let message = (request.commandStatus == CommandStatus.Ok) ?
+            `$: <!${CommandType[request.commandType]}>` + ' '
+            + `${request.data}` : `$: ${CommandStatus[request.commandStatus]} ` + ' '
+            + `<${request.data}>`;
 
         let commandMessage: ICommandMessage<Array<string>>;
 
         commandMessage = {
-            _commandType: commandType,
-            _commandStatus: commandStatus,
+            _commandType: request.commandType,
+            _commandStatus: request.commandStatus,
             _username: username,
             _message: message,
             _data: null,

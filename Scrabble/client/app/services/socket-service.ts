@@ -29,6 +29,7 @@ export class SocketService {
         //console.log("ActivatedRoute", this.activatedRoute);
         //  if (SocketService._socket === null) {
         //         SocketService._socket = io.connect(this._serverUri, { 'forceNew': false });
+
         //         // TODO: Leave this for now, I'm working on it
         //         // if (this.activatedRoute.params["id"] !== null) {
         //         //     this.router.navigate(["/",]);
@@ -46,7 +47,7 @@ export class SocketService {
 
                 // TODO: Leave this for now, I'm working on it
                 if (this.activatedRoute.params["id"] !== null) {
-                    this.router.navigate(["/", ]);
+                    this.router.navigate(["/", ""]);
                 }
             }
         });

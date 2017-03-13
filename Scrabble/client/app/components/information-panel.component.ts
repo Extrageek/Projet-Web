@@ -1,25 +1,27 @@
 import { Component, OnInit, AfterViewInit } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 
-import { TimerService } from "../services/timer-service";
 import { SocketService } from "../services/socket-service";
+import { CommandType } from "../services/commands/commons/command-type";
+import { CommandStatus } from "../services/commands/commons/command-status";
 import { SocketEventType } from "../commons/socket-eventType";
 import { IGameMessage } from "../commons/messages/game-message.interface";
 import { IRoomMessage } from "../commons/messages/room-message.interface";
 import { ICommandMessage } from "../commons/messages/command-message.interface";
 
 //const MAX_NUMBER_OF_LETTERS = 7;
-const ONE_SECOND = 1000;
 
 @Component({
     moduleId: module.id,
-    providers: [TimerService],
+    providers: [SocketService],
     selector: "info-panel-selector",
     templateUrl: "../../assets/templates/information-panel.html",
     styleUrls: ["../../assets/stylesheets/information-panel.css"]
 })
 
-export class InformationPanelComponent implements OnInit, AfterViewInit {
+export class InformationPanelComponent implements OnInit {
+    private _username: string;
     playingUser: string;
     nextPlayer: string;
     score: number;
@@ -28,10 +30,9 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
     seconds: number;
     minutes: number;
 
-    constructor(private timerService: TimerService,
-        private socketService: SocketService) {
-        this.seconds = timerService.seconds;
-        this.minutes = timerService.minutes;
+    constructor(
+        private socketService: SocketService,
+        private activatedRoute: ActivatedRoute) {
         this.score = 0;
         this.lettersOnEasel = 7;
         // TODO : get it from letterbank service
@@ -40,30 +41,38 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.onUpdatePlayersQueueEvent();
+        this.onTimerEvent();
+        this.activatedRoute.params.subscribe(params => {
+            this._username = params['id'];
+        });
     }
 
-    ngAfterViewInit() {
-        setInterval(() => {
-            if (this.timerService.timerIsRunning()) {
-                this.timerService.updateClock();
-                this.seconds = this.timerService.seconds;
-                this.minutes = this.timerService.minutes;
-            } else {
-                // Player's turn is over
-            }
-        }, ONE_SECOND);
+    private onTimerEvent(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.timerEvent)
+            .subscribe((counter: { minutes: number, seconds: number }) => {
+                this.minutes = counter.minutes;
+                this.seconds = counter.seconds;
+
+                console.log(this.minutes, this.seconds);
+
+                if (this.minutes === 0
+                    && this.seconds === 0
+                    && this.playingUser === this._username) {
+                    let request = {
+                        commandType: CommandType.PassCmd,
+                        commandStatus: CommandStatus.Ok,
+                        data: ""
+                    };
+
+                    this.socketService.emitMessage(SocketEventType.passCommandRequest, request);
+                }
+            });
     }
 
     private onUpdatePlayersQueueEvent(): Subscription {
         return this.socketService.subscribeToChannelEvent(SocketEventType.updatePlayersQueue)
             .subscribe((response: Array<string>) => {
                 if (response !== undefined && response !== null) {
-                    // console.log("playingUser", this.socketService.getCurrentPlayer());
-                    // console.log("NextPlayer in Queue", this.socketService.getCurrentPlayer());
-
-
-                    console.log("d", response);
-
                     // Temporary settings, we can use a manager to
                     this.socketService.playersPriorityQueue = response;
                     this.playingUser = response[0];
@@ -72,7 +81,6 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
                     // this.playingUser = this.socketService.getCurrentPlayer();
                     // this.nextPlayer = this.socketService.getNextPlayer();
                 }
-
             });
     }
 

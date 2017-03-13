@@ -86,6 +86,21 @@ export class SocketConnectionHandler {
                         // Emit to all the player in the room.
                         this._socket.to(response._roomId).emit(SocketEventType.joinRoom, response);
 
+                        // TODO: Handle the unsubscribe to the timer after a clean debug
+                        if (room.isFull()) {
+                            let test = room.timerService.timer().subscribe(
+                                (counter: { minutes: number, seconds: number }) => {
+
+                                    // Send the counter value to the members of the room
+                                    this._socket.to(response._roomId).emit(SocketEventType.timerEvent, counter);
+
+                                    // // Update the players queues for everyone in the room
+                                    // let playersQueues = room.getAndUpdatePlayersQueue();
+                                    // this._socket.to(room.roomId).emit(SocketEventType.passCommandRequest, playersQueues);
+
+                                });
+                        }
+
                     } else {
                         console.log("Already exists");
                         // Emit only to the sender
@@ -176,12 +191,7 @@ export class SocketConnectionHandler {
             let room = this._roomHandler.getRoomBySocketId(socket.id);
             let player = this._roomHandler.getPlayerBySocketId(socket.id);
             let response = this._messageHandler
-                .createCommandResponse(
-                player.username,
-                room,
-                request.commandType,
-                request.commandStatus,
-                request.data);
+                .createCommandResponse(player.username, room, request);
 
             // Emit a message with the new letters to the sender
             this._socket.to(room.roomId).emit(SocketEventType.commandRequest, response);
@@ -204,10 +214,7 @@ export class SocketConnectionHandler {
             let response = this._messageHandler
                 .createCommandResponse(
                 player.username,
-                room,
-                request.commandType,
-                request.commandStatus,
-                request.data);
+                room, request);
 
             // Emit a message with the new letters to the sender
             this._socket.to(response._room.roomId).emit(SocketEventType.commandRequest, response);

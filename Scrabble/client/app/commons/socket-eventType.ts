@@ -38,6 +38,8 @@ export class SocketEventType {
     static placeWordCommandRequest = "!place";
     static passCommandRequest = "!passer";
 
+    static timerEvent = "timerEvent";
+
     static commandRequest = "commandRequest";
     static invalidCommandRequest = "invalidCommand";
 }

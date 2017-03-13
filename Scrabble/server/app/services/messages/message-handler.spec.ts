@@ -162,27 +162,34 @@ describe("MessageHandler", () => {
     });
 
     it("createCommandResponse, Should throw Null argument exception if the username is null", () => {
-        let wrapper = () => messageHandler.createCommandResponse(null, fakeRoom, CommandType.PassCmd, CommandStatus.NotAllowed, "");
+        let request = { commandType: CommandType.PassCmd, commandStatus: CommandStatus.NotAllowed, data: "" };
+        let wrapper = () => messageHandler.createCommandResponse(null, fakeRoom, request);
         expect(wrapper).throw(Error, "Null argument exception: the parameters cannot be null be null.");
     });
 
     it("createCommandResponse, Should throw Null argument exception if the room is null", () => {
-        let wrapper = () => messageHandler.createCommandResponse(fakeUsername, null, CommandType.PassCmd, CommandStatus.NotAllowed, "");
+        let request = { commandType: CommandType.PassCmd, commandStatus: CommandStatus.NotAllowed, data: "" };
+        let wrapper = () => messageHandler.createCommandResponse(fakeUsername, null, request);
         expect(wrapper).throw(Error, "Null argument exception: the parameters cannot be null be null.");
     });
 
     it("createCommandResponse, Should throw Null argument exception if the CommandType is null", () => {
-        let wrapper = () => messageHandler.createCommandResponse(fakeUsername, fakeRoom, null, CommandStatus.NotAllowed, "");
+        let request = { commandType: CommandType.unknown, commandStatus: CommandStatus.NotAllowed, data: "" };
+        request.commandType = null;
+        let wrapper = () => messageHandler.createCommandResponse(fakeUsername, fakeRoom, request);
         expect(wrapper).throw(Error, "Null argument exception: the parameters cannot be null be null.");
     });
 
     it("createCommandResponse, Should throw Null argument exception if the CommandStatus is null", () => {
-        let wrapper = () => messageHandler.createCommandResponse(fakeUsername, fakeRoom, CommandType.PassCmd, null, "");
+        let request = { commandType: CommandType.PassCmd, commandStatus: CommandStatus.unknown, data: "" };
+        request.commandStatus = null;
+        let wrapper = () => messageHandler.createCommandResponse(fakeUsername, fakeRoom, request);
         expect(wrapper).throw(Error, "Null argument exception: the parameters cannot be null be null.");
     });
 
     it("createCommandResponse, Should create valid message with NotAllowed response with the letters to exchange", () => {
-        let response = messageHandler.createCommandResponse(fakeUsername, fakeRoom, CommandType.PassCmd, CommandStatus.NotAllowed, "");
+        let request = { commandType: CommandType.PassCmd, commandStatus: CommandStatus.NotAllowed, data: "" };
+        let response = messageHandler.createCommandResponse(fakeUsername, fakeRoom, request);
         let expectedMessage = `$: ${CommandStatus[CommandStatus.NotAllowed]} ` + ' '
             + `<${""}>`;
 
@@ -196,7 +203,8 @@ describe("MessageHandler", () => {
     });
 
     it("createCommandResponse, Should create valid message with Ok response with the letters to exchange", () => {
-        let response = messageHandler.createCommandResponse(fakeUsername, fakeRoom, CommandType.PassCmd, CommandStatus.Ok, "");
+        let request = { commandType: CommandType.PassCmd, commandStatus: CommandStatus.Ok, data: "" };
+        let response = messageHandler.createCommandResponse(fakeUsername, fakeRoom, request);
         let expectedMessage = `$: <!${CommandType[CommandType.PassCmd]}>` + ' ' + `${""}`;
 
         assert(response._username === fakeUsername);

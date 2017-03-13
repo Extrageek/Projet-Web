@@ -1,6 +1,9 @@
+import { Observable } from "rxjs/Observable";
+
 import { Player } from "../players/player";
 import { QueueCollection } from "../../models/queue-collection";
 import { Letter } from "../../models/lettersBank/letter";
+import { TimerService } from "../../services/timer/timer.service";
 import { LetterBankHandler } from "../../services/lettersBank/letterbank-handler";
 
 let uuid = require('node-uuid');
@@ -12,9 +15,14 @@ export class Room {
 
     private _playersQueue: QueueCollection<Player>;
     private _letterBankHandler: LetterBankHandler;
+    private _timerService: TimerService;
     private _roomCapacity: number;
     private _roomId: string;
 
+    public get timerService() {
+        this._timerService.initializeCounter();
+        return this._timerService;
+    }
     // The constructor of the room
     constructor(roomCapacity: number) {
         if (roomCapacity < Room.roomMinCapacity || roomCapacity > Room.roomMaxCapacity) {
@@ -24,6 +32,7 @@ export class Room {
         this._roomCapacity = roomCapacity;
         this._playersQueue = new QueueCollection<Player>();
         this._letterBankHandler = new LetterBankHandler();
+        this._timerService = new TimerService();
         this._roomId = uuid.v1(); // Generate a v1 (time-based) id
     }
 
@@ -115,7 +124,7 @@ export class Room {
         for (let index = 0; index < players.length; ++index) {
             newPlayerOrder[index] = players[index].username;
         }
-
+        this._timerService.initializeCounter();
         return newPlayerOrder;
     }
 
