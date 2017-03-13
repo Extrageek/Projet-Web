@@ -20,7 +20,7 @@ import { ICommandMessage } from "../commons/messages/command-message.interface";
     styleUrls: ["../../assets/stylesheets/information-panel.css"]
 })
 
-export class InformationPanelComponent implements OnInit {
+export class InformationPanelComponent implements OnInit, AfterViewInit {
     private _username: string;
     playingUser: string;
     nextPlayer: string;
@@ -41,10 +41,16 @@ export class InformationPanelComponent implements OnInit {
 
     ngOnInit() {
         this.onUpdatePlayersQueueEvent();
-        this.onTimerEvent();
+    }
+
+    ngAfterViewInit() {
         this.activatedRoute.params.subscribe(params => {
             this._username = params['id'];
+
+            console.log("username", this._username);
         });
+        this.onTimerEvent();
+
     }
 
     private onTimerEvent(): Subscription {
@@ -74,6 +80,8 @@ export class InformationPanelComponent implements OnInit {
             .subscribe((response: Array<string>) => {
                 if (response !== undefined && response !== null) {
                     // Temporary settings, we can use a manager to
+
+                    console.log("queue from server", response);
                     this.socketService.playersPriorityQueue = response;
                     this.playingUser = response[0];
                     this.nextPlayer = response[1];

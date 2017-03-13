@@ -12,16 +12,16 @@ const SERVER_PORT = 3002;
 export class SocketService {
 
     static _socket: SocketIOClient.Socket = null;
+    static _playersPriorityQueue: Array<string>;
     private _serverUri: string = 'http://localhost:' + SERVER_PORT;
-    private _playersPriorityQueue: Array<string>;
 
     // Must be removed after a clean debug
     public set playersPriorityQueue(players: Array<string>) {
-        this._playersPriorityQueue = players;
+        SocketService._playersPriorityQueue = players;
     }
 
     constructor(private router: Router, private activatedRoute: ActivatedRoute) {
-        this._playersPriorityQueue = new Array<string>();
+        SocketService._playersPriorityQueue = new Array<string>();
         this.initializeClient();
     }
 
@@ -47,7 +47,7 @@ export class SocketService {
 
                 // TODO: Leave this for now, I'm working on it
                 if (this.activatedRoute.params["id"] !== null) {
-                    this.router.navigate(["/", ""]);
+                    this.router.navigate(["/", ]);
                 }
             }
         });
@@ -73,10 +73,10 @@ export class SocketService {
     }
 
     public getCurrentPlayer(): string {
-        return this._playersPriorityQueue[0];
+        return SocketService._playersPriorityQueue[0];
     }
 
     public getNextPlayer(): string {
-        return this._playersPriorityQueue[1];
+        return SocketService._playersPriorityQueue[1];
     }
 }

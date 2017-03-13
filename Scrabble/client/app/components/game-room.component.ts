@@ -52,6 +52,7 @@ export class GameComponent implements OnInit, OnDestroy {
         private gameRoomEventManagerService: GameRoomManagerService,
         private easelManagerService: EaselManagerService,
         private commandsService: CommandsService) {
+
         this._inputMessage = '';
         // Constructor
     }
