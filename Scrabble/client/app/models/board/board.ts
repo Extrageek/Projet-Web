@@ -11,9 +11,6 @@ export class Board {
     public get board(): Array<Array<Square>> {
         return this._board;
     }
-    // public set board(_board: Array<Array<Square>>) {
-    //     this._board = _board;
-    // }
 
     constructor() {
         this._board = new Array<Array<Square>>();
@@ -26,11 +23,13 @@ export class Board {
         let colomn: number;
         let innerRow: Array<Square>;
 
-        for (row = BoardRows.A; row <= BOARD_SIZE; row++) {
+        for (row = 1; row <= BOARD_SIZE; row++) {
             innerRow = new Array<Square>();
             for (colomn = BoardColumn.FIRST_COLUMN; colomn <= BOARD_SIZE; colomn++) {
-                innerRow.push(new Square(new SquarePosition(row, colomn), SquareType.normal));
+                innerRow.push(new Square(new SquarePosition(BoardRows[row], colomn), SquareType.normal));
             }
+
+            console.log("row",innerRow);
             this.board.push(innerRow);
         }
     }

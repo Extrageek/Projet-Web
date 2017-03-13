@@ -6,7 +6,8 @@
 }
 
 .mainBoard .table {
-    width: 572px;
+    /*width: 572px;*/
+    width: 608px;
     margin: 2px;
     table-layout:fixed;
 }
@@ -17,7 +18,8 @@
 }
 
 .table-responsive {
-    padding: 27px;
+    padding-right: 20px;
+    padding-bottom: 20px;
     min-height: .01%;
     overflow-x: auto;
 }
@@ -25,6 +27,28 @@
 div.mainBoard > div:lastchild > img.cell {
     margin: 0;
 }
+
+td.imageContainer.rowIndex, 
+td.imageContainer.colIndex{
+    font-weight: bold;
+    font-size: 15px;
+}
+
+td.imageContainer.colIndex,
+td.imageContainer.zeroIndex {
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+}
+
+
+td.imageContainer.rowIndex, 
+td.imageContainer.zeroIndex{
+    border-top: 0px;
+    border-bottom: 0px;
+    border-left: 0px;
+}
+
 .mainBoard {
     background-color: #eee;
 }
