@@ -1,11 +1,11 @@
-import { SocketService } from '../socket-service';
-import { ICommand } from "./command.interface";
-import { ICommandRequest } from "./commons/command-request";
-import { CommandStatus } from './commons/command-status';
-import { CommandType } from './commons/command-type';
-import { CommandsHelper } from "./commons/commands-helper";
-import { SocketEventType } from "../../commons/socket-eventType";
-import { GameComponent } from "../../components/game-room.component";
+import { SocketService } from '../../socket-service';
+import { ICommand } from "../commandInterface/command.interface";
+import { ICommandRequest } from "../commons/command-request";
+import { CommandStatus } from '../commons/command-status';
+import { CommandType } from '../commons/command-type';
+import { CommandsHelper } from "../commons/commands-helper";
+import { SocketEventType } from "../../../commons/socket-eventType";
+import { GameComponent } from "../../../components/game-room.component";
 
 export class PassCommand implements ICommand {
 

@@ -1,4 +1,4 @@
-export class EaselControl {
+export class LetterHelper {
     // movement
     static readonly leftArrowKeyCode = 37;
     static readonly rightArrowKeyCode = 39;

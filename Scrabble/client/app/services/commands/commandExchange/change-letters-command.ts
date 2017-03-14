@@ -1,11 +1,11 @@
-import { EaselComponent } from "../../components/easel.component";
-import { EaselManagerService } from "../easel/easel-manager.service";
-import { ScrabbleLetter } from "../../models/letter/scrabble-letter";
-import { ICommand } from "./command.interface";
-import { CommandStatus } from './commons/command-status';
-import { CommandType } from './commons/command-type';
-import { ICommandRequest } from "./commons/command-request";
-import { CommandsHelper } from "./commons/commands-helper";
+import { EaselComponent } from "../../../components/easel.component";
+import { EaselManagerService } from "../../easel/easel-manager.service";
+import { ScrabbleLetter } from "../../../models/letter/scrabble-letter";
+import { ICommand } from "../commandInterface/command.interface";
+import { CommandStatus } from '../commons/command-status';
+import { CommandType } from '../commons/command-type';
+import { ICommandRequest } from "../commons/command-request";
+import { CommandsHelper } from "../commons/commands-helper";
 
 export class ChangeLettersCommand implements ICommand {
 

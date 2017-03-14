@@ -28,10 +28,10 @@ import { CommandStatus } from "./commons/command-status";
 import { CommandType } from "./commons/command-type";
 import { ICommandRequest } from "./commons/command-request";
 
-import { MessageCommand } from '../../services/commands/message-command';
-import { ChangeLettersCommand } from '../../services/commands/change-letters-command';
-import { PlaceWordCommand } from '../../services/commands/place-word-command';
-import { PassCommand } from '../../services/commands/pass-command';
+import { MessageCommand } from '../commands/commandMessage/message-command';
+import { ChangeLettersCommand } from '../commands/CommandExchange/change-letters-command';
+import { PlaceWordCommand } from '../commands/commandPlaceWord/place-word-command';
+import { PassCommand } from '../commands/commandPass/pass-command';
 
 import { SocketService } from "../../services/socket-service";
 import { EaselManagerService } from "../easel/easel-manager.service";

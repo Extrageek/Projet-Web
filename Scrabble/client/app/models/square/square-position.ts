@@ -10,15 +10,15 @@ export class SquarePosition {
         this._row = row;
     }
 
-    private _column: BoardColumn;
-    public get column(): BoardColumn {
+    private _column: number;
+    public get column(): number {
         return this._column;
     }
-    public set column(column: BoardColumn) {
+    public set column(column: number) {
         this._column = column;
     }
 
-    constructor(row: string, column: BoardColumn) {
+    constructor(row: string, column: number) {
         this.row = row;
         this.column = column;
     }

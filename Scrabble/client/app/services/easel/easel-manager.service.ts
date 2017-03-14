@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { EaselControl } from "../../commons/easel-control";
+import { LetterHelper } from "../../commons/letter-helper";
 import { ScrabbleLetter } from "../../models/letter/scrabble-letter";
 
 declare var jQuery: any;
@@ -10,6 +10,8 @@ export const MAX_POSITION_INDEX = 6;
 export const CSS_BORDER = 'border';
 export const CSS_BOX_SHADOW = 'box-shadow';
 export const CSS_OUT_LINE = 'out-line';
+export const IMAGE_SOURCE_PATH = '../../assets/images/';
+export const IMAGE_EXT = '.jpg';
 
 const EASEL_INIT_ELEMENT_CSS = {
     'border': '1px solid #000',
@@ -35,7 +37,8 @@ export class EaselManagerService {
         if (keyCode === null) {
             throw new Error("Argument error: the keyCode cannot be null");
         }
-        verification = (EaselControl.leftArrowKeyCode === keyCode || keyCode === EaselControl.rightArrowKeyCode);
+        verification = (LetterHelper.leftArrowKeyCode === keyCode
+            || keyCode === LetterHelper.rightArrowKeyCode);
         return verification;
     }
 
@@ -44,7 +47,7 @@ export class EaselManagerService {
         if (keyCode === null) {
             throw new Error("Argument error: the keyCode cannot be null");
         }
-        verification = (EaselControl.letterAKeyCode <= keyCode && keyCode <= EaselControl.letterZKeyCode);
+        verification = (LetterHelper.letterAKeyCode <= keyCode && keyCode <= LetterHelper.letterZKeyCode);
         return verification;
     }
 
@@ -53,7 +56,7 @@ export class EaselManagerService {
         if (keyCode === null) {
             throw new Error("Argument error: the keyCode cannot be null");
         }
-        verification = (keyCode === EaselControl.tabKeyCode);
+        verification = (keyCode === LetterHelper.tabKeyCode);
         return verification;
     }
 
@@ -81,13 +84,13 @@ export class EaselManagerService {
         let newPosition: number;
 
         switch (keyCode) {
-            case EaselControl.leftArrowKeyCode:
+            case LetterHelper.leftArrowKeyCode:
                 newPosition = currentPosition - 1;
                 return (newPosition < MIN_POSITION_INDEX) ? MAX_POSITION_INDEX : newPosition;
-            case EaselControl.rightArrowKeyCode:
+            case LetterHelper.rightArrowKeyCode:
                 newPosition = currentPosition + 1;
                 return (newPosition > MAX_POSITION_INDEX) ? MIN_POSITION_INDEX : newPosition;
-            case EaselControl.tabKeyCode:
+            case LetterHelper.tabKeyCode:
                 return MIN_POSITION_INDEX;
             default:
                 return newPosition = 0;
@@ -141,6 +144,23 @@ export class EaselManagerService {
             listOfChar.push(scrabbleLetters[index].letter.toUpperCase());
         }
         return listOfChar;
+    }
+
+    public getScrabbleLetterFromStringLetter(letters: Array<string>): Array<ScrabbleLetter> {
+
+        if (letters === null || letters.length < 1) {
+            throw new Error("Invalid argument error");
+        }
+
+        let scrabbleLettres = new Array<ScrabbleLetter>();
+        for (let index = 0; index < letters.length; ++index) {
+            let letterString = (letters[index] === '*') ? 'blank' : letters[index];
+            let letter = new ScrabbleLetter(letterString);
+
+            letter.imageSource = IMAGE_SOURCE_PATH + letter.letter + IMAGE_EXT;
+            scrabbleLettres.push(letter);
+        }
+        return scrabbleLettres;
     }
 
     public getScrabbleWordFromTheEasel(

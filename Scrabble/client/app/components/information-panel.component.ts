@@ -46,11 +46,8 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         this.activatedRoute.params.subscribe(params => {
             this._username = params['id'];
-
-            console.log("username", this._username);
         });
         this.onTimerEvent();
-
     }
 
     private onTimerEvent(): Subscription {
@@ -59,11 +56,11 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
                 this.minutes = counter.minutes;
                 this.seconds = counter.seconds;
 
-                console.log(this.minutes, this.seconds);
+                //console.log(this.minutes, this.seconds);
 
                 if (this.minutes === 0
                     && this.seconds === 0
-                    && this.playingUser === this._username) {
+                    && this.socketService.getCurrentPlayer() === this._username) {
                     let request = {
                         commandType: CommandType.PassCmd,
                         commandStatus: CommandStatus.Ok,
@@ -80,8 +77,6 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
             .subscribe((response: Array<string>) => {
                 if (response !== undefined && response !== null) {
                     // Temporary settings, we can use a manager to
-
-                    console.log("queue from server", response);
                     this.socketService.playersPriorityQueue = response;
                     this.playingUser = response[0];
                     this.nextPlayer = response[1];

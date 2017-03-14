@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ScrabbleLetter } from "../../models/letter/scrabble-letter";
-import { EaselControl } from "../../commons/easel-control";
+import { LetterHelper } from "../../commons/letter-helper";
 import { GameRoomManagerService } from "./game-room-manager.service";
 
 import { expect } from "chai";
@@ -17,7 +17,7 @@ describe("GameRoomManagerService should", () => {
     });
 
     it("reconize if the tab key has been pressed", () => {
-        let verification = service.isTabKey(EaselControl.tabKeyCode);
+        let verification = service.isTabKey(LetterHelper.tabKeyCode);
         expect(verification).to.be.true;
     });
 
@@ -27,7 +27,7 @@ describe("GameRoomManagerService should", () => {
     });
 
     it("reconize when the tab key has not been pressed", () => {
-        let verification = service.isTabKey(EaselControl.leftArrowKeyCode);
+        let verification = service.isTabKey(LetterHelper.leftArrowKeyCode);
         expect(verification).to.be.false;
     });
 });

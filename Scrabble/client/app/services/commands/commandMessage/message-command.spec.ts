@@ -2,8 +2,8 @@ import { NO_ERRORS_SCHEMA, } from "@angular/core";
 import { APP_BASE_HREF } from "@angular/common";
 import { RouterTestingModule, } from "@angular/router/testing";
 import { Router, ActivatedRoute } from "@angular/router";
-import { GameRoomModule } from '../../modules/game-room.module';
-import { GameStartModule } from '../../modules/game-start.module';
+import { GameRoomModule } from '../../../modules/game-room.module';
+import { GameStartModule } from '../../../modules/game-start.module';
 import {
     fakeAsync,
     inject,
@@ -14,21 +14,21 @@ import {
 
 import { expect, assert } from "chai";
 
-import { EaselComponent } from "../../components/easel.component";
-import { ChatroomComponent } from "../../components/chatroom.component";
-import { GameComponent } from "../../components/game-room.component";
-import { GameInitiationComponent } from "../../components/game-initiation.component";
-import { BoardComponent } from "../../components/board.component";
-import { ScrabbleLetter } from "../../models/letter/scrabble-letter";
-import { Alphabet } from "../../models/letter/alphabet";
-import { CommandStatus } from "./commons/command-status";
-import { CommandType } from "./commons/command-type";
-import { ICommandRequest } from "./commons/command-request";
-import { SocketEventType } from '../../commons/socket-eventType';
+import { EaselComponent } from "../../../components/easel.component";
+import { ChatroomComponent } from "../../../components/chatroom.component";
+import { GameComponent } from "../../../components/game-room.component";
+import { GameInitiationComponent } from "../../../components/game-initiation.component";
+import { BoardComponent } from "../../../components/board.component";
+import { ScrabbleLetter } from "../../../models/letter/scrabble-letter";
+import { Alphabet } from "../../../models/letter/alphabet";
+import { CommandStatus } from "../commons/command-status";
+import { CommandType } from "../commons/command-type";
+import { ICommandRequest } from "../commons/command-request";
+import { SocketEventType } from '../../../commons/socket-eventType';
 import { MessageCommand } from "./message-command";
 
-import { SocketService } from "../../services/socket-service";
-import { EaselManagerService } from "../easel/easel-manager.service";
+import { SocketService } from "../../socket-service";
+import { EaselManagerService } from "../../easel/easel-manager.service";
 
 import { Observable } from "rxjs/Observable"
 

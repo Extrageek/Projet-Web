@@ -10,7 +10,7 @@ import { CommandStatus } from "../services/commands/commons/command-status";
 import { CommandType } from "../services/commands/commons/command-type";
 
 import { IRoomMessage } from "../commons/messages/room-message.interface";
-import { EaselControl } from "../commons/easel-control";
+import { LetterHelper } from "../commons/letter-helper";
 import { SocketEventType } from "../commons/socket-eventType";
 
 import { EaselComponent } from "./easel.component";

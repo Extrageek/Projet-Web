@@ -4,6 +4,7 @@ import { Room } from "../../models/rooms/room";
 import { Player } from "../../models/players/player";
 import { CommandType } from "../commons/command-type";
 import { CommandStatus } from "../commons/command-status";
+import { IPlaceWordResponse } from "../commons/place-command-response.interface";
 import { ICommandMessage } from "../messages/commons/command-message.interface";
 import { IRoomMessage } from "../messages/commons/room-message.interface";
 import { MessageHandler } from "./message-handler";
@@ -11,6 +12,7 @@ import { MessageHandler } from "./message-handler";
 describe("MessageHandler", () => {
     let messageHandler: MessageHandler;
     let roomMessage: IRoomMessage;
+    let fakePlaceWorRequest: IPlaceWordResponse;
     let fakeRoom: Room;
     let fakeUsername = "mat";
     let fakeMessage = "a fake message to not send to a user";
@@ -31,6 +33,12 @@ describe("MessageHandler", () => {
             _roomId: fakeRoom.roomId,
             _numberOfMissingPlayers: fakeRoom.numberOfMissingPlayers(),
             _roomIsReady: fakeRoom.isFull(),
+        };
+
+        let fakePlaceWorRequest = {
+            _letters: fakeLetters,
+            _squarePosition: { row: "a", column: 3 },
+            _wordOrientation: 'h'
         };
     });
 
@@ -67,17 +75,17 @@ describe("MessageHandler", () => {
     });
 
     it("createPlaceWordResponse, Should throw Null argument exception if the username is null", () => {
-        let wrapper = () => messageHandler.createPlaceWordResponse(null, fakeRoom, CommandStatus.NotAllowed, fakeLetters);
+        let wrapper = () => messageHandler.createPlaceWordResponse(null, fakeRoom, CommandStatus.NotAllowed, fakePlaceWorRequest);
         expect(wrapper).throw(Error, "Null argument exception: the parameters cannot be null be null.");
     });
 
     it("createPlaceWordResponse, Should throw Null argument exception if the room is null", () => {
-        let wrapper = () => messageHandler.createPlaceWordResponse(fakeUsername, null, CommandStatus.NotAllowed, fakeLetters);
+        let wrapper = () => messageHandler.createPlaceWordResponse(fakeUsername, null, CommandStatus.NotAllowed, fakePlaceWorRequest);
         expect(wrapper).throw(Error, "Null argument exception: the parameters cannot be null be null.");
     });
 
     it("createPlaceWordResponse, Should throw Null argument exception if the CommandStatus is null", () => {
-        let wrapper = () => messageHandler.createPlaceWordResponse(fakeUsername, fakeRoom, null, fakeLetters);
+        let wrapper = () => messageHandler.createPlaceWordResponse(fakeUsername, fakeRoom, null, fakePlaceWorRequest);
         expect(wrapper).throw(Error, "Null argument exception: the parameters cannot be null be null.");
     });
 
@@ -87,7 +95,7 @@ describe("MessageHandler", () => {
     });
 
     it("createPlaceWordResponse, Should create valid message with ok response with the letters to place", () => {
-        let response = messageHandler.createPlaceWordResponse(fakeUsername, fakeRoom, CommandStatus.Ok, fakeLetters);
+        let response = messageHandler.createPlaceWordResponse(fakeUsername, fakeRoom, CommandStatus.Ok, fakePlaceWorRequest);
         let expectedMessage = `$: <!placer> ` + ' ' + `${fakeLetters.toString()}`;
 
         assert(response._username === fakeUsername);
@@ -100,7 +108,7 @@ describe("MessageHandler", () => {
     });
 
     it("createPlaceWordResponse, Should create valid message with NotAllowed response with the letters to place", () => {
-        let response = messageHandler.createPlaceWordResponse(fakeUsername, fakeRoom, CommandStatus.NotAllowed, fakeLetters);
+        let response = messageHandler.createPlaceWordResponse(fakeUsername, fakeRoom, CommandStatus.NotAllowed, fakePlaceWorRequest);
         let expectedMessage = `$: ${CommandStatus[CommandStatus.NotAllowed]} `
             + `<!placer> ` + ' ' + `${fakeLetters.toString()}`;
 

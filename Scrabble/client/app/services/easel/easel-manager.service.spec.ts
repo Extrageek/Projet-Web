@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { ScrabbleLetter } from "../../models/letter/scrabble-letter";
 import { Alphabet } from "../../models/letter/alphabet";
-import { EaselControl } from "../../commons/easel-control";
+import { LetterHelper } from "../../commons/letter-helper";
 import { EaselManagerService } from "./easel-manager.service";
 import { EaselComponent } from "../../components/easel.component";
 import { SocketService } from "../socket-service";
@@ -25,7 +25,7 @@ describe("EaselManagerService", () => {
     });
 
     it("reconize if the tab key has been pressed", () => {
-        let verification = service.isTabKey(EaselControl.tabKeyCode);
+        let verification = service.isTabKey(LetterHelper.tabKeyCode);
         expect(verification).to.be.true;
     });
 
@@ -35,22 +35,22 @@ describe("EaselManagerService", () => {
     });
 
     it("reconize when the tab key has not been pressed", () => {
-        let verification = service.isTabKey(EaselControl.leftArrowKeyCode);
+        let verification = service.isTabKey(LetterHelper.leftArrowKeyCode);
         expect(verification).to.be.false;
     });
 
     it("reconize if the leftArrowKey has been pressed as a direction key", () => {
-        let verification = service.isDirection(EaselControl.leftArrowKeyCode);
+        let verification = service.isDirection(LetterHelper.leftArrowKeyCode);
         expect(verification).to.be.true;
     });
 
     it("reconize if the rightArrowKey has been pressed as a direction key", () => {
-        let verification = service.isDirection(EaselControl.rightArrowKeyCode);
+        let verification = service.isDirection(LetterHelper.rightArrowKeyCode);
         expect(verification).to.be.true;
     });
 
     it("reconize if another key has been pressed as a direction key", () => {
-        let verification = service.isDirection(EaselControl.letterKKeyCode);
+        let verification = service.isDirection(LetterHelper.letterKKeyCode);
         expect(verification).to.be.false;
     });
 
@@ -66,15 +66,15 @@ describe("EaselManagerService", () => {
 
     it("reconize any letter as a scrabbleLetter", () => {
         let keyCode: number;
-        for (let index = EaselControl.letterAKeyCode; index >= EaselControl.letterZKeyCode; ++index) {
+        for (let index = LetterHelper.letterAKeyCode; index >= LetterHelper.letterZKeyCode; ++index) {
             keyCode = index;
             expect(() => service.isScrabbleLetter(index)).to.be.true;
         }
     });
 
     it("reconize another key to pretend to be a scrabbleLetter", () => {
-        let keyCodeAfterLetterZ = EaselControl.letterZKeyCode + 1;
-        let keyCodeBeforeLetterA = EaselControl.letterAKeyCode - 1;
+        let keyCodeAfterLetterZ = LetterHelper.letterZKeyCode + 1;
+        let keyCodeBeforeLetterA = LetterHelper.letterAKeyCode - 1;
         let verification = service.isScrabbleLetter(keyCodeBeforeLetterA);
         expect(verification).to.be.false;
         verification = service.isScrabbleLetter(keyCodeAfterLetterZ);
@@ -82,7 +82,7 @@ describe("EaselManagerService", () => {
     });
 
     it("throw an exception when a null easelLenght is used in onKeyEventUpdate", () => {
-        let verification = () => service.onKeyEventUpdateCurrentCursor(null, EaselControl.rightArrowKeyCode, 3);
+        let verification = () => service.onKeyEventUpdateCurrentCursor(null, LetterHelper.rightArrowKeyCode, 3);
         expect(verification).to.throw(Error);
     });
 
@@ -92,42 +92,42 @@ describe("EaselManagerService", () => {
     });
 
     it("reconize a new cursor when leftArrowKey is used in onKeyEventUpdate with first position", () => {
-        let verification = service.onKeyEventUpdateCurrentCursor(7, EaselControl.leftArrowKeyCode, MIN_POSITION_INDEX);
+        let verification = service.onKeyEventUpdateCurrentCursor(7, LetterHelper.leftArrowKeyCode, MIN_POSITION_INDEX);
         expect(verification).to.be.at.least(MIN_POSITION_INDEX - 1).and.at.most(MAX_POSITION_INDEX);
     });
 
     it("reconize a new cursor when rightArrowKey are used in onKeyEventUpdate  with first position", () => {
-        let verification = service.onKeyEventUpdateCurrentCursor(7, EaselControl.rightArrowKeyCode, MIN_POSITION_INDEX);
+        let verification = service.onKeyEventUpdateCurrentCursor(7, LetterHelper.rightArrowKeyCode, MIN_POSITION_INDEX);
         expect(verification).to.be.at.least(MIN_POSITION_INDEX - 1).and.at.most(MAX_POSITION_INDEX);
     });
 
     it("reconize a new cursor when the tab key is used in onKeyEventUpdate  with first position", () => {
-        let verification = service.onKeyEventUpdateCurrentCursor(7, EaselControl.tabKeyCode, MIN_POSITION_INDEX);
+        let verification = service.onKeyEventUpdateCurrentCursor(7, LetterHelper.tabKeyCode, MIN_POSITION_INDEX);
         expect(verification).to.be.at.least(MIN_POSITION_INDEX - 1).and.at.most(MAX_POSITION_INDEX);
     });
 
     it("put the cursor back to position 0 when other keys are used in onKeyEventUpdate  with first position", () => {
-        let verification = service.onKeyEventUpdateCurrentCursor(7, EaselControl.letterOKeyCode, MIN_POSITION_INDEX);
+        let verification = service.onKeyEventUpdateCurrentCursor(7, LetterHelper.letterOKeyCode, MIN_POSITION_INDEX);
         expect(verification).to.be.equal(0);
     });
 
     it("reconize a new cursor when leftArrowKey is used in onKeyEventUpdate with last position", () => {
-        let verification = service.onKeyEventUpdateCurrentCursor(7, EaselControl.leftArrowKeyCode, MAX_POSITION_INDEX);
+        let verification = service.onKeyEventUpdateCurrentCursor(7, LetterHelper.leftArrowKeyCode, MAX_POSITION_INDEX);
         expect(verification).to.be.at.least(MIN_POSITION_INDEX - 1).and.at.most(MAX_POSITION_INDEX);
     });
 
     it("reconize a new cursor when rightArrowKey are used in onKeyEventUpdate with last position", () => {
-        let verification = service.onKeyEventUpdateCurrentCursor(7, EaselControl.rightArrowKeyCode, MAX_POSITION_INDEX);
+        let verification = service.onKeyEventUpdateCurrentCursor(7, LetterHelper.rightArrowKeyCode, MAX_POSITION_INDEX);
         expect(verification).to.be.at.least(MIN_POSITION_INDEX - 1).and.at.most(MAX_POSITION_INDEX);
     });
 
     it("reconize a new cursor when the tab key is used in onKeyEventUpdate with last position", () => {
-        let verification = service.onKeyEventUpdateCurrentCursor(7, EaselControl.tabKeyCode, MAX_POSITION_INDEX);
+        let verification = service.onKeyEventUpdateCurrentCursor(7, LetterHelper.tabKeyCode, MAX_POSITION_INDEX);
         expect(verification).to.be.at.least(MIN_POSITION_INDEX - 1).and.at.most(MAX_POSITION_INDEX);
     });
 
     it("put the cursor back to position 0 when other keys are used in onKeyEventUpdate with last position", () => {
-        let verification = service.onKeyEventUpdateCurrentCursor(7, EaselControl.letterOKeyCode, MAX_POSITION_INDEX);
+        let verification = service.onKeyEventUpdateCurrentCursor(7, LetterHelper.letterOKeyCode, MAX_POSITION_INDEX);
         expect(verification).to.be.equal(0);
     });
 

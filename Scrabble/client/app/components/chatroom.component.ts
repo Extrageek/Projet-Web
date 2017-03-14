@@ -41,7 +41,6 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
 
     ngOnInit(): void {
         this._messageArray = new Array<IRoomMessage>();
-
         this.route.params.subscribe(params => {
             this._username = params['id'];
         });
@@ -50,17 +49,11 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
         this._onJoinedRoomSubscription = this.onJoinedRoom();
         this._onLeaveRoomSubscription = this.onLeaveRoom();
         this._onReceivedMessageSubscription = this.onReceivedMessage();
-        // this._onChangedLetterCommandSubscription = this.onChangedLetterCommand();
-        // this.onPlaceWordCommand();
-
         this._onCommandRequest = this.onCommandRequest();
     }
 
     ngOnDestroy() {
-        // unsubscribe to all the listening events
-        // this._onJoinedRoomSubscription.unsubscribe();
-        // this._onLeaveRoomSubscription.unsubscribe();
-        // this._onReceivedMessageSubscription.unsubscribe();
+        // Unsubscribe all the event listeners here
     }
 
     private onCommandRequest(): Subscription {
@@ -68,7 +61,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
             .subscribe((response: ICommandMessage<any>) => {
                 if (response !== undefined && response._message !== null) {
                     this._messageArray.push(response);
-                    console.log("CommandRequest Chatroom", response._data);
+                    console.log("CommandRequest Chatroom", response);
                 }
             });
     }

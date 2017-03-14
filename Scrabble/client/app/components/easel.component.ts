@@ -6,7 +6,7 @@ import { ScrabbleLetter } from "../models/letter/scrabble-letter";
 import { EaselManagerService } from "../services/easel/easel-manager.service";
 import { SocketService } from "../services/socket-service";
 
-import { EaselControl } from "../commons/easel-control";
+import { LetterHelper } from "../commons/letter-helper";
 import { CommandType } from "../services/commands/commons/command-type";
 import { SocketEventType } from "../commons/socket-eventType";
 import { IGameMessage } from "../commons/messages/game-message.interface";
@@ -143,13 +143,13 @@ export class EaselComponent implements OnInit, OnDestroy {
         let easelMaxIndex = this.letters.length - 1;
         let currentLetter = this.letters[currentInputIndex].letter;
 
-        if (keyCode === EaselControl.rightArrowKeyCode
+        if (keyCode === LetterHelper.rightArrowKeyCode
             && nextInputIndex === 0) {
             for (let index = easelMaxIndex; index > 0; --index) {
                 this.letters[index].letter = this.letters[index - 1].letter;
             }
 
-        } else if (keyCode === EaselControl.leftArrowKeyCode
+        } else if (keyCode === LetterHelper.leftArrowKeyCode
             && nextInputIndex === easelMaxIndex) {
             for (let index = 0; index < easelMaxIndex; ++index) {
                 this.letters[index].letter = this.letters[index + 1].letter;
