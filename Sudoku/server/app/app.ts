@@ -12,22 +12,12 @@ import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 
 import * as route from './routes';
+import { GridGenerationManager } from "./services/grid-generation.service";
+import { DatabaseManager } from "./database-management";
 
 export class Application {
 
     public app: express.Application;
-
-    /**
-     * Bootstrap the application.
-     *
-     * @class Server
-     * @method bootstrap
-     * @static
-     * @return {ng.auto.IInjectorService} Returns the newly created injector for this this.app.
-     */
-    public static bootstrap(): Application {
-        return new Application();
-    }
 
     /**
      * Constructor.
@@ -35,8 +25,7 @@ export class Application {
      * @class Server
      * @constructor
      */
-    constructor() {
-
+    constructor(gridGenerationManager: GridGenerationManager, databaseManager: DatabaseManager) {
         // Application instantiation
         this.app = express();
 
@@ -44,7 +33,7 @@ export class Application {
         this.config();
 
         //configure routes
-        this.routes();
+        this.routes(gridGenerationManager, databaseManager);
     }
 
     /**
@@ -68,7 +57,7 @@ export class Application {
      * @class Server
      * @method routes
      */
-    public routes() {
+    public routes(gridGenerationManager: GridGenerationManager, databaseManager: DatabaseManager) {
         let router: express.Router;
         router = express.Router();
 
@@ -82,18 +71,18 @@ export class Application {
         });
 
         //create routes
-        const routeManager: route.RouteManager = new route.RouteManager();
+        const routeManager: route.RouteManager = new route.RouteManager(gridGenerationManager, databaseManager);
 
         // REST - GET
-        router.get('/', routeManager.index.bind(routeManager.index));
-        router.get('/api/puzzle', routeManager.getNewPuzzle.bind(routeManager.getNewPuzzle));
-        router.get('/api/top-records', routeManager.getTopRecords.bind(routeManager.getTopRecords));
+        router.get('/', routeManager.index.bind(routeManager));
+        router.get('/api/:difficulty', routeManager.getNewPuzzle.bind(routeManager));
+        router.get('/api/top-records', routeManager.getTopRecords.bind(routeManager));
 
         // REST - POST
-        router.post('/api/login', routeManager.addUser.bind(routeManager.addUser));
-        router.post('/api/logout', routeManager.removeUser.bind(routeManager.removeUser));
-        router.post('/api/game-over', routeManager.saveGameRecord.bind(routeManager.saveGameRecord));
-        router.post('/api/grid-validation', routeManager.validateGrid.bind(routeManager.validateGrid));
+        router.post('/api/login', routeManager.addUser.bind(routeManager));
+        router.post('/api/logout', routeManager.removeUser.bind(routeManager));
+        router.post('/api/game-over', routeManager.saveGameRecord.bind(routeManager));
+        router.post('/api/grid-validation', routeManager.validateGrid.bind(routeManager));
 
         this.app.use(router);
 

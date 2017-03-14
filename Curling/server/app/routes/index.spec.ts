@@ -8,27 +8,33 @@ describe("A Route Manager should ", () => {
         //  expect(route.addUser(user);).to.equal(true);
         //route.addUser({username: "rami"};
         //expect()).to.equal(expectedId);
-        //done();
+        done();
     });
     it("prevent to play with an invalid username", done => {
         done();
     });
+
     it("react to an error to a username", done => {
-        //
+        done();
     });
+
     it("get all records with succes", done => {
-        //
+        done();
     });
+
     it("react to an error when getting records", done => {
-        //
+        done();
     });
+
     it("allow to save a game correctly", done => {
-        //
+        done();
     });
+
     it("prevent to quit without saving correctly", done => {
-        //
+        done();
     });
+
     it("react to an error when saving", done => {
-        //
+        done();
     });
 });

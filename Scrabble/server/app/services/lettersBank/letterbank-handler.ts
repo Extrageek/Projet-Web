@@ -20,9 +20,9 @@ export class LetterBankHandler {
         this._bank = new LetterBank();
     }
 
-    public initializeEasel(): Array<Letter> {
+    public initializeEasel(): Array<string> {
         let newEasel = this.getLetterFromBank(FULL_EASEL);
-        return newEasel;
+        return this.parseFromListOfLetterToListOfString(newEasel);
     }
 
     public exchangeLetters(lettersToBeChanged: Array<string>): Array<string> {
@@ -48,13 +48,14 @@ export class LetterBankHandler {
 
         for (let index = 0; index < numberOfLetters; index++) {
             randomNumber = this.getRandomLetter();
-            console.log("final Number", randomNumber);
+            // console.log("final Number", randomNumber);
             randomLetter = this.bank.bank[randomNumber];
             if (this._bank.letterIsAvailable(randomLetter)) {
                 chosenLetter = this.bank.getLetterFromBank(randomLetter);
                 newEasel.push(chosenLetter);
             } else {
-                index--;
+                // Check of this is necessary, we can stay in an infinite loop here
+                --index;
             }
         }
         return newEasel;
@@ -68,7 +69,7 @@ export class LetterBankHandler {
 
     private getRandomLetter(): number {
         let randomNumber = (Math.random() * (1 - Math.random()) / (1 - Math.random()));
-        console.log("randomNumber: ", randomNumber);
+        // console.log("randomNumber: ", randomNumber);
         let offset = MAX_LETTER_POSITION - MIN_LETTER_POSITION;
         return Math.floor((randomNumber * offset) % offset + MIN_LETTER_POSITION);
     }

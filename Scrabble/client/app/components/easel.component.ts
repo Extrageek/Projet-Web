@@ -1,14 +1,18 @@
 import { Component, OnInit, OnDestroy, EventEmitter, Input, Output } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 
 import { ScrabbleLetter } from "../models/letter/scrabble-letter";
 import { EaselManagerService } from "../services/easel/easel-manager.service";
-import { EaselControl } from "../commons/easel-control";
 import { SocketService } from "../services/socket-service";
-import { CommandType } from "../services/commands/command-type";
+
+import { LetterHelper } from "../commons/letter-helper";
+import { CommandType } from "../services/commands/commons/command-type";
 import { SocketEventType } from "../commons/socket-eventType";
-import { IGameMessage } from "../commons/messages/game-message-interface";
-import { ICommandMessage } from "../commons/messages/command-message";
+import { IGameMessage } from "../commons/messages/game-message.interface";
+import { ICommandMessage } from "../commons/messages/command-message.interface";
+import { ICommandRequest } from "../services/commands/commons/command-request";
+import { CommandStatus } from "../services/commands/commons/command-status";
 
 declare var jQuery: any;
 
@@ -31,7 +35,8 @@ export class EaselComponent implements OnInit, OnDestroy {
     private _letters: Array<ScrabbleLetter>;
     private _indexOflettersToExchange: Array<number>;
     private _keyEventKeyCode: string;
-    private _exchangeLetter: Subscription;
+    private _exchangeLetterSubcription: Subscription;
+    private _initializeEaselSubscription: Subscription;
 
     public get indexOfLettersToChange(): Array<number> {
         return this._indexOflettersToExchange;
@@ -62,49 +67,48 @@ export class EaselComponent implements OnInit, OnDestroy {
 
     constructor(
         private easelEventManagerService: EaselManagerService,
-        private socketService: SocketService) {
-
-        this._letters = new Array<ScrabbleLetter>();
+        private socketService: SocketService,
+        private activatedRoute: ActivatedRoute) {
         this._indexOflettersToExchange = new Array<number>();
-
-        // TODO: Check with RAMI, We should generate the letters from the server
-        let fakeLetters = ['A', 'E', 'M', 'N', 'U', 'A', 'A'];
-        fakeLetters.forEach((letter) => {
-            this.letters.push(new ScrabbleLetter(letter));
-        });
+        this._letters = new Array<ScrabbleLetter>();
     }
 
     ngOnInit() {
-        this.socketService.subscribeToChannelEvent(SocketEventType.changeLettersRequest)
-            .subscribe((lettersResponse: any) => {
+        this._exchangeLetterSubcription = this.onExchangeLetterRequest();
+        this._initializeEaselSubscription = this.initializeEaselOnConnection();
+    }
 
-                console.log("iii", lettersResponse._data);
+    ngOnDestroy() {
+        //this._exchangeLetterSubmission.unsubscribe();
+    }
 
-                for (let index = 0; index < this._indexOflettersToExchange.length; ++index) {
-                    console.log("in easel", this._indexOflettersToExchange[index]);
-
-                    this.letters[this._indexOflettersToExchange[index]] =
-                        new ScrabbleLetter(lettersResponse._data[index]);
-                    console.log(this.letters);
-                }
+    private initializeEaselOnConnection(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.initializeEasel)
+            .subscribe((initialsLetters: Array<string>) => {
+                this._letters = new Array<ScrabbleLetter>();
+                initialsLetters.forEach((letter) => {
+                    this.letters.push(new ScrabbleLetter(letter));
+                });
             });
     }
 
+    private onExchangeLetterRequest(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.changeLettersRequest)
+            .subscribe((response: any) => {
 
+                // TODO: Find another way, like using a session to handle the user info
+                this.activatedRoute.params.subscribe(params => {
+                    if (params['id'] === response._username) {
+                        for (let index = 0; index < this._indexOflettersToExchange.length; ++index) {
+                            console.log("in easel", this._indexOflettersToExchange[index]);
 
-    // onChangedLetterCommand(): Subscription {
-    //     return this.socketService.subscribeToChannelEvent(SocketEventType.changeLettersRequest)
-    //         .subscribe((response: ICommandMessage<Array<string>>) => {
-    //             if (response !== undefined && response._message !== null) {
-    //                 this._messageArray.push(response);
-    //                 console.log("Changed letters a work ", response._message);
-    //             }
-    //         });
-    //}
-
-
-    ngOnDestroy() {
-        //this._exchangeLetter.unsubscribe();
+                            this.letters[this._indexOflettersToExchange[index]] =
+                                new ScrabbleLetter(response._data[0][index]);
+                            console.log(this.letters);
+                        }
+                    }
+                });
+            });
     }
 
     public onKeyDownEventHandler(
@@ -141,13 +145,13 @@ export class EaselComponent implements OnInit, OnDestroy {
         let easelMaxIndex = this.letters.length - 1;
         let currentLetter = this.letters[currentInputIndex].letter;
 
-        if (keyCode === EaselControl.rightArrowKeyCode
+        if (keyCode === LetterHelper.rightArrowKeyCode
             && nextInputIndex === 0) {
             for (let index = easelMaxIndex; index > 0; --index) {
                 this.letters[index].letter = this.letters[index - 1].letter;
             }
 
-        } else if (keyCode === EaselControl.leftArrowKeyCode
+        } else if (keyCode === LetterHelper.leftArrowKeyCode
             && nextInputIndex === easelMaxIndex) {
             for (let index = 0; index < easelMaxIndex; ++index) {
                 this.letters[index].letter = this.letters[index + 1].letter;
@@ -204,5 +208,19 @@ export class EaselComponent implements OnInit, OnDestroy {
 
         let firstLetterIndex = 0;
         this.easelEventManagerService.setFocusToElementWithGivenIndex(this.letters.length, firstLetterIndex);
+    }
+
+    public changeLetters(commandRequest: ICommandRequest<
+        { indexOfLettersToChange: Array<number>, lettersToChange: Array<string> }>) {
+        this.indexOfLettersToChange = commandRequest._response.indexOfLettersToChange;
+        let listOfLettersToChange = commandRequest._response.lettersToChange;
+
+        let outputRequest = {
+            commandType: CommandType.ExchangeCmd,
+            commandStatus: commandRequest._commandStatus,
+            data: listOfLettersToChange
+        };
+
+        this.socketService.emitMessage(SocketEventType.changeLettersRequest, outputRequest);
     }
 }

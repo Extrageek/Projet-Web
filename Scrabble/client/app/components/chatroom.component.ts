@@ -4,9 +4,10 @@ import { Subscription } from "rxjs/Subscription";
 import { Route, ActivatedRoute } from "@angular/router";
 import { SocketService } from "../services/socket-service";
 import { SocketEventType } from "../commons/socket-eventType";
-import { IGameMessage } from "../commons/messages/game-message-interface";
-import { IRoomMessage } from "../commons/messages/room-message";
-import { ICommandMessage } from "../commons/messages/command-message";
+import { IGameMessage } from "../commons/messages/game-message.interface";
+import { IRoomMessage } from "../commons/messages/room-message.interface";
+import { ICommandMessage } from "../commons/messages/command-message.interface";
+import { CommandType } from '../services/commands/commons/command-type';
 
 @Component({
     moduleId: module.id,
@@ -40,7 +41,6 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
 
     ngOnInit(): void {
         this._messageArray = new Array<IRoomMessage>();
-
         this.route.params.subscribe(params => {
             this._username = params['id'];
         });
@@ -49,39 +49,19 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
         this._onJoinedRoomSubscription = this.onJoinedRoom();
         this._onLeaveRoomSubscription = this.onLeaveRoom();
         this._onReceivedMessageSubscription = this.onReceivedMessage();
-
-        // this._onPlaceWordSubscription = this.onCommandRequest();
-        this._onChangedLetterCommandSubscription = this.onChangedLetterCommand();
-        // this._onPassCommandSubscription = this.onPassCommand();
-
         this._onCommandRequest = this.onCommandRequest();
-        // this._onNotAllowedCommandSubscription = this.onNotAllowedCommand();
-        // this._onInvalidCommandSubscription = this.onInvalidCommand();
     }
 
     ngOnDestroy() {
-        // unsubscribe to all the listening events
-        // this._onJoinedRoomSubscription.unsubscribe();
-        // this._onLeaveRoomSubscription.unsubscribe();
-        // this._onReceivedMessageSubscription.unsubscribe();
+        // Unsubscribe all the event listeners here
     }
 
-    onCommandRequest(): Subscription {
+    private onCommandRequest(): Subscription {
         return this.socketService.subscribeToChannelEvent(SocketEventType.commandRequest)
             .subscribe((response: ICommandMessage<any>) => {
                 if (response !== undefined && response._message !== null) {
                     this._messageArray.push(response);
-                    console.log("CommandRequest Chatroom", response._message);
-                }
-            });
-    }
-
-    onChangedLetterCommand(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.changeLettersRequest)
-            .subscribe((response: ICommandMessage<Array<string>>) => {
-                if (response !== undefined && response._message !== null) {
-                    this._messageArray.push(response);
-                    console.log("Changed letters ", response._message);
+                    console.log("CommandRequest Chatroom", response);
                 }
             });
     }
@@ -98,7 +78,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
     }
 
     // A callback when the player leave a room
-    public onLeaveRoom(): Subscription {
+    private onLeaveRoom(): Subscription {
         return this.socketService.subscribeToChannelEvent(SocketEventType.leaveRoom)
             .subscribe((response: IRoomMessage) => {
                 if (response !== undefined && response._message !== null) {
@@ -117,6 +97,18 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
                     console.log("Chat room: ", response.message, response.date);
                 }
             });
+    }
+
+    public sendMessage(request: {
+        commandType: CommandType,
+        message: string
+    }) {
+
+        if (request.commandType === null
+            || request.message == null) {
+            throw new Error("Null argument error: the parameters cannot be null");
+        }
+        this.socketService.emitMessage(SocketEventType.message, request);
     }
 
     // Use to add a scroller to the chatroom

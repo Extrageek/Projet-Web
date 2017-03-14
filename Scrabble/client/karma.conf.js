@@ -1,17 +1,17 @@
-module.exports = function(config) {
+module.exports = function (config) {
 
-  var appBase    = 'out/';      // transpiled app JS and map files
+  var appBase = 'out/';      // transpiled app JS and map files
   var appSrcBase = 'app/';      // app source TS files
-  var appAssets  = 'base/app/'; // component assets fetched by Angular's compiler
+  var appAssets = 'base/app/'; // component assets fetched by Angular's compiler
 
   var assetsBase = 'assets/';
   // Important : the forward slash is mandatory in this case
-  var modelAssets  = '/base/assets/models/'; // Where our models will be located (karma proxy)
-  var fontAssets  = '/base/assets/fonts/'; // Where our fonts will be located (karma proxy)
-  var htmlAssets  = '/base/assets/html/'; // Where our fonts will be located (karma proxy)
+  var modelAssets = '/base/assets/models/'; // Where our models will be located (karma proxy)
+  var fontAssets = '/base/assets/fonts/'; // Where our fonts will be located (karma proxy)
+  var htmlAssets = '/base/assets/html/'; // Where our fonts will be located (karma proxy)
 
   // Testing helpers (optional) are conventionally in a folder called `testing`
-  var testingBase    = 'testing/'; // transpiled test JS and map files
+  var testingBase = 'testing/'; // transpiled test JS and map files
   var testingSrcBase = 'testing/'; // test source TS files
 
   config.set({
@@ -19,12 +19,12 @@ module.exports = function(config) {
     frameworks: ['mocha', 'chai'],
 
     plugins: [
-        require('karma-mocha'),
-        require('karma-mocha-reporter'),
-        require('karma-chai'),
-        require('karma-firefox-launcher'),
-        require('karma-chrome-launcher'),
-        require('karma-coverage')
+      require('karma-mocha'),
+      require('karma-mocha-reporter'),
+      require('karma-chai'),
+      require('karma-firefox-launcher'),
+      require('karma-chrome-launcher'),
+      require('karma-coverage')
     ],
 
     client: {
@@ -50,7 +50,7 @@ module.exports = function(config) {
       'node_modules/reflect-metadata/Reflect.js',
       //'node_modules/phantomjs-polyfill/bind-polyfill.js',
 
-	// Jquery
+      // Jquery
       'https://code.jquery.com/jquery-1.11.2.min.js',
       // zone.js
       'node_modules/zone.js/dist/zone.js',
@@ -67,17 +67,17 @@ module.exports = function(config) {
 
       // Everything that is in our local folder assets will be served by our server
       // see proxy section that will rewrite.
-      {pattern: assetsBase + 'models/**/*.json',watched:false, included: false, served:true},
-      {pattern: assetsBase + 'fonts/*.json',watched:false, included: false, served:true},
-      {pattern: assetsBase + 'images/*.*',watched:false, included: false, served:true},
-      {pattern: assetsBase + 'templates/*.html',watched:false, included: false, served:true},
+      { pattern: assetsBase + 'models/**/*.json', watched: false, included: false, served: true },
+      { pattern: assetsBase + 'fonts/*.json', watched: false, included: false, served: true },
+      { pattern: assetsBase + 'images/*.*', watched: false, included: false, served: true },
+      { pattern: assetsBase + 'templates/*.html', watched: false, included: false, served: true },
+      { pattern: assetsBase + 'stylesheets/*.css', watched: false, included: false, served: true },
 
-	    // RxJs
+      // RxJs
       { pattern: 'node_modules/rxjs/**/*.js', included: false, watched: false },
       { pattern: 'node_modules/rxjs/**/*.js.map', included: false, watched: false },
-
-
-            //socketIO
+      
+      //socketIO
       { pattern: 'node_modules/socket.io-client/**/*.js', included: false, watched: false },
       { pattern: 'node_modules/socket.io-client/**/*.js.map', included: false, watched: false },
 
@@ -101,14 +101,14 @@ module.exports = function(config) {
       { pattern: appSrcBase + '**/*.css', included: false, watched: true },
 
       // The CSS files that will be copied by gulp are in the output folder
-        { pattern: appBase + '**/*.css', included: false, watched: true },
-        { pattern: appBase + '**/*.html', included: false, watched: true },
+      { pattern: appBase + '**/*.css', included: false, watched: true },
+      { pattern: appBase + '**/*.html', included: false, watched: true },
 
-        // Paths for debugging with source maps in dev tools
+      // Paths for debugging with source maps in dev tools
       { pattern: appSrcBase + '**/*.ts', included: false, watched: false },
       { pattern: appBase + '**/*.js.map', included: false, watched: false },
       { pattern: testingSrcBase + '**/*.ts', included: false, watched: false },
-      { pattern: testingBase + '**/*.js.map', included: false, watched: false}
+      { pattern: testingBase + '**/*.js.map', included: false, watched: false }
     ],
 
     // Change if appBase changes
@@ -126,20 +126,20 @@ module.exports = function(config) {
     exclude: [],
     // Change if appBase changes
     preprocessors: {
-        'out/**/!(*spec).js': ['coverage']
+      'out/**/!(*spec).js': ['coverage']
     },
-    
-    reporters: ['mocha','coverage'],
+
+    reporters: ['mocha', 'coverage'],
 
     mochaReporter: {
       maxLogLines: -1
     },
-    
+
     coverageReporter: {
-        includeAllSources: true,
-        reporters:[
-            {type: 'html', subdir: '.', file: 'coverage-final.html'}
-        ]
+      includeAllSources: true,
+      reporters: [
+        { type: 'html', subdir: '.', file: 'coverage-final.html' }
+      ]
     },
 
     port: 9876,

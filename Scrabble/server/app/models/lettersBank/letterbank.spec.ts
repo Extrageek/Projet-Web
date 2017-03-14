@@ -1,10 +1,10 @@
 import { Alphabet } from "./alphabet";
-import { AlphabetPoint } from "../../commons/alphabet-point";
-import { AlphabetQuantity } from "../../commons/alphabet-quantity";
+import { AlphabetPoint } from "./commons/alphabet-point";
+import { AlphabetQuantity } from "./commons/alphabet-quantity";
 import { Letter } from "./letter";
 import { LetterBank } from "./letterbank";
 
-import { expect } from "chai";
+import { expect, assert } from "chai";
 
 let _letterBank: LetterBank;
 
@@ -49,5 +49,16 @@ describe("LetterBank should", () => {
         _fakeBank.push(new Letter(Alphabet.letterY, AlphabetPoint.letterY, AlphabetQuantity.letterY));
         _fakeBank.push(new Letter(Alphabet.letterZ, AlphabetPoint.letterZ, AlphabetQuantity.letterZ));
         expect(_letterBank.bank).to.be.deep.equals(_fakeBank);
+    });
+
+    it("should not find a letter from the bank", () => {
+        // Since the letter Y has 1 as a quantity, we cannot find 2 instances of a Letter in the bank
+        // I found a bug 
+        // The Letterbank try to exchange and send null letters, and decrement even if the quantity is 0.
+        // This must be fixed to return the same letter in this case
+        let letterY = new Letter(Alphabet.letterY, AlphabetPoint.letterY, AlphabetQuantity.letterY);
+
+        let letterYFromBank1 = _letterBank.getLetterFromBank(letterY);
+        assert(_letterBank.letterIsAvailable(null) === false);
     });
 });

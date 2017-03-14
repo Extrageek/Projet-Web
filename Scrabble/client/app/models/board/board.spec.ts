@@ -12,8 +12,8 @@ describe("Board object should", () => {
     });
 
     it("construct a board correctly", () => {
-        expect(_board.board).to.have.lengthOf(15);
-        expect(_board.board[0]).to.have.lengthOf(15);
+        expect(_board.squares).to.have.lengthOf(15);
+        expect(_board.squares[0]).to.have.lengthOf(15);
     });
 
     it("get the board correctly", () => {

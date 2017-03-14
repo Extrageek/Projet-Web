@@ -20,26 +20,26 @@ export class SocketEventType {
 
     // A joined room event.
     static joinRoom = "joinedRoom";
-
     // A joined room event.
     static leaveRoom = "leaveRoom";
-
     // A ready state event for a room.
     static roomReady = "roomReady";
-
     static message = "message";
 
     static playerLeftRoom = "playerLeftRoom";
 
+    static initializeEasel = "initializeEasel";
+    static updatePlayersQueue = "updatePlayersQueue";
+
     //Message sent by the server if the name already exists
     static usernameAlreadyExist = "usernameAlreadyExist";
+    static commandRequest = "commandRequest";
+    static invalidCommandRequest = "invalidCommand";
+
+    static timerEvent = "timerEvent";
 
     static changeLettersRequest = "!changer";
     static placeWordCommandRequest = "!place";
-    // static passCommandRequest = "!passer";
+    static passCommandRequest = "!passer";
 
-    static commandRequest = "commandRequest";
-    // static syntaxErrorRequest = "synthaxeError";
-    // static invalidCommandRequest = "invalidCommand";
-    // static notAllowedCommandRequest = "notAllowedCommand";
 }

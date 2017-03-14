@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { SocketService } from "../services/socket-service";
 import { SocketEventType } from "../commons/socket-eventType";
-import { IRoomMessage } from "../commons/messages/room-message";
+import { IRoomMessage } from "../commons/messages/room-message.interface";
 
 @Component({
     moduleId: module.id,
@@ -55,6 +55,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
             .subscribe((roomMessage: IRoomMessage) => {
                 console.log("Joined the room", roomMessage);
                 if (roomMessage._roomIsReady) {
+                    this.socketService.emitMessage(SocketEventType.initializeEasel, this._username);
                     this.router.navigate(["/game-room", this._username]);
                 } else {
                     alert("waiting for a missing member before starting the game");
@@ -104,12 +105,5 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
         this.socketService.emitMessage(
             SocketEventType.newGameRequest,
             { 'username': username, 'gameType': Number(numberOfPlayers) });
-    }
-
-    public waitingForMissingMember(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.connectError)
-            .subscribe((error) => {
-                alert("Waiting for missing member: The server is not reachable");
-            });
     }
 }

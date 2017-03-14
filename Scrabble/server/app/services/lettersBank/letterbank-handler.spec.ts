@@ -1,6 +1,6 @@
 import { Alphabet } from "../../models/lettersBank/alphabet";
-import { AlphabetPoint } from "../../commons/alphabet-point";
-import { AlphabetQuantity } from "../../commons/alphabet-quantity";
+import { AlphabetPoint } from "../../models/lettersBank/commons/alphabet-point";
+import { AlphabetQuantity } from "../../models/lettersBank/commons/alphabet-quantity";
 import { Letter } from "../../models/lettersBank/letter";
 import { LetterBank } from "../../models/lettersBank/letterbank";
 import { LetterBankHandler } from "./letterbank-handler";
@@ -76,9 +76,15 @@ describe("BankLetterHandler should", () => {
 
     it("get the number of letters in bank correctly", () => {
         expect(_bankHandler.getNumberOfLettersInBank()).to.be.equal(102);
-        let fakeEasel = new Array<Letter>();
+        let fakeEasel = new Array<string>();
         fakeEasel = _bankHandler.initializeEasel();
         expect(_bankHandler.getNumberOfLettersInBank()).to.be.equal(95);
+    });
+
+    it("should not be able to return letter from the bank", () => {
+        expect(_bankHandler.getNumberOfLettersInBank()).to.be.equal(102);
+        // let fakeEasel = _bankHandler.getLetterFromBank(103);
+        // expect(fakeEasel).to.be.null;
     });
 
     it("not parse null arrays of letters and throw an erro", () => {

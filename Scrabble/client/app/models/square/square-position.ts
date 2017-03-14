@@ -2,23 +2,23 @@ import { BoardRows } from "../board/board-rows";
 import { BoardColumn } from "../board/board-column";
 
 export class SquarePosition {
-    private _row: BoardRows;
-    public get row(): BoardRows {
+    private _row: string;
+    public get row(): string {
         return this._row;
     }
-    public set row(row: BoardRows) {
+    public set row(row: string) {
         this._row = row;
     }
 
-    private _column: BoardColumn;
-    public get column(): BoardColumn {
+    private _column: number;
+    public get column(): number {
         return this._column;
     }
-    public set column(column: BoardColumn) {
+    public set column(column: number) {
         this._column = column;
     }
 
-    constructor(row: BoardRows, column: BoardColumn) {
+    constructor(row: string, column: number) {
         this.row = row;
         this.column = column;
     }

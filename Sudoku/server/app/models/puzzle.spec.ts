@@ -175,6 +175,48 @@ describe("Puzzle should", () => {
     });
 
     // Puzzle operations
+    it("copy himself with the constructor", () => {
+        let puzzleCopy = new Puzzle(puzzle);
+        expect(puzzleCopy, "should contain same values").to.be.deep.equal(puzzle);
+        puzzleCopy.setPuzzleTileValue(3, 3, 3);
+        expect(puzzleCopy.getPuzzleTileValue(3, 3)).to.not.equal(puzzle.getPuzzleTileValue(3, 3));
+    });
+
+    it("have setters and getters working properly", () => {
+        expect(puzzle.setPuzzleTileValue.bind(puzzle, -1, 1, 7)
+            , "Puzzle setter tile value should throw exception with invalid row.").to.throw(RangeError);
+        expect(puzzle.setPuzzleTileValue.bind(puzzle, 1, -1, 7)
+            , "Puzzle setter tile value should throw exception with invalid column.").to.throw(RangeError);
+        expect(puzzle.setPuzzleTileValue.bind(puzzle, 1, 1, 0)
+            , "Puzzle setter tile value should throw exception with invalid value.").to.throw(RangeError);
+        expect(puzzle.setPuzzleTileValue.bind(puzzle, 1, 1, 6), "Puzzle setter tile value should accept the value")
+            .to.not.throw(RangeError);
+
+        expect(puzzle.setPuzzleTileVisibility.bind(puzzle, -1, 1, true)
+            , "Puzzle setter tile visibility should throw exception with invalid row.").to.throw(RangeError);
+        expect(puzzle.setPuzzleTileVisibility.bind(puzzle, 1, -1, true)
+            , "Puzzle setter tile visibility should throw exception with invalid column.").to.throw(RangeError);
+        expect(puzzle.setPuzzleTileVisibility.bind(puzzle, 1, 1, null)
+            , "Puzzle setter tile visibility should throw exception with invalid value.").to.throw(RangeError);
+        expect(puzzle.setPuzzleTileVisibility.bind(puzzle, 1, 1, true)
+            , "Puzzle setter tile visibility should accept the value").to.not.throw(RangeError);
+
+        expect(puzzle.getPuzzleTileValue.bind(puzzle, -1, 1)
+            , "Puzzle getter tile value should throw exception with invalid row.").to.throw(RangeError);
+        expect(puzzle.getPuzzleTileValue.bind(puzzle, 1, -1)
+            , "Puzzle getter tile value should throw exception with invalid column.").to.throw(RangeError);
+        expect(puzzle.getPuzzleTileValue(1, 1)
+            , "Puzzle getter tile value should give the value entered by the setter.").to.be.equal(6);
+
+        expect(puzzle.getPuzzleTileVisibility.bind(puzzle, -1, 1)
+            , "Puzzle getter tile visibility should throw exception with invalid row.").to.throw(RangeError);
+        expect(puzzle.getPuzzleTileVisibility.bind(puzzle, 1, -1)
+            , "Puzzle setter tile visibility should throw exception with invalid column.").to.throw(RangeError);
+        expect(puzzle.getPuzzleTileVisibility(1, 1)
+            , "Puzzle getter tile visibility should give the value entered by the setter.").to.be.equal(true);
+    });
+
+
     it("swap column 0 with 1", () => {
         puzzle._puzzle = [
             [
@@ -290,5 +332,18 @@ describe("Puzzle should", () => {
                 expect(puzzle._puzzle[row][column].isHidden).to.equal(true);
             }
         }
+    });
+
+    it("have the right number of holes", () => {
+        expect(puzzle.getNumberOfHoles(), "Initial puzzle should have 0 holes.").to.be.equal(0);
+        puzzle.setPuzzleTileVisibility(4, 5, true);
+        expect(puzzle.getNumberOfHoles(), "Puzzle should have 1 hole.").to.be.equal(1);
+        puzzle.setPuzzleTileVisibility(4, 5, false);
+        puzzle.setPuzzleTileVisibility(6, 6, true);
+        expect(puzzle.getNumberOfHoles(), "Puzzle should still have 1 hole.").to.be.equal(1);
+        puzzle.hideAllItemsInRange(Puzzle.MIN_ROW_INDEX, Puzzle.MAX_ROW_INDEX
+            , Puzzle.MIN_COLUMN_INDEX, Puzzle.MAX_COLUMN_INDEX);
+        expect(puzzle.getNumberOfHoles(), "Puzzle should have the maximum number of holes")
+            .to.be.equal((Puzzle.MAX_ROW_INDEX + 1) * (Puzzle.MAX_COLUMN_INDEX + 1));
     });
 });

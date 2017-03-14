@@ -44,7 +44,7 @@ export class RestApiProxyService {
      * TODO: Must be checked if we need to convert to an object.
      */
     public getNewPuzzle(difficulty: Difficulty): Observable<Puzzle> {
-        return this.http.get(this._urlApi + "puzzle?difficulty=" + difficulty)
+        return this.http.get(this._urlApi + difficulty)
             .map(this.retrieveDataFromHttpResponse)
             .catch((error: Error) => {
                 throw error;

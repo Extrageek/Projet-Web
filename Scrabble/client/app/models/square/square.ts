@@ -19,17 +19,26 @@ export class Square {
         this._position = position;
     }
 
-    private _type : SquareType;
-    public get type() : SquareType {
+    private _type: SquareType;
+    public get type(): SquareType {
         return this._type;
     }
-    public set type(type : SquareType) {
+    public set type(type: SquareType) {
         this._type = type;
     }
 
+    private _isBusy: boolean;
+    public get isBusy(): boolean {
+        return this._isBusy;
+    }
+    public set isBusy(v: boolean) {
+        this._isBusy = v;
+    }
+
     constructor(position: SquarePosition, type: SquareType) {
-        this.letter = null;
+        this.letter = new ScrabbleLetter("");
         this.position = position;
         this.type = type;
+        this.isBusy = false;
     }
 }

@@ -1,161 +1,385 @@
-// import { expect, assert } from "chai";
-// import * as http from "http";
-// import * as ioClient from "socket.io-client";
-// let io = require('socket.io-client');
+import { expect, assert } from "chai";
+import * as http from "http";
+let ioClient = require('socket.io-client');
 
-// import { SocketConnectionHandler } from "./socket-connection-handler";
-// import { SocketEventType } from "../../commons/socket-eventType";
+import { SocketConnectionHandler } from "./socket-connection-handler";
+import { RoomHandler } from "../rooms/room-handler";
+import { SocketEventType } from "./socket-eventType";
+import { CommandType } from "../commons/command-type";
+import { CommandStatus } from "../commons/command-status";
+import { IRoomMessage } from "../messages/commons/room-message.interface";
+import { ICommandMessage } from "../messages/commons/command-message.interface";
 
-// const fakePortNumber = 5000;
-// const fakeServerUrl = "http://0.0.0.0:" + `${fakePortNumber}`;
-// let httpServer: http.Server;
+const fakePortNumber = 8080;
+const fakeServerUrl = "http://127.0.0.1:" + `${fakePortNumber}`;
+let httpServer: http.Server;
 
-// let chai = require('chai'),
-//     mocha = require('mocha'),
-//     should = chai.should();
+let chai = require('chai'),
+    mocha = require('mocha'),
+    sinon = require('sinon'),
+    should = chai.should();
 
-// let socketHandler: SocketConnectionHandler;
-// let clientConnection1: SocketIOClient.Socket;
-// let clientConnection2: SocketIOClient.Socket;
-// let options = {
-//     transports: ['websocket'],
-//     forceNew: true
-// };
+let socketHandler: SocketConnectionHandler;
+let client1: SocketIO.Socket;
+let client2: SocketIO.Socket;
 
-
-// let userCounter = 0;
-// const playerName1 = "Marie";
-// const playerName2 = "Helene";
-// class RoomMessage {
-//     username: string;
-//     roomId: string;
-//     numberOfMissingPlayers: number;
-//     roomIsReady: boolean;
-//     message: string;
-// }
-
-// describe("SocketConnectionHandler, should create a socket connection handler", () => {
-//     before(() => {
-//         httpServer = http.createServer();
-//         httpServer.listen(fakePortNumber);
-//         //new SocketConnectionHandler(httpServer);
-//     });
-
-//     after(() => {
-//         httpServer.close();
-//         httpServer = null;
-//     });
-
-//     it("should create socketHandler", () => {
-//         socketHandler = new SocketConnectionHandler(httpServer);
-//         expect(socketHandler).to.be.instanceof(SocketConnectionHandler);
-//     });
-//     it("should not create socketHandler", () => {
-//         expect(SocketConnectionHandler.bind(null)).to.throw(Error);
-//     });
-
-//     it("SocketConnectionHandler, should add a player and emit a message to player", (done) => {
-//         clientConnection1 = ioClient(fakeServerUrl, options);
-
-//         clientConnection1.once(SocketEventType.connect, function () {
-//             clientConnection1.emit(SocketEventType.newGameRequest, { username: playerName1, gameType: 2 });
-//         });
-
-//         clientConnection1.once(SocketEventType.joinRoom, function (roomMessage: RoomMessage) {
-//             //console.log("test 1 join", roomMessage);
-//             roomMessage.message.should.equal(`${playerName1}` + ` joined the room`);
-//             // clientConnection1.disconnect();
-//             // clientConnection1.close();
-//         });
-
-//         done();
-
-//     });
-
-//     describe("test", () => {
-
-//         it("SocketConnectionHandler, should add 2 players in the same room", () => {
-
-//             //clientConnection1.removeAllListeners();
-//             //clientConnection1.disconnect();
-//             clientConnection1 = ioClient(fakeServerUrl, options);
-
-//             // When the user 1 is connected
-//             clientConnection1.once(SocketEventType.connect, function () {
-
-//                 // Create a second user
-//                 clientConnection2 = ioClient(fakeServerUrl, options);
-
-//                 // When the user 2 is connected
-//                 clientConnection2.once(SocketEventType.connect, function () {
-//                     clientConnection2.emit(SocketEventType.newGameRequest, { username: playerName2, gameType: 2 });
-//                     //clientConnection1.emit(SocketEventType.newGameRequest, {
-//                     //username: playerName1 + "2", gameType: 2 });
-
-//                 });
-//                 // Add a listener for the second user when he joined the room
-//                 clientConnection2.once(SocketEventType.joinRoom, function (roomMessage: RoomMessage) {
-//                     // console.log("test 1 join", roomMessage);
-//                     roomMessage.message.should.equal(`${playerName1}` + `2 joined the room`);
-//                 });
-
-//                 // Add a listener for the second user when he joined the room
-//                 clientConnection2.once(SocketEventType.joinRoom, function (roomMessage: RoomMessage) {
-//                     //console.log("test 2 join", roomMessage);
-//                     roomMessage.message.should.equal(`${playerName2}` + ` joined the room`);
-//                 });
-
-//                 assert(socketHandler._roomHandler._rooms.length === 1, "Expect 1 Room");
-//                 // assert(socketHandler._roomHandler._rooms[0].players.length == 2, "Expect 2 players");
-//             });
-//         });
-//     });
-// });
+let options = {
+    transports: ['websocket'],
+    forceNew: true
+};
 
 
-// // describe("messages received by the client", () => {
-// //     const INVALID_NAME = "The server said that the name is not valid.";
-// //     const NAME_ALREADY_EXISTS = "The server said that the name alreadyExists.";
-// //     const INVALID_DEMAND = "The server said that the demand is not valid";
-// //     const NO_ERROR = "The server returned the number of missing players";
+let userCounter = 0;
+const playerName1 = "Marie";
+const playerName2 = "Helene";
+class RoomMessage {
+    username: string;
+    roomId: string;
+    numberOfMissingPlayers: number;
+    roomIsReady: boolean;
+    message: string;
+}
 
-// //     const doNothing = () => { /*Nothing to do*/ };
-// //     const throwError = (errorMessage: string): Function => { return () => { throw new Error(errorMessage); }; };
-// //     const makeTestDone = (done: MochaDone): Function => { return () => { done(); }; };
+describe("SocketConnectionHandler, should create a socket connection handler", () => {
+    before(function (done) {
+        httpServer = http.createServer();
+        httpServer.listen(fakePortNumber);
+        socketHandler = new SocketConnectionHandler(httpServer);
 
-// //     const playerName1 = "Marie";
-// //     const playerName2 = "Helene";
+        done();
+    });
 
-// //     let socketHandler: SocketConnectionHandler;
-// //     let clientConnection1: SocketIOClient.Socket;
-// //     let clientConnection2: SocketIOClient.Socket;
+    // beforeEach(function (done) {
+    //     client1 = ioClient.connect(fakeServerUrl, options);
+    //     client2 = ioClient.connect(fakeServerUrl, options);
+    //     done();
+    // });
 
-// //     before(() => {
-// //         httpServer = http.createServer();
-// //         httpServer.listen(fakePortNumber);
-// //         socketHandler = new SocketConnectionHandler(httpServer);
-// //     });
-// //     after(() => {
-// //         httpServer.close();
-// //         httpServer = null;
-// //     });
-// //     beforeEach((done) => {
-// //         clientConnection1 = ioClient(fakeServerUrl);
-// //         done();
-// //     });
-// //     afterEach(() => {
-// //         clientConnection1.close();
-// //     });
+    // after(function (done) {
+    //     httpServer.close();
+    //     httpServer = null;
+    //     done();
+    // });
 
-// //     // TODO: To be completed
-// //     it("should accept new game demand and respond", done => {
-// //         let roomJoinedMessage = `${playerName1}` + ` join the room`;
-// //         let missingMembers = 1;
+    it("SocketConnectionHandler, should throw a null argument paramater error", () => {
+        let wrapper = () => new SocketConnectionHandler(null);
+        expect(wrapper).to.throw(Error, "Invalid server parameter.");
+    });
 
-// //         it("should accept new game demand", done => {
-// //             clientConnection1.emit(SocketEventType.newGameRequest, { name: playerName1, gameType: 2 });
-// //         });
+    it("should not create socketHandler", () => {
+        expect(SocketConnectionHandler.bind(null)).to.throw(Error);
+    });
 
-// //         done();
-// //     });
-// // });
+    it("should have a valid RoomHandler", () => {
+        expect(socketHandler.roomHandler).to.not.be.undefined;
+    });
+
+    it("SocketConnectionHandler, should not accept a new game request with null parameter", function (done) {
+        client1 = ioClient.connect(fakeServerUrl, options);
+        client1.once("connect", function () {
+            client1.emit(SocketEventType.newGameRequest, null);
+        });
+
+        done();
+    });
+
+    it("SocketConnectionHandler, should add 2 players and emit a joined room message to them", function (done) {
+        client1 = ioClient.connect(fakeServerUrl, options);
+
+        client1.once("connect", function () {
+            client1.on(SocketEventType.joinRoom, function (response: any) {
+                // console.log("Joined", response);
+                expect(response).to.not.be.null;
+            });
+            client1.emit(SocketEventType.newGameRequest, { username: "44424bb", gameType: 2 });
+        });
+
+        client2 = ioClient.connect(fakeServerUrl, options);
+        client2.once("connect", function () {
+            client2.on(SocketEventType.joinRoom, function (response: any) {
+                // console.log("Joined", response);
+                expect(response).to.not.be.null;
+            });
+            client2.emit(SocketEventType.newGameRequest, { username: "q1q1q11", gameType: 2 });
+
+        });
+
+        done();
+    });
+
+    it("SocketConnectionHandler, should add 1 player but must refused a duplicated username for the second", function (done) {
+        let client1 = ioClient.connect(fakeServerUrl, options);
+
+        client1.once("connect", function () {
+            client1.emit(SocketEventType.newGameRequest, { username: "3ee3e3e", gameType: 2 });
+        });
+
+        let client2 = ioClient.connect(fakeServerUrl, options);
+        client2.once("connect", function () {
+            client2.on(SocketEventType.usernameAlreadyExist, function (response: any) {
+                // console.log("Joined", response);
+                expect(response).to.not.be.null;
+            });
+            client2.emit(SocketEventType.newGameRequest, { username: "3ee3e3e", gameType: 2 });
+
+        });
+
+        done();
+    });
+
+    it("SocketConnectionHandler, should accept 2 players and send a message to a room", function (done) {
+        client1 = ioClient.connect(fakeServerUrl, options);
+
+        client1.once("connect", function () {
+            client1.emit(SocketEventType.newGameRequest, { username: "dwdwdd", gameType: 2 });
+        });
+
+        let client2 = ioClient.connect(fakeServerUrl, options);
+        client2.once("connect", function () {
+            client2.on(SocketEventType.message, function (response: any) {
+                // console.log("Joined", response);
+                expect(response).to.not.be.null;
+            });
+            client2.emit(SocketEventType.newGameRequest, { username: "rfrgrg", gameType: 2 });
+            client2.emit(SocketEventType.message, { commandType: CommandType, message: "fake message" });
+
+        });
+
+        done();
+    });
+
+    it("SocketConnectionHandler, should accept and send an ExchangeLetter command", function (done) {
+        client1 = ioClient.connect(fakeServerUrl, options);
+
+        client1.once("connect", function () {
+            client1.emit(SocketEventType.newGameRequest, { username: "dewdadad", gameType: 2 });
+        });
+
+        let client2 = ioClient.connect(fakeServerUrl, options);
+        client2.once("connect", function () {
+            client2.on(SocketEventType.changeLettersRequest, function (response: any) {
+                // console.log("Joined", response);
+                expect(response).to.not.be.null;
+            });
+
+            let listOfLettersToChange = ['A', 'B', 'C'];
+            let fakeRequest = {
+                commandType: CommandType.ExchangeCmd,
+                commandStatus: CommandStatus.Ok,
+                data: listOfLettersToChange
+            };
+            client2.emit(SocketEventType.newGameRequest, { username: "8u8i9ij", gameType: 2 });
+            client2.emit(SocketEventType.changeLettersRequest, fakeRequest);
+
+        });
+
+        done();
+    });
+
+    it("SocketConnectionHandler, should not accept an ExchangeLetter command request with invalid status", function (done) {
+        client1 = ioClient.connect(fakeServerUrl, options);
+
+        client1.once("connect", function () {
+            client1.emit(SocketEventType.newGameRequest, { username: "0owwww", gameType: 2 });
+        });
+
+        let client2 = ioClient.connect(fakeServerUrl, options);
+        client2.once("connect", function () {
+            client2.on(SocketEventType.changeLettersRequest, function (response: any) {
+                // console.log("Joined", response);
+                expect(response).to.not.be.null;
+            });
+
+            let listOfLettersToChange = ['A', 'B', 'C'];
+            let fakeRequest = {
+                commandType: CommandType.ExchangeCmd,
+                commandStatus: CommandStatus.Invalid,
+                data: listOfLettersToChange
+            };
+
+            client2.emit(SocketEventType.newGameRequest, { username: "ii0iooi", gameType: 2 });
+            client2.emit(SocketEventType.changeLettersRequest, fakeRequest);
+
+        });
+
+        done();
+    });
+
+    it("SocketConnectionHandler, should accept a request for PlaceWord command", function (done) {
+        client1 = ioClient.connect(fakeServerUrl, options);
+
+        client1.once("connect", function () {
+            client1.emit(SocketEventType.newGameRequest, { username: "gtgdgdg", gameType: 2 });
+        });
+
+        let client2 = ioClient.connect(fakeServerUrl, options);
+        client2.once("connect", function () {
+            client2.on(SocketEventType.placeWordCommandRequest, function (response: any) {
+                // console.log("Joined", response);
+                expect(response).to.not.be.null;
+            });
+
+            let letterToPlace = ['A', 'B', 'C'];
+            let request = {
+                commandType: CommandType.PlaceCmd,
+                commandStatus: CommandStatus.Ok,
+                data: letterToPlace
+            };
+
+            client2.emit(SocketEventType.newGameRequest, { username: "234csaa", gameType: 2 });
+            client2.emit(SocketEventType.placeWordCommandRequest, request);
+
+        });
+
+        done();
+    });
+
+    it("SocketConnectionHandler, should accept a request for PassCmd command", function (done) {
+        client1 = ioClient.connect(fakeServerUrl, options);
+
+        client1.once("connect", function () {
+            client1.emit(SocketEventType.newGameRequest, { username: "h6hdhdhdh6", gameType: 2 });
+        });
+
+        let client2 = ioClient.connect(fakeServerUrl, options);
+        client2.once("connect", function () {
+            client2.on(SocketEventType.commandRequest, function (response: any) {
+                // console.log("Joined", response);
+                expect(response).to.not.be.null;
+            });
+
+            let request = {
+                commandType: CommandType.PassCmd,
+                commandStatus: CommandStatus.Ok,
+                data: ""
+            };
+
+            client2.emit(SocketEventType.newGameRequest, { username: "ad09aadd", gameType: 2 });
+            client2.emit(SocketEventType.passCommandRequest, request);
+
+        });
+
+        done();
+    });
+
+    it("SocketConnectionHandler, should accept and resend an invalid command", function (done) {
+        client1 = ioClient.connect(fakeServerUrl, options);
+
+        client1.once("connect", function () {
+            client1.emit(SocketEventType.newGameRequest, { username: playerName1, gameType: 2 });
+        });
+
+        let client2 = ioClient.connect(fakeServerUrl, options);
+        client2.once("connect", function () {
+            client2.on(SocketEventType.commandRequest, function (response: any) {
+                // console.log("Joined", response);
+                expect(response).to.not.be.null;
+            });
+
+            let request = {
+                commandType: CommandType.InvalidCmd,
+                commandStatus: CommandStatus.Ok,
+                data: ""
+            };
+
+            client2.emit(SocketEventType.newGameRequest, { username: "vvvxv", gameType: 2 });
+            client2.emit(SocketEventType.invalidCommandRequest, request);
+
+        });
+
+        done();
+    });
+
+    it("SocketConnectionHandler, should not accept a initializeEasel request with null username", function (done) {
+
+        let client2 = ioClient.connect(fakeServerUrl, options);
+        client2.once("connect", function () {
+            let request = {
+                commandType: CommandType.InvalidCmd,
+                commandStatus: CommandStatus.Ok,
+                data: ""
+            };
+            client2.emit(SocketEventType.initializeEasel, null);
+        });
+
+        done();
+    });
+
+    it("SocketConnectionHandler, should accept an initializeEasel command request", function (done) {
+        client1 = ioClient.connect(fakeServerUrl, options);
+
+        client1.once("connect", function () {
+            client1.emit(SocketEventType.newGameRequest, { username: playerName1, gameType: 2 });
+        });
+
+        let client2 = ioClient.connect(fakeServerUrl, options);
+        client2.once("connect", function () {
+            client2.on(SocketEventType.initializeEasel, function (response: any) {
+                // console.log("Joined", response);
+                expect(response).to.not.be.null;
+            });
+
+            let request = {
+                commandType: CommandType.InvalidCmd,
+                commandStatus: CommandStatus.Ok,
+                data: ""
+            };
+
+            client2.emit(SocketEventType.newGameRequest, { username: "mhgmfd", gameType: 2 });
+            client2.emit(SocketEventType.initializeEasel, playerName1);
+        });
+
+        done();
+    });
+
+    it("SocketConnectionHandler, should recognize a user disconnection", function (done) {
+        client1 = ioClient.connect(fakeServerUrl, options);
+
+        client1.once("connect", function () {
+            client1.emit(SocketEventType.newGameRequest, { username: "vd3435d", gameType: 2 });
+            client1.disconnect();;
+            done();
+        });
+    });
+
+    it("SocketConnectionHandler, should recognize a user disconnection and send a message to the members", function (done) {
+        client1 = ioClient.connect(fakeServerUrl, options);
+
+        client1.once("connect", function () {
+            client1.emit(SocketEventType.newGameRequest, { username: "252004", gameType: 2 });
+            client1.on(SocketEventType.leaveRoom, () => { });
+
+            let client2 = ioClient.connect(fakeServerUrl, options);
+            client2.once("connect", function () {
+                client2.emit(SocketEventType.newGameRequest, { username: "77543f", gameType: 2 });
+                client2.disconnect();
+            });
+
+            done();
+        });
+    });
+
+    it("SocketConnectionHandler, should recognize a last user disconnection and remove the room", function (done) {
+        client1 = ioClient.connect(fakeServerUrl, options);
+
+        client1.once("connect", function () {
+            client1.emit(SocketEventType.newGameRequest, { username: "vf44fff", gameType: 2 });
+
+            client2 = ioClient.connect(fakeServerUrl, options);
+            client2.once("connect", function () {
+                client2.emit(SocketEventType.newGameRequest, { username: "0000073", gameType: 2 });
+                client2.disconnect();
+            });
+
+            client1.disconnect();
+            done();
+        });
+    });
+
+    it("SocketConnectionHandler, should recognize a last user disconnection and remove the room", function (done) {
+        httpServer.close();
+        client1.disconnect();
+        client2.disconnect();
+        done();
+    });
+});

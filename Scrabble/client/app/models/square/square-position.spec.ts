@@ -4,13 +4,13 @@ import { BoardColumn } from "../board/board-column";
 
 import { expect } from "chai";
 
-let _row: BoardRows;
+let _row: string;
 let _column: BoardColumn;
 let _position: SquarePosition;
 
 describe("SquarePosition object should", () => {
     beforeEach(() => {
-        _row = BoardRows.A;
+        _row = BoardRows[BoardRows.A];
         _column = BoardColumn.FIRST_COLUMN;
         _position = new SquarePosition(_row, _column);
     });
@@ -27,7 +27,7 @@ describe("SquarePosition object should", () => {
         expect(_position.row).to.be.equal(_row);
     });
     it("set the row index correctly", () => {
-        _row = BoardRows.B;
+        _row = BoardRows[BoardRows.B];
         _position.row = _row;
         expect(_position.row).to.be.equal(_row);
     });

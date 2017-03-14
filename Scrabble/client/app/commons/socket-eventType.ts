@@ -31,13 +31,15 @@ export class SocketEventType {
 
     //Message sent by the server if the name already exists
     static usernameAlreadyExist = "usernameAlreadyExist";
+    static initializeEasel = "initializeEasel";
 
+    static updatePlayersQueue = "updatePlayersQueue";
     static changeLettersRequest = "!changer";
     static placeWordCommandRequest = "!place";
-    // static passCommandRequest = "!passer";
+    static passCommandRequest = "!passer";
+
+    static timerEvent = "timerEvent";
 
     static commandRequest = "commandRequest";
-    // static syntaxErrorRequest = "synthaxeError";
-    // static invalidCommandRequest = "invalidCommand";
-    // static notAllowedCommandRequest = "notAllowedCommand";
+    static invalidCommandRequest = "invalidCommand";
 }

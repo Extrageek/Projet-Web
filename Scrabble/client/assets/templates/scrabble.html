@@ -2,9 +2,15 @@
     <div class="table-responsive">
         <table class="table">
             <tbody>
-                <tr class="grid" *ngFor="let row of scrabbleGrid?.board , let i = index" [attr.id]="'gridRowId' + i">
-                    <td class="imageContainer" *ngFor="let square of row, let j = index" [attr.id]="'squareId' + i + '' + j">
-                        <img class="cell" src="../../assets/images/{{ square._type }}.jpg" alt="../../assets/images/{{ square._type }}">
+                <tr class="grid">
+                    <td class="imageContainer zeroIndex"> </td>
+                    <td class="imageContainer colIndex" *ngFor="let col of board?.squares[0] let i = index"> {{i+1}} </td>
+                </tr>
+                <tr class="grid" *ngFor="let row of board?.squares , let i = index" [attr.id]="'gridRowId' + i">
+                    <td class="imageContainer rowIndex"> {{row[0].position.row}}</td>
+                    <td class="imageContainer" *ngFor="let square of row, let j = index" 
+                    [attr.id]="square.position.row + '' + square.position.column"
+                    [ngStyle]="{'background-image': 'url('+ '../../assets/images/' + square._type + '.jpg' +')'}">
                     </td>
                 </tr>
             </tbody>

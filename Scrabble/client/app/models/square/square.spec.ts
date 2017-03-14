@@ -14,7 +14,7 @@ let _type: SquareType;
 
 describe("Square object should", () => {
     beforeEach(() => {
-        _position = new SquarePosition(BoardRows.H, BoardColumn.EIGHT_COLUMN);
+        _position = new SquarePosition(BoardRows[BoardRows.H], BoardColumn.EIGHT_COLUMN);
         _type = SquareType.star;
         _square = new Square(_position, _type);
     });
@@ -40,7 +40,7 @@ describe("Square object should", () => {
         expect(_square.position).to.be.equal(_position);
     });
     it("set the position of a square corectly", () => {
-        _position = new SquarePosition(BoardRows.B, BoardColumn.SECOND_COLUMN);
+        _position = new SquarePosition(BoardRows[BoardRows.B], BoardColumn.SECOND_COLUMN);
         _square.position = _position;
         expect(_square.position).to.be.equal(_position);
     });
