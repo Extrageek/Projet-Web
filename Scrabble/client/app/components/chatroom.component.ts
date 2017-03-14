@@ -119,8 +119,6 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
             });
     }
 
-
-
     // Use to add a scroller to the chatroom
     private scrollToBottom() {
         try {

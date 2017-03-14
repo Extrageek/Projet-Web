@@ -36,6 +36,7 @@ export class EaselComponent implements OnInit, OnDestroy {
     public get indexOfLettersToChange(): Array<number> {
         return this._indexOflettersToExchange;
     }
+
     public set indexOfLettersToChange(v: Array<number>) {
         this._indexOflettersToExchange = v;
     }
@@ -43,6 +44,7 @@ export class EaselComponent implements OnInit, OnDestroy {
     public get letters(): Array<ScrabbleLetter> {
         return this._letters;
     }
+
     public set letters(letters: Array<ScrabbleLetter>) {
         this._letters = letters;
     }
