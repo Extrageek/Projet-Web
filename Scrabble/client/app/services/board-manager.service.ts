@@ -3,7 +3,7 @@ declare var jQuery: any;
 
 import { EaselManagerService } from "../services/easel/easel-manager.service";
 import { CommandsHelper } from "../services/commands/commons/commands-helper";
-import { LetterHelper } from "../commons/letter-helper"
+import { LetterHelper } from "../commons/letter-helper";
 import { ExceptionHelperService } from "../services/helpers/exception-helper.service";
 
 import { Board } from '../models/board/board';
@@ -79,14 +79,17 @@ export class BoardManagerService {
 
             if (!currentSquare.isBusy) {
                 let position = [INPUT_ID_PREFIX, firstRowIndex, nextColumnIndex].join('');
-                let imageSource = [BACKGROUND_URL_PREFIX, scrabbleLetters[index].imageSource, BACKGROUND_URL_SUFFIX].join('');
+                let imageSource = [BACKGROUND_URL_PREFIX,
+                    scrabbleLetters[index].imageSource,
+                    BACKGROUND_URL_SUFFIX].join('');
+
                 jQuery(position).css(CSS_BACKGROUND_IMAGE, imageSource);
                 this._board.squares[rowLetterToRowNumber][nextColumnIndex].isBusy = true;
 
             } else {
                 if (currentSquare.letter.letter !== ""
                     && currentSquare.letter.letter !== scrabbleLetters[index].letter) {
-                    return false
+                    return false;
                 }
             }
         }

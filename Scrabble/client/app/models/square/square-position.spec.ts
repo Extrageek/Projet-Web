@@ -20,23 +20,23 @@ describe("SquarePosition object should", () => {
     });
 
     it("construct a square position correctly", () => {
-        expect(_position._row).to.be.equal(_row);
-        expect(_position._column).to.be.equal(_column);
+        expect(_position.row).to.be.equal(_row);
+        expect(_position.column).to.be.equal(_column);
     });
     it("get the row index correctly", () => {
-        expect(_position._row).to.be.equal(_row);
+        expect(_position.row).to.be.equal(_row);
     });
     it("set the row index correctly", () => {
         _row = BoardRows[BoardRows.B];
-        _position._row = _row;
-        expect(_position._row).to.be.equal(_row);
+        _position.row = _row;
+        expect(_position.row).to.be.equal(_row);
     });
     it("get the column index correctly", () => {
-        expect(_position._column).to.be.equal(_column);
+        expect(_position.column).to.be.equal(_column);
     });
     it("set the column index correctly", () => {
         _column = BoardColumn.SECOND_COLUMN;
-        _position._column = _column;
-        expect(_position._column).to.be.equal(_column);
+        _position.column = _column;
+        expect(_position.column).to.be.equal(_column);
     });
 });
