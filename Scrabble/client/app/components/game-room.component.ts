@@ -63,7 +63,7 @@ export class GameComponent implements OnInit, OnDestroy {
         });
 
         // TODO: unsubscribe all the event in the ngOnDestroy
-        this.socketService.subscribeToChannelEvent(SocketEventType.connectError)
+        this.socketService.subscribeToChannelEvent(SocketEventType.CONNECT_ERROR)
             .subscribe(this.onConnectionError);
     }
 
@@ -100,7 +100,7 @@ export class GameComponent implements OnInit, OnDestroy {
             let message = `Veuillez attendre votre tour après ${currentPlayerName} pour pouvoir jouer`;
 
             // Ask if it's necessary to send this to the server, I'm not sure we can just push it to the chatroom
-            this.socketService.emitMessage(SocketEventType.invalidCommandRequest,
+            this.socketService.emitMessage(SocketEventType.INVALID_COMMAND_REQUEST,
                 {
                     commandType: CommandType.InvalidCmd,
                     commandStatus: CommandStatus.NotAllowed,
@@ -157,12 +157,12 @@ export class GameComponent implements OnInit, OnDestroy {
         commandStatus: CommandStatus,
         data: string
     }) {
-        this.socketService.emitMessage(SocketEventType.passCommandRequest, request);
+        this.socketService.emitMessage(SocketEventType.PASS_COMMAND_REQUEST, request);
     }
 
     public executeInvalidCommand() {
         console.log("Custom message: Invalid");
-        this.socketService.emitMessage(SocketEventType.invalidCommandRequest,
+        this.socketService.emitMessage(SocketEventType.INVALID_COMMAND_REQUEST,
             {
                 commandType: CommandType.InvalidCmd,
                 commandStatus: CommandStatus.Invalid,

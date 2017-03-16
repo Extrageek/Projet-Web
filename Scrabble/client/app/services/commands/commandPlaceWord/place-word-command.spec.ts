@@ -28,7 +28,7 @@ import { PlaceWordCommand } from "./place-word-command";
 import { SocketService } from "../../../services/socket-service";
 import { EaselManagerService } from "../../easel/easel-manager.service";
 
-import { Observable } from "rxjs/Observable"
+import { Observable } from "rxjs/Observable";
 
 describe("PlaceWordCommand", function () {
 
@@ -56,13 +56,13 @@ describe("PlaceWordCommand", function () {
     beforeEach(() => {
         fixtureEasel = TestBed.createComponent(EaselComponent);
         easelComponent = fixtureEasel.componentInstance;
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.letterA));
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.letterB));
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.letterC));
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.letterD));
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.letterE));
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.letterF));
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.blank));
+        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_A));
+        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_B));
+        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_C));
+        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_D));
+        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_E));
+        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_F));
+        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_BLANK));
 
         fixtureBoard = TestBed.createComponent(BoardComponent);
         boardComponent = fixtureBoard.componentInstance;
@@ -85,119 +85,119 @@ describe("PlaceWordCommand", function () {
     });
 
     it("PlaceWordCommand should initialize the command correctly", () => {
-        let placeWordCommand = new PlaceWordCommand(easelComponent, boardComponent, "abcd");
-        expect(placeWordCommand.commandRequest._commandStatus === CommandStatus.Unknown);
-        expect(placeWordCommand.commandRequest._commandType === CommandType.PlaceCmd);
-        expect(placeWordCommand.commandRequest._response).instanceOf(Array);
-        expect(placeWordCommand.parameters === "abcd");
+        let placeAWordCommand = new PlaceWordCommand(easelComponent, boardComponent, "abcd");
+        expect(placeAWordCommand.commandRequest._commandStatus === CommandStatus.Unknown);
+        expect(placeAWordCommand.commandRequest._commandType === CommandType.PlaceCmd);
+        expect(placeAWordCommand.commandRequest._response).instanceOf(Array);
+        expect(placeAWordCommand.parameters === "abcd");
     });
 
     it("should not validate a wrong letter when writing a word request", () => {
         let lettersInEasel = new Array<ScrabbleLetter>();
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterA));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterB));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.blank));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_A));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_B));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_BLANK));
         easelComponent.letters = lettersInEasel;
 
         let request = "a4v .._@.";
-        let placeWordCommand = new PlaceWordCommand(easelComponent, boardComponent, request);
-        let verification = placeWordCommand.createPlaceWordRequest(lettersInEasel);
+        let placeAWordCommand = new PlaceWordCommand(easelComponent, boardComponent, request);
+        let verification = placeAWordCommand.createPlaceWordRequest(lettersInEasel);
         expect(verification._commandStatus).to.be.equal(CommandStatus.SynthaxeError);
     });
 
     it("should not validate a empty letter when writing a word request", () => {
         let lettersInEasel = new Array<ScrabbleLetter>();
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterA));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterB));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.blank));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_A));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_B));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_BLANK));
         easelComponent.letters = lettersInEasel;
 
         let request = "a4v   ";
-        let placeWordCommand = new PlaceWordCommand(easelComponent, boardComponent, request);
-        let verification = placeWordCommand.createPlaceWordRequest(lettersInEasel);
+        let placeAWordCommand = new PlaceWordCommand(easelComponent, boardComponent, request);
+        let verification = placeAWordCommand.createPlaceWordRequest(lettersInEasel);
         expect(verification._commandStatus).to.be.equal(CommandStatus.SynthaxeError);
     });
 
     it("should not validate a wrong position when writing a word request", () => {
         let lettersInEasel = new Array<ScrabbleLetter>();
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterA));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterB));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.blank))
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_A));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_B));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_BLANK));
         easelComponent.letters = lettersInEasel;
 
         let request = "a34v ab";
-        let placeWordCommand = new PlaceWordCommand(easelComponent, boardComponent, request);
+        let placeAWordCommand = new PlaceWordCommand(easelComponent, boardComponent, request);
 
-        let verification = placeWordCommand.createPlaceWordRequest(lettersInEasel);
+        let verification = placeAWordCommand.createPlaceWordRequest(lettersInEasel);
         expect(verification._commandStatus).to.be.equal(CommandStatus.SynthaxeError);
     });
 
     it("should not validate a wrong position when writing a word request", () => {
         let lettersInEasel = new Array<ScrabbleLetter>();
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterA));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterB));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.blank));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_A));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_B));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_BLANK));
         easelComponent.letters = lettersInEasel;
 
         let request = "a0v ab";
-        let placeWordCommand = new PlaceWordCommand(easelComponent, boardComponent, request);
+        let placeAWordCommand = new PlaceWordCommand(easelComponent, boardComponent, request);
 
-        let verification = placeWordCommand.createPlaceWordRequest(lettersInEasel);
+        let verification = placeAWordCommand.createPlaceWordRequest(lettersInEasel);
         expect(verification._commandStatus).to.be.equal(CommandStatus.SynthaxeError);
     });
 
     it("should not validate a wrong position <0 when writing a word request", () => {
         let lettersInEasel = new Array<ScrabbleLetter>();
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterA));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterB));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.blank));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_A));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_B));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_BLANK));
         easelComponent.letters = lettersInEasel;
 
         let request = "a-3v ab";
-        let placeWordCommand = new PlaceWordCommand(easelComponent, boardComponent, request);
+        let placeAWordCommand = new PlaceWordCommand(easelComponent, boardComponent, request);
 
-        let verification = placeWordCommand.createPlaceWordRequest(lettersInEasel);
+        let verification = placeAWordCommand.createPlaceWordRequest(lettersInEasel);
         expect(verification._commandStatus).to.be.equal(CommandStatus.SynthaxeError);
     });
 
     it("should not validate a wrong position >15 when writing a word request", () => {
         let lettersInEasel = new Array<ScrabbleLetter>();
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterA));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterB));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.blank));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_A));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_B));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_BLANK));
         easelComponent.letters = lettersInEasel;
 
         let request = "a20v ab";
-        let placeWordCommand = new PlaceWordCommand(easelComponent, boardComponent, request);
+        let placeAWordCommand = new PlaceWordCommand(easelComponent, boardComponent, request);
 
-        let verification = placeWordCommand.createPlaceWordRequest(lettersInEasel);
+        let verification = placeAWordCommand.createPlaceWordRequest(lettersInEasel);
         expect(verification._commandStatus).to.be.equal(CommandStatus.SynthaxeError);
     });
 
     it("should not validate a wrong position when writing a word request", () => {
         let lettersInEasel = new Array<ScrabbleLetter>();
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterA));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterB));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.blank));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_A));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_B));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_BLANK));
         easelComponent.letters = lettersInEasel;
 
         let request = "a.v ab";
-        let placeWordCommand = new PlaceWordCommand(easelComponent, boardComponent, request);
-        let verification = placeWordCommand.createPlaceWordRequest(lettersInEasel);
+        let placeAWordCommand = new PlaceWordCommand(easelComponent, boardComponent, request);
+        let verification = placeAWordCommand.createPlaceWordRequest(lettersInEasel);
         expect(verification._commandStatus).to.be.equal(CommandStatus.SynthaxeError);
     });
 
 
     it("should not find the entered word in the easel", () => {
         let lettersInEasel = new Array<ScrabbleLetter>();
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterA));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterB));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.blank));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_A));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_B));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_BLANK));
         easelComponent.letters = lettersInEasel;
 
         let request = "a4v axxxb";
-        let placeWordCommand = new PlaceWordCommand(easelComponent, boardComponent, request);
-        let verification = placeWordCommand.createPlaceWordRequest(lettersInEasel);
+        let placeAWordCommand = new PlaceWordCommand(easelComponent, boardComponent, request);
+        let verification = placeAWordCommand.createPlaceWordRequest(lettersInEasel);
 
         console.log(verification._commandStatus);
         expect(verification._commandStatus).to.be.equal(CommandStatus.NotAllowed);
@@ -205,17 +205,17 @@ describe("PlaceWordCommand", function () {
 
     it("should create the request without error", () => {
         let lettersInEasel = new Array<ScrabbleLetter>();
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterA));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterB));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterC));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterD));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterE));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.blank));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_A));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_B));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_C));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_D));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_E));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_BLANK));
         easelComponent.letters = lettersInEasel;
 
         let request = "a4v ab*d";
-        let placeWordCommand = new PlaceWordCommand(easelComponent, boardComponent, request);
-        let verification = placeWordCommand.createPlaceWordRequest(lettersInEasel);
+        let placeAWordCommand = new PlaceWordCommand(easelComponent, boardComponent, request);
+        let verification = placeAWordCommand.createPlaceWordRequest(lettersInEasel);
 
         console.log("---", verification);
         expect(verification._commandStatus).to.be.equal(CommandStatus.Ok);
@@ -225,15 +225,15 @@ describe("PlaceWordCommand", function () {
 
     it("should execute the command without error", () => {
         let lettersInEasel = new Array<ScrabbleLetter>();
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterA));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterB));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterC));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_A));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_B));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_C));
         easelComponent.letters = lettersInEasel;
 
         let request = "a4v ab";
-        let placeWordCommand = new PlaceWordCommand(easelComponent, boardComponent, request);
+        let placeAWordCommand = new PlaceWordCommand(easelComponent, boardComponent, request);
 
-        expect(placeWordCommand.execute()).to.not.throw;
+        expect(placeAWordCommand.execute()).to.not.throw;
     });
 
 });

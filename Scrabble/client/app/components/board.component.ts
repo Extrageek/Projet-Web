@@ -36,7 +36,7 @@ export class BoardComponent implements OnInit {
     constructor(
         private socketService: SocketService,
         private boardManagerService: BoardManagerService) {
-        this.board = new Board();
+            this.board = new Board();
     }
 
     ngOnInit() {
@@ -44,7 +44,7 @@ export class BoardComponent implements OnInit {
     }
 
     private onPlaceWordCommand(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.placeWordCommandRequest)
+        return this.socketService.subscribeToChannelEvent(SocketEventType.PLACE_WORD_COMMAND_REQUEST)
             .subscribe((response: any) => {
                 if (response !== undefined) {
                     console.log("Place Word response from the server ", response._data);
@@ -68,6 +68,6 @@ export class BoardComponent implements OnInit {
     }
 
     public placeWordInBoard(commandRequest: ICommandRequest<IPlaceWordResponse>) {
-        this.socketService.emitMessage(SocketEventType.placeWordCommandRequest, commandRequest);
+        this.socketService.emitMessage(SocketEventType.PLACE_WORD_COMMAND_REQUEST, commandRequest);
     }
 }

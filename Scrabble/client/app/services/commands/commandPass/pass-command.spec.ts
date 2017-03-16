@@ -27,7 +27,7 @@ import { PassCommand } from "./pass-command";
 import { SocketService } from "../../socket-service";
 import { EaselManagerService } from "../../easel/easel-manager.service";
 
-import { Observable } from "rxjs/Observable"
+import { Observable } from "rxjs/Observable";
 
 
 describe("PassCommand", function () {

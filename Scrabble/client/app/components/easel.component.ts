@@ -23,7 +23,7 @@ import { Alphabet } from "../models/letter/alphabet";
     providers: [EaselManagerService, SocketService],
     selector: "easel-selector",
     templateUrl: "../../assets/templates/easel.html",
-    styleUrls: ["../../assets/stylesheets/easel.css"],
+    styleUrls: ["../../assets/stylesheets/easel.css"]
 })
 
 export class EaselComponent implements OnInit, OnDestroy {
@@ -83,7 +83,7 @@ export class EaselComponent implements OnInit, OnDestroy {
     }
 
     private initializeEaselOnConnection(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.initializeEasel)
+        return this.socketService.subscribeToChannelEvent(SocketEventType.INITIALIZE_EASEL)
             .subscribe((initialsLetters: Array<string>) => {
                 this._letters = new Array<ScrabbleLetter>();
                 initialsLetters.forEach((letter) => {
@@ -93,7 +93,7 @@ export class EaselComponent implements OnInit, OnDestroy {
     }
 
     private onExchangeLetterRequest(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.changeLettersRequest)
+        return this.socketService.subscribeToChannelEvent(SocketEventType.CHANGE_LETTERS_REQUEST)
             .subscribe((response: any) => {
 
                 // TODO: Find another way, like using a session to handle the user info
@@ -145,13 +145,13 @@ export class EaselComponent implements OnInit, OnDestroy {
         let easelMaxIndex = this.letters.length - 1;
         let currentLetter = this.letters[currentInputIndex].letter;
 
-        if (keyCode === LetterHelper.rightArrowKeyCode
+        if (keyCode === LetterHelper.RIGHT_ARROW_KEY_CODE
             && nextInputIndex === 0) {
             for (let index = easelMaxIndex; index > 0; --index) {
                 this.letters[index].letter = this.letters[index - 1].letter;
             }
 
-        } else if (keyCode === LetterHelper.leftArrowKeyCode
+        } else if (keyCode === LetterHelper.LEFT_ARROW_KEY_CODE
             && nextInputIndex === easelMaxIndex) {
             for (let index = 0; index < easelMaxIndex; ++index) {
                 this.letters[index].letter = this.letters[index + 1].letter;
@@ -188,8 +188,7 @@ export class EaselComponent implements OnInit, OnDestroy {
                     isFound = true;
                 }
             }
-        }
-        else {
+        } else {
             foundIndex = this.letters.findIndex((element: ScrabbleLetter) => element.letter === enteredLetter);
         }
 
@@ -221,6 +220,6 @@ export class EaselComponent implements OnInit, OnDestroy {
             data: listOfLettersToChange
         };
 
-        this.socketService.emitMessage(SocketEventType.changeLettersRequest, outputRequest);
+        this.socketService.emitMessage(SocketEventType.CHANGE_LETTERS_REQUEST, outputRequest);
     }
 }

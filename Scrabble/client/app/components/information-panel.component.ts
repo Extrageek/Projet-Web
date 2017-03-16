@@ -33,10 +33,10 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
     constructor(
         private socketService: SocketService,
         private activatedRoute: ActivatedRoute) {
-        this.score = 0;
-        this.lettersOnEasel = 7;
-        // TODO : get it from letterbank service
-        this.lettersInBank = 102;
+            this.score = 0;
+            this.lettersOnEasel = 7;
+            // TODO : get it from letterbank service
+            this.lettersInBank = 102;
     }
 
     ngOnInit() {
@@ -51,7 +51,7 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
     }
 
     private onTimerEvent(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.timerEvent)
+        return this.socketService.subscribeToChannelEvent(SocketEventType.TIMER_EVENT)
             .subscribe((counter: { minutes: number, seconds: number }) => {
                 this.minutes = counter.minutes;
                 this.seconds = counter.seconds;
@@ -67,13 +67,13 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
                         data: ""
                     };
 
-                    this.socketService.emitMessage(SocketEventType.passCommandRequest, request);
+                    this.socketService.emitMessage(SocketEventType.PASS_COMMAND_REQUEST, request);
                 }
             });
     }
 
     private onUpdatePlayersQueueEvent(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.updatePlayersQueue)
+        return this.socketService.subscribeToChannelEvent(SocketEventType.UPDATE_PLAYERS_QUEUE)
             .subscribe((response: Array<string>) => {
                 if (response !== undefined && response !== null) {
                     // Temporary settings, we can use a manager to

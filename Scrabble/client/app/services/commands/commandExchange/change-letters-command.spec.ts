@@ -30,32 +30,34 @@ import { ChangeLettersCommand } from "./change-letters-command";
 import { SocketService } from "../../../services/socket-service";
 import { EaselManagerService } from "../../easel/easel-manager.service";
 
-import { Observable } from "rxjs/Observable"
+import { Observable } from "rxjs/Observable";
 
 let changeLettersCommand: ChangeLettersCommand;
 let commandRequest: ICommandRequest<
     {
         indexOfLettersToChange: Array<number>,
         lettersToChange: Array<string>
-    }>
+    }>;
 
-const Routes = [
+const routes = [
     { path: "", redirectTo: "/game-start", pathMatch: "full" },
     { path: "game-start", component: GameComponent },
     { path: "game-room/:id", component: GameComponent, data: { id: "" } },
 ];
 
-class MockRouter { public navigate() { }; }
+class MockRouter { public navigate() { /***/ }; }
 class MockActivatedRoute {
-    Params: { "id": "math" };
+    param: { "id": "math" };
+
+    /** An observable of the matrix parameters scoped to this route */
+    params = new Observable((observer: any) => {
+        observer.next(this.param);
+    });
+
     constructor() {
         //
     }
 
-    /** An observable of the matrix parameters scoped to this route */
-    params = new Observable((observer: any) => {
-        observer.next(this.Params);
-    });
 }
 
 describe("ChangeLetterCommand", function () {
@@ -66,12 +68,10 @@ describe("ChangeLetterCommand", function () {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             schemas: [NO_ERRORS_SCHEMA],
-            imports: [GameRoomModule, GameStartModule, RouterTestingModule.withRoutes(Routes)],
+            imports: [GameRoomModule, GameStartModule, RouterTestingModule.withRoutes(routes)],
             declarations: [],
             providers: [
                 { provide: APP_BASE_HREF, useValue: '/game-room/test' },
-                // { provide: Router, useClass: MockRouter },
-                // { provide: ActivatedRoute, useClass: MockRouter },
                 SocketService,
                 EaselManagerService,
             ],
@@ -85,13 +85,13 @@ describe("ChangeLetterCommand", function () {
         fixture = TestBed.createComponent(EaselComponent);
         easelComponent = fixture.componentInstance;
 
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.letterA));
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.letterB));
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.letterC));
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.letterD));
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.letterE));
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.letterF));
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.blank));
+        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_A));
+        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_B));
+        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_C));
+        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_D));
+        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_E));
+        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_F));
+        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_BLANK));
     });
 
     it("ChangeLetterCommand should not be undefined", () => {
@@ -138,8 +138,10 @@ describe("ChangeLetterCommand", function () {
         changeLettersCommand = new ChangeLettersCommand(easelComponent, "abc*efd");
         changeLettersCommand.execute();
 
-        expect(changeLettersCommand.commandRequest._response.indexOfLettersToChange).to.be.deep.equals([0, 1, 2, 6, 4, 5, 3]);
-        expect(changeLettersCommand.commandRequest._response.lettersToChange).to.be.deep.equals(['A', 'B', 'C', 'blank', 'E', 'F', 'D']);
+        expect(changeLettersCommand.commandRequest
+            ._response.indexOfLettersToChange).to.be.deep.equals([0, 1, 2, 6, 4, 5, 3]);
+        expect(changeLettersCommand.commandRequest
+            ._response.lettersToChange).to.be.deep.equals(['A', 'B', 'C', 'blank', 'E', 'F', 'D']);
         expect(changeLettersCommand.commandRequest._commandStatus).to.be.equal(CommandStatus.Ok);
         expect(changeLettersCommand.commandRequest._commandType).to.be.equal(CommandType.ExchangeCmd);
     });
@@ -148,8 +150,10 @@ describe("ChangeLetterCommand", function () {
         changeLettersCommand = new ChangeLettersCommand(easelComponent, "abc*efd");
         changeLettersCommand.execute();
 
-        expect(changeLettersCommand.commandRequest._response.indexOfLettersToChange).to.be.deep.equals([0, 1, 2, 6, 4, 5, 3]);
-        expect(changeLettersCommand.commandRequest._response.lettersToChange).to.be.deep.equals(['A', 'B', 'C', 'blank', 'E', 'F', 'D']);
+        expect(changeLettersCommand.commandRequest
+            ._response.indexOfLettersToChange).to.be.deep.equals([0, 1, 2, 6, 4, 5, 3]);
+        expect(changeLettersCommand.commandRequest
+            ._response.lettersToChange).to.be.deep.equals(['A', 'B', 'C', 'blank', 'E', 'F', 'D']);
         expect(changeLettersCommand.commandRequest._commandStatus).to.be.equal(CommandStatus.Ok);
         expect(changeLettersCommand.commandRequest._commandType).to.be.equal(CommandType.ExchangeCmd);
     });
@@ -159,19 +163,22 @@ describe("ChangeLetterCommand", function () {
         changeLettersCommand.execute();
 
         assert(changeLettersCommand.commandRequest._response.indexOfLettersToChange.length === 0);
-        expect(changeLettersCommand.commandRequest._response.lettersToChange).to.be.deep.equals(['A', 'Z', '*', 'J', 'W']);
+        expect(changeLettersCommand.commandRequest
+            ._response.lettersToChange).to.be.deep.equals(['A', 'Z', '*', 'J', 'W']);
         expect(changeLettersCommand.commandRequest._commandStatus).to.be.equal(CommandStatus.NotAllowed);
         expect(changeLettersCommand.commandRequest._commandType).to.be.equal(CommandType.ExchangeCmd);
     });
 
-    it("ChangeLettersCommand should execute and send SynthaxeError request if we have more than 7 letters to change", () => {
-        changeLettersCommand = new ChangeLettersCommand(easelComponent, "abcd*abcd");
-        changeLettersCommand.execute();
+    it("ChangeLettersCommand should execute and send SynthaxeError" +
+        "request if we have more than 7 letters to change", () => {
+            changeLettersCommand = new ChangeLettersCommand(easelComponent, "abcd*abcdaaaaaaa");
+            changeLettersCommand.execute();
 
-        assert(changeLettersCommand.commandRequest._response.indexOfLettersToChange.length === 0);
-        expect(changeLettersCommand.commandRequest._response.lettersToChange).to.be.deep.equals(['A', 'B', 'C', 'D', 'blank', 'A', 'B', 'C', 'D']);
-        expect(changeLettersCommand.commandRequest._commandStatus).to.be.equal(CommandStatus.SynthaxeError);
-        expect(changeLettersCommand.commandRequest._commandType).to.be.equal(CommandType.ExchangeCmd);
+            assert(changeLettersCommand.commandRequest._response.indexOfLettersToChange.length === 0);
+            expect(changeLettersCommand.commandRequest._response.lettersToChange)
+                .to.be.deep.equals(['A', 'B', 'C', 'D', 'blank', 'A', 'B', 'C', 'D']);
+            expect(changeLettersCommand.commandRequest._commandStatus).to.be.equal(CommandStatus.SynthaxeError);
+            expect(changeLettersCommand.commandRequest._commandType).to.be.equal(CommandType.ExchangeCmd);
     });
 
     it("ChangeLettersCommand should execute and send NotAllowed request", () => {
@@ -179,7 +186,8 @@ describe("ChangeLetterCommand", function () {
         changeLettersCommand.execute();
 
         assert(changeLettersCommand.commandRequest._response.indexOfLettersToChange.length === 0);
-        expect(changeLettersCommand.commandRequest._response.lettersToChange).to.be.deep.equals(['A', 'Z', 'C', '*', 'E', 'F', 'D']);
+        expect(changeLettersCommand.commandRequest._response.lettersToChange)
+            .to.be.deep.equals(['A', 'Z', 'C', '*', 'E', 'F', 'D']);
         expect(changeLettersCommand.commandRequest._commandStatus).to.be.equal(CommandStatus.NotAllowed);
         expect(changeLettersCommand.commandRequest._commandType).to.be.equal(CommandType.ExchangeCmd);
     });
@@ -198,10 +206,10 @@ describe("ChangeLetterCommand", function () {
         changeLettersCommand = new ChangeLettersCommand(easelComponent, "a*e");
 
         let lettersInEasel = new Array<ScrabbleLetter>();
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterJ));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterA));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterF));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterT));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_J));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_A));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_F));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_T));
 
         console.log("response", changeLettersCommand.commandRequest);
         commandRequest = changeLettersCommand.createExchangeEaselLettersRequest(lettersInEasel);
@@ -212,7 +220,7 @@ describe("ChangeLetterCommand", function () {
     it("return a syntax error response if there are more letters to change than what we are in the easel", () => {
         changeLettersCommand = new ChangeLettersCommand(easelComponent, "a*e");
         let lettersInEasel = new Array<ScrabbleLetter>();
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterO));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_O));
 
         commandRequest = changeLettersCommand.createExchangeEaselLettersRequest(lettersInEasel);
         expect(commandRequest._commandStatus).to.be.equal(CommandStatus.SynthaxeError);
@@ -222,7 +230,7 @@ describe("ChangeLetterCommand", function () {
     it("return a not allowed error response if there are no letters entered", () => {
         changeLettersCommand = new ChangeLettersCommand(easelComponent, "");
         let lettersInEasel = new Array<ScrabbleLetter>();
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterO));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_O));
 
         commandRequest = changeLettersCommand.createExchangeEaselLettersRequest(lettersInEasel);
         expect(commandRequest._commandStatus).to.be.equal(CommandStatus.SynthaxeError);
@@ -233,13 +241,13 @@ describe("ChangeLetterCommand", function () {
         changeLettersCommand = new ChangeLettersCommand(easelComponent, "a*e");
 
         let lettersInEasel = new Array<ScrabbleLetter>();
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterA));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterB));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterC));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterD));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterE));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.letterF));
-        lettersInEasel.push(new ScrabbleLetter(Alphabet.blank));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_A));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_B));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_C));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_D));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_E));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_F));
+        lettersInEasel.push(new ScrabbleLetter(Alphabet.LETTER_BLANK));
 
         commandRequest = changeLettersCommand.createExchangeEaselLettersRequest(lettersInEasel);
         expect(commandRequest._commandStatus).to.be.equal(CommandStatus.Ok);

@@ -15,6 +15,7 @@ export class ScrabbleLetter {
     public get letter(): string {
         return this._letter;
     }
+
     public set letter(v: string) {
         this._letter = v;
     }

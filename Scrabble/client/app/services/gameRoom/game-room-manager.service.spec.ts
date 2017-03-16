@@ -17,7 +17,7 @@ describe("GameRoomManagerService should", () => {
     });
 
     it("reconize if the tab key has been pressed", () => {
-        let verification = service.isTabKey(LetterHelper.tabKeyCode);
+        let verification = service.isTabKey(LetterHelper.TAB_KEY_CODE);
         expect(verification).to.be.true;
     });
 
@@ -27,7 +27,7 @@ describe("GameRoomManagerService should", () => {
     });
 
     it("reconize when the tab key has not been pressed", () => {
-        let verification = service.isTabKey(LetterHelper.leftArrowKeyCode);
+        let verification = service.isTabKey(LetterHelper.LEFT_ARROW_KEY_CODE);
         expect(verification).to.be.false;
     });
 });
