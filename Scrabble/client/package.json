@@ -26,6 +26,7 @@
     "angular-in-memory-web-api": "~0.2.4",
     "core-js": "^2.4.1",
     "http": "0.0.0",
+    "lint": "^1.1.2",
     "reflect-metadata": "^0.1.8",
     "rxjs": "5.0.1",
     "socket.io": "^1.7.3",
