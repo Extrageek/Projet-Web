@@ -126,7 +126,7 @@ export class BoardManagerService {
 
             // Get the row number from the given letter
             let nextRowLetter = this.parseFromNumberToCharacter(nextRowIndex);
-            let nextSquareRow = nextRowIndex - LetterHelper.letterAKeyCode;
+            let nextSquareRow = nextRowIndex - LetterHelper.LETTER_A_KEY_CODE;
             let nextSquare = this._board.squares[nextSquareRow][columnIndex];
 
             if (!nextSquare.isBusy) {
@@ -174,8 +174,8 @@ export class BoardManagerService {
     public parseFromNumberToCharacter(value: number) {
         this.exceptionHelperService.throwNullArgumentException(value);
         this.exceptionHelperService.throwOutOfRangeException(
-            LetterHelper.letterAKeyCode,
-            LetterHelper.letterZKeyCode,
+            LetterHelper.LETTER_A_KEY_CODE,
+            LetterHelper.LETTER_Z_KEY_CODE,
             value);
         return String.fromCharCode(value);
     }
