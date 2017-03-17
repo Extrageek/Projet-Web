@@ -3,6 +3,7 @@ import { Room } from "../../models/rooms/room";
 import { Player } from "../../models/players/player";
 import { CommandType } from "../commons/command-type";
 import { CommandStatus } from "../commons/command-status";
+import { IPlaceWordResponse } from "../commons/place-command-response.interface";
 import { ICommandMessage } from "../messages/commons/command-message.interface";
 import { IRoomMessage } from "../messages/commons/room-message.interface";
 
@@ -41,23 +42,23 @@ export class MessageHandler {
         username: string,
         room: Room,
         commandStatus: CommandStatus,
-        data: Array<string>
-    ): ICommandMessage<Array<string>> {
+        data: IPlaceWordResponse
+    ): ICommandMessage<IPlaceWordResponse> {
 
         this.throwNullArgumentException(room);
         this.throwNullArgumentException(username);
         this.throwNullArgumentException(commandStatus);
         this.throwNullArgumentException(data);
 
-        let commandMessage: ICommandMessage<Array<string>>;
+        let commandMessage: ICommandMessage<IPlaceWordResponse>;
         let message: string;
 
-        if (commandStatus == CommandStatus.Ok) {
-            message = `$: <!placer> ` + ' ' + `${data.toString()}`;
+        if (commandStatus === CommandStatus.Ok) {
+            message = `$: <!placer> ` + ' ' + `${data._letters.toString()}`;
 
         } else {
             message = `$: ${CommandStatus[commandStatus]} `
-                + `<!placer> ` + ' ' + `${data.toString()}`;
+                + `<!placer> ` + ' ' + `${data._letters.toString()}`;
         }
 
         commandMessage = {
@@ -88,7 +89,7 @@ export class MessageHandler {
 
         let exchangeCommandResponse: ICommandMessage<Array<string>>;
 
-        let message = (commandStatus == CommandStatus.Ok) ?
+        let message = (commandStatus === CommandStatus.Ok) ?
             `$: <!changer> ` + ' ' + `${lettersToChange.toString()}` :
             `$: ${CommandStatus[commandStatus]} `
             + `<!changer> ` + ' '
@@ -122,7 +123,7 @@ export class MessageHandler {
         this.throwNullArgumentException(request.commandType);
         this.throwNullArgumentException(request.commandStatus);
 
-        let message = (request.commandStatus == CommandStatus.Ok) ?
+        let message = (request.commandStatus === CommandStatus.Ok) ?
             `$: <!${CommandType[request.commandType]}>` + ' '
             + `${request.data}` : `$: ${CommandStatus[request.commandStatus]} ` + ' '
             + `<${request.data}>`;

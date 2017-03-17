@@ -7,7 +7,7 @@ import { ChatroomComponent } from "../../components/chatroom.component";
 import { GameComponent } from "../../components/game-room.component";
 
 import { EaselManagerService } from "../easel/easel-manager.service";
-import { EaselControl } from "../../commons/easel-control";
+import { LetterHelper } from "../../commons/letter-helper";
 import { ScrabbleLetter } from "../../models/letter/scrabble-letter";
 
 import { CommandType } from "./commons/command-type";
@@ -15,10 +15,10 @@ import { CommandStatus } from "./commons/command-status";
 import { ICommandRequest } from "./commons/command-request";
 import { CommandsHelper } from "./commons/commands-helper";
 
-import { MessageCommand } from './message-command';
-import { ChangeLettersCommand } from './change-letters-command';
-import { PlaceWordCommand } from './place-word-command';
-import { PassCommand } from './pass-command';
+import { MessageCommand } from './commandMessage/message-command';
+import { ChangeLettersCommand } from './commandExchange/change-letters-command';
+import { PlaceWordCommand } from './commandPlaceWord/place-word-command';
+import { PassCommand } from './commandPass/pass-command';
 
 const PARAM_INDEX = 1;
 
@@ -57,6 +57,7 @@ export class CommandsService {
         receiverEaselCompoment: EaselComponent,
         receiverBoardComponent: BoardComponent,
         params: string) {
+
 
         if (receiverEaselCompoment === null
             || receiverBoardComponent === null) {

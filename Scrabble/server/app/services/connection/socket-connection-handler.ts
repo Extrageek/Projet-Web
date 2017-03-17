@@ -7,11 +7,15 @@ import { Player } from "../../models/players/Player";
 import { Letter } from "../../models/lettersBank/letter";
 
 import { SocketEventType } from "./socket-eventType";
+
 import { CommandType } from "../commons/command-type";
 import { CommandStatus } from "../commons/command-status";
-import { MessageHandler } from "../messages/message-handler";
+import { ICommandRequest } from "../commons/command-request";
+import { IPlaceWordResponse } from "../commons/place-command-response.interface";
 import { ICommandMessage } from "../messages/commons/command-message.interface";
+
 import { IRoomMessage } from "../messages/commons/room-message.interface";
+import { MessageHandler } from "../messages/message-handler";
 
 export class SocketConnectionHandler {
 
@@ -90,14 +94,8 @@ export class SocketConnectionHandler {
                         if (room.isFull()) {
                             let test = room.timerService.timer().subscribe(
                                 (counter: { minutes: number, seconds: number }) => {
-
                                     // Send the counter value to the members of the room
                                     this._socket.to(response._roomId).emit(SocketEventType.timerEvent, counter);
-
-                                    // // Update the players queues for everyone in the room
-                                    // let playersQueues = room.getAndUpdatePlayersQueue();
-                                    // this._socket.to(room.roomId).emit(SocketEventType.passCommandRequest, playersQueues);
-
                                 });
                         }
 
@@ -161,13 +159,12 @@ export class SocketConnectionHandler {
 
     private subscribeToPlaceWordEvent(socket: SocketIO.Socket) {
 
-        socket.on(SocketEventType.placeWordCommandRequest, (data: {
-            commandType: CommandType, commandStatus: CommandStatus, data: Array<string>
-        }) => {
+        socket.on(SocketEventType.placeWordCommandRequest, (request: ICommandRequest<IPlaceWordResponse>) => {
 
             let room = this._roomHandler.getRoomBySocketId(socket.id);
             let player = this._roomHandler.getPlayerBySocketId(socket.id);
-            let response = this._messageHandler.createPlaceWordResponse(player.username, room, data.commandStatus, data.data);
+            let response = this._messageHandler
+                .createPlaceWordResponse(player.username, room, request._commandStatus, request._response);
 
             if (response._commandStatus === CommandStatus.Ok) {
                 // Update the players queues for everyone in the room
@@ -280,8 +277,17 @@ export class SocketConnectionHandler {
                             _date: new Date(),
                             _commandType: null,
                         };
-                        console.log("Room not empty", playerRoom);
 
+                        // If the leaving player has the turn in the game, this state should be released,
+                        // we should give the turn to the next one
+                        // TODO: Check after when we will implement in the next sprint exactly what to do
+                        // when a user is leaving
+                        if (leavingPlayer.username === playerRoom.players.peek().username) {
+                            // Update the players queue for everyone in the room
+                            let playersQueues = playerRoom.getAndUpdatePlayersQueue();
+                            this._socket.to(playerRoom.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
+
+                        }
                         // Emit a message for the other players in the room.
                         this._socket.to(playerRoom.roomId).emit(SocketEventType.leaveRoom, roomMessage);
                     }

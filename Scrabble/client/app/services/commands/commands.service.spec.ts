@@ -28,16 +28,16 @@ import { CommandStatus } from "./commons/command-status";
 import { CommandType } from "./commons/command-type";
 import { ICommandRequest } from "./commons/command-request";
 
-import { MessageCommand } from '../../services/commands/message-command';
-import { ChangeLettersCommand } from '../../services/commands/change-letters-command';
-import { PlaceWordCommand } from '../../services/commands/place-word-command';
-import { PassCommand } from '../../services/commands/pass-command';
+import { MessageCommand } from '../commands/commandMessage/message-command';
+import { ChangeLettersCommand } from '../commands/CommandExchange/change-letters-command';
+import { PlaceWordCommand } from '../commands/commandPlaceWord/place-word-command';
+import { PassCommand } from '../commands/commandPass/pass-command';
 
 import { SocketService } from "../../services/socket-service";
 import { EaselManagerService } from "../easel/easel-manager.service";
 import { CommandsService } from "../../services/commands/commands.service";
 
-import { Observable } from "rxjs/Observable"
+import { Observable } from "rxjs/Observable";
 
 describe("CommandService", function () {
 
@@ -64,8 +64,7 @@ describe("CommandService", function () {
             declarations: [],
             providers: [
                 { provide: APP_BASE_HREF, useValue: '/game-room/test' },
-                
-                EaselManagerService,
+                EaselManagerService
             ],
 
         })
@@ -78,11 +77,11 @@ describe("CommandService", function () {
         easelComponent = fixtureEasel.componentInstance;
 
         console.log(easelComponent);
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.letterA));
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.letterB));
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.letterC));
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.letterD));
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.letterE));
+        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_A));
+        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_B));
+        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_C));
+        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_D));
+        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_E));
         // easelComponent.letters.push(new ScrabbleLetter(Alphabet.letterF));
         // easelComponent.letters.push(new ScrabbleLetter(Alphabet.blank));
 

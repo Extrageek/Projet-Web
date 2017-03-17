@@ -43,7 +43,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
 
     // A callback function when the client is connected to the server.
     private onConnected(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.connect)
+        return this.socketService.subscribeToChannelEvent(SocketEventType.CONNECT)
             .subscribe(() => {
                 console.log("I'm connected to the server");
             });
@@ -51,11 +51,11 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
 
     // A callback when the player join a room
     private onJoinedRoom(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.joinRoom)
+        return this.socketService.subscribeToChannelEvent(SocketEventType.JOIN_ROOM)
             .subscribe((roomMessage: IRoomMessage) => {
                 console.log("Joined the room", roomMessage);
                 if (roomMessage._roomIsReady) {
-                    this.socketService.emitMessage(SocketEventType.initializeEasel, this._username);
+                    this.socketService.emitMessage(SocketEventType.INITIALIZE_EASEL, this._username);
                     this.router.navigate(["/game-room", this._username]);
                 } else {
                     alert("waiting for a missing member before starting the game");
@@ -65,7 +65,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
 
     // A callback when the player join a room
     private onleaveRoom(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.leaveRoom)
+        return this.socketService.subscribeToChannelEvent(SocketEventType.LEAVE_ROOM)
             .subscribe((roomMessage: IRoomMessage) => {
                 console.log("Left the room", roomMessage);
             });
@@ -73,7 +73,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
 
     // A callback function when in case of invalid request.
     private onInvalidRequest(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.invalidRequest)
+        return this.socketService.subscribeToChannelEvent(SocketEventType.INVALID_REQUEST)
             .subscribe(() => {
                 console.log("The request sent to the server is invalid");
             });
@@ -81,7 +81,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
 
     // A callback function when the username is taken.
     private onUsernameAlreadyExists(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.usernameAlreadyExist)
+        return this.socketService.subscribeToChannelEvent(SocketEventType.USERNAME_ALREADY_EXIST)
             .subscribe(() => {
                 alert("This username is already taken, please choose another username.");
             });
@@ -89,7 +89,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
 
     // A callback function when the server is not reachable.
     private onConnectionError(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.connectError)
+        return this.socketService.subscribeToChannelEvent(SocketEventType.CONNECT_ERROR)
             .subscribe((error) => {
                 console.log("Connection Error: The server is not reachable", error);
             });
@@ -103,7 +103,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
 
         this._username = username;
         this.socketService.emitMessage(
-            SocketEventType.newGameRequest,
+            SocketEventType.NEW_GAME_REQUEST,
             { 'username': username, 'gameType': Number(numberOfPlayers) });
     }
 }

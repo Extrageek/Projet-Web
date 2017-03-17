@@ -62,7 +62,7 @@ export class LetterBank {
     }
 
     public getLetterFromBank(chosenLetter: Letter): Letter {
-        // I found a bug 
+        // I found a bug
         // The Letterbank try to exchange and send null letters, and decrement even if the quantity is 0.
         // This must be fixed to return the same letter in this case
         let indexOfChosenLetter = this.findIndexOfChosenLetter(chosenLetter);

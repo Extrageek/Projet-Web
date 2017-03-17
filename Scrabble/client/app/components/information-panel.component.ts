@@ -20,7 +20,7 @@ import { ICommandMessage } from "../commons/messages/command-message.interface";
     styleUrls: ["../../assets/stylesheets/information-panel.css"]
 })
 
-export class InformationPanelComponent implements OnInit {
+export class InformationPanelComponent implements OnInit, AfterViewInit {
     private _username: string;
     playingUser: string;
     nextPlayer: string;
@@ -33,44 +33,47 @@ export class InformationPanelComponent implements OnInit {
     constructor(
         private socketService: SocketService,
         private activatedRoute: ActivatedRoute) {
-        this.score = 0;
-        this.lettersOnEasel = 7;
-        // TODO : get it from letterbank service
-        this.lettersInBank = 102;
+            this.score = 0;
+            this.lettersOnEasel = 7;
+            // TODO : get it from letterbank service
+            this.lettersInBank = 102;
     }
 
     ngOnInit() {
         this.onUpdatePlayersQueueEvent();
-        this.onTimerEvent();
+    }
+
+    ngAfterViewInit() {
         this.activatedRoute.params.subscribe(params => {
             this._username = params['id'];
         });
+        this.onTimerEvent();
     }
 
     private onTimerEvent(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.timerEvent)
+        return this.socketService.subscribeToChannelEvent(SocketEventType.TIMER_EVENT)
             .subscribe((counter: { minutes: number, seconds: number }) => {
                 this.minutes = counter.minutes;
                 this.seconds = counter.seconds;
 
-                console.log(this.minutes, this.seconds);
+                //console.log(this.minutes, this.seconds);
 
                 if (this.minutes === 0
                     && this.seconds === 0
-                    && this.playingUser === this._username) {
+                    && this.socketService.getCurrentPlayer() === this._username) {
                     let request = {
                         commandType: CommandType.PassCmd,
                         commandStatus: CommandStatus.Ok,
                         data: ""
                     };
 
-                    this.socketService.emitMessage(SocketEventType.passCommandRequest, request);
+                    this.socketService.emitMessage(SocketEventType.PASS_COMMAND_REQUEST, request);
                 }
             });
     }
 
     private onUpdatePlayersQueueEvent(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.updatePlayersQueue)
+        return this.socketService.subscribeToChannelEvent(SocketEventType.UPDATE_PLAYERS_QUEUE)
             .subscribe((response: Array<string>) => {
                 if (response !== undefined && response !== null) {
                     // Temporary settings, we can use a manager to

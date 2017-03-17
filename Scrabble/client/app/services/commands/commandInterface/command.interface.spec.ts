@@ -1,9 +1,9 @@
 import { expect, assert } from "chai";
-import { ICommand } from "../../services/commands/command.interface";
+import { ICommand } from "./command.interface";
 
 let mockCommand: ICommand = {
-    execute: () => { }
-}
+    execute: () => { /**/ }
+};
 
 describe("CommandInterface", function () {
     it("CommandInterface should be implementable ", () => {
@@ -12,7 +12,7 @@ describe("CommandInterface", function () {
 
     it("CommandInterface should be implementable ", () => {
         // console.log("dsfdg", mockCommand.execute());
-        mockCommand.execute = () => { throw new Error("not implemented function"); }
+        mockCommand.execute = () => { throw new Error("not implemented function"); };
         expect(mockCommand.execute).throw(Error, "not implemented function");
     });
 });

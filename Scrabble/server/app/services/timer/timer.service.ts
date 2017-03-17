@@ -1,11 +1,9 @@
-
 import { Observable } from "rxjs/Observable";
 
 const ONE_SECOND = 1000;
 const DEFAULT_MAX_VALUE = 0;
 
 export class TimerService {
-
 
     private _counterMaxValue: number;
     public set counterMaxValue(value: number) {
@@ -47,7 +45,7 @@ export class TimerService {
         let observable = new Observable((observer: any) => {
             setInterval(() => {
                 this.updateClock();
-                let count = { minutes: this.minutes, seconds: this.seconds }
+                let count = { minutes: this.minutes, seconds: this.seconds };
                 observer.next(count);
             }, ONE_SECOND);
 

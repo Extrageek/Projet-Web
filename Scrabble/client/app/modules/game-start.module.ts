@@ -17,9 +17,9 @@ import { SocketService } from "./../services/socket-service";
     ],
     declarations: [
         AppComponent,
-        GameInitiationComponent,
+        GameInitiationComponent
     ],
     providers: [SocketService],
-    bootstrap: [AppComponent],
+    bootstrap: [AppComponent]
 })
 export class GameStartModule { }

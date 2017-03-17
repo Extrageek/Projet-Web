@@ -41,7 +41,6 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
 
     ngOnInit(): void {
         this._messageArray = new Array<IRoomMessage>();
-
         this.route.params.subscribe(params => {
             this._username = params['id'];
         });
@@ -50,32 +49,26 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
         this._onJoinedRoomSubscription = this.onJoinedRoom();
         this._onLeaveRoomSubscription = this.onLeaveRoom();
         this._onReceivedMessageSubscription = this.onReceivedMessage();
-        // this._onChangedLetterCommandSubscription = this.onChangedLetterCommand();
-        // this.onPlaceWordCommand();
-
         this._onCommandRequest = this.onCommandRequest();
     }
 
     ngOnDestroy() {
-        // unsubscribe to all the listening events
-        // this._onJoinedRoomSubscription.unsubscribe();
-        // this._onLeaveRoomSubscription.unsubscribe();
-        // this._onReceivedMessageSubscription.unsubscribe();
+        // Unsubscribe all the event listeners here
     }
 
     private onCommandRequest(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.commandRequest)
+        return this.socketService.subscribeToChannelEvent(SocketEventType.COMMAND_REQUEST)
             .subscribe((response: ICommandMessage<any>) => {
                 if (response !== undefined && response._message !== null) {
                     this._messageArray.push(response);
-                    console.log("CommandRequest Chatroom", response._data);
+                    console.log("CommandRequest Chatroom", response);
                 }
             });
     }
 
     // A callback when the player join a room
     private onJoinedRoom(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.joinRoom)
+        return this.socketService.subscribeToChannelEvent(SocketEventType.JOIN_ROOM)
             .subscribe((response: IRoomMessage) => {
                 if (response !== undefined && response._message !== null) {
                     this._messageArray.push(response);
@@ -86,7 +79,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
 
     // A callback when the player leave a room
     private onLeaveRoom(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.leaveRoom)
+        return this.socketService.subscribeToChannelEvent(SocketEventType.LEAVE_ROOM)
             .subscribe((response: IRoomMessage) => {
                 if (response !== undefined && response._message !== null) {
                     this._messageArray.push(response);
@@ -97,7 +90,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
 
     // A callback fonction when the player receive a message
     private onReceivedMessage(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.message)
+        return this.socketService.subscribeToChannelEvent(SocketEventType.MESSAGE)
             .subscribe((response: any) => {
                 if (response !== undefined && response._message !== null) {
                     this._messageArray.push(response as IRoomMessage);
@@ -115,7 +108,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
             || request.message == null) {
             throw new Error("Null argument error: the parameters cannot be null");
         }
-        this.socketService.emitMessage(SocketEventType.message, request);
+        this.socketService.emitMessage(SocketEventType.MESSAGE, request);
     }
 
     // Use to add a scroller to the chatroom
