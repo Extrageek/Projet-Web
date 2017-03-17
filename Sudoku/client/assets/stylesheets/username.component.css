@@ -1,8 +1,8 @@
-#leaderboardBtn{
+#leaderboardBtn {
     margin-top: 50px;
 }
 
-#leaderboardBtn p{
+#leaderboardBtn p {
     font-size: 16px;
 }
 
@@ -75,10 +75,6 @@
     font-size: 36px;
     color: white;
     display: block; 
-}
-
-.full-height {
-    height: 100%;
 }
 
 .user-setting-content p:hover, .user-setting-content p:focus {

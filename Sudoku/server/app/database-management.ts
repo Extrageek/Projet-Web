@@ -27,7 +27,6 @@ export class DatabaseManager {
 
     private constructor(dbConnection: Db) {
         this._dbConnection = dbConnection;
-        console.log("passed here!");
         this._dbConnection.on("close", this.reconnectToDatabase.bind(this));
     }
 

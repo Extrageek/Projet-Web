@@ -47,13 +47,12 @@ describe('Stopwatch service tests', () => {
 
     });
 
-    it("hour property should be equal to 1", () => {
+    it("hour property should be equal to 0", () => {
         service = new StopwatchService();
 
-            service.updateClock ();
-            expect(service.seconds).to.equal(0, "seconds property is not equal to 5...");
-            expect(service.minutes).to.equal(0, "minute property is not equal to 0...");
-            expect(service.hours).to.equal(0, "hour property is not equal to 1...");
-
+        service.updateClock ();
+        expect(service.seconds).to.equal(0, "seconds property is not equal to 5...");
+        expect(service.minutes).to.equal(0, "minute property is not equal to 0...");
+        expect(service.hours).to.equal(0, "hour property is not equal to 0...");
     });
 });
