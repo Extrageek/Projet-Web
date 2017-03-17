@@ -1,5 +1,3 @@
-import { Observable } from "rxjs/Observable";
-
 import { Player } from "../players/player";
 import { QueueCollection } from "../../models/queue-collection";
 import { Letter } from "../../models/lettersBank/letter";

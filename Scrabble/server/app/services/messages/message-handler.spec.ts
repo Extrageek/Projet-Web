@@ -35,9 +35,9 @@ describe("MessageHandler", () => {
             _roomIsReady: fakeRoom.isFull(),
         };
 
-        let fakePlaceWorRequest = {
+        fakePlaceWorRequest = {
             _letters: fakeLetters,
-            _squarePosition: { row: "a", column: 3 },
+            _squarePosition: { _row: "a", _column: 3 },
             _wordOrientation: 'h'
         };
     });
@@ -75,12 +75,14 @@ describe("MessageHandler", () => {
     });
 
     it("createPlaceWordResponse, Should throw Null argument exception if the username is null", () => {
-        let wrapper = () => messageHandler.createPlaceWordResponse(null, fakeRoom, CommandStatus.NotAllowed, fakePlaceWorRequest);
+        let wrapper = () =>
+            messageHandler.createPlaceWordResponse(null, fakeRoom, CommandStatus.NotAllowed, fakePlaceWorRequest);
         expect(wrapper).throw(Error, "Null argument exception: the parameters cannot be null be null.");
     });
 
     it("createPlaceWordResponse, Should throw Null argument exception if the room is null", () => {
-        let wrapper = () => messageHandler.createPlaceWordResponse(fakeUsername, null, CommandStatus.NotAllowed, fakePlaceWorRequest);
+        let wrapper = () =>
+            messageHandler.createPlaceWordResponse(fakeUsername, null, CommandStatus.NotAllowed, fakePlaceWorRequest);
         expect(wrapper).throw(Error, "Null argument exception: the parameters cannot be null be null.");
     });
 
@@ -95,78 +97,91 @@ describe("MessageHandler", () => {
     });
 
     it("createPlaceWordResponse, Should create valid message with ok response with the letters to place", () => {
-        let response = messageHandler.createPlaceWordResponse(fakeUsername, fakeRoom, CommandStatus.Ok, fakePlaceWorRequest);
+        let response =
+            messageHandler.createPlaceWordResponse(fakeUsername, fakeRoom, CommandStatus.Ok, fakePlaceWorRequest);
         let expectedMessage = `$: <!placer> ` + ' ' + `${fakeLetters.toString()}`;
 
         assert(response._username === fakeUsername);
         expect(response._room).to.be.deep.equals(fakeRoom);
         assert(response._commandStatus === CommandStatus.Ok);
         assert(response._commandType === CommandType.PlaceCmd);
-        expect(response._data).to.be.deep.equals(fakeLetters);
+        expect(response._data._letters).to.be.deep.equals(fakeLetters);
         assert(response._message === expectedMessage);
         expect(response._date).to.be.instanceof(Date);
     });
 
-    it("createPlaceWordResponse, Should create valid message with NotAllowed response with the letters to place", () => {
-        let response = messageHandler.createPlaceWordResponse(fakeUsername, fakeRoom, CommandStatus.NotAllowed, fakePlaceWorRequest);
-        let expectedMessage = `$: ${CommandStatus[CommandStatus.NotAllowed]} `
-            + `<!placer> ` + ' ' + `${fakeLetters.toString()}`;
+    it("createPlaceWordResponse, " +
+        "Should create valid message with NotAllowed response with the letters to place", () => {
+            let response = messageHandler
+                .createPlaceWordResponse(fakeUsername, fakeRoom, CommandStatus.NotAllowed, fakePlaceWorRequest);
+            let expectedMessage = `$: ${CommandStatus[CommandStatus.NotAllowed]} `
+                + `<!placer> ` + ' ' + `${fakeLetters.toString()}`;
 
-        assert(response._username === fakeUsername);
-        expect(response._room).to.be.deep.equals(fakeRoom);
-        assert(response._commandStatus === CommandStatus.NotAllowed);
-        assert(response._commandType === CommandType.PlaceCmd);
-        expect(response._data).to.be.deep.equals(fakeLetters);
-        assert(response._message === expectedMessage);
-        expect(response._date).to.be.instanceof(Date);
+            assert(response._username === fakeUsername);
+            expect(response._room).to.be.deep.equals(fakeRoom);
+            assert(response._commandStatus === CommandStatus.NotAllowed);
+            assert(response._commandType === CommandType.PlaceCmd);
+            expect(response._data._letters).to.be.deep.equals(fakeLetters);
+            assert(response._message === expectedMessage);
+            expect(response._date).to.be.instanceof(Date);
     });
 
     it("createExchangeLettersResponse, Should throw Null argument exception if the username is null", () => {
-        let wrapper = () => messageHandler.createExchangeLettersResponse(null, fakeRoom, CommandStatus.NotAllowed, fakeLetters, fakeLettersToSend);
+        let wrapper = () => messageHandler
+            .createExchangeLettersResponse(null, fakeRoom, CommandStatus.NotAllowed, fakeLetters, fakeLettersToSend);
         expect(wrapper).throw(Error, "Null argument exception: the parameters cannot be null be null.");
     });
 
     it("createExchangeLettersResponse, Should throw Null argument exception if the room is null", () => {
-        let wrapper = () => messageHandler.createExchangeLettersResponse(fakeUsername, null, CommandStatus.NotAllowed, fakeLetters, fakeLettersToSend);
+        let wrapper = () => messageHandler.createExchangeLettersResponse
+            (fakeUsername, null, CommandStatus.NotAllowed, fakeLetters, fakeLettersToSend);
+
         expect(wrapper).throw(Error, "Null argument exception: the parameters cannot be null be null.");
     });
 
     it("createExchangeLettersResponse, Should throw Null argument exception if the CommandStatus is null", () => {
-        let wrapper = () => messageHandler.createExchangeLettersResponse(fakeUsername, fakeRoom, null, fakeLetters, fakeLettersToSend);
+        let wrapper = () => messageHandler
+            .createExchangeLettersResponse(fakeUsername, fakeRoom, null, fakeLetters, fakeLettersToSend);
         expect(wrapper).throw(Error, "Null argument exception: the parameters cannot be null be null.");
     });
 
     it("createExchangeLettersResponse, Should throw Null argument exception if the letters to change is null", () => {
-        let wrapper = () => messageHandler.createExchangeLettersResponse(fakeUsername, fakeRoom, CommandStatus.NotAllowed, null, fakeLettersToSend);
+        let wrapper = () => messageHandler
+            .createExchangeLettersResponse(fakeUsername, fakeRoom, CommandStatus.NotAllowed, null, fakeLettersToSend);
         expect(wrapper).throw(Error, "Null argument exception: the parameters cannot be null be null.");
     });
 
-    it("createExchangeLettersResponse, Should create valid message with NotAllowed response with the letters to exchange", () => {
-        let response = messageHandler.createExchangeLettersResponse(fakeUsername, fakeRoom, CommandStatus.NotAllowed, fakeLetters, null);
-        let expectedMessage = `$: ${CommandStatus[CommandStatus.NotAllowed]} `
-            + `<!changer> ` + ' '
-            + `${fakeLetters.toString()}`;
+    it("createExchangeLettersResponse, " +
+        "Should create valid message with NotAllowed response with the letters to exchange", () => {
+            let response = messageHandler
+                .createExchangeLettersResponse(fakeUsername, fakeRoom, CommandStatus.NotAllowed, fakeLetters, null);
+            let expectedMessage = `$: ${CommandStatus[CommandStatus.NotAllowed]} `
+                + `<!changer> ` + ' '
+                + `${fakeLetters.toString()}`;
 
-        assert(response._username === fakeUsername);
-        expect(response._room).to.be.deep.equals(fakeRoom);
-        assert(response._commandStatus === CommandStatus.NotAllowed);
-        assert(response._commandType === CommandType.ExchangeCmd);
-        expect(response._data).to.be.null;
-        assert(response._message === expectedMessage);
-        expect(response._date).to.be.instanceof(Date);
+            assert(response._username === fakeUsername);
+            expect(response._room).to.be.deep.equals(fakeRoom);
+            assert(response._commandStatus === CommandStatus.NotAllowed);
+            assert(response._commandType === CommandType.ExchangeCmd);
+            expect(response._data).to.be.null;
+            assert(response._message === expectedMessage);
+            expect(response._date).to.be.instanceof(Date);
     });
 
-    it("createExchangeLettersResponse, Should create valid message with Ok response with the letters to exchange", () => {
-        let response = messageHandler.createExchangeLettersResponse(fakeUsername, fakeRoom, CommandStatus.Ok, fakeLetters, fakeLettersToSend);
-        let expectedMessage = `$: <!changer> ` + ' ' + `${fakeLetters.toString()}`;
+    it("createExchangeLettersResponse, " +
+        "Should create valid message with Ok response with the letters to exchange", () => {
+            let response = messageHandler
+                .createExchangeLettersResponse
+                    (fakeUsername, fakeRoom, CommandStatus.Ok, fakeLetters, fakeLettersToSend);
+            let expectedMessage = `$: <!changer> ` + ' ' + `${fakeLetters.toString()}`;
 
-        assert(response._username === fakeUsername);
-        expect(response._room).to.be.deep.equals(fakeRoom);
-        assert(response._commandStatus === CommandStatus.Ok);
-        assert(response._commandType === CommandType.ExchangeCmd);
-        expect(response._data).to.be.deep.equals(fakeLettersToSend);
-        assert(response._message === expectedMessage);
-        expect(response._date).to.be.instanceof(Date);
+            assert(response._username === fakeUsername);
+            expect(response._room).to.be.deep.equals(fakeRoom);
+            assert(response._commandStatus === CommandStatus.Ok);
+            assert(response._commandType === CommandType.ExchangeCmd);
+            expect(response._data).to.be.deep.equals(fakeLettersToSend);
+            assert(response._message === expectedMessage);
+            expect(response._date).to.be.instanceof(Date);
     });
 
     it("createCommandResponse, Should throw Null argument exception if the username is null", () => {
@@ -195,19 +210,20 @@ describe("MessageHandler", () => {
         expect(wrapper).throw(Error, "Null argument exception: the parameters cannot be null be null.");
     });
 
-    it("createCommandResponse, Should create valid message with NotAllowed response with the letters to exchange", () => {
-        let request = { commandType: CommandType.PassCmd, commandStatus: CommandStatus.NotAllowed, data: "" };
-        let response = messageHandler.createCommandResponse(fakeUsername, fakeRoom, request);
-        let expectedMessage = `$: ${CommandStatus[CommandStatus.NotAllowed]} ` + ' '
-            + `<${""}>`;
+    it("createCommandResponse, " +
+        "Should create valid message with NotAllowed response with the letters to exchange", () => {
+            let request = { commandType: CommandType.PassCmd, commandStatus: CommandStatus.NotAllowed, data: "" };
+            let response = messageHandler.createCommandResponse(fakeUsername, fakeRoom, request);
+            let expectedMessage = `$: ${CommandStatus[CommandStatus.NotAllowed]} ` + ' '
+                + `<${""}>`;
 
-        assert(response._username === fakeUsername);
-        expect(response._room).to.be.deep.equals(fakeRoom);
-        assert(response._commandStatus === CommandStatus.NotAllowed);
-        assert(response._commandType === CommandType.PassCmd);
-        expect(response._data).to.be.null;
-        assert(response._message === expectedMessage);
-        expect(response._date).to.be.instanceof(Date);
+            assert(response._username === fakeUsername);
+            expect(response._room).to.be.deep.equals(fakeRoom);
+            assert(response._commandStatus === CommandStatus.NotAllowed);
+            assert(response._commandType === CommandType.PassCmd);
+            expect(response._data).to.be.null;
+            assert(response._message === expectedMessage);
+            expect(response._date).to.be.instanceof(Date);
     });
 
     it("createCommandResponse, Should create valid message with Ok response with the letters to exchange", () => {

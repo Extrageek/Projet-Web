@@ -56,4 +56,3 @@
 //         expect(timerService.timerIsRunning()).to.be.false;
 //     });
 // });
-

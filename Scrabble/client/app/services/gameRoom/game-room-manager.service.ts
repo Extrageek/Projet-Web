@@ -29,7 +29,7 @@ export class GameRoomManagerService {
         if (keyCode === null) {
             throw new Error("Argument error: the keyCode cannot be null");
         }
-        response = (keyCode === LetterHelper.tabKeyCode);
+        response = (keyCode === LetterHelper.TAB_KEY_CODE);
         return response;
     }
 }

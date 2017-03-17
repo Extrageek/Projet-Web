@@ -130,8 +130,8 @@ export class PlaceWordCommand implements ICommand {
         }
 
         notScrabbleLetters = enteredLetters.filter((value) => {
-            return !(LetterHelper.letterAKeyCode <= value.charCodeAt(0)
-                && value.charCodeAt(0) <= LetterHelper.letterZKeyCode)
+            return !(LetterHelper.LETTER_A_KEY_CODE <= value.charCodeAt(0)
+                && value.charCodeAt(0) <= LetterHelper.LETTER_Z_KEY_CODE)
                 && value !== CommandsHelper.BLANK_VALUE;
         });
         return (notScrabbleLetters.length === 0);
@@ -153,8 +153,8 @@ export class PlaceWordCommand implements ICommand {
     public isValidRowPosition(letter: string): boolean {
         this.throwsErrorIfParameterIsEmpty(letter);
         let keyCode = letter.toUpperCase().charCodeAt(0);
-        return keyCode >= LetterHelper.letterAKeyCode
-            && keyCode <= LetterHelper.letterOKeyCode;
+        return keyCode >= LetterHelper.LETTER_A_KEY_CODE
+            && keyCode <= LetterHelper.LETTER_O_KEY_CODE;
     }
 
     public isValidColumnPosition(index: number): boolean {

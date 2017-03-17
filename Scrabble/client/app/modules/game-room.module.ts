@@ -16,6 +16,6 @@ import { GameComponent } from "./../components/game-room.component";
         EaselComponent,
         InformationPanelComponent,
         GameComponent
-    ],
+    ]
 })
 export class GameRoomModule { }

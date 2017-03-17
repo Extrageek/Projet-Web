@@ -7,7 +7,6 @@ const DEFAULT_MAX_VALUE = 0;
 @Injectable()
 export class TimerService {
 
-
     private _counterMaxValue: number;
     public set counterMaxValue(value: number) {
         this._counterMaxValue = value;
@@ -45,12 +44,12 @@ export class TimerService {
     }
 
     public timer() {
-
         let observable = new Observable((observer: any) => {
             setInterval(() => {
                 this.updateClock();
                 let count = { minutes: this.minutes, seconds: this.seconds };
                 observer.next(count);
+
             }, ONE_SECOND);
 
             return () => {

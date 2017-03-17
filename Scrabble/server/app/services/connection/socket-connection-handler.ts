@@ -163,7 +163,8 @@ export class SocketConnectionHandler {
 
             let room = this._roomHandler.getRoomBySocketId(socket.id);
             let player = this._roomHandler.getPlayerBySocketId(socket.id);
-            let response = this._messageHandler.createPlaceWordResponse(player.username, room, request._commandStatus, request._response);
+            let response = this._messageHandler
+                .createPlaceWordResponse(player.username, room, request._commandStatus, request._response);
 
             if (response._commandStatus === CommandStatus.Ok) {
                 // Update the players queues for everyone in the room
@@ -277,8 +278,10 @@ export class SocketConnectionHandler {
                             _commandType: null,
                         };
 
-                        // If the leaving player has the turn in the game, this state should be released, we should give the turn to the next one
-                        //TODO: Check after when we will implement in the next sprint exactly what to do when a user is leaving
+                        // If the leaving player has the turn in the game, this state should be released,
+                        // we should give the turn to the next one
+                        // TODO: Check after when we will implement in the next sprint exactly what to do
+                        // when a user is leaving
                         if (leavingPlayer.username === playerRoom.players.peek().username) {
                             // Update the players queue for everyone in the room
                             let playersQueues = playerRoom.getAndUpdatePlayersQueue();

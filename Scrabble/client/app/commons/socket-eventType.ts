@@ -1,45 +1,45 @@
 export class SocketEventType {
 
     // A connection event with the server.
-    static connection = "connection";
+    static CONNECTION = "connection";
 
     // A connection event error.
-    static connectError = "connect_error";
+    static CONNECT_ERROR = "connect_error";
 
     // A connected status of the client.
-    static connect = "connect";
+    static CONNECT = "connect";
 
     // A disconnected status of the client.
-    static disconnect = "disconnect";
+    static DISCONNECT = "disconnect";
 
     //Message sent by the server if the information sent are not valid
-    static invalidRequest = "invalidRequest";
+    static INVALID_REQUEST = "invalidRequest";
 
     //Message sent by the client when he wants to play a game.
-    static newGameRequest = "newGameRequest";
+    static NEW_GAME_REQUEST = "newGameRequest";
 
     // A joined room event.
-    static joinRoom = "joinedRoom";
+    static JOIN_ROOM = "joinedRoom";
 
     // A joined room event.
-    static leaveRoom = "leaveRoom";
+    static LEAVE_ROOM = "leaveRoom";
 
     // A ready state event for a room.
-    static roomReady = "roomReady";
-    static message = "message";
-    static playerLeftRoom = "playerLeftRoom";
+    static ROOM_READY = "roomReady";
+    static MESSAGE = "message";
+    static PLAYER_LEFT_ROOM = "playerLeftRoom";
 
     //Message sent by the server if the name already exists
-    static usernameAlreadyExist = "usernameAlreadyExist";
-    static initializeEasel = "initializeEasel";
+    static USERNAME_ALREADY_EXIST = "usernameAlreadyExist";
+    static INITIALIZE_EASEL = "initializeEasel";
 
-    static updatePlayersQueue = "updatePlayersQueue";
-    static changeLettersRequest = "!changer";
-    static placeWordCommandRequest = "!place";
-    static passCommandRequest = "!passer";
+    static UPDATE_PLAYERS_QUEUE = "updatePlayersQueue";
+    static CHANGE_LETTERS_REQUEST = "!changer";
+    static PLACE_WORD_COMMAND_REQUEST = "!place";
+    static PASS_COMMAND_REQUEST = "!passer";
 
-    static timerEvent = "timerEvent";
+    static TIMER_EVENT = "timerEvent";
 
-    static commandRequest = "commandRequest";
-    static invalidCommandRequest = "invalidCommand";
+    static COMMAND_REQUEST = "commandRequest";
+    static INVALID_COMMAND_REQUEST = "invalidCommand";
 }

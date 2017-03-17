@@ -40,7 +40,7 @@ export class MessageCommand implements ICommand {
         let request = {
             commandType: this._commandRequest._commandType,
             message: this._commandRequest._response
-        }
+        };
         this.chatroomComponent.sendMessage(request);
     }
 

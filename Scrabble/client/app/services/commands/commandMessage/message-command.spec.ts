@@ -30,7 +30,7 @@ import { MessageCommand } from "./message-command";
 import { SocketService } from "../../socket-service";
 import { EaselManagerService } from "../../easel/easel-manager.service";
 
-import { Observable } from "rxjs/Observable"
+import { Observable } from "rxjs/Observable";
 
 describe("MessageCommand", function () {
 
@@ -47,7 +47,7 @@ describe("MessageCommand", function () {
             providers: [
                 { provide: APP_BASE_HREF, useValue: '/game-room/test' },
                 SocketService,
-                EaselManagerService,
+                EaselManagerService
             ],
 
         })
