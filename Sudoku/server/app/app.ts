@@ -75,8 +75,8 @@ export class Application {
 
         // REST - GET
         router.get('/', routeManager.index.bind(routeManager));
-        router.get('/api/:difficulty', routeManager.getNewPuzzle.bind(routeManager));
         router.get('/api/top-records', routeManager.getTopRecords.bind(routeManager));
+        router.get('/api/:difficulty', routeManager.getNewPuzzle.bind(routeManager));
 
         // REST - POST
         router.post('/api/login', routeManager.addUser.bind(routeManager));

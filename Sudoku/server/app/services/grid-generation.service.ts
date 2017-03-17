@@ -5,18 +5,12 @@
  * @date 2017/01/22
  */
 
-import { Puzzle } from "./../models/puzzle";
+import { Puzzle, Difficulty } from "./../models/puzzle";
 import { GridSolver } from "./grid-solver.service";
 
 // Used to generate the type of transformation and to give a number of holes to dig in sudoku
 function getRandomNumberInRange(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-export enum Difficulty {
-    NORMAL = 0,
-    HARD = 1,
-    NUMBER_OF_DIFFICULTIES = 2
 }
 
 export class GridGenerationManager {

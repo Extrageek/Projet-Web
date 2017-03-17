@@ -1,6 +1,7 @@
 //import * as express from 'express';
 
 import { MongoClient, InsertOneWriteOpResult, DeleteWriteOpResultObject, Db } from "mongodb";
+import { Difficulty } from "./models/puzzle";
 
 export class DatabaseManager {
 
@@ -91,8 +92,8 @@ export class DatabaseManager {
             console.log("-- DatabaseManager getTopRecords --");
             let docs = new Array<any>();
             let collection = this._dbConnection.collection("leaderboard");
-            docs.push(await collection.find({ difficulty: "NORMAL" }).sort({ time: 1 }).limit(3).toArray());
-            docs.push(await collection.find({ difficulty: "HARD" }).sort({ time: 1 }).limit(3).toArray());
+            docs.push(await collection.find({ difficulty: Difficulty.NORMAL }).sort({ time: 1 }).limit(3).toArray());
+            docs.push(await collection.find({ difficulty: Difficulty.HARD }).sort({ time: 1 }).limit(3).toArray());
             return docs;
         }
         catch (error) {
