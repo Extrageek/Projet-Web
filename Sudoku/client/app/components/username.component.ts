@@ -12,9 +12,8 @@ import { UserSettingService } from '../services/user-setting.service';
 })
 export class UsernameComponent {
     _isLoginNextActivated = false;
+    _isErrorMessageHidden = true;
     username: string;
-
-    @ViewChild("alertBox") alertBox: ElementRef;
 
     constructor(
         private router: Router,
@@ -23,24 +22,19 @@ export class UsernameComponent {
     }
 
     public async verifyUsername(username: string) {
-        let isValid: boolean;
+        this._isErrorMessageHidden = true;
         await this.restApiProxyService.verifyUsername(username)
             .then(result => {
-                isValid = result;
+                this._isErrorMessageHidden = result;
             })
             .catch(error => {
                 console.log(error);
-                isValid = false;
+                this._isErrorMessageHidden = false;
             });
-        if (isValid) {
-            this.alertBox.nativeElement.classList.add("fade");
+        if (this._isErrorMessageHidden) {
             this.userSettingService.setName(username);
             this.router.navigate(["/difficulty"]);
         }
-        else {
-            this.alertBox.nativeElement.classList.remove("fade");
-        }
-
     }
 
     public activateLoginNext(username: string) {
@@ -52,6 +46,6 @@ export class UsernameComponent {
     // }
 
     public closeAlert() {
-        this.alertBox.nativeElement.classList.add("fade");
+        this._isErrorMessageHidden = true;
     }
 }

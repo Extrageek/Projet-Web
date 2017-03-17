@@ -1,17 +1,6 @@
 
-import {
-    fakeAsync,
-    tick, inject,
-    TestBed
-} from '@angular/core/testing';
-
-import {
-    Http, ResponseOptions,
-    Response,
-    BaseRequestOptions,
-    ConnectionBackend
-} from '@angular/http';
-
+import { fakeAsync, tick, inject, TestBed } from '@angular/core/testing';
+import { Http, ResponseOptions, Response, BaseRequestOptions, ConnectionBackend } from '@angular/http';
 import { MockBackend, MockConnection } from '@angular/http/testing';
 import { expect, assert } from 'chai';
 
@@ -19,7 +8,6 @@ import { UserSetting } from '../models/user-setting';
 import { Record } from '../models/record';
 import { Time } from '../models/time';
 import { Puzzle } from '../models/puzzle';
-
 import { RestApiProxyService } from '../services/rest-api-proxy.service';
 import { FAKE_PUZZLE_FEED } from './mock-data';
 
@@ -58,7 +46,7 @@ describe('RestApiProxyService - getNewPuzzle', () => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
 
                     //Check the expected Url to the server
-                    expect(connection.request.url).to.deep.equal('http://localhost:3002/api/puzzle?difficulty=0');
+                    expect(connection.request.url).to.deep.equal('http://localhost:3002/api/0');
 
                     // Send the fake data to the caller
                     connection.mockRespond(new Response(new ResponseOptions({ body: fakePuzzle })));
@@ -72,8 +60,17 @@ describe('RestApiProxyService - getNewPuzzle', () => {
 
                 tick();
 
-                // Check for the expected response.
-                expect(response).to.deep.equal(fakePuzzle);
+                // Check for the expected response (A 9x9 array);
+                expect(response._puzzle.length).to.equal(9);
+                expect(response._puzzle[0].length).to.equal(9);
+                expect(response._puzzle[1].length).to.equal(9);
+                expect(response._puzzle[2].length).to.equal(9);
+                expect(response._puzzle[3].length).to.equal(9);
+                expect(response._puzzle[4].length).to.equal(9);
+                expect(response._puzzle[5].length).to.equal(9);
+                expect(response._puzzle[6].length).to.equal(9);
+                expect(response._puzzle[7].length).to.equal(9);
+                expect(response._puzzle[8].length).to.equal(9);
             }))
     );
 
