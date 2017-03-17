@@ -45,12 +45,12 @@ export class TimerService {
     }
 
     public timer() {
-
         let observable = new Observable((observer: any) => {
             setInterval(() => {
                 this.updateClock();
                 let count = { minutes: this.minutes, seconds: this.seconds };
                 observer.next(count);
+
             }, ONE_SECOND);
 
             return () => {

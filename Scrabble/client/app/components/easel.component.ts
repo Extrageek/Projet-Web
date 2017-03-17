@@ -94,14 +94,12 @@ export class EaselComponent implements OnInit, OnDestroy {
         return this.socketService.subscribeToChannelEvent(SocketEventType.changeLettersRequest)
             .subscribe((response: any) => {
 
-                // TODO: Find another way, like using a session to handle the user info
                 this.activatedRoute.params.subscribe(params => {
+
                     if (params['id'] === response._username) {
                         for (let index = 0; index < this._indexOflettersToExchange.length; ++index) {
-                            console.log("in easel", this._indexOflettersToExchange[index]);
-
                             this.letters[this._indexOflettersToExchange[index]] =
-                                new ScrabbleLetter(response._data[0][index]);
+                                new ScrabbleLetter(response._data[index]);
                             console.log(this.letters);
                         }
                     }
