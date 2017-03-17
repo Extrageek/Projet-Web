@@ -1,8 +1,6 @@
 import { expect } from "chai";
 import { ObjectLoader, Vector3 } from "three";
-import { Stone } from "./stone";
-import { StoneColor } from './stone-color';
-import { StoneSpin } from './stone-spin';
+import { Stone, StoneColor, StoneSpin } from "./../stone";
 
 describe("Stone tester should", () => {
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { GameStatus, CurrentPlayer } from './../../models/game-status/game-status';
+import { GameStatus, CurrentPlayer } from './../models/game-status';
 
 @Injectable()
 export class GameStatusService {

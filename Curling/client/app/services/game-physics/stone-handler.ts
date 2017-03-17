@@ -1,9 +1,7 @@
 import { Clock, ObjectLoader, Vector3 } from 'three';
-import { RinkInfo } from './../../models/scenery/rinkInfo.interface';
-import { Stone } from './../../models/stone/stone';
-import { StoneColor } from './../../models/stone/stone-color';
-import { StoneSpin } from './../../models/stone/stone-spin';
-import { GameComponent } from './../../models/stone/game-component.interface';
+import { RinkInfo } from './../../models/scenery/rink-info.interface';
+import { Stone, StoneSpin, StoneColor } from './../../models/stone';
+import { GameComponent } from './../../models/game-component.interface';
 import { CameraType } from './camera-type';
 import Box3 = THREE.Box3;
 

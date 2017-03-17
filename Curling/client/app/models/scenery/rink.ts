@@ -1,5 +1,5 @@
 import { Group, MeshPhongMaterial, ObjectLoader, Object3D, Vector3 } from "three";
-import { RinkInfo } from "./rinkInfo.interface";
+import { RinkInfo } from "./rink-info.interface";
 
 export class Rink extends Group implements RinkInfo {
     public static readonly TARGET_CENTER = new Vector3(/*TODO:Find the center*/);

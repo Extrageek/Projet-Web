@@ -1,7 +1,16 @@
 import { ObjectLoader, Group, MeshPhongMaterial, Object3D, Sphere, Vector3 } from "three";
 import { GameComponent } from "./game-component.interface";
-import { StoneColor } from './stone-color';
-import { StoneSpin } from './stone-spin';
+
+export enum StoneSpin {
+    CounterClockwise = 0,
+    Clockwise = 1
+}
+
+export enum StoneColor {
+    Blue = 0,
+    Red = 1,
+    NumberOfColors = 2
+}
 
 export class Stone extends Group implements GameComponent {
 

@@ -1,11 +1,9 @@
 import { expect } from 'chai';
 import { ObjectLoader, Vector3 } from "three";
 import { StoneHandler } from './stone-handler';
-import { Stone } from './../../models//stone/stone';
-import { StoneColor } from './../../models/stone/stone-color';
-import { StoneSpin } from './../../models/stone/stone-spin';
+import { Stone, StoneColor, StoneSpin } from './../../models/stone';
 import { CameraType } from './camera-type';
-import { RinkInfo } from './../../models/scenery/rinkInfo.interface';
+import { RinkInfo } from './../../models/scenery/rink-info.interface';
 
 describe("StoneHandler tests should", () => {
 

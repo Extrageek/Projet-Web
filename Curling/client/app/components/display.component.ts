@@ -1,12 +1,12 @@
 import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { GameStatus } from '../models/game-status/game-status';
-import { UserSetting } from '../models/user/user-setting';
+import { GameStatus } from '../models/game-status';
+import { UserSetting } from '../models/user-setting';
 
-import { RestApiProxyService } from './../services/leaderboard/rest-api-proxy.service';
-import { UserSettingService } from './../services/user/user-setting.service';
-import { GameStatusService } from './../services/game-status/game-status.service';
+import { RestApiProxyService } from './../services/rest-api-proxy.service';
+import { UserSettingService } from './../services/user-setting.service';
+import { GameStatusService } from './../services/game-status.service';
 
 @Component({
     moduleId: module.id,

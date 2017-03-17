@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { Rink } from "./rink";
+import { Rink } from "./../scenery/rink";
 import { ObjectLoader } from "three";
 
 describe("Rink class should", () => {
