@@ -53,18 +53,24 @@ export class LetterBankHandler {
             if (this._bank.letterIsAvailable(randomLetter)) {
                 chosenLetter = this.bank.getLetterFromBank(randomLetter);
                 newEasel.push(chosenLetter);
+            } else if (this.bank.numberOfLettersInBank === 0) {
+                break;
             } else {
                 // Check of this is necessary, we can stay in an infinite loop here
                 --index;
             }
         }
+
         return newEasel;
     }
 
     private putLetterBackInBank(lettersToBeChanged: Array<Letter>) {
-        for (let index = 0; index < lettersToBeChanged.length; index++) {
+          for (let index = 0; index < lettersToBeChanged.length; index++) {
             this.bank.putLetterBackInBank(lettersToBeChanged[index]);
         }
+        // lettersToBeChanged.map((letter) => {
+        //     this.bank.putLetterBackInBank(letter);
+        // } );
     }
 
     private getRandomLetter(): number {

@@ -44,7 +44,7 @@ export class MessageHandler {
         commandStatus: CommandStatus,
         data: IPlaceWordResponse
     ): ICommandMessage<IPlaceWordResponse> {
-        
+
         this.throwNullArgumentException(room);
         this.throwNullArgumentException(username);
         this.throwNullArgumentException(commandStatus);
@@ -53,7 +53,7 @@ export class MessageHandler {
         let commandMessage: ICommandMessage<IPlaceWordResponse>;
         let message: string;
 
-        if (commandStatus == CommandStatus.Ok) {
+        if (commandStatus === CommandStatus.Ok) {
             message = `$: <!placer> ` + ' ' + `${data._letters.toString()}`;
 
         } else {
@@ -89,7 +89,7 @@ export class MessageHandler {
 
         let exchangeCommandResponse: ICommandMessage<Array<string>>;
 
-        let message = (commandStatus == CommandStatus.Ok) ?
+        let message = (commandStatus === CommandStatus.Ok) ?
             `$: <!changer> ` + ' ' + `${lettersToChange.toString()}` :
             `$: ${CommandStatus[commandStatus]} `
             + `<!changer> ` + ' '
@@ -123,7 +123,7 @@ export class MessageHandler {
         this.throwNullArgumentException(request.commandType);
         this.throwNullArgumentException(request.commandStatus);
 
-        let message = (request.commandStatus == CommandStatus.Ok) ?
+        let message = (request.commandStatus === CommandStatus.Ok) ?
             `$: <!${CommandType[request.commandType]}>` + ' '
             + `${request.data}` : `$: ${CommandStatus[request.commandStatus]} ` + ' '
             + `<${request.data}>`;

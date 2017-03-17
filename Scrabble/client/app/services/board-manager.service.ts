@@ -73,7 +73,7 @@ export class BoardManagerService {
 
             // Get the row number from the given letter
             let rowLetterToRowNumber = firstRowIndex.toUpperCase()
-                .charCodeAt(0) - LetterHelper.letterAKeyCode;
+                .charCodeAt(0) - LetterHelper.LETTER_A_KEY_CODE;
             // console.log("square", this._board.squares[rowLetterToRowNumber][nextColumnIndex].isBusy);
             let currentSquare = this._board.squares[rowLetterToRowNumber][nextColumnIndex];
 
@@ -154,8 +154,8 @@ export class BoardManagerService {
     public isValidRowPosition(letter: string): boolean {
         this.exceptionHelperService.throwNullArgumentException(letter);
         let keyCode = letter.toUpperCase().charCodeAt(0);
-        return keyCode >= LetterHelper.letterAKeyCode
-            && keyCode <= LetterHelper.letterOKeyCode;
+        return keyCode >= LetterHelper.LETTER_A_KEY_CODE
+            && keyCode <= LetterHelper.LETTER_O_KEY_CODE;
     }
 
     public isValidColumnPosition(index: number): boolean {

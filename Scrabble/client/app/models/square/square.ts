@@ -4,33 +4,38 @@ import { SquareType } from "./square-type";
 
 export class Square {
     private _letter: ScrabbleLetter;
+    private _position: SquarePosition;
+    private _type: SquareType;
+    private _isBusy: boolean;
+
     public get letter(): ScrabbleLetter {
         return this._letter;
     }
+
     public set letter(letter: ScrabbleLetter) {
         this._letter = letter;
     }
 
-    private _position: SquarePosition;
     public get position(): SquarePosition {
         return this._position;
     }
+
     public set position(position: SquarePosition) {
         this._position = position;
     }
 
-    private _type: SquareType;
     public get type(): SquareType {
         return this._type;
     }
+
     public set type(type: SquareType) {
         this._type = type;
     }
 
-    private _isBusy: boolean;
     public get isBusy(): boolean {
         return this._isBusy;
     }
+
     public set isBusy(v: boolean) {
         this._isBusy = v;
     }

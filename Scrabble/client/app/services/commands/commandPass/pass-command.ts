@@ -33,8 +33,8 @@ export class PassCommand implements ICommand {
         let request = {
             commandType: this._commandRequest._commandType,
             commandStatus: this._commandRequest._commandStatus,
-            data: this._commandRequest._response,
-        }
+            data: this._commandRequest._response
+        };
         this.gameComponent.passCurrentPlayerTurn(request);
     }
 

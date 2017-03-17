@@ -37,8 +37,8 @@ export class EaselManagerService {
         if (keyCode === null) {
             throw new Error("Argument error: the keyCode cannot be null");
         }
-        verification = (LetterHelper.leftArrowKeyCode === keyCode
-            || keyCode === LetterHelper.rightArrowKeyCode);
+        verification = (LetterHelper.LEFT_ARROW_KEY_CODE === keyCode
+            || keyCode === LetterHelper.RIGHT_ARROW_KEY_CODE);
         return verification;
     }
 
@@ -47,7 +47,7 @@ export class EaselManagerService {
         if (keyCode === null) {
             throw new Error("Argument error: the keyCode cannot be null");
         }
-        verification = (LetterHelper.letterAKeyCode <= keyCode && keyCode <= LetterHelper.letterZKeyCode);
+        verification = (LetterHelper.LETTER_A_KEY_CODE <= keyCode && keyCode <= LetterHelper.LETTER_Z_KEY_CODE);
         return verification;
     }
 
@@ -56,7 +56,7 @@ export class EaselManagerService {
         if (keyCode === null) {
             throw new Error("Argument error: the keyCode cannot be null");
         }
-        verification = (keyCode === LetterHelper.tabKeyCode);
+        verification = (keyCode === LetterHelper.TAB_KEY_CODE);
         return verification;
     }
 
@@ -84,13 +84,13 @@ export class EaselManagerService {
         let newPosition: number;
 
         switch (keyCode) {
-            case LetterHelper.leftArrowKeyCode:
+            case LetterHelper.LEFT_ARROW_KEY_CODE:
                 newPosition = currentPosition - 1;
                 return (newPosition < MIN_POSITION_INDEX) ? MAX_POSITION_INDEX : newPosition;
-            case LetterHelper.rightArrowKeyCode:
+            case LetterHelper.RIGHT_ARROW_KEY_CODE:
                 newPosition = currentPosition + 1;
                 return (newPosition > MAX_POSITION_INDEX) ? MIN_POSITION_INDEX : newPosition;
-            case LetterHelper.tabKeyCode:
+            case LetterHelper.TAB_KEY_CODE:
                 return MIN_POSITION_INDEX;
             default:
                 return newPosition = 0;

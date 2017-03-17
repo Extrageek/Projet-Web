@@ -15,7 +15,7 @@ let _type: SquareType;
 describe("Square object should", () => {
     beforeEach(() => {
         _position = new SquarePosition(BoardRows[BoardRows.H], BoardColumn.EIGHT_COLUMN);
-        _type = SquareType.star;
+        _type = SquareType.STAR;
         _square = new Square(_position, _type);
     });
 
@@ -32,7 +32,7 @@ describe("Square object should", () => {
         expect(_square.letter).to.be.null;
     });
     it("set the alphabet letter corectly", () => {
-        _letter = new ScrabbleLetter(Alphabet.letterD);
+        _letter = new ScrabbleLetter(Alphabet.LETTER_D);
         _square.letter = _letter;
         expect(_square.letter).to.be.equal(_letter);
     });
@@ -45,10 +45,10 @@ describe("Square object should", () => {
         expect(_square.position).to.be.equal(_position);
     });
     it("get the type of a square corectly", () => {
-        expect(_square.type).to.be.equal(SquareType.star);
+        expect(_square.type).to.be.equal(SquareType.STAR);
     });
     it("set the score of the player corectly", () => {
-        _type = SquareType.normal;
+        _type = SquareType.NORMAL;
         _square.type = _type;
         expect(_square.type).to.be.equal(_type);
     });

@@ -7,7 +7,6 @@ const DEFAULT_MAX_VALUE = 0;
 @Injectable()
 export class TimerService {
 
-
     private _counterMaxValue: number;
     public set counterMaxValue(value: number) {
         this._counterMaxValue = value;

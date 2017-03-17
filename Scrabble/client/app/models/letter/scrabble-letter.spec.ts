@@ -7,7 +7,7 @@ let _letter: ScrabbleLetter;
 describe("ScrabbleLetter letter validation", () => {
 
     beforeEach(() => {
-        _letter = new ScrabbleLetter(Alphabet.letterC);
+        _letter = new ScrabbleLetter(Alphabet.LETTER_C);
     });
 
     it("should be an instance of ScrabbleLetter", () => {
@@ -24,7 +24,7 @@ describe("ScrabbleLetter letter validation", () => {
 
     it("should set letter correctly", () => {
         let fakeLeter: string;
-        fakeLeter = Alphabet.letterK;
+        fakeLeter = Alphabet.LETTER_K;
         _letter.letter = fakeLeter;
         expect(_letter.letter).to.be.equal(fakeLeter);
     });
