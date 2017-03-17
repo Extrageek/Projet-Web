@@ -1,8 +1,8 @@
-import { Player } from "../players/player";
-import { QueueCollection } from "../../models/queue-collection";
-import { Letter } from "../../models/lettersBank/letter";
-import { TimerService } from "../../services/timer/timer.service";
-import { LetterBankHandler } from "../../services/lettersBank/letterbank-handler";
+import { Player } from "./player";
+import { QueueCollection } from "./queue-collection";
+import { Letter } from "./letter";
+import { TimerService } from "../services/timer.service";
+import { LetterBankHandler } from "../services/letterbank-handler";
 
 let uuid = require('node-uuid');
 

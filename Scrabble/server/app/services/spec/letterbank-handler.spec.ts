@@ -1,9 +1,9 @@
-import { Alphabet } from "../../models/lettersBank/alphabet";
-import { AlphabetPoint } from "../../models/lettersBank/commons/alphabet-point";
-import { AlphabetQuantity } from "../../models/lettersBank/commons/alphabet-quantity";
-import { Letter } from "../../models/lettersBank/letter";
-import { LetterBank } from "../../models/lettersBank/letterbank";
-import { LetterBankHandler } from "./letterbank-handler";
+import { Alphabet } from "../../models/commons/alphabet";
+import { AlphabetPoint } from "../../models/commons/alphabet-point";
+import { AlphabetQuantity } from "../../models/commons/alphabet-quantity";
+import { Letter } from "../../models/letter";
+import { LetterBank } from "../../models/letterbank";
+import { LetterBankHandler } from "../letterbank-handler";
 
 import { expect } from "chai";
 

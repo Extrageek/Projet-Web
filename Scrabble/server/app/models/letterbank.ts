@@ -1,5 +1,5 @@
 import { Letter } from "./letter";
-import { Alphabet } from "./alphabet";
+import { Alphabet } from "./commons/alphabet";
 import { AlphabetPoint } from "./commons/alphabet-point";
 import { AlphabetQuantity } from "./commons/alphabet-quantity";
 

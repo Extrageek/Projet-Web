@@ -1,4 +1,4 @@
-import { Room } from "../rooms/room";
+import { Room } from "./room";
 
 export class Player {
 

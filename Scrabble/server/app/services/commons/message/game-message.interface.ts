@@ -1,5 +1,5 @@
-import { CommandType } from "../../commons/command-type";
-import { Room } from '../../../models/rooms/room';
+import { CommandType } from "../command/command-type";
+import { Room } from '../../../models/room';
 
 export class IGameMessage {
     _commandType: CommandType;

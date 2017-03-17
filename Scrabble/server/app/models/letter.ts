@@ -1,4 +1,4 @@
-import { Alphabet } from "./alphabet";
+import { Alphabet } from "./commons/alphabet";
 import { AlphabetPoint } from "./commons/alphabet-point";
 
 export class Letter {

@@ -1,6 +1,6 @@
-import { Room } from "../../models/rooms/room";
-import { Letter } from "../../models/lettersBank/letter";
-import { Player } from "../../models/players/player";
+import { Room } from "../models/room";
+import { Letter } from "../models/letter";
+import { Player } from "../models/player";
 
 export class RoomHandler {
 

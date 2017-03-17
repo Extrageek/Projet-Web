@@ -1,21 +1,21 @@
 import * as http from "http";
 import * as io from "socket.io";
 
-import { RoomHandler } from "../../services/rooms/room-handler";
-import { Room } from "../../models/rooms/room";
-import { Player } from "../../models/players/Player";
-import { Letter } from "../../models/lettersBank/letter";
+import { RoomHandler } from "./room-handler";
+import { Room } from "../models/room";
+import { Player } from "../models/player";
+import { Letter } from "../models/letter";
 
-import { SocketEventType } from "./socket-eventType";
+import { SocketEventType } from "./commons/socket-eventType";
 
-import { CommandType } from "../commons/command-type";
-import { CommandStatus } from "../commons/command-status";
-import { ICommandRequest } from "../commons/command-request";
-import { IPlaceWordResponse } from "../commons/place-command-response.interface";
-import { ICommandMessage } from "../messages/commons/command-message.interface";
+import { CommandType } from "./commons/command/command-type";
+import { CommandStatus } from "./commons/command/command-status";
+import { ICommandRequest } from "./commons/command/command-request";
+import { IPlaceWordResponse } from "./commons/place-command-response.interface";
+import { ICommandMessage } from "./commons/message/command-message.interface";
 
-import { IRoomMessage } from "../messages/commons/room-message.interface";
-import { MessageHandler } from "../messages/message-handler";
+import { IRoomMessage } from "./commons/message/room-message.interface";
+import { MessageHandler } from "./message-handler";
 
 export class SocketConnectionHandler {
 

@@ -1,8 +1,7 @@
 import * as express from "express";
 import { GridGenerationManager } from "./services/grid-generation.service";
 import { GridValidationManager } from "./services/grid-validation.service";
-import { Puzzle } from "./models/puzzle";
-import { Difficulty } from "./services/grid-generation.service";
+import { Puzzle, Difficulty } from "./models/puzzle";
 import { DatabaseManager } from "./database-management";
 
 module Route {

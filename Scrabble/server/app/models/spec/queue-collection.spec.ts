@@ -1,6 +1,6 @@
 import { expect, assert } from "chai";
-import { QueueCollection } from "./queue-collection";
-import { Player } from "./players/player";
+import { QueueCollection } from "../queue-collection";
+import { Player } from "../player";
 
 let fakeName1 = "testname1";
 let fakeName2 = "testname2";

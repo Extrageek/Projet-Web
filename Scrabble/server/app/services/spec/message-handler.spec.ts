@@ -1,13 +1,13 @@
 import { expect, assert } from "chai";
 
-import { Room } from "../../models/rooms/room";
-import { Player } from "../../models/players/player";
-import { CommandType } from "../commons/command-type";
-import { CommandStatus } from "../commons/command-status";
+import { Room } from "../../models/room";
+import { Player } from "../../models/player";
+import { CommandType } from "../commons/command/command-type";
+import { CommandStatus } from "../commons/command/command-status";
 import { IPlaceWordResponse } from "../commons/place-command-response.interface";
-import { ICommandMessage } from "../messages/commons/command-message.interface";
-import { IRoomMessage } from "../messages/commons/room-message.interface";
-import { MessageHandler } from "./message-handler";
+import { ICommandMessage } from "../commons/message/command-message.interface";
+import { IRoomMessage } from "../commons/message/room-message.interface";
+import { MessageHandler } from "../message-handler";
 
 describe("MessageHandler", () => {
     let messageHandler: MessageHandler;
@@ -124,7 +124,7 @@ describe("MessageHandler", () => {
             expect(response._data._letters).to.be.deep.equals(fakeLetters);
             assert(response._message === expectedMessage);
             expect(response._date).to.be.instanceof(Date);
-    });
+        });
 
     it("createExchangeLettersResponse, Should throw Null argument exception if the username is null", () => {
         let wrapper = () => messageHandler
@@ -133,9 +133,8 @@ describe("MessageHandler", () => {
     });
 
     it("createExchangeLettersResponse, Should throw Null argument exception if the room is null", () => {
-        let wrapper = () => messageHandler.createExchangeLettersResponse
-            (fakeUsername, null, CommandStatus.NotAllowed, fakeLetters, fakeLettersToSend);
-
+        let wrapper = () => messageHandler
+        .createExchangeLettersResponse(fakeUsername, null, CommandStatus.NotAllowed, fakeLetters, fakeLettersToSend);
         expect(wrapper).throw(Error, "Null argument exception: the parameters cannot be null be null.");
     });
 
@@ -166,13 +165,12 @@ describe("MessageHandler", () => {
             expect(response._data).to.be.null;
             assert(response._message === expectedMessage);
             expect(response._date).to.be.instanceof(Date);
-    });
+        });
 
     it("createExchangeLettersResponse, " +
         "Should create valid message with Ok response with the letters to exchange", () => {
             let response = messageHandler
-                .createExchangeLettersResponse
-                    (fakeUsername, fakeRoom, CommandStatus.Ok, fakeLetters, fakeLettersToSend);
+            .createExchangeLettersResponse(fakeUsername, fakeRoom, CommandStatus.Ok, fakeLetters, fakeLettersToSend);
             let expectedMessage = `$: <!changer> ` + ' ' + `${fakeLetters.toString()}`;
 
             assert(response._username === fakeUsername);
@@ -182,7 +180,7 @@ describe("MessageHandler", () => {
             expect(response._data).to.be.deep.equals(fakeLettersToSend);
             assert(response._message === expectedMessage);
             expect(response._date).to.be.instanceof(Date);
-    });
+        });
 
     it("createCommandResponse, Should throw Null argument exception if the username is null", () => {
         let request = { commandType: CommandType.PassCmd, commandStatus: CommandStatus.NotAllowed, data: "" };
@@ -224,7 +222,7 @@ describe("MessageHandler", () => {
             expect(response._data).to.be.null;
             assert(response._message === expectedMessage);
             expect(response._date).to.be.instanceof(Date);
-    });
+        });
 
     it("createCommandResponse, Should create valid message with Ok response with the letters to exchange", () => {
         let request = { commandType: CommandType.PassCmd, commandStatus: CommandStatus.Ok, data: "" };

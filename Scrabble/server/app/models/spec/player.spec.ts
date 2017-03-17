@@ -1,5 +1,5 @@
 import { expect, assert } from "chai";
-import { Player } from "./Player";
+import { Player } from "../player";
 
 let username = "Martin";
 let fakeSocketId = "fakeId@33md401";

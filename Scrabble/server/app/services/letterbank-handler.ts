@@ -1,5 +1,5 @@
-import { Letter } from "../../models/lettersBank/letter";
-import { LetterBank } from "../../models/lettersBank/letterbank";
+import { Letter } from "../models/letter";
+import { LetterBank } from "../models/letterbank";
 
 const FULL_EASEL = 7;
 const MIN_LETTER_POSITION = 0;

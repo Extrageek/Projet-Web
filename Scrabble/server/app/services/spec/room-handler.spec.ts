@@ -1,7 +1,7 @@
 import { expect, assert } from "chai";
-import { Room } from "../../models/rooms/room";
-import { RoomHandler } from "./room-handler";
-import { Player } from "../../models/players/player";
+import { Room } from "../../models/room";
+import { RoomHandler } from "../room-handler";
+import { Player } from "../../models/player";
 
 let fakeSocketId1 = "fakevmTOF4T3yXo5dAjvAAAF";
 

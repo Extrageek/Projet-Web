@@ -1,16 +1,16 @@
 import { expect, assert } from "chai";
-import { Room } from "./room";
-import { Player } from "../players/player";
+import { Room } from "../room";
+import { Player } from "../player";
 import { QueueCollection } from "../queue-collection";
-import { LetterBankHandler } from "../../services/lettersBank/letterbank-handler";
+import { LetterBankHandler } from "../../services/letterbank-handler";
 
 let fakeSocketId1 = "fakeId@33md401";
 let fakeSocketId2 = "fakeId@3300001";
 let fakename1 = "mat";
 let fakename2 = "jul";
 let numberOfPlayers = 2;
-let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
-let player2 = new Player(fakename2, numberOfPlayers, fakeSocketId2);
+let playerOne = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+let playerTwo = new Player(fakename2, numberOfPlayers, fakeSocketId2);
 
 describe("Room", () => {
 
@@ -39,8 +39,8 @@ describe("Room", () => {
         let roomCapacity = 2;
         let room = new Room(roomCapacity);
 
-        room.addPlayer(player1);
-        room.addPlayer(player2);
+        room.addPlayer(playerOne);
+        room.addPlayer(playerTwo);
         assert(room.roomCapacity === numberOfPlayers);
 
         let roomFirstPlayer = room.players.dequeue();
@@ -58,7 +58,7 @@ describe("Room", () => {
 
         let fakeName1 = "testname1";
         let fakeName2 = "testname2";
-        let numberOfPlayers = 1;
+        // let numberOfPlayers = 1;
 
         let player1 = new Player(fakeName1, numberOfPlayers, fakeSocketId1);
         let player2 = new Player(fakeName2, numberOfPlayers, fakeSocketId2);
@@ -86,9 +86,9 @@ describe("Room", () => {
 
         let fakeName = "fakename";
 
-        room.addPlayer(player1);
-        player2.username = player1.username;
-        let playerWithDuplicatedUsername = () => room.addPlayer(player2);
+        room.addPlayer(playerOne);
+        playerTwo.username = playerOne.username;
+        let playerWithDuplicatedUsername = () => room.addPlayer(playerTwo);
 
         expect(playerWithDuplicatedUsername).to.throw(Error, "The username already exist in this room");
     });
@@ -98,7 +98,7 @@ describe("Room", () => {
         let room = new Room(roomCapacity);
 
         let fakeName = "fakename";
-        let numberOfPlayers = 2;
+        // let numberOfPlayers = 2;
         let player1 = new Player(fakeName, numberOfPlayers, fakeSocketId1);
         let player2 = new Player(fakeName, numberOfPlayers, fakeSocketId2);
 
@@ -110,7 +110,7 @@ describe("Room", () => {
     it("usernameAlreadyExist, should throw a null argument error", () => {
         let roomCapacity = 2;
         let room = new Room(roomCapacity);
-        room.addPlayer(player1);
+        room.addPlayer(playerOne);
 
         expect(() => room.isUsernameAlreadyExist(null)).to.throw(Error, "Argument error: the username cannot be null");
     });
@@ -118,7 +118,7 @@ describe("Room", () => {
     it("isFull, should be false", () => {
         let roomCapacity = 2;
         let room = new Room(roomCapacity);
-        room.addPlayer(player1);
+        room.addPlayer(playerOne);
 
         expect(room.isFull()).to.equals(false);
     });
@@ -146,7 +146,7 @@ describe("Room", () => {
     it("removePlayer, should throw a null argument error", () => {
         let roomCapacity = 1;
         let room = new Room(roomCapacity);
-        room.addPlayer(player1);
+        room.addPlayer(playerOne);
 
         let mustFailFunction = () => room.removePlayer(null);
         expect(mustFailFunction).to.throw(Error, "Argument error: the player cannot be null");
@@ -239,7 +239,7 @@ describe("Room", () => {
 
     it("should change the order of 3 players", () => {
         let roomCapacity = 3;
-        let numberOfPlayers = 3;
+        // let numberOfPlayers = 3;
         let fakename3 = "fakename3";
         let fakeSocketId3 = "fafa78777f9a79fa";
 
@@ -273,7 +273,7 @@ describe("Room", () => {
 
     it("should change the order of 4 players", () => {
         let roomCapacity = 4;
-        let numberOfPlayers = 4;
+        // let numberOfPlayers = 4;
         let fakename3 = "fakename3";
         let fakename4 = "fakename4";
         let fakeSocketId3 = "fafa78777f9a79fa";
