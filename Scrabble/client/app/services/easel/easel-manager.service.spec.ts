@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ScrabbleLetter } from "../../models/letter/scrabble-letter";
+import { IScrabbleLetter } from "../../models/letter/scrabble-letter";
 import { Alphabet } from "../../models/letter/alphabet";
 import { LetterHelper } from "../../commons/letter-helper";
 import { EaselManagerService } from "./easel-manager.service";
@@ -156,10 +156,10 @@ describe("EaselManagerService", () => {
     });
 
     it("throw and exception if the text is not null when trying to get a list of char", () => {
-        let scrabbleLetters = new Array<ScrabbleLetter>();
-        scrabbleLetters.push(new ScrabbleLetter(Alphabet.LETTER_A));
-        scrabbleLetters.push(new ScrabbleLetter(Alphabet.LETTER_B));
-        scrabbleLetters.push(new ScrabbleLetter(Alphabet.LETTER_BLANK));
+        let scrabbleLetters = new Array<IScrabbleLetter>();
+        scrabbleLetters.push({_alphabetLetter: Alphabet.LETTER_A, _imageSource: ""});
+        scrabbleLetters.push({_alphabetLetter: Alphabet.LETTER_B, _imageSource: ""});
+        scrabbleLetters.push({_alphabetLetter: Alphabet.LETTER_BLANK, _imageSource: ""});
         let response = service.parseScrabbleLettersToListofChar(scrabbleLetters);
         expect(response).to.be.an.instanceOf(Array);
     });
@@ -172,8 +172,8 @@ describe("EaselManagerService", () => {
     });
 
     it("throw an error if the enteredLetters is null when trying to get a scrabble letter from easel", () => {
-        let easelLetters = new Array<ScrabbleLetter>();
-        easelLetters.push(new ScrabbleLetter(Alphabet.LETTER_F));
+        let easelLetters = new Array<IScrabbleLetter>();
+        easelLetters.push({_alphabetLetter: Alphabet.LETTER_F, _imageSource: ""});
         let verification = () => service.getScrabbleWordFromTheEasel(easelLetters, null);
         expect(verification).to.throw(Error);
     });

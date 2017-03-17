@@ -19,7 +19,7 @@ import { ChatroomComponent } from "../../../components/chatroom.component";
 import { GameComponent } from "../../../components/game-room.component";
 import { GameInitiationComponent } from "../../../components/game-initiation.component";
 import { BoardComponent } from "../../../components/board.component";
-import { ScrabbleLetter } from "../../../models/letter/scrabble-letter";
+import { IScrabbleLetter } from "../../../models/letter/scrabble-letter";
 import { Alphabet } from "../../../models/letter/alphabet";
 import { CommandStatus } from "../commons/command-status";
 import { CommandType } from "../commons/command-type";

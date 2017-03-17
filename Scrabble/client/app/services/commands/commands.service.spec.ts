@@ -20,7 +20,7 @@ import { GameComponent } from "../../components/game-room.component";
 import { GameInitiationComponent } from "../../components/game-initiation.component";
 import { BoardComponent } from "../../components/board.component";
 
-import { ScrabbleLetter } from "../../models/letter/scrabble-letter";
+import { IScrabbleLetter } from "../../models/letter/scrabble-letter";
 import { Alphabet } from "../../models/letter/alphabet";
 import { SocketEventType } from '../../commons/socket-eventType';
 
@@ -77,11 +77,11 @@ describe("CommandService", function () {
         easelComponent = fixtureEasel.componentInstance;
 
         console.log(easelComponent);
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_A));
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_B));
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_C));
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_D));
-        easelComponent.letters.push(new ScrabbleLetter(Alphabet.LETTER_E));
+        easelComponent.letters.push({_alphabetLetter: Alphabet.LETTER_A, _imageSource: ""});
+        easelComponent.letters.push({_alphabetLetter: Alphabet.LETTER_B, _imageSource: ""});
+        easelComponent.letters.push({_alphabetLetter: Alphabet.LETTER_C, _imageSource: ""});
+        easelComponent.letters.push({_alphabetLetter: Alphabet.LETTER_D, _imageSource: ""});
+        easelComponent.letters.push({_alphabetLetter: Alphabet.LETTER_E, _imageSource: ""});
         // easelComponent.letters.push(new ScrabbleLetter(Alphabet.letterF));
         // easelComponent.letters.push(new ScrabbleLetter(Alphabet.blank));
 

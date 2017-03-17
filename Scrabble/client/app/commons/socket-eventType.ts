@@ -39,6 +39,7 @@ export class SocketEventType {
     static PASS_COMMAND_REQUEST = "!passer";
 
     static TIMER_EVENT = "timerEvent";
+    static UPDATE_BOARD = "updateBoard";
 
     static COMMAND_REQUEST = "commandRequest";
     static INVALID_COMMAND_REQUEST = "invalidCommand";

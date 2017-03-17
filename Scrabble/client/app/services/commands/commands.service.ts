@@ -8,7 +8,7 @@ import { GameComponent } from "../../components/game-room.component";
 
 import { EaselManagerService } from "../easel/easel-manager.service";
 import { LetterHelper } from "../../commons/letter-helper";
-import { ScrabbleLetter } from "../../models/letter/scrabble-letter";
+import { IScrabbleLetter } from "../../models/letter/scrabble-letter";
 
 import { CommandType } from "./commons/command-type";
 import { CommandStatus } from "./commons/command-status";

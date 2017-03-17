@@ -1,5 +1,5 @@
 import { Board } from "./board";
-import { ISquare } from "../square/square";
+import { Square } from "../square/square";
 
 import { expect } from "chai";
 

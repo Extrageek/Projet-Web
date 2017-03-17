@@ -16,7 +16,7 @@ import { SocketEventType } from "../commons/socket-eventType";
 import { EaselComponent } from "./easel.component";
 import { ChatroomComponent } from "./chatroom.component";
 import { BoardComponent } from "./board.component";
-import { ScrabbleLetter } from "../models/letter/scrabble-letter";
+import { IScrabbleLetter } from "../models/letter/scrabble-letter";
 
 
 declare var jQuery: any;

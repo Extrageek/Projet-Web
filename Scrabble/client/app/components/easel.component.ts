@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, EventEmitter, Input, Output } from "@angu
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 
-import { ScrabbleLetter } from "../models/letter/scrabble-letter";
+import { IScrabbleLetter } from "../models/letter/scrabble-letter";
 import { EaselManagerService } from "../services/easel/easel-manager.service";
 import { SocketService } from "../services/socket-service";
 
@@ -29,10 +29,10 @@ import { Alphabet } from "../models/letter/alphabet";
 export class EaselComponent implements OnInit, OnDestroy {
 
     // Create an event emitter to interact with the Game room Component
-    @Output() easelTabKeyEvent = new EventEmitter<ScrabbleLetter>();
+    @Output() easelTabKeyEvent = new EventEmitter<IScrabbleLetter>();
     @Input() keyEventValue: any;
 
-    private _letters: Array<ScrabbleLetter>;
+    private _letters: Array<IScrabbleLetter>;
     private _indexOflettersToExchange: Array<number>;
     private _keyEventKeyCode: string;
     private _exchangeLetterSubcription: Subscription;
@@ -46,11 +46,11 @@ export class EaselComponent implements OnInit, OnDestroy {
         this._indexOflettersToExchange = v;
     }
 
-    public get letters(): Array<ScrabbleLetter> {
+    public get letters(): Array<IScrabbleLetter> {
         return this._letters;
     }
 
-    public set letters(letters: Array<ScrabbleLetter>) {
+    public set letters(letters: Array<IScrabbleLetter>) {
         this._letters = letters;
     }
 
@@ -63,14 +63,14 @@ export class EaselComponent implements OnInit, OnDestroy {
         this._keyEventKeyCode = v;
     }
 
-    private fakeLettersFromServer: Array<ScrabbleLetter>;
+    private fakeLettersFromServer: Array<IScrabbleLetter>;
 
     constructor(
         private easelEventManagerService: EaselManagerService,
         private socketService: SocketService,
         private activatedRoute: ActivatedRoute) {
         this._indexOflettersToExchange = new Array<number>();
-        this._letters = new Array<ScrabbleLetter>();
+        this._letters = new Array<IScrabbleLetter>();
     }
 
     ngOnInit() {
@@ -85,9 +85,9 @@ export class EaselComponent implements OnInit, OnDestroy {
     private initializeEaselOnConnection(): Subscription {
         return this.socketService.subscribeToChannelEvent(SocketEventType.INITIALIZE_EASEL)
             .subscribe((initialsLetters: Array<string>) => {
-                this._letters = new Array<ScrabbleLetter>();
+                this._letters = new Array<IScrabbleLetter>();
                 initialsLetters.forEach((letter) => {
-                    this.letters.push(new ScrabbleLetter(letter));
+                    this.letters.push({ _alphabetLetter: letter, _imageSource: "" });
                 });
             });
     }
@@ -101,7 +101,7 @@ export class EaselComponent implements OnInit, OnDestroy {
                     if (params['id'] === response._username) {
                         for (let index = 0; index < this._indexOflettersToExchange.length; ++index) {
                             this.letters[this._indexOflettersToExchange[index]] =
-                                new ScrabbleLetter(response._data[index]);
+                                { _alphabetLetter: response._data[index], _imageSource: "" };
                             console.log(this.letters);
                         }
                     }
@@ -112,7 +112,7 @@ export class EaselComponent implements OnInit, OnDestroy {
     public onKeyDownEventHandler(
         event: KeyboardEvent,
         id: string,
-        letter: ScrabbleLetter) {
+        letter: IScrabbleLetter) {
 
         let easelMaxIndex = this.letters.length - 1;
         let keyCode = event.which;
@@ -141,25 +141,25 @@ export class EaselComponent implements OnInit, OnDestroy {
         nextInputIndex: number) {
 
         let easelMaxIndex = this.letters.length - 1;
-        let currentLetter = this.letters[currentInputIndex].letter;
+        let currentLetter = this.letters[currentInputIndex]._alphabetLetter;
 
         if (keyCode === LetterHelper.RIGHT_ARROW_KEY_CODE
             && nextInputIndex === 0) {
             for (let index = easelMaxIndex; index > 0; --index) {
-                this.letters[index].letter = this.letters[index - 1].letter;
+                this.letters[index]._alphabetLetter = this.letters[index - 1]._alphabetLetter;
             }
 
         } else if (keyCode === LetterHelper.LEFT_ARROW_KEY_CODE
             && nextInputIndex === easelMaxIndex) {
             for (let index = 0; index < easelMaxIndex; ++index) {
-                this.letters[index].letter = this.letters[index + 1].letter;
+                this.letters[index]._alphabetLetter = this.letters[index + 1]._alphabetLetter;
             }
 
         } else {
-            this.letters[currentInputIndex].letter = this.letters[nextInputIndex].letter;
+            this.letters[currentInputIndex]._alphabetLetter = this.letters[nextInputIndex]._alphabetLetter;
         }
 
-        this.letters[nextInputIndex].letter = currentLetter;
+        this.letters[nextInputIndex]._alphabetLetter = currentLetter;
     }
 
     private setFocusToNextMatchLetter(
@@ -181,13 +181,15 @@ export class EaselComponent implements OnInit, OnDestroy {
                 ++nextIndex, ++index) {
 
                 nextIndex = (nextIndex < this.letters.length) ? nextIndex : 0;
-                if (this.letters[nextIndex].letter === enteredLetter) {
+                if (this.letters[nextIndex]._alphabetLetter === enteredLetter) {
                     foundIndex = nextIndex;
                     isFound = true;
                 }
             }
         } else {
-            foundIndex = this.letters.findIndex((element: ScrabbleLetter) => element.letter === enteredLetter);
+            foundIndex = this.letters.findIndex(
+                (element: IScrabbleLetter) => element._alphabetLetter === enteredLetter
+            );
         }
 
         if (foundIndex !== -1) {

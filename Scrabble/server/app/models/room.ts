@@ -1,6 +1,7 @@
 import { Player } from "./player";
 import { QueueCollection } from "./queue-collection";
 import { Letter } from "./letter";
+import { Board } from "./board/board";
 import { TimerService } from "../services/timer.service";
 import { LetterBankHandler } from "../services/letterbank-handler";
 
@@ -16,6 +17,7 @@ export class Room {
     private _timerService: TimerService;
     private _roomCapacity: number;
     private _roomId: string;
+    private _board: Board;
 
     public get timerService() {
         this._timerService.initializeCounter();
@@ -32,6 +34,7 @@ export class Room {
         this._letterBankHandler = new LetterBankHandler();
         this._timerService = new TimerService();
         this._roomId = uuid.v1(); // Generate a v1 (time-based) id
+        this._board = new Board();
     }
 
     // The player of the room
@@ -49,6 +52,11 @@ export class Room {
     // The room unique id
     public get roomId(): string {
         return this._roomId;
+    }
+
+    // The board of the room
+    public get board() : Board {
+        return this._board;
     }
 
     // The room capacity

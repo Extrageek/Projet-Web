@@ -1,6 +1,6 @@
 import { EaselComponent } from "../../../components/easel.component";
 import { EaselManagerService } from "../../easel/easel-manager.service";
-import { ScrabbleLetter } from "../../../models/letter/scrabble-letter";
+import { IScrabbleLetter } from "../../../models/letter/scrabble-letter";
 import { ICommand } from "../commandInterface/command.interface";
 import { CommandStatus } from '../commons/command-status';
 import { CommandType } from '../commons/command-type';
@@ -43,7 +43,7 @@ export class ChangeLettersCommand implements ICommand {
         this.easelComponent.changeLetters(commandRequest);
     }
 
-    public createExchangeEaselLettersRequest(lettersInEasel: Array<ScrabbleLetter>):
+    public createExchangeEaselLettersRequest(lettersInEasel: Array<IScrabbleLetter>):
         ICommandRequest<{ indexOfLettersToChange: Array<number>, lettersToChange: Array<string> }> {
 
         let enteredletters = this._easelManagerService.parseStringToListofChar(this.parameters);
@@ -59,7 +59,7 @@ export class ChangeLettersCommand implements ICommand {
 
             let tempEaselLetters = new Array<string>();
             lettersInEasel.forEach((letter) => {
-                tempEaselLetters.push(letter.letter);
+                tempEaselLetters.push(letter._alphabetLetter);
             });
 
             for (let index = 0; index < enteredletters.length; ++index) {

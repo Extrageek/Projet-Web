@@ -1,0 +1,49 @@
+import { SquarePosition } from "./square-position";
+import { Letter } from "./../letter";
+import { SquareType } from "./square-type";
+
+export class Square {
+    private _letter: Letter;
+    private _position: SquarePosition;
+    private _type: SquareType;
+    private _isBusy: boolean;
+
+    public get letter(): Letter {
+        return this._letter;
+    }
+
+    public set letter(letter: Letter) {
+        this._letter = letter;
+    }
+
+    public get position(): SquarePosition {
+        return this._position;
+    }
+
+    public set position(position: SquarePosition) {
+        this._position = position;
+    }
+
+    public get type(): SquareType {
+        return this._type;
+    }
+
+    public set type(type: SquareType) {
+        this._type = type;
+    }
+
+    public get isBusy(): boolean {
+        return this._isBusy;
+    }
+
+    public set isBusy(v: boolean) {
+        this._isBusy = v;
+    }
+
+    constructor(position: SquarePosition, type: SquareType) {
+        this.letter = new Letter("", 0, 0);
+        this.position = position;
+        this.type = type;
+        this.isBusy = false;
+    }
+}

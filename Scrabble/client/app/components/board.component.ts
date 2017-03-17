@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 
-import { ScrabbleLetter } from "../models/letter/scrabble-letter";
-import { Square } from '../models/square/square';
-import { SquarePosition } from '../models/square/square-position';
+import { IScrabbleLetter } from "../models/letter/scrabble-letter";
+import { ISquare } from '../models/square/square';
+import { ISquarePosition } from '../models/square/square-position';
 import { Board } from '../models/board/board';
 
 import { SocketEventType } from "../commons/socket-eventType";
@@ -36,11 +36,11 @@ export class BoardComponent implements OnInit {
     constructor(
         private socketService: SocketService,
         private boardManagerService: BoardManagerService) {
-            this.board = new Board();
     }
 
     ngOnInit() {
         this.onPlaceWordCommand();
+        this.onUpdateBoardEvent();
     }
 
     private onPlaceWordCommand(): Subscription {
@@ -51,8 +51,10 @@ export class BoardComponent implements OnInit {
 
                     if (response._commandStatus === CommandStatus.Ok) {
                         // Create a well formatted response for the board manager
-                        let position = new SquarePosition(response._data._squarePosition._row,
-                            response._data._squarePosition._column);
+                        let position = {
+                            _row: response._data._squarePosition._row,
+                            _column: response._data._squarePosition._column
+                        };
 
                         let placeWordResponse: IPlaceWordResponse = {
                             _squarePosition: position,
@@ -63,6 +65,17 @@ export class BoardComponent implements OnInit {
                         // Get a feedback from the manager if the word is placed
                         let isPlaced = this.boardManagerService.placeWordInBoard(placeWordResponse, this.board);
                     }
+                }
+            });
+    }
+
+    private onUpdateBoardEvent() {
+        this.socketService.subscribeToChannelEvent(SocketEventType.UPDATE_BOARD)
+            .subscribe((response: any) => {
+                if (response !== undefined) {
+                    console.log("Board response from the server ", response);
+                    this.board = new Board(response._squares);
+                    console.log(this.board);
                 }
             });
     }

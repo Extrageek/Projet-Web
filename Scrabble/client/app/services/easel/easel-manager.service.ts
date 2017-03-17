@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { LetterHelper } from "../../commons/letter-helper";
-import { ScrabbleLetter } from "../../models/letter/scrabble-letter";
+import { IScrabbleLetter } from "../../models/letter/scrabble-letter";
 
 declare var jQuery: any;
 
@@ -135,48 +135,51 @@ export class EaselManagerService {
         return listOfChar;
     }
 
-    public parseScrabbleLettersToListofChar(scrabbleLetters: Array<ScrabbleLetter>): Array<string> {
+    public parseScrabbleLettersToListofChar(scrabbleLetters: Array<IScrabbleLetter>): Array<string> {
         if (scrabbleLetters === null) {
             throw new Error("Null argument error: The parameter cannot be null");
         }
         let listOfChar = new Array<string>();
         for (let index = 0; index < scrabbleLetters.length; ++index) {
-            listOfChar.push(scrabbleLetters[index].letter.toUpperCase());
+            listOfChar.push(scrabbleLetters[index]._alphabetLetter.toUpperCase());
         }
         return listOfChar;
     }
 
-    public getScrabbleLetterFromStringLetter(letters: Array<string>): Array<ScrabbleLetter> {
+    public getScrabbleLetterFromStringLetter(letters: Array<string>): Array<IScrabbleLetter> {
 
         if (letters === null || letters.length < 1) {
             throw new Error("Invalid argument error");
         }
 
-        let scrabbleLettres = new Array<ScrabbleLetter>();
+        let scrabbleLettres = new Array<IScrabbleLetter>();
         for (let index = 0; index < letters.length; ++index) {
             let letterString = (letters[index] === '*') ? 'blank' : letters[index];
-            let letter = new ScrabbleLetter(letterString);
+            let letter = {
+                _alphabetLetter: letterString,
+                _imageSource: ""
+            };
 
-            letter.imageSource = IMAGE_SOURCE_PATH + letter.letter + IMAGE_EXT;
+            letter._imageSource = IMAGE_SOURCE_PATH + letter._alphabetLetter + IMAGE_EXT;
             scrabbleLettres.push(letter);
         }
         return scrabbleLettres;
     }
 
     public getScrabbleWordFromTheEasel(
-        easelLetters: Array<ScrabbleLetter>,
+        easelLetters: Array<IScrabbleLetter>,
         enteredLetters: Array<string>):
-        Array<ScrabbleLetter> {
+        Array<IScrabbleLetter> {
         if (enteredLetters === null
             || easelLetters === null) {
             throw new Error("Null argument error: The parameter cannot be null");
         }
 
-        let words = new Array<ScrabbleLetter>();
+        let words = new Array<IScrabbleLetter>();
         let tempEaselLetters = new Array<string>();
 
         easelLetters.forEach((letter) => {
-            tempEaselLetters.push(letter.letter);
+            tempEaselLetters.push(letter._alphabetLetter);
         });
 
         // Since the char '*' should be recognize has the blank letter,

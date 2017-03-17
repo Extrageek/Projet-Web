@@ -92,6 +92,7 @@ export class SocketConnectionHandler {
 
                         // TODO: Handle the unsubscribe to the timer after a clean debug
                         if (room.isFull()) {
+                            this._socket.to(response._roomId).emit(SocketEventType.updateBoard, room.board);
                             let test = room.timerService.timer().subscribe(
                                 (counter: { minutes: number, seconds: number }) => {
                                     // Send the counter value to the members of the room

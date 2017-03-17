@@ -1,7 +1,7 @@
 import { EaselComponent } from "../../../components/easel.component";
 import { EaselManagerService } from "../../easel/easel-manager.service";
-import { ScrabbleLetter } from "../../../models/letter/scrabble-letter";
-import { SquarePosition } from "../../../models/square/square-position";
+import { IScrabbleLetter } from "../../../models/letter/scrabble-letter";
+import { ISquarePosition } from "../../../models/square/square-position";
 import { BoardColumn } from "../../../models/board/board-column";
 import { BoardComponent } from "../../../components/board.component";
 import { LetterHelper } from "../../../commons/letter-helper";
@@ -40,7 +40,10 @@ export class PlaceWordCommand implements ICommand {
             _commandType: CommandType.PlaceCmd,
             _commandStatus: CommandStatus.Unknown,
             _response: {
-                _squarePosition: new SquarePosition("", BoardColumn.INIT_COLUMN),
+                _squarePosition: {
+                    _row: "",
+                    _column: BoardColumn.INIT_COLUMN
+                },
                 _wordOrientation: "",
                 _letters: new Array<string>()
             }
@@ -56,7 +59,7 @@ export class PlaceWordCommand implements ICommand {
         this.boardComponent.placeWordInBoard(commandRequest);
     }
 
-    public createPlaceWordRequest(lettersInEasel: Array<ScrabbleLetter>)
+    public createPlaceWordRequest(lettersInEasel: Array<IScrabbleLetter>)
         : ICommandRequest<IPlaceWordResponse> {
 
         this.throwsErrorIfParameterIsNull(lettersInEasel);
@@ -93,7 +96,7 @@ export class PlaceWordCommand implements ICommand {
     }
 
     private extractWordPosition(wordPosition: Array<string>):
-        { squarePosition: SquarePosition, orientation: string } {
+        { squarePosition: ISquarePosition, orientation: string } {
         // if (wordPosition.length < CommandsHelper.MIN_POSITION_VALUE
         //     || wordPosition.length > CommandsHelper.MAX_POSITION_VALUE) {
         //     return false;
@@ -117,7 +120,10 @@ export class PlaceWordCommand implements ICommand {
             && this.isValidOrientation(wordOrientation))) {
             return null;
         } else {
-            let squarePosition = new SquarePosition(rowIndex, colIndex);
+            let squarePosition = {
+                _row: rowIndex,
+                _column: colIndex
+            };
             return { squarePosition: squarePosition, orientation: wordOrientation };
         }
     }

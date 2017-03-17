@@ -1,8 +1,8 @@
 import { expect } from "chai";
-import { ScrabbleLetter } from "./scrabble-letter";
+import { IScrabbleLetter } from "./scrabble-letter";
 import { Alphabet } from "./alphabet";
 
-let _letter: ScrabbleLetter;
+let _letter: IScrabbleLetter;
 
 describe("ScrabbleLetter letter validation", () => {
 

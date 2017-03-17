@@ -5,6 +5,15 @@ export class Letter {
     private _alphabetLetter: string;
     private _point: AlphabetPoint;
     private _quantity: number;
+    private _imageSource: string;
+
+    public get imageSource(): string {
+        return this._imageSource;
+    }
+
+    public set imageSource(v: string) {
+        this._imageSource = v;
+    }
 
     public get alphabetLetter(): string {
         return this._alphabetLetter;
@@ -34,5 +43,6 @@ export class Letter {
         this._alphabetLetter = letter;
         this._point = point;
         this._quantity = quantity;
+        this._imageSource = "";
     }
 }

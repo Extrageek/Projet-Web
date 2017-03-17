@@ -38,6 +38,8 @@ export class SocketEventType {
 
     static timerEvent = "timerEvent";
 
+    static updateBoard = "updateBoard";
+
     static changeLettersRequest = "!changer";
     static placeWordCommandRequest = "!place";
     static passCommandRequest = "!passer";
