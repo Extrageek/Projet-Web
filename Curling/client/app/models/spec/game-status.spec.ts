@@ -1,4 +1,4 @@
-import { GameStatus, CurrentPlayer } from './game-status';
+import { GameStatus, CurrentPlayer } from './../game-status';
 import { expect } from "chai";
 
 let _gameStatus: GameStatus;

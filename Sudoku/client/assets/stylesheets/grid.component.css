@@ -52,6 +52,8 @@ input {
 input:focus {
     border: 1px solid;
     background-color: #fff;
+    color: transparent;
+    text-shadow: 0 0 0 black;
     box-shadow: 0 0 50px 0 deepskyblue;
 }
 

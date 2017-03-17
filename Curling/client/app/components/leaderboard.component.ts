@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { RestApiProxyService } from './../services/leaderboard/rest-api-proxy.service';
+import { RestApiProxyService } from './../services/rest-api-proxy.service';
 
-import { Record } from '../models/leaderboard/record';
+import { Record } from '../models/record';
 
 @Component({
     selector: 'leaderboard-component',

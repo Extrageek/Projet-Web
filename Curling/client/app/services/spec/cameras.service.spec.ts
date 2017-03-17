@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { CameraService } from "./cameras.service";
+import { CameraService } from "./../views/cameras.service";
 import { PerspectiveCamera, Object3D, Vector3 } from "three";
 
 //The setTimeout function was used instead of the requestAnimationFrame because the

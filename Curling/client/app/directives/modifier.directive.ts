@@ -1,6 +1,8 @@
 import { Directive, Input } from '@angular/core';
 import { RenderService } from './../services/game-physics/render.service';
 
+import { TextureService } from './../services/game-physics/texture.service';
+
 @Directive({
     selector: 'modifier'
 })
@@ -22,7 +24,7 @@ export class ModifierDirective {
         if (!value) {
             value = '';
         }
-        this._renderService.setText(value);
+        this._renderService.updateText(value);
     }
 
     public addStars(stars: number) {

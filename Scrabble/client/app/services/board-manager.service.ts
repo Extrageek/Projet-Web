@@ -37,17 +37,20 @@ export class BoardManagerService {
         console.log("-", response._squarePosition.row);
 
         this._board = board;
-        let firstRow = response._squarePosition.row.toUpperCase();
-        let firstColumn = response._squarePosition.column;
+        let firstRowIndex = response._squarePosition.row.toUpperCase();
+        let firstColumnIndex = response._squarePosition.column;
         let orientation = response._wordOrientation;
         let letters = response._letters;
-
         let scrabbleLetters = this.easelManagerService.getScrabbleLetterFromStringLetter(letters);
 
+        this.exceptionHelperService.throwNullArgumentException(firstRowIndex);
+        this.exceptionHelperService.throwNullArgumentException(firstColumnIndex);
+        this.exceptionHelperService.throwNullArgumentException(scrabbleLetters);
+
         if (orientation === CommandsHelper.HORIZONTAL_ORIENTATION) {
-            return (this.placeLetterInHorizontalOrientation(firstRow, firstColumn, scrabbleLetters));
+            return (this.placeLetterInHorizontalOrientation(firstRowIndex, firstColumnIndex, scrabbleLetters));
         } else if (orientation === CommandsHelper.VERTICAL_ORIENTATION) {
-            return (this.placeLetterInVerticalOrientation(firstRow, firstColumn, scrabbleLetters));
+            return (this.placeLetterInVerticalOrientation(firstRowIndex, firstColumnIndex, scrabbleLetters));
         } else {
             return false;
         }
@@ -58,13 +61,9 @@ export class BoardManagerService {
         firstColumnIndex: number,
         scrabbleLetters: Array<ScrabbleLetter>): boolean {
 
-        this.exceptionHelperService.throwNullArgumentException(firstRowIndex);
-        this.exceptionHelperService.throwNullArgumentException(firstColumnIndex);
-        this.exceptionHelperService.throwNullArgumentException(scrabbleLetters);
-
         let lastLetterColumnPosition = scrabbleLetters.length + firstColumnIndex - 1;
 
-        // TODO: We can check many staff here before placing the word
+        // TODO: We can check more staff here before placing the word
         if (!this.isValidColumnPosition(lastLetterColumnPosition)) {
             return false;
         }
@@ -72,6 +71,7 @@ export class BoardManagerService {
         for (let index = 0; index < (scrabbleLetters.length); ++index) {
             let nextColumnIndex = index + firstColumnIndex;
 
+            // Get the row number from the given letter
             let rowLetterToRowNumber = firstRowIndex.toUpperCase()
                 .charCodeAt(0) - LetterHelper.LETTER_A_KEY_CODE;
             // console.log("square", this._board.squares[rowLetterToRowNumber][nextColumnIndex].isBusy);
@@ -89,6 +89,8 @@ export class BoardManagerService {
             } else {
                 if (currentSquare.letter.letter !== ""
                     && currentSquare.letter.letter !== scrabbleLetters[index].letter) {
+
+                    // TODO: Reinitialiser les lettres déjà placées ici
                     return false;
                 }
             }
@@ -99,15 +101,51 @@ export class BoardManagerService {
 
     private placeLetterInVerticalOrientation(
         firstRowIndex: string,
-        firstColumnIndex: number,
+        columnIndex: number,
         scrabbleLetters: Array<ScrabbleLetter>): boolean {
 
-        this.exceptionHelperService.throwNullArgumentException(firstRowIndex);
-        this.exceptionHelperService.throwNullArgumentException(firstColumnIndex);
-        this.exceptionHelperService.throwNullArgumentException(scrabbleLetters);
+        let firstRowLetterToRowNumber = firstRowIndex
+            .toUpperCase()
+            .charCodeAt(0);
 
-        if (!this.isValidRowPosition(firstRowIndex)) {
+        let lastRowPosition = scrabbleLetters.length
+            + firstRowLetterToRowNumber
+            - 1;
+
+
+        console.log("first", firstRowLetterToRowNumber);
+        console.log("lastRowPosition", lastRowPosition);
+
+
+        if (!this.isValidRowPosition(String.fromCharCode(lastRowPosition))) {
             return false;
+        }
+
+        for (let index = 0; index < (scrabbleLetters.length); ++index) {
+            let nextRowIndex = firstRowLetterToRowNumber + index;
+
+            // Get the row number from the given letter
+            let nextRowLetter = this.parseFromNumberToCharacter(nextRowIndex);
+            let nextSquareRow = nextRowIndex - LetterHelper.LETTER_A_KEY_CODE;
+            let nextSquare = this._board.squares[nextSquareRow][columnIndex];
+
+            if (!nextSquare.isBusy) {
+                let position = [INPUT_ID_PREFIX, nextRowLetter, columnIndex].join('');
+                let imageSource = [BACKGROUND_URL_PREFIX,
+                    scrabbleLetters[index].imageSource,
+                    BACKGROUND_URL_SUFFIX].join('');
+
+                jQuery(position).css(CSS_BACKGROUND_IMAGE, imageSource);
+                this._board.squares[nextSquareRow][columnIndex].isBusy = true;
+
+            } else {
+                if (nextSquare.letter.letter !== ""
+                    && nextSquare.letter.letter !== scrabbleLetters[index].letter) {
+
+                    // TODO: Reinitialiser les lettres déjà placées ici
+                    return false;
+                }
+            }
         }
 
         return true;
@@ -131,5 +169,14 @@ export class BoardManagerService {
         this.exceptionHelperService.throwNullArgumentException(orientation);
         return orientation === CommandsHelper.VERTICAL_ORIENTATION
             || orientation === CommandsHelper.HORIZONTAL_ORIENTATION;
+    }
+
+    public parseFromNumberToCharacter(value: number) {
+        this.exceptionHelperService.throwNullArgumentException(value);
+        this.exceptionHelperService.throwOutOfRangeException(
+            LetterHelper.LETTER_A_KEY_CODE,
+            LetterHelper.LETTER_Z_KEY_CODE,
+            value);
+        return String.fromCharCode(value);
     }
 }

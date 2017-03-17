@@ -14,10 +14,10 @@ import {
 import { MockBackend, MockConnection } from '@angular/http/testing';
 import { expect } from 'chai';
 
-import { UserSetting } from './../../models/user/user-setting';
-import { GameStatus } from './../../models/game-status/game-status';
-import { Record } from './../../models/leaderboard/record';
-import { RestApiProxyService } from './rest-api-proxy.service';
+import { UserSetting } from './../../models/user-setting';
+import { GameStatus } from './../../models/game-status';
+import { Record } from './../../models/record';
+import { RestApiProxyService } from './../rest-api-proxy.service';
 
 
 let userSetting: UserSetting;
