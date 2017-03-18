@@ -2,12 +2,12 @@ import { Component, OnInit, OnDestroy, Output, ViewChild, EventEmitter } from "@
 import { Route, ActivatedRoute } from "@angular/router";
 
 import { SocketService } from "../services/socket-service";
-import { EaselManagerService } from "../services/easel/easel-manager.service";
-import { GameRoomManagerService } from "../services/gameRoom/game-room-manager.service";
-import { CommandsService } from "../services/commands/commands.service";
-import { CommandsHelper } from "../services/commands/commons/commands-helper";
-import { CommandStatus } from "../services/commands/commons/command-status";
-import { CommandType } from "../services/commands/commons/command-type";
+import { EaselManagerService } from "../services/easel-manager.service";
+import { GameRoomManagerService } from "../services/game-room-manager.service";
+import { CommandsService } from "../services/commands.service";
+import { CommandsHelper } from "../services/commons/commands-helper";
+import { CommandStatus } from "../services/commons/command-status";
+import { CommandType } from "../services/commons/command-type";
 
 import { IRoomMessage } from "../commons/messages/room-message.interface";
 import { LetterHelper } from "../commons/letter-helper";
@@ -16,7 +16,7 @@ import { SocketEventType } from "../commons/socket-eventType";
 import { EaselComponent } from "./easel.component";
 import { ChatroomComponent } from "./chatroom.component";
 import { BoardComponent } from "./board.component";
-import { IScrabbleLetter } from "../models/letter/scrabble-letter";
+import { IScrabbleLetter } from "../models/scrabble-letter";
 
 
 declare var jQuery: any;

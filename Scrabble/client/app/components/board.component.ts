@@ -1,19 +1,19 @@
 import { Component, OnInit } from "@angular/core";
 
-import { IScrabbleLetter } from "../models/letter/scrabble-letter";
-import { ISquare } from '../models/square/square';
-import { ISquarePosition } from '../models/square/square-position';
-import { Board } from '../models/board/board';
+import { IScrabbleLetter } from "../models/scrabble-letter";
+import { ISquare } from '../models/square';
+import { ISquarePosition } from '../models/square-position';
+import { Board } from '../models/board';
 
 import { SocketEventType } from "../commons/socket-eventType";
 import { SocketService } from "../services/socket-service";
 import { BoardManagerService } from "../services/board-manager.service";
-import { ExceptionHelperService } from "../services/helpers/exception-helper.service";
+import { ExceptionHelperService } from "../services/exception-helper.service";
 
-import { IPlaceWordResponse } from "../services/commands/commandPlaceWord/place-command-response.interface";
-import { CommandType } from "../services/commands/commons/command-type";
-import { CommandStatus } from "../services/commands/commons/command-status";
-import { ICommandRequest } from '../services/commands/commons/command-request';
+import { IPlaceWordResponse } from "../services/place-command-response.interface";
+import { CommandType } from "../services/commons/command-type";
+import { CommandStatus } from "../services/commons/command-status";
+import { ICommandRequest } from '../services/commons/command-request';
 import { ICommandMessage } from "../commons/messages/command-message.interface";
 
 import { Subscription } from "rxjs/Subscription";
@@ -39,7 +39,7 @@ export class BoardComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.onPlaceWordCommand();
+        // this.onPlaceWordCommand();
         this.onUpdateBoardEvent();
     }
 
@@ -63,7 +63,7 @@ export class BoardComponent implements OnInit {
                         };
 
                         // Get a feedback from the manager if the word is placed
-                        let isPlaced = this.boardManagerService.placeWordInBoard(placeWordResponse, this.board);
+                        //let isPlaced = this.boardManagerService.placeWordInBoard(placeWordResponse, this.board);
                     }
                 }
             });

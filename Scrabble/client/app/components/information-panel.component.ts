@@ -3,8 +3,8 @@ import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 
 import { SocketService } from "../services/socket-service";
-import { CommandType } from "../services/commands/commons/command-type";
-import { CommandStatus } from "../services/commands/commons/command-status";
+import { CommandType } from "../services/commons/command-type";
+import { CommandStatus } from "../services/commons/command-status";
 import { SocketEventType } from "../commons/socket-eventType";
 import { IGameMessage } from "../commons/messages/game-message.interface";
 import { IRoomMessage } from "../commons/messages/room-message.interface";

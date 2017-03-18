@@ -7,7 +7,7 @@ import { SocketEventType } from "../commons/socket-eventType";
 import { IGameMessage } from "../commons/messages/game-message.interface";
 import { IRoomMessage } from "../commons/messages/room-message.interface";
 import { ICommandMessage } from "../commons/messages/command-message.interface";
-import { CommandType } from '../services/commands/commons/command-type';
+import { CommandType } from '../services/commons/command-type';
 
 @Component({
     moduleId: module.id,

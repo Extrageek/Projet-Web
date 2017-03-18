@@ -1,4 +1,4 @@
-import { CommandType } from "../../services/commands/commons/command-type";
+import { CommandType } from "../../services/commons/command-type";
 
 export interface IGameMessage {
     _commandType: CommandType;

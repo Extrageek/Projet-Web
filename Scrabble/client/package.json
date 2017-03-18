@@ -24,6 +24,7 @@
     "@angular/router": "~3.4.0",
     "@types/socket.io-client": "^1.4.29",
     "angular-in-memory-web-api": "~0.2.4",
+    "chai-interface": "^2.0.3",
     "core-js": "^2.4.1",
     "http": "0.0.0",
     "lint": "^1.1.2",

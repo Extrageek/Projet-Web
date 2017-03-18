@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 declare var jQuery: any;
 
-import { EaselManagerService } from "../services/easel/easel-manager.service";
-import { CommandsHelper } from "../services/commands/commons/commands-helper";
+import { EaselManagerService } from "./easel-manager.service";
+import { CommandsHelper } from "./commons/commands-helper";
 import { LetterHelper } from "../commons/letter-helper";
-import { ExceptionHelperService } from "../services/helpers/exception-helper.service";
+import { ExceptionHelperService } from "./exception-helper.service";
 
-import { Board } from '../models/board/board';
-import { IScrabbleLetter } from "../models/letter/scrabble-letter";
-import { IPlaceWordResponse } from "./commands/commandPlaceWord/place-command-response.interface";
-import { ICommandRequest } from './commands/commons/command-request';
+import { Board } from '../models/board';
+import { IScrabbleLetter } from "../models/scrabble-letter";
+import { IPlaceWordResponse } from "./place-command-response.interface";
+import { ICommandRequest } from './commons/command-request';
 
 export const INPUT_ID_PREFIX = '#';
 export const CSS_BACKGROUND_IMAGE = 'background-image';

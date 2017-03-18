@@ -1,4 +1,4 @@
-import { CommandType } from "../../services/commands/commons/command-type";
+import { CommandType } from "../../services/commons/command-type";
 import { IGameMessage } from "./game-message.interface";
 import { expect } from "chai";
 

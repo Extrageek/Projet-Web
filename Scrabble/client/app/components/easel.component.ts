@@ -2,21 +2,21 @@ import { Component, OnInit, OnDestroy, EventEmitter, Input, Output } from "@angu
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 
-import { IScrabbleLetter } from "../models/letter/scrabble-letter";
-import { EaselManagerService } from "../services/easel/easel-manager.service";
+import { IScrabbleLetter } from "../models/scrabble-letter";
+import { EaselManagerService } from "../services/easel-manager.service";
 import { SocketService } from "../services/socket-service";
 
 import { LetterHelper } from "../commons/letter-helper";
-import { CommandType } from "../services/commands/commons/command-type";
+import { CommandType } from "../services/commons/command-type";
 import { SocketEventType } from "../commons/socket-eventType";
 import { IGameMessage } from "../commons/messages/game-message.interface";
 import { ICommandMessage } from "../commons/messages/command-message.interface";
-import { ICommandRequest } from "../services/commands/commons/command-request";
-import { CommandStatus } from "../services/commands/commons/command-status";
+import { ICommandRequest } from "../services/commons/command-request";
+import { CommandStatus } from "../services/commons/command-status";
 
 declare var jQuery: any;
 
-import { Alphabet } from "../models/letter/alphabet";
+import { Alphabet } from "../models/commons/alphabet";
 
 @Component({
     moduleId: module.id,
