@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 
-import { Puzzle, PuzzleItem } from '../models/puzzle';
+import { Puzzle, PuzzleItem } from "../models/puzzle";
 
 const SUDOKU_LENGTH = 9;
 @Injectable()

@@ -5,19 +5,19 @@
  * @date 2017/01/22
  */
 
-import { Injectable } from '@angular/core';
-import { Response, Http, Headers } from '@angular/http';
+import { Injectable } from "@angular/core";
+import { Response, Http, Headers } from "@angular/http";
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from "rxjs/Observable";
 
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/throw';
+import "rxjs/add/operator/toPromise";
+import "rxjs/add/operator/catch";
+import "rxjs/add/observable/throw";
 
-import { Puzzle } from '../models/puzzle';
-import { UserSetting, Difficulty } from '../models/user-setting';
-import { Time } from '../models/time';
-import { Record } from '../models/record';
+import { Puzzle } from "../models/puzzle";
+import { UserSetting, Difficulty } from "../models/user-setting";
+import { Time } from "../models/time";
+import { Record } from "../models/record";
 
 @Injectable()
 export class RestApiProxyService {
@@ -25,7 +25,7 @@ export class RestApiProxyService {
     // API Url for new Puzzle request to the server
     // Check how to manage cookies after
     protected _urlApi = "http://localhost:3002/api/";
-    protected _headers = new Headers({ 'Content-Type': "application/json" });
+    protected _headers = new Headers({ "Content-Type": "application/json" });
 
 
     /**
@@ -41,11 +41,11 @@ export class RestApiProxyService {
      * @class RestApiProxyService
      * @method getNewSudokuPuzzle
      * @returns an Observable with a newPuzzle json data
-     * TODO: Must be checked if we need to convert to an object.
+     * An error will be thrown if the data received from the server is not valid.
      */
     public getNewPuzzle(difficulty: Difficulty): Observable<Puzzle> {
         return this.http.get(this._urlApi + difficulty)
-            .map(this.retrieveDataFromHttpResponse)
+            .map(this.transformSudokuDataFromHttpResponse)
             .catch((error: Error) => {
                 throw error;
             });
@@ -58,9 +58,10 @@ export class RestApiProxyService {
      * @method retrieveDataFromHttpResponse
      * @return Json data.
      */
-    private retrieveDataFromHttpResponse(res: Response) {
+    private transformSudokuDataFromHttpResponse(res: Response) {
         let body = res.json();
-        return body;
+        let result = Puzzle.convertObjectToPuzzle(body);
+        return result;
     }
 
     public async createGameRecord(userSetting: UserSetting, time: Time): Promise<boolean> {
@@ -137,7 +138,7 @@ export class RestApiProxyService {
                 }
             })
             .catch(error => {
-                console.error("ERROR - Rest api getAllRecords - Une erreur est survenue - ", error);
+                console.error("ERROR - Rest api getAllRecords - An error occured when getting top records - ", error);
                 throw error;
             });
         return records;
@@ -150,6 +151,7 @@ export class RestApiProxyService {
             .toPromise()
             .then(response => {
                 let body = response.json();
+                console.log(body);
                 if (body.validity === "valid") {
                     return true;
                 }
@@ -162,28 +164,4 @@ export class RestApiProxyService {
                 return false;
             });
     }
-
-    // /**
-    //  * Handle error by sending logs.
-    //  *
-    //  * @class RestApiProxyService
-    //  * @method handleError
-    //  * @return.
-    //  */
-    // handleError(error: Response | any) {
-
-    //     let errMsg: string;
-    //     if (error instanceof Response) {
-    //         const body = error.json() || '';
-    //         const err = body.error || JSON.stringify(body);
-    //         errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-    //     } else {
-    //         errMsg = error.message ? error.message : error.toString();
-    //     }
-
-    //     //TODO: Use an new service to handle as a Logger,but we can keep the console for now
-    //     //console.error(errMsg);
-
-    //     return Observable.throw(errMsg);
-    //}
 }

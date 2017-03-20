@@ -1,20 +1,20 @@
 
-import { fakeAsync, tick, inject, TestBed } from '@angular/core/testing';
-import { Http, ResponseOptions, Response, BaseRequestOptions, ConnectionBackend } from '@angular/http';
-import { MockBackend, MockConnection } from '@angular/http/testing';
-import { expect, assert } from 'chai';
+import { fakeAsync, tick, inject, TestBed } from "@angular/core/testing";
+import { Http, ResponseOptions, Response, BaseRequestOptions, ConnectionBackend } from "@angular/http";
+import { MockBackend, MockConnection } from "@angular/http/testing";
+import { expect, assert } from "chai";
 
-import { UserSetting } from '../models/user-setting';
-import { Record } from '../models/record';
-import { Time } from '../models/time';
-import { Puzzle } from '../models/puzzle';
-import { RestApiProxyService } from '../services/rest-api-proxy.service';
-import { FAKE_PUZZLE_FEED } from './mock-data';
+import { UserSetting } from "../models/user-setting";
+import { Record } from "../models/record";
+import { Time } from "../models/time";
+import { Puzzle } from "../models/puzzle";
+import { RestApiProxyService } from "../services/rest-api-proxy.service";
+import { PUZZLE_ITEMS_DATA, FAKE_PUZZLE_FEED } from "./mock-data";
 
 let userSetting: UserSetting;
 let time: Time;
 
-describe('RestApiProxyService - getNewPuzzle', () => {
+describe("RestApiProxyService - getNewPuzzle", () => {
 
     beforeEach(async () => {
         TestBed.configureTestingModule({
@@ -46,13 +46,12 @@ describe('RestApiProxyService - getNewPuzzle', () => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
 
                     //Check the expected Url to the server
-                    expect(connection.request.url).to.deep.equal('http://localhost:3002/api/0');
+                    expect(connection.request.url).to.deep.equal("http://localhost:3002/api/0");
 
                     // Send the fake data to the caller
-                    connection.mockRespond(new Response(new ResponseOptions({ body: fakePuzzle })));
+                    connection.mockRespond(new Response(new ResponseOptions({ body: PUZZLE_ITEMS_DATA })));
 
                 });
-
                 // Make the fake call to the server
                 restApiProxyService.getNewPuzzle(0).subscribe(data => {
                     response = data;
@@ -73,35 +72,9 @@ describe('RestApiProxyService - getNewPuzzle', () => {
                 expect(response._puzzle[8].length).to.equal(9);
             }))
     );
-
-//     // Test the REST API Service for getting a valid grid
-//     it("getNewPuzzle, Should return an error from the server",
-//         inject([RestApiProxyService, MockBackend],
-//             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
-//
-//                 let fakeHttpErrorFromTheServer = "An error occured when trying to join the server";
-//                 mockBackend.connections.subscribe((connection: MockConnection) => {
-//
-//                     //Check the expected Url to the server
-//                     expect(connection.request.url).to.deep.equal('http://localhost:3002/api/puzzle?difficulty=0');
-//
-//                     // Send the fake data to the caller
-//                     connection.mockError(new Error(fakeHttpErrorFromTheServer));
-//
-//                 });
-//
-//                 let httpError = new TypeError(fakeHttpErrorFromTheServer);
-//
-//                 // Make the fake call to the server, we must get an error
-//                 expect(() => {
-//                     restApiProxyService.getNewPuzzle(0);
-//                     tick();
-//                 }).to.throw(Error, fakeHttpErrorFromTheServer);
-//             }))
-//     );
 });
 
-describe('RestApiProxyService - createGameRecord', () => {
+describe("RestApiProxyService - createGameRecord", () => {
 
     beforeEach(async () => {
         userSetting = new UserSetting();
@@ -131,7 +104,7 @@ describe('RestApiProxyService - createGameRecord', () => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
 
                     //Check the expected Url to the server
-                    expect(connection.request.url).to.deep.equal('http://localhost:3002/api/game-over');
+                    expect(connection.request.url).to.deep.equal("http://localhost:3002/api/game-over");
 
                     // Send the fake data to the caller
                     connection.mockRespond(new Response(new ResponseOptions({
@@ -158,7 +131,7 @@ describe('RestApiProxyService - createGameRecord', () => {
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
                     //Check the expected Url to the server
-                    expect(connection.request.url).to.deep.equal('http://localhost:3002/api/game-over');
+                    expect(connection.request.url).to.deep.equal("http://localhost:3002/api/game-over");
 
                     // Send the fake data to the caller
                     connection.mockRespond(new Response(new ResponseOptions({
@@ -184,7 +157,7 @@ describe('RestApiProxyService - createGameRecord', () => {
         inject([RestApiProxyService, MockBackend],
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
-                    expect(connection.request.url).to.deep.equal('http://localhost:3002/api/game-over');
+                    expect(connection.request.url).to.deep.equal("http://localhost:3002/api/game-over");
                     connection.mockError(new Error("erreur"));
                 });
                 expect(() => {
@@ -195,7 +168,7 @@ describe('RestApiProxyService - createGameRecord', () => {
     );
 });
 
-describe('RestApiProxyService - verifyUsername', () => {
+describe("RestApiProxyService - verifyUsername", () => {
 
     beforeEach(async () => {
         userSetting = new UserSetting();
@@ -224,7 +197,7 @@ describe('RestApiProxyService - verifyUsername', () => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
 
                     //Check the expected Url to the server
-                    expect(connection.request.url).to.deep.equal('http://localhost:3002/api/login');
+                    expect(connection.request.url).to.deep.equal("http://localhost:3002/api/login");
 
                     // Send the fake data to the caller
                     connection.mockRespond(new Response(new ResponseOptions({
@@ -255,7 +228,7 @@ describe('RestApiProxyService - verifyUsername', () => {
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
                     //Check the expected Url to the server
-                    expect(connection.request.url).to.deep.equal('http://localhost:3002/api/login');
+                    expect(connection.request.url).to.deep.equal("http://localhost:3002/api/login");
 
                     // Send the fake data to the caller
                     connection.mockRespond(new Response(new ResponseOptions({
@@ -286,7 +259,7 @@ describe('RestApiProxyService - verifyUsername', () => {
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
                     //Check the expected Url to the server
-                    expect(connection.request.url).to.deep.equal('http://localhost:3002/api/login');
+                    expect(connection.request.url).to.deep.equal("http://localhost:3002/api/login");
 
                     connection.mockError();
                 });
@@ -310,7 +283,7 @@ describe('RestApiProxyService - verifyUsername', () => {
 });
 
 
-describe('RestApiProxyService - removeUsername', () => {
+describe("RestApiProxyService - removeUsername", () => {
 
     beforeEach(async () => {
         userSetting = new UserSetting();
@@ -339,7 +312,7 @@ describe('RestApiProxyService - removeUsername', () => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
 
                     //Check the expected Url to the server
-                    expect(connection.request.url).to.deep.equal('http://localhost:3002/api/logout');
+                    expect(connection.request.url).to.deep.equal("http://localhost:3002/api/logout");
 
                     // Send the fake data to the caller
                     connection.mockRespond(new Response(new ResponseOptions({
@@ -370,7 +343,7 @@ describe('RestApiProxyService - removeUsername', () => {
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
                     //Check the expected Url to the server
-                    expect(connection.request.url).to.deep.equal('http://localhost:3002/api/logout');
+                    expect(connection.request.url).to.deep.equal("http://localhost:3002/api/logout");
 
                     // Send the fake data to the caller
                     connection.mockRespond(new Response(new ResponseOptions({
@@ -401,7 +374,7 @@ describe('RestApiProxyService - removeUsername', () => {
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
                     //Check the expected Url to the server
-                    expect(connection.request.url).to.deep.equal('http://localhost:3002/api/logout');
+                    expect(connection.request.url).to.deep.equal("http://localhost:3002/api/logout");
 
                     connection.mockError();
                 });
@@ -425,7 +398,7 @@ describe('RestApiProxyService - removeUsername', () => {
 });
 
 
-describe('RestApiProxyService - getTopRecords', () => {
+describe("RestApiProxyService - getTopRecords", () => {
 
     beforeEach(async () => {
         TestBed.configureTestingModule({
@@ -461,7 +434,7 @@ describe('RestApiProxyService - getTopRecords', () => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
 
                     //Check the expected Url to the server
-                    expect(connection.request.url).to.deep.equal('http://localhost:3002/api/top-records');
+                    expect(connection.request.url).to.deep.equal("http://localhost:3002/api/top-records");
 
                     // Send the fake data to the caller
                     connection.mockRespond(new Response(new ResponseOptions({
@@ -505,7 +478,7 @@ describe('RestApiProxyService - getTopRecords', () => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
 
                     //Check the expected Url to the server
-                    expect(connection.request.url).to.deep.equal('http://localhost:3002/api/top-records');
+                    expect(connection.request.url).to.deep.equal("http://localhost:3002/api/top-records");
 
                     // Send the fake data to the caller
                     connection.mockRespond(new Response(new ResponseOptions({
@@ -542,7 +515,7 @@ describe('RestApiProxyService - getTopRecords', () => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
 
                     //Check the expected Url to the server
-                    expect(connection.request.url).to.deep.equal('http://localhost:3002/api/top-records');
+                    expect(connection.request.url).to.deep.equal("http://localhost:3002/api/top-records");
                     connection.mockError(new Error("erreur"));
                     // Send the fake data to the caller
                 });
@@ -555,7 +528,7 @@ describe('RestApiProxyService - getTopRecords', () => {
     );
 });
 
-describe('RestApiProxyService - verifyGrid', () => {
+describe("RestApiProxyService - verifyGrid", () => {
 
     beforeEach(async () => {
         TestBed.configureTestingModule({
@@ -583,7 +556,7 @@ describe('RestApiProxyService - verifyGrid', () => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
 
                     //Check the expected Url to the server
-                    expect(connection.request.url).to.deep.equal('http://localhost:3002/api/grid-validation');
+                    expect(connection.request.url).to.deep.equal("http://localhost:3002/api/grid-validation");
 
                     // Send the fake data to the caller
                     connection.mockRespond(
@@ -610,7 +583,7 @@ describe('RestApiProxyService - verifyGrid', () => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
 
                     //Check the expected Url to the server
-                    expect(connection.request.url).to.deep.equal('http://localhost:3002/api/grid-validation');
+                    expect(connection.request.url).to.deep.equal("http://localhost:3002/api/grid-validation");
 
                     // Send the fake data to the caller
                     connection.mockRespond(
@@ -638,7 +611,7 @@ describe('RestApiProxyService - verifyGrid', () => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
 
                     //Check the expected Url to the server
-                    expect(connection.request.url).to.deep.equal('http://localhost:3002/api/grid-validation');
+                    expect(connection.request.url).to.deep.equal("http://localhost:3002/api/grid-validation");
 
                     // Send the fake data to the caller
                     connection.mockError(new Error(fakeHttpErrorFromTheServer));

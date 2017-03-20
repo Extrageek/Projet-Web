@@ -5,30 +5,30 @@
  * @date 2017/01/22
  */
 
-import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, HostListener } from "@angular/core";
+import { Router } from "@angular/router";
 
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/timer';
-import { Observable } from 'rxjs/Observable';
+import "rxjs/add/operator/map";
+import "rxjs/add/operator/catch";
+import "rxjs/add/observable/timer";
+import { Observable } from "rxjs/Observable";
 
-import { RestApiProxyService } from '../services/rest-api-proxy.service';
-import { GridManagerService } from '../services/grid-manager.service';
-import { UserSettingService } from '../services/user-setting.service';
-import { PuzzleEventManagerService } from '../services/puzzle-event-manager.service';
+import { RestApiProxyService } from "../services/rest-api-proxy.service";
+import { GridManagerService } from "../services/grid-manager.service";
+import { UserSettingService } from "../services/user-setting.service";
+import { PuzzleEventManagerService } from "../services/puzzle-event-manager.service";
 import { StopwatchService } from "../services/stopwatch.service";
 
-import { PuzzleCommon } from '../commons/puzzle-common';
-import { Puzzle, PuzzleItem } from '../models/puzzle';
-import { Record } from '../models/record';
-import { UserSetting, Difficulty } from '../models/user-setting';
+import { PuzzleCommon } from "../commons/puzzle-common";
+import { Puzzle, PuzzleItem } from "../models/puzzle";
+import { Record } from "../models/record";
+import { UserSetting, Difficulty } from "../models/user-setting";
 import { Time } from "../models/time";
 
 
 @Component({
     moduleId: module.id,
-    selector: 'sudoku-grid',
+    selector: "sudoku-grid",
     templateUrl: "/assets/templates/grid.component.html",
     styleUrls: ["../../assets/stylesheets/grid.component.css"],
     providers: [GridManagerService, PuzzleEventManagerService, StopwatchService]
@@ -38,14 +38,13 @@ export class GridComponent implements OnInit {
     _puzzle: Puzzle;
     _isLoading: boolean;
     _isFinished: boolean;
+    _isCongratulationMessageHidden = true;
+    _isTopRecordHidden = true;
     _userSetting: UserSetting;
     _time: Time;
     _hiddenClock: boolean;
     _easyRecords: Array<Record>;
     _hardRecords: Array<Record>;
-
-    @ViewChild("messageCongratulation") messageCongratulation: ElementRef;
-    @ViewChild("leaderboard") leaderboard: ElementRef;
 
     constructor(
         private gridManagerService: GridManagerService,
@@ -62,7 +61,7 @@ export class GridComponent implements OnInit {
         this._isLoading = true;
         this._isFinished = false;
         if (this._userSetting.name === "") {
-            this.router.navigate(['/']);
+            this.router.navigate(["/"]);
         }
         this._time = new Time();
         this.getNewPuzzle(this._userSetting.difficulty);
@@ -80,7 +79,7 @@ export class GridComponent implements OnInit {
         this._hardRecords = new Array<Record>();
     }
 
-    @HostListener('window:beforeunload')
+    @HostListener("window:beforeunload")
     public async logout() {
         await this.api.removeUsername(this._userSetting.name);
         return "are you sure";
@@ -89,8 +88,8 @@ export class GridComponent implements OnInit {
     public getNewPuzzle(difficulty: Difficulty) {
         this._isLoading = true;
         this._time.resetTime();
-        this.leaderboard.nativeElement.classList.add("fade");
-        this.hideMessageCongratulation();
+        this._isTopRecordHidden = true;
+        this._isCongratulationMessageHidden = true;
         this._easyRecords = [];
         this._hardRecords = [];
         this.api.getNewPuzzle(difficulty)
@@ -111,31 +110,31 @@ export class GridComponent implements OnInit {
 
     // Handle the input value changed event from grid
     public async onValueChange(event: KeyboardEvent, id: string) {
-        let rowColIndex = id.split('');
-        let rowIndex = Number(rowColIndex[PuzzleCommon.yPosition]);
-        let colIndex = Number(rowColIndex[PuzzleCommon.xPosition]);
-        if (this.puzzleEventManager.isDeleteKey(event.key)) {
-            if (this._puzzle._puzzle[rowIndex][colIndex]._value !== null) {
-                this.gridManagerService.deleteCurrentValue(this._puzzle, rowIndex, colIndex);
-                this.gridManagerService.updateGridAfterInsertOrDelete(this._puzzle, rowIndex, colIndex);
+        if (!this._isFinished) {
+            let rowColIndex = id.split("");
+            let rowIndex = Number(rowColIndex[PuzzleCommon.yPosition]);
+            let colIndex = Number(rowColIndex[PuzzleCommon.xPosition]);
+            if (this.puzzleEventManager.isDeleteKey(event.key)) {
+                if (this._puzzle._puzzle[rowIndex][colIndex]._value !== null) {
+                    this.gridManagerService.deleteCurrentValue(this._puzzle, rowIndex, colIndex);
+                    this.gridManagerService.updateGridAfterInsertOrDelete(this._puzzle, rowIndex, colIndex);
+                }
             }
-        }
-        else if (this.puzzleEventManager.isSudokuNumber(event.key)) {
-            this.gridManagerService.decrementCellsToBeCompleted();
-            this.gridManagerService.updateGridAfterInsertOrDelete(this._puzzle, rowIndex, colIndex);
-            if (this.gridManagerService.cellsToBeCompleted === 0) {
-                if (await this.api.verifyGrid(this._puzzle)) {
-                    this._isFinished = true;
-                    await this.api.getTopRecords().then(topRecords => {
-                        let isInserted = this.insertUserScoreIntoTopScores(topRecords);
-                        this.messageCongratulation.nativeElement.classList.remove("fade");
-                        if (isInserted) {
-                            this.leaderboard.nativeElement.classList.remove("fade");
-                        }
-                    }).catch(error => {
-                        console.log(error);
-                    });
-                    this.api.createGameRecord(this._userSetting, this._time);
+            else if (this.puzzleEventManager.isSudokuNumber(event.key)) {
+                this.gridManagerService.decrementCellsToBeCompleted();
+                this.gridManagerService.updateGridAfterInsertOrDelete(this._puzzle, rowIndex, colIndex);
+                if (this.gridManagerService.cellsToBeCompleted === 0) {
+                    if (await this.api.verifyGrid(this._puzzle)) {
+                        this._isFinished = true;
+                        await this.api.getTopRecords().then(topRecords => {
+                            let isInserted = this.insertUserScoreIntoTopScores(topRecords);
+                            this._isTopRecordHidden = !isInserted;
+                            this._isCongratulationMessageHidden = false;
+                        }).catch(error => {
+                            console.log(error);
+                        });
+                        this.api.createGameRecord(this._userSetting, this._time);
+                    }
                 }
             }
         }
@@ -143,14 +142,14 @@ export class GridComponent implements OnInit {
 
     // Initialize the current grid
     public initializeCurrentGrid() {
-        if (this._puzzle === null
-            || this._puzzle._puzzle == null) {
+        if (this._puzzle === null || this._puzzle === undefined
+            || this._puzzle._puzzle == null || this._puzzle._puzzle === undefined) {
             throw new Error("The initial grid cannot be null.");
         }
 
         this.stopwatchService.resetTime();
-        this.leaderboard.nativeElement.classList.add("fade");
-        this.hideMessageCongratulation();
+        this._isTopRecordHidden = true;
+        this._isCongratulationMessageHidden = true;
         this.gridManagerService.initializeGrid(this._puzzle);
         this._isFinished = false;
         this._easyRecords = [];
@@ -159,7 +158,7 @@ export class GridComponent implements OnInit {
 
     // Use to check if a value is a Sudoku number
     public validateInputValue(event: KeyboardEvent) {
-        if (event === null) {
+        if (event === null || event === undefined) {
             throw new Error("No event source is provided.");
         }
 
@@ -169,7 +168,7 @@ export class GridComponent implements OnInit {
     }
 
     public hideMessageCongratulation() {
-        this.messageCongratulation.nativeElement.classList.add("fade");
+        this._isCongratulationMessageHidden = true;
     }
 
     public hideClock() {
@@ -178,13 +177,15 @@ export class GridComponent implements OnInit {
 
     public insertUserScoreIntoTopScores(recordsFromDb: Record[][]): boolean {
         let isInserted = false;
-        for (let i = 0; i < recordsFromDb[this._userSetting.difficulty].length; ++i) {
-            if (this._time.compareTo(recordsFromDb[this._userSetting.difficulty][i].time) === -1 && !isInserted) {
+        let i = 0;
+        while (!isInserted && i < recordsFromDb[this._userSetting.difficulty].length) {
+            if (this._time.compareTo(recordsFromDb[this._userSetting.difficulty][i].time) === -1) {
                 isInserted = true;
                 recordsFromDb[this._userSetting.difficulty][i] = new Record(this._userSetting.name,
                     this._userSetting.difficulty,
                     this._time);
             }
+            ++i;
         }
         this._easyRecords = recordsFromDb[Difficulty.NORMAL];
         this._hardRecords = recordsFromDb[Difficulty.HARD];

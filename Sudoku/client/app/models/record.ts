@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 
-import { Difficulty } from './user-setting';
-import { Time } from './time';
+import { Difficulty } from "./user-setting";
+import { Time } from "./time";
 
 @Injectable()
 export class Record {

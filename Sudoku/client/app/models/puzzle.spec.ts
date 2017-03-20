@@ -1,12 +1,20 @@
-import { assert } from 'chai';
+import { assert, expect } from "chai";
 
-declare var jQuery: any;
+import { IPuzzleItemData, Puzzle, PuzzleItem } from "../models/puzzle";
 
-import { Puzzle, PuzzleItem } from '../models/puzzle';
+import { INITIAL_PUZZLE_SEED, PUZZLE_ITEMS_DATA, INVALID_PUZZLE_ITEMS_DATA_1,
+    INVALID_PUZZLE_ITEMS_DATA_2 } from "../services/mock-data";
 
-import { INITIAL_PUZZLE_SEED } from '../services/mock-data';
+describe("Puzzle", () => {
 
-describe('Puzzle', () => {
+    it("should transform object to Puzzle", () => {
+        expect(() => {Puzzle.convertObjectToPuzzle(PUZZLE_ITEMS_DATA); }).to.not.throw(Error);
+    });
+
+    it("should not transform object to Puzzle", () => {
+        expect(() => {Puzzle.convertObjectToPuzzle(INVALID_PUZZLE_ITEMS_DATA_1); }).to.throw(TypeError);
+        expect(() => {Puzzle.convertObjectToPuzzle(INVALID_PUZZLE_ITEMS_DATA_2); }).to.throw(TypeError);
+    });
 
    // Testing puzzle constructor
    it("should initialize grid to INITIAL_PUZZLE_SEED", () => {
@@ -22,14 +30,5 @@ describe('Puzzle', () => {
        // Check the expected result
        assert(item._hide === true, "Should be hidden");
        assert(item._value === 3, "Should contain the number 3");
-   });
-
-   it("should create a PuzzleItem that contains 3 and is hidden", () => {
-       // Must be completed
-       let item: PuzzleItem = new PuzzleItem(null, false);
-
-       // Check the expected result
-       assert(item._hide === false, "Should not be hidden");
-       assert(item._value === null, "Should not contain a value");
    });
 });

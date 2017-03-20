@@ -11,12 +11,12 @@
                         <tr class="grid" *ngFor="let row of _puzzle?._puzzle , let i = index" [attr.id]="'gridRowId' + i">
                             <td *ngFor="let cell of row, let j = index" [attr.id]="'cellId' + i + '' + j">
                                 <input #attrRead class="readOnlyCell" *ngIf="!cell._hide" readonly maxlength="1" type="text" name="inputCell" id="{{i}}{{j}}"
-                                       [ngModel]="cell._value" (keydown)="onKeyDownEventHandler($event, attrRead.id)" />
-                                <input #attrWrite [ngClass]="{readWriteCell: !_puzzle._puzzle[i][j]._isRed, errorCell: _puzzle._puzzle[i][j]._isRed }"  *ngIf="cell._hide" maxlength="1" type="text" name="inputCell" id="{{i}}{{j}}" [(ngModel)]="cell._value"
-                                       oncopy="return false" onpaste="return false"
-                                       (keydown)="onKeyDownEventHandler($event, attrWrite.id)" (keyup)="onValueChange($event, attrWrite.id)"
-                                       (keypress)="validateInputValue($event)"
-                                        />
+                                        [ngModel]="cell._value" (keydown)="onKeyDownEventHandler($event, attrRead.id)" />
+                                <input #attrWrite [ngClass]="{readWriteCell: !_puzzle._puzzle[i][j]._isRed, errorCell: _puzzle._puzzle[i][j]._isRed }"
+                                        *ngIf="cell._hide" maxlength="1" type="text" name="inputCell" id="{{i}}{{j}}" [(ngModel)]="cell._value"
+                                        oncopy="return false" onpaste="return false"
+                                        (keydown)="onKeyDownEventHandler($event, attrWrite.id)" (keyup)="onValueChange($event, attrWrite.id)"
+                                        (keypress)="validateInputValue($event)" />
                             </td>
                         </tr>
                         </tbody>
@@ -29,13 +29,9 @@
         <md-card>
             <md-card-content>
                 <h2 *ngIf="!_hiddenClock">
-                    <span class="glyphicon glyphicon-time" aria-hidden="true"> </span> {{_time.printHours()}} : {{_time.printMinutes()}}
+                    <span [ngClass]="{hidden: _hiddenClock}" class="glyphicon glyphicon-time" aria-hidden="true"> </span> {{_time.printHours()}} : {{_time.printMinutes()}}
                     : {{_time.printSeconds()}}
                     <span (click)="hideClock()" class="glyphicon glyphicon-eye-close" aria-hidden="true"> </span>
-                </h2>
-                <h2 *ngIf="_hiddenClock">
-                    <span class="glyphicon glyphicon-time" aria-hidden="true"> </span>
-                    <span (click)="hideClock()" class="glyphicon glyphicon-eye-open" aria-hidden="true"> </span>
                 </h2>
             </md-card-content>
             <md-card-content>
@@ -60,7 +56,7 @@
             </md-card-actions>
         </md-card>
 
-        <div #messageCongratulation class="col-md-12 alert alert-success alert-dismissible fade show" role="alert">
+        <div [ngClass]="{hidden: _isCongratulationMessageHidden}" class="col-md-12 alert alert-success alert-dismissible" role="alert">
             <button type="button" class="close" (click)="hideMessageCongratulation()" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -69,7 +65,7 @@
             <strong *ngIf="_userSetting.difficulty === 1"> DIFFICILE </strong>
         </div>
 
-        <div id="leaderboard" #leaderboard class="col-md-12 ">
+        <div id="leaderboard" [ngClass]="{hidden: _isTopRecordHidden}" class="col-md-12">
             <md-tab-group>
                 <md-tab label="Facile" style="color: white;">
                     <table id="lead-table-easy" class="table table-hover table-responsive">

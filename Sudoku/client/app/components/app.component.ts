@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-    selector: 'sudoku-app',
+    selector: "sudoku-app",
     template: `<h1>{{name}}</h1>
         <main>
             <router-outlet></router-outlet>
@@ -9,5 +9,5 @@ import { Component } from '@angular/core';
     `,
 })
 export class AppComponent {
-    name = 'SUDOKU';
+    name = "SUDOKU";
 }

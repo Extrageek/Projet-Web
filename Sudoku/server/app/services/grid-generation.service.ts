@@ -19,7 +19,7 @@ export class GridGenerationManager {
     private static readonly NUMBER_OF_SUDOKUS_TO_GENERATE = 3;
     private static readonly NOMBRE_ITERATIONS_MIN = 1;
     private static readonly NOMBRE_ITERATIONS_MAX = 200;
-    private static readonly NUMBERS_TO_REMOVE = [45, 60];
+    private static readonly NUMBERS_TO_REMOVE = [1, 60];
 
     private _sudokusGenerated: Array<Array<Puzzle>>;
 
@@ -122,7 +122,6 @@ export class GridGenerationManager {
             operations[operationNumberToDo](newPuzzle);
         }
         this.hideNumbers(newPuzzle, GridGenerationManager.NUMBERS_TO_REMOVE[difficulty]);
-        //this.hideNumbers(newPuzzle, 40);
         newPuzzle.createPuzzleHoles();
         return newPuzzle;
     }
@@ -158,7 +157,6 @@ export class GridGenerationManager {
                             [0, 1, 2, 3 , 4, 5, 6, 7, 8],
                             [0, 1, 2, 3 , 4, 5, 6, 7, 8]];
         let numberOfRemovedNumbers = 0;
-        console.log("-----------------");
         while (validIndexesRow.length > 0 && numberOfRemovedNumbers < numbersToRemove) {
             let rowValidIndex = getRandomNumberInRange(0, validIndexesRow.length - 1);
             let rowIndex = validIndexesRow[rowValidIndex];

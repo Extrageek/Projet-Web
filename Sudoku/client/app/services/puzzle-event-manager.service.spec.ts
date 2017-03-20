@@ -3,14 +3,14 @@ import {
     fakeAsync,
     inject,
     TestBed, async
-} from '@angular/core/testing';
+} from "@angular/core/testing";
 
-import { assert } from 'chai';
-import { PuzzleEventManagerService } from './puzzle-event-manager.service';
-import { GridManagerService } from './grid-manager.service';
-import { PuzzleCommon } from '../commons/puzzle-common';
+import { assert } from "chai";
+import { PuzzleEventManagerService } from "./puzzle-event-manager.service";
+import { GridManagerService } from "./grid-manager.service";
+import { PuzzleCommon } from "../commons/puzzle-common";
 
-describe('PuzzleEventManagerService', () => {
+describe("PuzzleEventManagerService", () => {
 
     beforeEach(async (() => {
         TestBed.configureTestingModule({

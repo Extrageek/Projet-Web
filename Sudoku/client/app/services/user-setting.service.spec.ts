@@ -1,15 +1,15 @@
-import { UserSettingService } from './user-setting.service';
-import { RestApiProxyService } from './rest-api-proxy.service';
+import { UserSettingService } from "./user-setting.service";
+import { RestApiProxyService } from "./rest-api-proxy.service";
 import {
     Http, ResponseOptions,
     Response,
     BaseRequestOptions,
     ConnectionBackend
-} from '@angular/http';
-import { UserSetting } from '../models/user-setting';
+} from "@angular/http";
+import { UserSetting } from "../models/user-setting";
 
-import { MockBackend, MockConnection } from '@angular/http/testing';
-import { Difficulty } from '../models/user-setting';
+import { MockBackend, MockConnection } from "@angular/http/testing";
+import { Difficulty } from "../models/user-setting";
 import { expect } from "chai";
 import { TestBed, tick, inject, fakeAsync } from "@angular/core/testing";
 
@@ -116,7 +116,7 @@ describe("UserSettingService should", () => {
         inject([UserSettingService],
             fakeAsync((_userSettingService: UserSettingService) => {
                 let _user = new UserSetting();
-                _user.name = '';
+                _user.name = "";
                 _user.difficulty = Difficulty.NORMAL;
                 expect(_userSettingService.userSetting.name).to.be.equal(_user.name);
                 expect(_userSettingService.userSetting.difficulty).to.be.equal(_user.difficulty);

@@ -5,14 +5,14 @@
  * @date 2017/01/22
  */
 
-import { Injectable } from '@angular/core';
-import { PuzzleCommon } from '../commons/puzzle-common';
-import { GridManagerService } from './grid-manager.service';
+import { Injectable } from "@angular/core";
+import { PuzzleCommon } from "../commons/puzzle-common";
+import { GridManagerService } from "./grid-manager.service";
 
 declare var jQuery: any;
 
-export const INPUT_ID_PREFIX = '#';
-export const READ_ONLY_ATTRIBUTE = 'readonly';
+export const INPUT_ID_PREFIX = "#";
+export const READ_ONLY_ATTRIBUTE = "readonly";
 export enum ArrayDirection {
     LEFT = 0,
     RIGHT = 1,
@@ -79,7 +79,7 @@ export class PuzzleEventManagerService {
      * @method onKeyEventUpdateCurrentCursor
      */
     onKeyEventUpdateCurrentCursor(event: KeyboardEvent, id: string): void {
-        let currentPositionXY = id.split('');
+        let currentPositionXY = id.split("");
         let keyCode = event.key;
 
         if (this.isDirection(keyCode)) {
@@ -140,7 +140,7 @@ export class PuzzleEventManagerService {
             currentPositionXY[PuzzleCommon.yPosition],
             this._newPositionY.toString()
         ]
-            .join('');
+            .join("");
     }
 
     // On Up/Down Arrow key press, jump to the next Up/Down empty cell, according to the direction.
@@ -162,6 +162,6 @@ export class PuzzleEventManagerService {
         this._nextInputPositionYX = [
             this._newPositionX.toString(),
             currentPositionXY[PuzzleCommon.xPosition]
-        ].join('');
+        ].join("");
     }
 }

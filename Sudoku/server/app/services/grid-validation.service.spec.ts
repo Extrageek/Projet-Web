@@ -1,10 +1,21 @@
 import { expect } from 'chai';
 
 import { GridValidationManager } from './grid-validation.service';
-import { Puzzle, PuzzleItem } from './../models/puzzle';
+import { IPuzzleItemData, Puzzle, PuzzleItem } from './../models/puzzle';
 
-let gridValidationManager = new GridValidationManager();
+const BAD_GRID_1 = [
+    [{_value: 1, _hide: true}, {_value: 2, _hide: true}, {_value: 3, _hide: true}]
+];
 
+const BAD_GRID_2 = [
+    [{_value: 1, _hide: true}, {_value: 2, _hide: true}, {_value: 3, _hide: true},
+    {_value: 4, _hide: true}, {_value: 5, _hide: true}, {_value: 6, _hide: true},
+    {_value: 7, _hide: true}, {_value: 8, _hide: true}, {_value: 9, _hide: true}]
+];
+
+const BAD_GRID_3 = [
+    [{_value: 1, _hide: true}, {_value: 2, _hide: true}, null]
+];
 
 
 const GRID_VALID = [
@@ -106,127 +117,117 @@ const GRID_NOT_VALID = [
     ]
 ];
 
+describe("Grid validation manager - constructions", () => {
 
-describe('Grid Validation Manager', () => {
-    it("isRowValid, Should return false because of a null value",
+    it("should throw exceptions because of invalid data structure", () => {
+        expect(() => {new GridValidationManager(null); }, "should not accept null value.").to.throw(Error);
+        expect(() => {GridValidationManager.convertObjectToAnArrayOfPuzzleItem(BAD_GRID_1); },
+            "should not accept BAD_GRID_1.").to.throw(TypeError);
+        expect(() => {GridValidationManager.convertObjectToAnArrayOfPuzzleItem(BAD_GRID_2); },
+            "should not accept BAD_GRID_2.").to.throw(TypeError);
+        expect(() => {GridValidationManager.convertObjectToAnArrayOfPuzzleItem(BAD_GRID_3); },
+            "should not accept BAD_GRID_3.").to.throw(TypeError);
+    });
+
+    it("should not construct a double array of PuzzleItem from a doubleArray of IPuzzleItemData", () => {
+        let badObject1: Array<Array<IPuzzleItemData>> = [null];
+        let badObject2: Array<Array<IPuzzleItemData>> = [[{_value: 1, _hide: true}]];
+        expect(() => {GridValidationManager.convertObjectToAnArrayOfPuzzleItem(badObject1); }).to.throw(TypeError);
+        expect(() => {GridValidationManager.convertObjectToAnArrayOfPuzzleItem(badObject2); }).to.throw(TypeError);
+    });
+
+    it("should construct a double array of PuzzleItem from a doubleArray of IPuzzleItemData", () => {
+        let arrayOfIPuzzleData = new Array<Array<IPuzzleItemData>>();
+        for (let row = Puzzle.MIN_ROW_INDEX; row <= Puzzle.MAX_ROW_INDEX; ++row) {
+            arrayOfIPuzzleData.push(new Array<IPuzzleItemData>());
+            for (let column = Puzzle.MIN_COLUMN_INDEX; column <= Puzzle.MAX_COLUMN_INDEX; ++column) {
+                arrayOfIPuzzleData[row].push({_value: 1, _hide: false});
+            }
+        }
+        expect(() => {GridValidationManager.convertObjectToAnArrayOfPuzzleItem(arrayOfIPuzzleData); })
+            .to.not.throw(TypeError);
+    });
+});
+
+describe("Grid validation manager - Invalid grid", () => {
+
+    let gridValidationManager: GridValidationManager;
+
+    beforeEach(() => {
+        gridValidationManager = new GridValidationManager(GRID_NOT_VALID);
+    });
+
+    it("should return false with a duplicated number error in the current row", () => {
+            expect(gridValidationManager.hasNoRepeatedNumbersInRange(0, 0,
+                Puzzle.MIN_COLUMN_INDEX, Puzzle.MAX_COLUMN_INDEX)).to.be.false;
+    });
+
+    it("should return false with a duplicated number error in the current column", () => {
+            expect(gridValidationManager.hasNoRepeatedNumbersInRange(Puzzle.MIN_ROW_INDEX, Puzzle.MAX_ROW_INDEX,
+                0, 0)).to.be.false;
+    });
+
+    it("should return false with a duplicated number error in the first square", () => {
+            expect(gridValidationManager.hasNoRepeatedNumbersInRange(Puzzle.MIN_ROW_INDEX, Puzzle.SQUARE_LENGTH - 1,
+                Puzzle.MIN_COLUMN_INDEX, Puzzle.SQUARE_LENGTH - 1)).to.be.false;
+    });
+
+    it("should return false for a grid with at least an invalid row", () => {
+            expect(gridValidationManager.validateRows()).to.be.false;
+    });
+
+    it("should return false for a grid with at least an invalid column",
         () => {
-            let puzzle = new Puzzle();
-            puzzle._puzzle[0][0].value = null;
-            expect(gridValidationManager.isRowValid(puzzle._puzzle, 0)).to.be.false;
+            expect(gridValidationManager.validateColumns()).to.be.false;
         }
     );
 
-    it("isRowValid, Should return false with a duplicated number error in the current row",
-        () => {
-            // let isRowValid = gridValidationManagerRewire.__get__('isRowValid');
-            expect(gridValidationManager.isRowValid(GRID_NOT_VALID, 0)).to.be.false;
-        }
-    );
+    it("should return false for a grid with at least an invalid square", () => {
+        expect(gridValidationManager.validateSquares()).to.be.false;
+    });
 
-    it("isRowValid, Should return true for a valid row",
-        () => {
-            // let isRowValid = gridValidationManagerRewire.__get__('isRowValid');
-            expect(gridValidationManager.isRowValid(GRID_VALID, 0)).to.be.true;
-        }
-    );
+    it("should return false for an invalid grid.", () => {
+            expect(gridValidationManager.validateGrid()).to.be.false;
+    });
+});
 
-    it("validateRows, Should return true for a grid with valid rows",
-        () => {
-            // let validateRows = gridValidationManagerRewire.__get__('validateRows');
-            expect(gridValidationManager.validateRows(GRID_VALID)).to.be.true;
-        }
-    );
 
-    it("validateRows, Should return false for a grid with at least an invalid row",
-        () => {
-            // let validateRows = gridValidationManagerRewire.__get__('validateRows');
-            expect(gridValidationManager.validateRows(GRID_NOT_VALID)).to.be.false;
-        }
-    );
+describe("Grid Validation Manager - valid grid", () => {
 
-    it("isColumnValid, Should return false because of a null value",
-        () => {
-            let puzzle = new Puzzle();
-            puzzle._puzzle[0][0].value = null;
-            expect(gridValidationManager.isColumnValid(puzzle._puzzle, 0)).to.be.false;
-        }
-    );
+    let gridValidationManager: GridValidationManager;
 
-    it("isColumnValid, Should return false with a duplicated number error in the current column",
-        () => {
-            // let isColumnValid = gridValidationManagerRewire.__get__('isColumnValid');
-            expect(gridValidationManager.isColumnValid(GRID_NOT_VALID, 0)).to.be.false;
-        }
-    );
+    beforeEach(() => {
+        gridValidationManager = new GridValidationManager(GRID_VALID);
+    });
 
-    it("isColumnValid, Should return true for a valid column",
-        () => {
-            // let isColumnValid = gridValidationManagerRewire.__get__('isColumnValid');
-            expect(gridValidationManager.isColumnValid(GRID_VALID, 0)).to.be.true;
-        }
-    );
+    it("should return true for a valid row", () => {
+            expect(gridValidationManager.hasNoRepeatedNumbersInRange(0, 0,
+                Puzzle.MIN_COLUMN_INDEX, Puzzle.MAX_COLUMN_INDEX)).to.be.true;
+    });
 
-    it("validateColumns, Should return true for a grid with valid columns",
-        () => {
-            // let validateColumns = gridValidationManagerRewire.__get__('validateColumns');
-            expect(gridValidationManager.validateColumns(GRID_VALID)).to.be.true;
-        }
-    );
+    it("should return true for a valid column", () => {
+            expect(gridValidationManager.hasNoRepeatedNumbersInRange(Puzzle.MIN_ROW_INDEX, Puzzle.MAX_ROW_INDEX,
+                0, 0)).to.be.true;
+    });
 
-    it("validateColumns, Should return false for a grid with at least an invalid column",
-        () => {
-            // let validateColumns = gridValidationManagerRewire.__get__('validateColumns');
-            expect(gridValidationManager.validateColumns(GRID_NOT_VALID)).to.be.false;
-        }
-    );
+    it("should return true for a valid square", () => {
+            expect(gridValidationManager.hasNoRepeatedNumbersInRange(Puzzle.MIN_ROW_INDEX, Puzzle.SQUARE_LENGTH - 1,
+                Puzzle.MIN_COLUMN_INDEX, Puzzle.SQUARE_LENGTH - 1)).to.be.true;
+    });
 
-    it("isSquareValid, Should return false because of a null value",
-        () => {
-            let puzzle = new Puzzle();
-            puzzle._puzzle[0][0].value = null;
-            expect(gridValidationManager.isSquareValid(puzzle._puzzle, 0, 0)).to.be.false;
-        }
-    );
+    it("should return true for a grid with valid rows", () => {
+            expect(gridValidationManager.validateRows()).to.be.true;
+    });
 
-    it("isSquareValid, Should return false with a duplicated number error in the first square",
-        () => {
-            // let isSquareValid = gridValidationManagerRewire.__get__('isSquareValid');
-            expect(gridValidationManager.isSquareValid(GRID_NOT_VALID, 0, 0)).to.be.false;
-        }
-    );
+    it("should return true for a grid with valid columns", () => {
+            expect(gridValidationManager.validateColumns()).to.be.true;
+    });
 
-    it("isSquareValid, Should return true for a valid square",
-        () => {
-            // let isSquareValid = gridValidationManagerRewire.__get__('isSquareValid');
-            expect(gridValidationManager.isSquareValid(GRID_VALID, 0, 0)).to.be.true;
-        }
-    );
+    it("should return true for a grid with valid squares", () => {
+            expect(gridValidationManager.validateSquares()).to.be.true;
+    });
 
-    it("validateSquares, Should return true for a grid with valid squares",
-        () => {
-            // let validateSquares = gridValidationManagerRewire.__get__('validateSquares');
-            expect(gridValidationManager.validateSquares(GRID_VALID)).to.be.true;
-        }
-    );
-
-    it("validateSquares, Should return false for a grid with at least an invalid square",
-        () => {
-            // let validateSquares = gridValidationManagerRewire.__get__('validateSquares');
-            expect(gridValidationManager.validateSquares(GRID_NOT_VALID)).to.be.false;
-        }
-    );
-
-    it("validateGrid, Should return true for a valid grid",
-        () => {
-            // let gridValidationManager = new GridValidationManager();
-            expect(gridValidationManager.validateGrid(GRID_VALID)).to.be.true;
-        }
-    );
-
-    it("validateGrid, Should return false for a grid with at least an invalid sqaure",
-        () => {
-            // let gridValidationManager = new GridValidationManager();
-            expect(gridValidationManager.validateGrid(GRID_NOT_VALID)).to.be.false;
-        }
-    );
+    it("should return true for a valid grid", () => {
+            expect(gridValidationManager.validateGrid()).to.be.true;
+    });
 });
