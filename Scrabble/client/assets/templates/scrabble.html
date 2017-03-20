@@ -8,9 +8,9 @@
                 </tr>
                 <tr class="grid" *ngFor="let row of board?.squares , let i = index" [attr.id]="'gridRowId' + i">
                     <td class="imageContainer rowIndex"> {{row[0]._position._row}}</td>
-                    <td class="imageContainer" *ngFor="let square of row, let j = index" 
+                    <td class="imageContainer" *ngFor="let square of row" 
                     [attr.id]="square._position._row + '' + square._position._column"
-                    [ngStyle]="{'background-image': 'url('+ '../../assets/images/' + square._type + '.jpg' +')'}">
+                    [ngStyle]="{'background-image': 'url('+ '../../assets/images/' + square._squareValue + '.jpg' +')'}">
                     </td>
                 </tr>
             </tbody>

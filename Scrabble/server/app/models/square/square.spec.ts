@@ -26,13 +26,11 @@ describe("Square object should", () => {
     });
 
     it("construct a square correctly", () => {
-        expect(_square.letter).to.be.null;
         expect(_square.position).to.be.equal(_position);
         expect(_square.type).to.be.equal(_type);
+        expect(_square.squareValue).to.be.equal(_type.toString());
     });
-    it("get the alphabet letter correctly", () => {
-        expect(_square.letter).to.be.null;
-    });
+
     it("set the alphabet letter corectly", () => {
         _letter = new Letter(Alphabet.letterD, AlphabetPoint.letterD, AlphabetQuantity.letterD);
         _square.letter = _letter;

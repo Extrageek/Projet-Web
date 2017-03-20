@@ -3,10 +3,19 @@ import { Letter } from "./../letter";
 import { SquareType } from "./square-type";
 
 export class Square {
+
+    private _squareValue: string;
     private _letter: Letter;
     private _position: SquarePosition;
     private _type: SquareType;
     private _isBusy: boolean;
+
+    public get squareValue(): string {
+        return this._squareValue;
+    }
+    public set squareValue(v: string) {
+        this._squareValue = v;
+    }
 
     public get letter(): Letter {
         return this._letter;
@@ -41,6 +50,7 @@ export class Square {
     }
 
     constructor(position: SquarePosition, type: SquareType) {
+        this.squareValue = type.toString();
         this.letter = new Letter("", 0, 0);
         this.position = position;
         this.type = type;
