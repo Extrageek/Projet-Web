@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 
-import { UserSetting, Difficulty } from '../models/user-setting';
+import { UserSetting, Difficulty } from "../models/user-setting";
 
-import { RestApiProxyService } from '../services/rest-api-proxy.service';
+import { RestApiProxyService } from "../services/rest-api-proxy.service";
 
 @Injectable()
 export class UserSettingService {
@@ -46,7 +46,7 @@ export class UserSettingService {
     }
 
     public async verifyUsername(username: string): Promise<boolean> {
-        if (username !== '') {
+        if (username !== "") {
             let isValid: boolean;
             await this.api.verifyUsername(username)
                 .then(result => {

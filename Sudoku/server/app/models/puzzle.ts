@@ -5,15 +5,31 @@
  * @date 2017/01/22
  */
 
+export interface IPuzzleItemData {
+    _value: number;
+    _hide: boolean;
+}
+
 export class PuzzleItem {
     private _value: number;
     private _hide: boolean;
-    private _isRed: boolean;
+    //private _isRed: boolean;
+
+    /**
+     * Extract from an any object the properties _value and _hide to create an object of type PuzzleItem.
+     * A typeError is thrown if the object doesn't contain the properties of the IPuzzleItemData interface.
+     */
+    public static convertObjectToPuzzleItem(object: IPuzzleItemData): PuzzleItem {
+        if (object._value === undefined || object._hide === undefined) {
+            throw new TypeError("The object doesn't have the property _value or _hide.");
+        }
+        return new PuzzleItem(Number(object._value), object._hide);
+    }
 
     constructor(value: number, hide: boolean) {
         this._value = value;
         this._hide = hide;
-        this._isRed = false;
+        //this._isRed = false;
     }
 
     get isHidden(): boolean {
@@ -43,9 +59,29 @@ export class Puzzle {
     public static readonly MIN_ROW_INDEX = 0;
     public static readonly MIN_COLUMN_INDEX = 0;
     public static readonly ALL_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    public static readonly MIN_NUMBER = 1;
+    public static readonly MAX_NUMBER = 9;
 
     public _puzzle: Array<Array<PuzzleItem>>;
     private _numberOfHoles: number;
+
+    /*
+    public static convertObjectToPuzzle(object: Array<Array<IPuzzleItemData>>): Puzzle {
+        let puzzle = new Puzzle();
+        for (let row = Puzzle.MIN_ROW_INDEX; row <= Puzzle.MAX_ROW_INDEX; ++row) {
+            if (puzzle[row] === undefined || puzzle[row] === null) {
+                throw new TypeError("The puzzle is not a valid double array of 9 x 9.");
+            }
+            for (let column = Puzzle.MIN_COLUMN_INDEX; row <= Puzzle.MAX_COLUMN_INDEX; ++column) {
+                if (puzzle[row][column] === undefined || puzzle[row][column] === null) {
+                    throw new TypeError("The puzzle is not a valid double array of 9 x 9.");
+                }
+                puzzle.
+            }
+        }
+        return puzzle;
+    }
+    */
 
     private static validateRowColumnIndex(row: number, column: number): boolean {
         return row >= Puzzle.MIN_ROW_INDEX && row <= Puzzle.MAX_ROW_INDEX
@@ -143,8 +179,6 @@ export class Puzzle {
         }
     }
 
-
-
     public swapRow(rowA: number, rowB: number) {
         for (let column = 0; column < this._puzzle.length; ++column) {
             this.swapTwoTiles(rowA, column, rowB, column);
@@ -189,23 +223,6 @@ export class Puzzle {
         return this._numberOfHoles;
     }
 
-    /*
-    public getFirstHiddenTile(): indexCoordinates {
-        let rowFound: number;
-        let columnFound: number;
-        this._puzzle.find((row: PuzzleItem[], indexRow: number, object: PuzzleItem[][]) => {
-            return row.find((puzzleItem: PuzzleItem, indexColumn: number, objet: PuzzleItem[]) => {
-                if (puzzleItem.isHidden) {
-                    rowFound = indexRow;
-                    columnFound = indexColumn;
-                }
-                return puzzleItem.isHidden;
-            }) !== undefined;
-        });
-        return rowFound !== undefined ? {row: rowFound, column: columnFound} : null;
-    }
-    */
-
     private swapTwoTiles(rowA: number, columnA: number, rowB: number, columnB: number) {
         let temp = this._puzzle[rowA][columnA];
         this._puzzle[rowA][columnA] = this._puzzle[rowB][columnB];
@@ -232,6 +249,10 @@ export class Puzzle {
                 this.setPuzzleTileVisibility(row, column, true);
             }
         }
+    }
+
+    public generateJSONFormat(): string {
+        return JSON.stringify(this._puzzle);
     }
 
     public printToConsole() {

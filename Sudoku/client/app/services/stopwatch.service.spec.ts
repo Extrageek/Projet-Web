@@ -1,10 +1,10 @@
-import { expect } from 'chai';
+import { expect } from "chai";
 
-import { StopwatchService } from './stopwatch.service';
+import { StopwatchService } from "./stopwatch.service";
 
 let service: StopwatchService;
 
-describe('Stopwatch service tests', () => {
+describe("Stopwatch service tests", () => {
 
     it("seconds property should be equal to 5", () => {
         service = new StopwatchService();

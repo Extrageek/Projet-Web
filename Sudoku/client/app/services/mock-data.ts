@@ -1,5 +1,67 @@
 
-import { PuzzleItem } from '../models/puzzle';
+import { IPuzzleItemData, PuzzleItem } from "../models/puzzle";
+
+export const PUZZLE_ITEMS_DATA: Array<Array<IPuzzleItemData>> = [
+    [
+        {_value: 1, _hide: true}, {_value: 2, _hide: true}, {_value: 3, _hide: true},
+        {_value: 4, _hide: true}, {_value: 5, _hide: true}, {_value: 6, _hide: true},
+        {_value: 7, _hide: true}, {_value: 8, _hide: true}, {_value: 9, _hide: true}
+    ],
+    [
+        {_value: 1, _hide: true}, {_value: 2, _hide: true}, {_value: 3, _hide: true},
+        {_value: 4, _hide: true}, {_value: 5, _hide: true}, {_value: 6, _hide: true},
+        {_value: 7, _hide: true}, {_value: 8, _hide: true}, {_value: 9, _hide: true}
+    ],
+    [
+        {_value: 1, _hide: true}, {_value: 2, _hide: true}, {_value: 3, _hide: true},
+        {_value: 4, _hide: true}, {_value: 5, _hide: true}, {_value: 6, _hide: true},
+        {_value: 7, _hide: true}, {_value: 8, _hide: true}, {_value: 9, _hide: true}
+    ],
+    [
+        {_value: 1, _hide: true}, {_value: 2, _hide: true}, {_value: 3, _hide: true},
+        {_value: 4, _hide: true}, {_value: 5, _hide: true}, {_value: 6, _hide: true},
+        {_value: 7, _hide: true}, {_value: 8, _hide: true}, {_value: 9, _hide: true}
+    ],
+    [
+        {_value: 1, _hide: true}, {_value: 2, _hide: true}, {_value: 3, _hide: true},
+        {_value: 4, _hide: true}, {_value: 5, _hide: true}, {_value: 6, _hide: true},
+        {_value: 7, _hide: true}, {_value: 8, _hide: true}, {_value: 9, _hide: true}
+    ],
+    [
+        {_value: 1, _hide: true}, {_value: 2, _hide: true}, {_value: 3, _hide: true},
+        {_value: 4, _hide: true}, {_value: 5, _hide: true}, {_value: 6, _hide: true},
+        {_value: 7, _hide: true}, {_value: 8, _hide: true}, {_value: 9, _hide: true}
+    ],
+    [
+        {_value: 1, _hide: true}, {_value: 2, _hide: true}, {_value: 3, _hide: true},
+        {_value: 4, _hide: true}, {_value: 5, _hide: true}, {_value: 6, _hide: true},
+        {_value: 7, _hide: true}, {_value: 8, _hide: true}, {_value: 9, _hide: true}
+    ],
+    [
+        {_value: 1, _hide: true}, {_value: 2, _hide: true}, {_value: 3, _hide: true},
+        {_value: 4, _hide: true}, {_value: 5, _hide: true}, {_value: 6, _hide: true},
+        {_value: 7, _hide: true}, {_value: 8, _hide: true}, {_value: 9, _hide: true}
+    ],
+    [
+        {_value: 1, _hide: true}, {_value: 2, _hide: true}, {_value: 3, _hide: true},
+        {_value: 4, _hide: true}, {_value: 5, _hide: true}, {_value: 6, _hide: true},
+        {_value: 7, _hide: true}, {_value: 8, _hide: true}, {_value: 9, _hide: true}
+    ]
+];
+
+export const INVALID_PUZZLE_ITEMS_DATA_1: Array<Array<IPuzzleItemData>> = [
+    [
+        {_value: 1, _hide: true}, {_value: 2, _hide: true}, {_value: 3, _hide: true},
+        {_value: 4, _hide: true}, {_value: 5, _hide: true}, {_value: 6, _hide: true},
+        {_value: 7, _hide: true}, {_value: 8, _hide: true}, {_value: 9, _hide: true}
+    ]
+];
+
+export const INVALID_PUZZLE_ITEMS_DATA_2: Array<Array<IPuzzleItemData>> = [
+    [
+        {_value: 1, _hide: true}, {_value: 2, _hide: true}, null
+    ]
+];
 
 export const FAKE_PUZZLE_FEED = [
 

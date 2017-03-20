@@ -1,14 +1,14 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component } from "@angular/core";
+import { Router } from "@angular/router";
 
-import { RestApiProxyService } from '../services/rest-api-proxy.service';
-import { UserSettingService } from '../services/user-setting.service';
+import { RestApiProxyService } from "../services/rest-api-proxy.service";
+import { UserSettingService } from "../services/user-setting.service";
 
 @Component({
     moduleId: module.id,
-    selector: 'username-component',
-    templateUrl: '/assets/templates/username.component.html',
-    styleUrls: ['../../assets/stylesheets/username.component.css']
+    selector: "username-component",
+    templateUrl: "/assets/templates/username.component.html",
+    styleUrls: ["../../assets/stylesheets/username.component.css"]
 })
 export class UsernameComponent {
     _isLoginNextActivated = false;
@@ -42,7 +42,7 @@ export class UsernameComponent {
     }
 
     // public goToLeaderBoard() {
-    //     this.router.navigate(['/leaderboard']);
+    //     this.router.navigate(["/leaderboard"]);
     // }
 
     public closeAlert() {

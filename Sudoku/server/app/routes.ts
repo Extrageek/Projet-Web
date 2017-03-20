@@ -43,7 +43,7 @@ module Route {
             }
             this._gridGenerationManager.getNewPuzzle(difficulty)
                 .then((newPuzzle: Puzzle) => {
-                    res.send(newPuzzle);
+                    res.send(newPuzzle.generateJSONFormat());
                 });
         }
 
@@ -117,11 +117,13 @@ module Route {
         }
 
         public validateGrid(request: express.Request, response: express.Response, next: express.NextFunction) {
-            let gridValidationManager = new GridValidationManager();
             let isGridValid: boolean;
             try {
-                isGridValid = gridValidationManager.validateGrid(request.body.puzzle);
+                let puzzleItems = GridValidationManager.convertObjectToAnArrayOfPuzzleItem(request.body.puzzle);
+                let gridValidationManager = new GridValidationManager(puzzleItems);
+                isGridValid = gridValidationManager.validateGrid();
             } catch (error) {
+                console.log(error);
                 isGridValid = false;
             }
             if (isGridValid) {

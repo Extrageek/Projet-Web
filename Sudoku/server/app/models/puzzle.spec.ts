@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { Puzzle, PuzzleItem } from "./puzzle";
+import { IPuzzleItemData, Puzzle, PuzzleItem } from "./puzzle";
 
 const puzzleSeed = [
     [
@@ -156,6 +156,13 @@ describe("PuzzleItem should", () => {
         let item: PuzzleItem = new PuzzleItem(null, false);
         expect(item.isHidden, "should be shown").to.equals(false);
         expect(item.value, "should contain null").to.equals(null);
+    });
+
+    it("be created from an object", () => {
+        let puzzleItemData: IPuzzleItemData = {_value: 3, _hide: true};
+        let puzzleItem = PuzzleItem.convertObjectToPuzzleItem(puzzleItemData);
+        expect(puzzleItem.isHidden, "should be hidden").to.equals(true);
+        expect(puzzleItem.value, "should contain 3").to.equals(3);
     });
 });
 

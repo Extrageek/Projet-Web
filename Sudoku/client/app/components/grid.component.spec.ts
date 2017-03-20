@@ -1,4 +1,4 @@
-import { Injectable, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Injectable, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
 
 import {
     fakeAsync,
@@ -6,33 +6,33 @@ import {
     ComponentFixture,
     TestBed,
     async,
-} from '@angular/core/testing';
+} from "@angular/core/testing";
 import {
     HttpModule, Http, ResponseOptions,
     Response,
     BaseRequestOptions,
     ConnectionBackend
-} from '@angular/http';
+} from "@angular/http";
 
 
-import { RouterTestingModule } from '@angular/router/testing';
+import { RouterTestingModule } from "@angular/router/testing";
 
-import { MockBackend, MockConnection } from '@angular/http/testing';
-import { assert, expect } from 'chai';
+import { MockBackend, MockConnection } from "@angular/http/testing";
+import { assert, expect } from "chai";
 
-import { FormsModule } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
+import { FormsModule } from "@angular/forms";
+import { Observable } from "rxjs/Observable";
+import "rxjs/add/observable/of";
 
 declare var jQuery: any;
 
-import { GridComponent } from './grid.component';
-import { Puzzle } from '../models/puzzle';
+import { GridComponent } from "./grid.component";
+import { Puzzle } from "../models/puzzle";
 
-import { RestApiProxyService } from '../services/rest-api-proxy.service';
-import { GridManagerService } from '../services/grid-manager.service';
-import { FAKE_PUZZLE_FEED, INITIAL_PUZZLE_SEED } from '../services/mock-data';
-import { PuzzleEventManagerService } from '../services/puzzle-event-manager.service';
+import { RestApiProxyService } from "../services/rest-api-proxy.service";
+import { GridManagerService } from "../services/grid-manager.service";
+import { FAKE_PUZZLE_FEED, INITIAL_PUZZLE_SEED } from "../services/mock-data";
+import { PuzzleEventManagerService } from "../services/puzzle-event-manager.service";
 
 import { StopwatchService } from "../services/stopwatch.service";
 import { UserSettingService } from "../services/user-setting.service";
@@ -41,14 +41,14 @@ import { Router } from "@angular/router";
 // Mock the REST API Service to give a fake result after a request.
 @Injectable()
 class MockRestApiService extends RestApiProxyService {
-    protected _urlApi: 'http://localhost:3002/api/';
+    protected _urlApi: "http://localhost:3002/api/";
 
     getNewPuzzle(): Observable<Puzzle> {
         return Observable.of(new Puzzle(FAKE_PUZZLE_FEED));
     }
 }
 
-describe('GridComponent', () => {
+describe("GridComponent", () => {
 
     let comp: GridComponent;
     let fixture: ComponentFixture<GridComponent>;
@@ -113,29 +113,5 @@ describe('GridComponent', () => {
 
     it("validateInputValue, should throw a null argument error", () => {
         assert.throws(() => comp.validateInputValue(null), Error, "No event source is provided.");
-    });
-
-    it("validateInputValue, should return false", () => {
-        // TODO: Must be completed, remove the next lines after a clean debug
-
-        // var event = jQuery.Event("keyup");
-        // event.keyCode = 72;
-        // jQuery("#12").trigger(event);
-
-        // let h1 = de.nativeElement;
-
-        // expect(h1.innerText).to.match(/Sudoku/i,
-        //     '<h1> should say something about "Angular"');
-
-        // // Create a new jQuery.Event object with specified event properties.
-        // var fakeEvent = jQuery.Event("keydown", { keyCode: 64 });
-
-        // // trigger an artificial keydown event with keyCode 64
-        // //jQuery("body").trigger(fakeEvent);
-
-        // //fakeEvent.target.dispatchEvent(fakeEvent)
-
-        // console.log(jQuery("#cell12").val(), "id");
-
     });
 });

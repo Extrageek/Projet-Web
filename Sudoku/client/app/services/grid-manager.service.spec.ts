@@ -3,15 +3,15 @@ import {
     fakeAsync,
     inject,
     TestBed
-} from '@angular/core/testing';
+} from "@angular/core/testing";
 
 
-import { expect, assert } from 'chai';
+import { expect, assert } from "chai";
 
-import { Puzzle, PuzzleItem } from '../models/puzzle';
-import { GridManagerService } from '../services/grid-manager.service';
+import { Puzzle, PuzzleItem } from "../models/puzzle";
+import { GridManagerService } from "../services/grid-manager.service";
 
-describe('GridManagerService', () => {
+describe("GridManagerService", () => {
 
     beforeEach(async () => {
         TestBed.configureTestingModule({
@@ -522,31 +522,4 @@ describe('GridManagerService', () => {
                 expect(gridManagerService.cellsToBeCompleted).to.be.equals(4);
             }))
     );
-
-    // it("deleteCurrentValue should throw a null element error for a not existing DOM element",
-    //     inject([GridManagerService],
-    //         fakeAsync((gridManagerService: GridManagerService) => {
-
-    //             // Since we don't have an input element with index like [1][100]
-    //             // This should throw an Error.
-    //             let invalidRowIndex = 1;
-    //             let invalidColumnIndex = 333333;
-    //             assert.throws(() => gridManagerService.deleteCurrentValue(
-    //              invalidRowIndex, invalidColumnIndex), Error, "Invalid Input element");
-
-    //         })));
-
-    // it("deleteCurrentValue should throw an out of range index error",
-    //     inject([GridManagerService],
-    //         fakeAsync((gridManagerService: GridManagerService) => {
-    //
-    //             // Since we don't have an input element with index like [1][100]
-    //             // This should throw an Error.
-    //             let invalidRowIndex = -1;
-    //             let validColumnIndex = -1;
-    //             assert.throws(() => gridManagerService.deleteCurrentValue(puzzle, invalidRowIndex, validColumnIndex),
-    //                 Error, "A row or a column index cannot be less than (0)");
-    //
-    //         })));
-
 });
