@@ -11,7 +11,7 @@ import { CommandType } from "../services/commons/command-type";
 import { SocketEventType } from "../commons/socket-eventType";
 import { IGameMessage } from "../commons/messages/game-message.interface";
 import { ICommandMessage } from "../commons/messages/command-message.interface";
-import { ICommandRequest } from "../services/commons/command-request";
+import { ICommandRequest } from "../services/commons/command-request.interface";
 import { CommandStatus } from "../services/commons/command-status";
 
 declare var jQuery: any;
@@ -46,14 +46,6 @@ export class EaselComponent implements OnInit, OnDestroy {
         this._indexOflettersToExchange = v;
     }
 
-    public get letters(): Array<IScrabbleLetter> {
-        return this._letters;
-    }
-
-    public set letters(letters: Array<IScrabbleLetter>) {
-        this._letters = letters;
-    }
-
     public get keyEvent(): string {
         return this._keyEventKeyCode;
     }
@@ -70,12 +62,12 @@ export class EaselComponent implements OnInit, OnDestroy {
         private socketService: SocketService,
         private activatedRoute: ActivatedRoute) {
         this._indexOflettersToExchange = new Array<number>();
-        this._letters = new Array<IScrabbleLetter>();
     }
 
     ngOnInit() {
         this._exchangeLetterSubcription = this.onExchangeLetterRequest();
         this._initializeEaselSubscription = this.initializeEaselOnConnection();
+        this._letters = new Array<IScrabbleLetter>();
     }
 
     ngOnDestroy() {
@@ -85,10 +77,13 @@ export class EaselComponent implements OnInit, OnDestroy {
     private initializeEaselOnConnection(): Subscription {
         return this.socketService.subscribeToChannelEvent(SocketEventType.INITIALIZE_EASEL)
             .subscribe((initialsLetters: Array<string>) => {
-                this._letters = new Array<IScrabbleLetter>();
+                this.socketService.player.letters = new Array<IScrabbleLetter>();
                 initialsLetters.forEach((letter) => {
-                    this.letters.push({ _alphabetLetter: letter, _imageSource: "" });
+
+                    this.socketService.player.letters.push({ _alphabetLetter: letter, _imageSource: "" });
+                    console.log(this.socketService.player.letters);
                 });
+                this._letters = this.socketService.player.letters;
             });
     }
 
@@ -100,10 +95,11 @@ export class EaselComponent implements OnInit, OnDestroy {
 
                     if (params['id'] === response._username) {
                         for (let index = 0; index < this._indexOflettersToExchange.length; ++index) {
-                            this.letters[this._indexOflettersToExchange[index]] =
+                            this.socketService.player.letters[this._indexOflettersToExchange[index]] =
                                 { _alphabetLetter: response._data[index], _imageSource: "" };
-                            console.log(this.letters);
+                            console.log(this.socketService.player.letters);
                         }
+                        this._letters = this.socketService.player.letters;
                     }
                 });
             });
@@ -114,7 +110,7 @@ export class EaselComponent implements OnInit, OnDestroy {
         id: string,
         letter: IScrabbleLetter) {
 
-        let easelMaxIndex = this.letters.length - 1;
+        let easelMaxIndex = this.socketService.player.letters.length - 1;
         let keyCode = event.which;
         let currentInputIndex = Number(id.split('_')[1]);
 
@@ -122,11 +118,11 @@ export class EaselComponent implements OnInit, OnDestroy {
         // and send the selected Letter the game Component
         if (this.easelEventManagerService.isTabKey(keyCode)) {
             this.easelTabKeyEvent.emit(letter);
-            this.easelEventManagerService.removeFocusFormatInEasel(this.letters.length);
+            this.easelEventManagerService.removeFocusFormatInEasel(this.socketService.player.letters.length);
 
         } else if (this.easelEventManagerService.isDirection(keyCode)) {
             let nextInputIndex = this.easelEventManagerService
-                .onKeyEventUpdateCurrentCursor(this.letters.length, keyCode, currentInputIndex);
+                .onKeyEventUpdateCurrentCursor(this.socketService.player.letters.length, keyCode, currentInputIndex);
 
             this.moveCurrentLetterToTheNextPosition(keyCode, currentInputIndex, nextInputIndex);
 
@@ -140,26 +136,29 @@ export class EaselComponent implements OnInit, OnDestroy {
         currentInputIndex: number,
         nextInputIndex: number) {
 
-        let easelMaxIndex = this.letters.length - 1;
-        let currentLetter = this.letters[currentInputIndex]._alphabetLetter;
+        let easelMaxIndex = this.socketService.player.letters.length - 1;
+        let currentLetter = this.socketService.player.letters[currentInputIndex]._alphabetLetter;
 
         if (keyCode === LetterHelper.RIGHT_ARROW_KEY_CODE
             && nextInputIndex === 0) {
             for (let index = easelMaxIndex; index > 0; --index) {
-                this.letters[index]._alphabetLetter = this.letters[index - 1]._alphabetLetter;
+                this.socketService.player.letters[index]._alphabetLetter =
+                    this.socketService.player.letters[index - 1]._alphabetLetter;
             }
 
         } else if (keyCode === LetterHelper.LEFT_ARROW_KEY_CODE
             && nextInputIndex === easelMaxIndex) {
             for (let index = 0; index < easelMaxIndex; ++index) {
-                this.letters[index]._alphabetLetter = this.letters[index + 1]._alphabetLetter;
+                this.socketService.player.letters[index]._alphabetLetter
+                    = this.socketService.player.letters[index + 1]._alphabetLetter;
             }
 
         } else {
-            this.letters[currentInputIndex]._alphabetLetter = this.letters[nextInputIndex]._alphabetLetter;
+            this.socketService.player.letters[currentInputIndex]._alphabetLetter
+                = this.socketService.player.letters[nextInputIndex]._alphabetLetter;
         }
 
-        this.letters[nextInputIndex]._alphabetLetter = currentLetter;
+        this.socketService.player.letters[nextInputIndex]._alphabetLetter = currentLetter;
     }
 
     private setFocusToNextMatchLetter(
@@ -177,25 +176,26 @@ export class EaselComponent implements OnInit, OnDestroy {
 
         if (jQuery('#easelCell_' + currentInputIndex).is(":focus")) {
             for (let nextIndex = currentInputIndex + 1, index = 0;
-                index < this.letters.length && !isFound;
+                index < this.socketService.player.letters.length && !isFound;
                 ++nextIndex, ++index) {
 
-                nextIndex = (nextIndex < this.letters.length) ? nextIndex : 0;
-                if (this.letters[nextIndex]._alphabetLetter === enteredLetter) {
+                nextIndex = (nextIndex < this.socketService.player.letters.length) ? nextIndex : 0;
+                if (this.socketService.player.letters[nextIndex]._alphabetLetter === enteredLetter) {
                     foundIndex = nextIndex;
                     isFound = true;
                 }
             }
         } else {
-            foundIndex = this.letters.findIndex(
+            foundIndex = this.socketService.player.letters.findIndex(
                 (element: IScrabbleLetter) => element._alphabetLetter === enteredLetter
             );
         }
 
         if (foundIndex !== -1) {
-            this.easelEventManagerService.setFocusToElementWithGivenIndex(this.letters.length, foundIndex);
+            this.easelEventManagerService
+                .setFocusToElementWithGivenIndex(this.socketService.player.letters.length, foundIndex);
         } else {
-            this.easelEventManagerService.removeFocusFormatInEasel(this.letters.length);
+            this.easelEventManagerService.removeFocusFormatInEasel(this.socketService.player.letters.length);
         }
     }
 
@@ -206,7 +206,8 @@ export class EaselComponent implements OnInit, OnDestroy {
         }
 
         let firstLetterIndex = 0;
-        this.easelEventManagerService.setFocusToElementWithGivenIndex(this.letters.length, firstLetterIndex);
+        this.easelEventManagerService
+            .setFocusToElementWithGivenIndex(this.socketService.player.letters.length, firstLetterIndex);
     }
 
     public changeLetters(commandRequest: ICommandRequest<

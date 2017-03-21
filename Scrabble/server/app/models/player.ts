@@ -5,6 +5,8 @@ export class Player {
     private _username: string;
     private _numberOfPlayers: number;
     private _socketId: string;
+    private _score : number;
+
 
     // The constructor of a player
     constructor(username: string, numberOfPlayers: number, socketId: string) {
@@ -23,6 +25,15 @@ export class Player {
         this._username = username;
         this._numberOfPlayers = numberOfPlayers;
         this.socketId = socketId;
+        this._score = 0;
+    }
+
+    // The player score
+    public get score() : number {
+        return this._score;
+    }
+    public set score(v : number) {
+        this._score = v;
     }
 
     // The player name

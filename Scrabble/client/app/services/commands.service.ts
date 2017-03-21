@@ -12,7 +12,7 @@ import { IScrabbleLetter } from "../models/scrabble-letter";
 
 import { CommandType } from "./commons/command-type";
 import { CommandStatus } from "./commons/command-status";
-import { ICommandRequest } from "./commons/command-request";
+import { ICommandRequest } from "./commons/command-request.interface";
 import { CommandsHelper } from "./commons/commands-helper";
 
 import { MessageCommand } from './message-command';

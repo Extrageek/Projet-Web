@@ -1,10 +1,12 @@
+import { IScrabbleLetter } from "./scrabble-letter";
+
 export class Player {
 
     private _username: string;
     private _numberOfPlayers: number;
     private _socketId: string;
     private _score: number;
-
+    private _letters: Array<IScrabbleLetter>;
     // The constructor of a player
     constructor(username: string) {
 
@@ -13,6 +15,15 @@ export class Player {
         }
         this._username = username;
         this._score = 0;
+        this.letters = new Array<IScrabbleLetter>();
+    }
+
+    public get letters(): Array<IScrabbleLetter> {
+        return this._letters;
+    }
+
+    public set letters(letters: Array<IScrabbleLetter>) {
+        this._letters = letters;
     }
 
     // The player name
@@ -40,10 +51,10 @@ export class Player {
         this._socketId = value;
     }
 
-    public get score() : number {
+    public get score(): number {
         return this._score;
     }
-    public set score(v : number) {
+    public set score(v: number) {
         this._score = v;
     }
 }
