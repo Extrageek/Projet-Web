@@ -149,7 +149,8 @@ export class Room {
         return this.letterBankHandler.initializeEasel();
     }
 
-    public placeWordInTheBoard(response: IPlaceWordResponse): boolean {
-        return this._boardManager.placeWordInBoard(response, this._board);
+    public placeWordInTheBoard(response: IPlaceWordResponse, player:Player): boolean {
+   
+        return this._boardManager.placeWordInBoard(response, this._board, player);
     }
 }

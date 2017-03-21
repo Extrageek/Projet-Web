@@ -24,7 +24,7 @@ declare var jQuery: any;
 
 @Component({
     moduleId: module.id,
-    providers: [GameRoomManagerService, CommandsService, EaselManagerService],
+    providers: [SocketService, GameRoomManagerService, CommandsService, EaselManagerService],
     selector: "game-room-selector",
     templateUrl: "../../assets/templates/game-room.html",
     styleUrls: ["../../assets/stylesheets/game-room.css"],
@@ -95,7 +95,8 @@ export class GameComponent implements OnInit, OnDestroy {
         let commandParameters = this.commandsService.extractCommandParameters(this._inputMessage);
 
         // If the player try a command and it's not his turn to play, let him know
-        if (this.socketService.isCurrentPlayer() && commandParameters.commandType !== CommandType.MessageCmd) {
+        if (!this.socketService.isCurrentPlayer()
+            && commandParameters.commandType !== CommandType.MessageCmd) {
             let message = "Veuillez attendre votre tour après " + this.socketService.getCurrentPlayer() +
                 + "pour pouvoir jouer";
 
