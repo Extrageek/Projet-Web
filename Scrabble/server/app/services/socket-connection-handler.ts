@@ -168,7 +168,6 @@ export class SocketConnectionHandler {
                 .createPlaceWordResponse(player.username, room, request._commandStatus, request._response);
 
             if (response._commandStatus === CommandStatus.Ok) {
-                console.log(player);
                 if (room.placeWordInTheBoard(request._response, player)) {
 
                     // Place the word in the board and emit an update board to the room members

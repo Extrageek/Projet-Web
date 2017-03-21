@@ -79,7 +79,6 @@ export class GameComponent implements OnInit, OnDestroy {
 
     // A callback when the player leave a room
     public onLeaveRoom(roomMessage: IRoomMessage): void {
-
         // For debug
         console.log("In Room", roomMessage);
     }

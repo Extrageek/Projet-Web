@@ -10,19 +10,12 @@ import { SquareType } from "../models/square/square-type";
 import { IPlaceWordResponse } from "../services/commons/command/place-word-response.interface";
 import { LetterBankHandler } from './letterbank-handler';
 
-export class BoardManagerService {
+export class BoardManager {
 
     private _exceptionHelper: ExceptionHelper;
     private _letterBankHandler: LetterBankHandler;
     private _player: Player;
     private _board: Board;
-
-    public get board(): Board {
-        return this._board;
-    }
-    public set board(v: Board) {
-        this._board = v;
-    }
 
     constructor() {
         this._letterBankHandler = new LetterBankHandler();
@@ -147,7 +140,7 @@ export class BoardManagerService {
 
     public isValidRowPosition(rowIndex: number): boolean {
         this._exceptionHelper.throwNullArgumentException(rowIndex);
-        let letter = String.fromCharCode(rowIndex)
+        let letter = String.fromCharCode(rowIndex);
         let keyCode = letter.toUpperCase().charCodeAt(0);
         return keyCode >= LetterHelper.LETTER_A_KEY_CODE
             && keyCode <= LetterHelper.LETTER_O_KEY_CODE;
@@ -286,12 +279,14 @@ export class BoardManagerService {
 
         let touchedBeforeWord = (this.isValidColumnPosition(columnIndex - 1)) ?
             (this.isValidRowPosition(beforeWordRowIndex) ?
-                this._board.squares[beforeWordRowIndex - LetterHelper.LETTER_A_KEY_CODE][columnIndex - 1].isBusy : false)
+                this._board.squares[beforeWordRowIndex - LetterHelper.LETTER_A_KEY_CODE][columnIndex - 1]
+                    .isBusy : false)
             : false;
 
         let touchedAfterWord = (this.isValidColumnPosition(columnIndex - 1)) ?
             (this.isValidRowPosition(afterWordRowIndex) ?
-                this._board.squares[afterWordRowIndex - LetterHelper.LETTER_A_KEY_CODE][columnIndex - 1].isBusy : false)
+                this._board.squares[afterWordRowIndex - LetterHelper.LETTER_A_KEY_CODE][columnIndex - 1]
+                    .isBusy : false)
             : false;
 
         touchedBeforeOrAfterWord = touchedBeforeWord || touchedAfterWord;
