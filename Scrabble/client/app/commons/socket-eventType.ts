@@ -40,6 +40,7 @@ export class SocketEventType {
 
     static TIMER_EVENT = "timerEvent";
     static UPDATE_BOARD = "updateBoard";
+    static UPDATE_SCORE = "updateScore";
 
     static COMMAND_REQUEST = "commandRequest";
     static INVALID_COMMAND_REQUEST = "invalidCommand";

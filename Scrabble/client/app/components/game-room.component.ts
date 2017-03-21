@@ -12,6 +12,7 @@ import { CommandType } from "../services/commons/command-type";
 import { IRoomMessage } from "../commons/messages/room-message.interface";
 import { LetterHelper } from "../commons/letter-helper";
 import { SocketEventType } from "../commons/socket-eventType";
+import { Player } from "../models/player";
 
 import { EaselComponent } from "./easel.component";
 import { ChatroomComponent } from "./chatroom.component";
@@ -23,7 +24,7 @@ declare var jQuery: any;
 
 @Component({
     moduleId: module.id,
-    providers: [SocketService, GameRoomManagerService, CommandsService, EaselManagerService],
+    providers: [GameRoomManagerService, CommandsService, EaselManagerService],
     selector: "game-room-selector",
     templateUrl: "../../assets/templates/game-room.html",
     styleUrls: ["../../assets/stylesheets/game-room.css"],
@@ -43,7 +44,6 @@ export class GameComponent implements OnInit, OnDestroy {
     @ViewChild(ChatroomComponent)
     private _childChatroomComponent: ChatroomComponent;
 
-    _username: string;
     _inputMessage: string;
 
     constructor(
@@ -59,7 +59,8 @@ export class GameComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.activatedRoute.params.subscribe(params => {
-            this._username = params['id'];
+            this.socketService.player = new Player(params['id']);
+            console.log(this.socketService.player);
         });
 
         // TODO: unsubscribe all the event in the ngOnDestroy
@@ -92,12 +93,11 @@ export class GameComponent implements OnInit, OnDestroy {
     public submitMessage() {
         let commandRequest = this._inputMessage.trim();
         let commandParameters = this.commandsService.extractCommandParameters(this._inputMessage);
-        let currentPlayerName = this.socketService.getCurrentPlayer();
 
         // If the player try a command and it's not his turn to play, let him know
-        if (currentPlayerName !== this._username
-            && commandParameters.commandType !== CommandType.MessageCmd) {
-            let message = `Veuillez attendre votre tour après ${currentPlayerName} pour pouvoir jouer`;
+        if (this.socketService.isCurrentPlayer() && commandParameters.commandType !== CommandType.MessageCmd) {
+            let message = "Veuillez attendre votre tour après " + this.socketService.getCurrentPlayer() +
+                + "pour pouvoir jouer";
 
             // Ask if it's necessary to send this to the server, I'm not sure we can just push it to the chatroom
             this.socketService.emitMessage(SocketEventType.INVALID_COMMAND_REQUEST,

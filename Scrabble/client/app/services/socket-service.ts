@@ -6,6 +6,8 @@ import * as io from "socket.io-client";
 
 import { SocketEventType } from "../commons/socket-eventType";
 
+import { Player } from "../models/player";
+
 const SERVER_PORT = 3002;
 
 @Injectable()
@@ -13,7 +15,15 @@ export class SocketService {
 
     static _socket: SocketIOClient.Socket = null;
     static _playersPriorityQueue: Array<string>;
+    private _player : Player;
     private _serverUri: string = 'http://localhost:' + SERVER_PORT;
+
+    public get player() : Player {
+        return this._player;
+    }
+    public set player(v : Player) {
+        this._player = v;
+    }
 
     // Must be removed after a clean debug
     public set playersPriorityQueue(players: Array<string>) {
@@ -23,6 +33,10 @@ export class SocketService {
     constructor(private router: Router, private activatedRoute: ActivatedRoute) {
         SocketService._playersPriorityQueue = new Array<string>();
         this.initializeClient();
+    }
+
+    public isCurrentPlayer(): Boolean {
+        return this.getCurrentPlayer() === this.player.username;
     }
 
     private initializeClient() {

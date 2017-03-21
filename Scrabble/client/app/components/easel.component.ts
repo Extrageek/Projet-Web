@@ -20,7 +20,7 @@ import { Alphabet } from "../models/commons/alphabet";
 
 @Component({
     moduleId: module.id,
-    providers: [EaselManagerService, SocketService],
+    providers: [EaselManagerService],
     selector: "easel-selector",
     templateUrl: "../../assets/templates/easel.html",
     styleUrls: ["../../assets/stylesheets/easel.css"]

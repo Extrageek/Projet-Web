@@ -14,7 +14,6 @@ import { CommandType } from '../services/commons/command-type';
     selector: "scrabble-chatroom-selector",
     templateUrl: "../../assets/templates/chatroom.html",
     styleUrls: ["../../assets/stylesheets/chatroom.css"],
-    providers: [SocketService]
 })
 
 export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {

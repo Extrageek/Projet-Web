@@ -14,53 +14,53 @@ import { ICommandMessage } from "../commons/messages/command-message.interface";
 
 @Component({
     moduleId: module.id,
-    providers: [SocketService],
     selector: "info-panel-selector",
     templateUrl: "../../assets/templates/information-panel.html",
     styleUrls: ["../../assets/stylesheets/information-panel.css"]
 })
 
 export class InformationPanelComponent implements OnInit, AfterViewInit {
-    private _username: string;
-    playingUser: string;
-    nextPlayer: string;
-    score: number;
-    lettersOnEasel: number;
-    lettersInBank: number;
-    seconds: number;
-    minutes: number;
+    public _lettersOnEasel: number;
+    public _lettersInBank: number;
+    public _seconds: number;
+    public _minutes: number;
 
     constructor(
         private socketService: SocketService,
         private activatedRoute: ActivatedRoute) {
-            this.score = 0;
-            this.lettersOnEasel = 7;
-            // TODO : get it from letterbank service
-            this.lettersInBank = 102;
+        this._lettersOnEasel = 7;
+        // TODO : get it from letterbank service
+        this._lettersInBank = 102;
     }
 
     ngOnInit() {
         this.onUpdatePlayersQueueEvent();
+        this.onUpdateScore();
     }
 
     ngAfterViewInit() {
-        this.activatedRoute.params.subscribe(params => {
-            this._username = params['id'];
-        });
+        // this.activatedRoute.params.subscribe(params => {
+        //     this._username = params['id'];
+        // });
         this.onTimerEvent();
+    }
+
+    private onUpdateScore(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.UPDATE_SCORE)
+            .subscribe((score: number) => {
+                this.socketService.player.score = score;
+            });
     }
 
     private onTimerEvent(): Subscription {
         return this.socketService.subscribeToChannelEvent(SocketEventType.TIMER_EVENT)
             .subscribe((counter: { minutes: number, seconds: number }) => {
-                this.minutes = counter.minutes;
-                this.seconds = counter.seconds;
+                this._minutes = counter.minutes;
+                this._seconds = counter.seconds;
 
                 //console.log(this.minutes, this.seconds);
 
-                if (this.minutes === 0
-                    && this.seconds === 0
-                    && this.socketService.getCurrentPlayer() === this._username) {
+                if (this._minutes === 0 && this._seconds === 0 && this.socketService.isCurrentPlayer()) {
                     let request = {
                         commandType: CommandType.PassCmd,
                         commandStatus: CommandStatus.Ok,
@@ -78,11 +78,6 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
                 if (response !== undefined && response !== null) {
                     // Temporary settings, we can use a manager to
                     this.socketService.playersPriorityQueue = response;
-                    this.playingUser = response[0];
-                    this.nextPlayer = response[1];
-
-                    // this.playingUser = this.socketService.getCurrentPlayer();
-                    // this.nextPlayer = this.socketService.getNextPlayer();
                 }
             });
     }
@@ -98,10 +93,22 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
     // }
 
     public printMinutes(): string {
-        return ("0" + this.minutes).slice(-2);
+        return ("0" + this._minutes).slice(-2);
     }
 
     public printSeconds(): string {
-        return ("0" + this.seconds).slice(-2);
+        return ("0" + this._seconds).slice(-2);
+    }
+
+    public getScore(): number {
+        return this.socketService.player.score;
+    }
+
+    public getCurrentPlayer(){
+        return this.socketService.getCurrentPlayer();
+    }
+
+    public getNextPlayer(){
+        return this.socketService.getNextPlayer();
     }
 }

@@ -4,33 +4,33 @@
     <table class="info-elements">
         <tbody>
             <tr>
-                <td>Tenps restant <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                <td>Temps restant <i class="fa fa-angle-double-right" aria-hidden="true"></i>
                 </td>
-                <td>{{printMinutes()}}: {{ printSeconds()}}</td>
+                <td>{{ printMinutes() }}: {{ printSeconds() }}</td>
             </tr>
             <tr>
                 <td>Actif
                     <i class="fa fa-angle-double-right" aria-hidden="true"></i>
                 </td>
-                <td>{{playingUser}}</td>
+                <td>{{ getCurrentPlayer() }}</td>
             </tr>
             <tr>
                 <td>Score
                     <i class="fa fa-angle-double-right" aria-hidden="true"></i>
                 </td>
-                <td>{{score}}</td>
+                <td>{{ getScore() }}</td>
             </tr>
             <tr>
                 <td>Chevalet
                     <i class="fa fa-angle-double-right" aria-hidden="true"></i>
                 </td>
-                <td>{{lettersOnEasel}}</td>
+                <td>{{ _lettersOnEasel }}</td>
             </tr>
             <tr>
                 <td>En banque
                     <i class="fa fa-angle-double-right" aria-hidden="true"></i>
                 </td>
-                <td>{{lettersInBank}}</td>
+                <td>{{ _lettersInBank }}</td>
             </tr>
 
         </tbody>
