@@ -13,6 +13,8 @@ import { IValidationRequest } from './validation-request.interface';
 export class VerticalWordValidator {
     private _player: Player;
     private _board: Board;
+    readonly CENTER_ROW = 7;
+    readonly CENTER_COLUMN = 7;
 
     constructor() {
         // Constructor
@@ -20,18 +22,30 @@ export class VerticalWordValidator {
 
     public matchVerticalPlacementRules(request: IValidationRequest, board: Board): boolean {
 
-        let squaresAreAvailable = true;
-        let foundMiddleSquare = false;
         this._board = board;
         this._player = request._player;
 
-        for (let index = 0; index < request._letters.length && squaresAreAvailable; ++index) {
+        let squaresAreAvailable = true;
+        let easel = this._player.easel;
+        let isWordFit = true;
+
+        if (this._board.isEmpty
+            && this.isFirstVerticalWordCrossedMiddle(
+                request._firstRowNumber,
+                request._columnIndex,
+                request._letters.length)) {
+            console.log("board empty et mot pas au milieu");
+            isWordFit = false;
+        }
+
+        for (let index = 0; index < request._letters.length && isWordFit; ++index) {
 
             // Calculate and find the next values for the placement
             let nextRowIndex = request._firstRowNumber + index;
+            let nextLetterToBePlaced = request._letters[index];
 
             if (!BoardHelper.isValidRowPosition(nextRowIndex)) {
-                return false;
+                isWordFit = false;
             }
 
             let nextRowLetter = BoardHelper.parseFromNumberToCharacter(nextRowIndex);
@@ -39,35 +53,58 @@ export class VerticalWordValidator {
             // get the next square object
             let nextSquare = this._board.squares[nextSquareRow][request._columnIndex - 1];
 
+            console.log("is quare busy -- ", nextSquare.isBusy);
             // Check if the square already contains a letter or not
             if (!nextSquare.isBusy) {
 
-                // Check if it's a Star square (the middle of the board)
-                if (nextSquare.type === SquareType.STAR) {
-                    foundMiddleSquare = true;
-                }
-
                 // If the letter to be placed is not in the player easel
                 // we have an invalid word
-                // let isLetterInTheEasel = this._player.easelHasLetter(nextSquare.letter);
-                let isLetterInTheEasel = true;
-                if (isLetterInTheEasel) {
-                    squaresAreAvailable = true;
-                } else {
-                    squaresAreAvailable = false;
+                console.log("easel contient lettre -- ", easel.containsLetter(nextLetterToBePlaced));
+                if (!easel.containsLetter(nextLetterToBePlaced)) {
+                    isWordFit = false;
                 }
-                // If we find an existing letter in the square that does not match the current one
-            } else if (nextSquare.letter.alphabetLetter !== request._letters[index].alphabetLetter) {
-                squaresAreAvailable = false;
+                else {
+                    easel.letters.splice(easel.letters.indexOf(nextLetterToBePlaced, 0), 1);
+                }
             }
-        }
-        // Check if we have touched at least one existing letter in the board
-        let hasTouchedLetterInTheBoard = this.hasTouchedAletterVerticallyInTheBoard(
-            request._firstRowNumber, request._columnIndex, request._letters);
+            // If we find an existing letter in the square that does not match the current one
+            else if (nextSquare.letter.alphabetLetter !== nextLetterToBePlaced.alphabetLetter) {
+                isWordFit = false;
+            }
 
-        return (this._board.isEmpty) ?
-            (squaresAreAvailable && foundMiddleSquare)
-            : (squaresAreAvailable && hasTouchedLetterInTheBoard);
+            console.log("isWordFit --- ", isWordFit);
+        }
+
+        // Check if we have touched at least one existing letter in the board
+        let hasTouchedLetterInTheBoard = false;
+        if (isWordFit && !this._board.isEmpty) {
+            hasTouchedLetterInTheBoard = this.hasTouchedAletterVerticallyInTheBoard(
+                request._firstRowNumber, request._columnIndex, request._letters);
+        }
+
+        return (isWordFit && (this._board.isEmpty || hasTouchedLetterInTheBoard));
+    }
+
+    private isFirstVerticalWordCrossedMiddle(firstRow: number, column: number, wordLength: number): boolean {
+        if (column === this.CENTER_COLUMN
+            && (firstRow === this.CENTER_ROW
+                || (firstRow < this.CENTER_ROW && firstRow + wordLength >= this.CENTER_ROW))) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private isFirstHorizontalWordCrossedMiddle(row: number, firstColumn: number, wordLength: number): boolean {
+        if (row === this.CENTER_ROW
+            && (firstColumn === this.CENTER_COLUMN
+                || (firstColumn < this.CENTER_COLUMN && firstColumn + wordLength >= this.CENTER_COLUMN))) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     private hasTouchedAletterVerticallyInTheBoard(

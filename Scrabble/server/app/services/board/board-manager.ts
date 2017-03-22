@@ -110,8 +110,10 @@ export class BoardManager {
             _letters: letters,
             _player: this._player
         };
+        let match = this._verticalWordValidator.matchVerticalPlacementRules(request, this._board);
+        console.log("MATCH RULES ---- ", match);
 
-        if (!this._verticalWordValidator.matchVerticalPlacementRules(request, this._board)) {
+        if (!match) {
             return false;
         }
 
@@ -125,9 +127,9 @@ export class BoardManager {
             let nextSquare = this._board.squares[nextSquareRow][columnIndex - 1];
 
             if (!nextSquare.isBusy) {
-                this._board.squares[nextSquareRow][columnIndex - 1].isBusy = true;
                 this._board.squares[nextSquareRow][columnIndex - 1].squareValue =
                     letters[index].alphabetLetter;
+                this._board.squares[nextSquareRow][columnIndex - 1].isBusy = true;
             }
         }
 

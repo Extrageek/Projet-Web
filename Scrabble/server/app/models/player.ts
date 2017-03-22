@@ -1,11 +1,13 @@
 import { Room } from "./room";
 import { Letter } from "./letter";
+import { Easel } from "./easel";
 
 export class Player {
 
     private _username: string;
     private _numberOfPlayers: number;
     private _socketId: string;
+    private _easel: Easel;
     private _score : number;
 
     // The constructor of a player
@@ -25,7 +27,16 @@ export class Player {
         this._username = username;
         this._numberOfPlayers = numberOfPlayers;
         this.socketId = socketId;
+        this._easel = new Easel();
         this._score = 0;
+    }
+
+    // The player's easel
+    public get easel() : Easel {
+        return this._easel;
+    }
+    public set easel(v : Easel) {
+        this._easel = v;
     }
 
     // The player score
@@ -59,9 +70,5 @@ export class Player {
     }
     public set socketId(value: string) {
         this._socketId = value;
-    }
-
-    public easelHasLetter(letter: Letter): boolean {
-        return true;
     }
 }
