@@ -10,6 +10,5 @@ export interface IValidationRequest {
     _firstRowNumber: number,
     _columnIndex: number,
     _letters: Array<Letter>,
-    _wordDirection: WordDirection,
     _player: Player
 }

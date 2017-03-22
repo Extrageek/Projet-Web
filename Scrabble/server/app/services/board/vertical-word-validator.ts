@@ -18,20 +18,17 @@ export class VerticalWordValidator {
         // Constructor
     }
 
-    public matchVerticalPlacementRules(request: IValidationRequest, board: Board,
-    ): boolean {
+    public matchVerticalPlacementRules(request: IValidationRequest, board: Board): boolean {
 
         let squaresAreAvailable = true;
-        let centralSquareStartExist = false;
+        let foundMiddleSquare = false;
         this._board = board;
         this._player = request._player;
 
         for (let index = 0; index < request._letters.length && squaresAreAvailable; ++index) {
 
             // Calculate and find the next values for the placement
-            let nextRowIndex = (request._wordDirection === WordDirection.UP) ?
-                request._firstRowNumber - index :
-                request._firstRowNumber + index;
+            let nextRowIndex = request._firstRowNumber + index;
 
             if (!BoardHelper.isValidRowPosition(nextRowIndex)) {
                 return false;
@@ -47,7 +44,7 @@ export class VerticalWordValidator {
 
                 // Check if it's a Star square (the middle of the board)
                 if (nextSquare.type === SquareType.STAR) {
-                    centralSquareStartExist = true;
+                    foundMiddleSquare = true;
                 }
 
                 // If the letter to be placed is not in the player easel
@@ -66,36 +63,31 @@ export class VerticalWordValidator {
         }
         // Check if we have touched at least one existing letter in the board
         let hasTouchedLetterInTheBoard = this.hasTouchedAletterVerticallyInTheBoard(
-            request._firstRowNumber, request._columnIndex,
-            request._letters, request._wordDirection);
+            request._firstRowNumber, request._columnIndex, request._letters);
 
         return (this._board.isEmpty) ?
-            (squaresAreAvailable && centralSquareStartExist)
+            (squaresAreAvailable && foundMiddleSquare)
             : (squaresAreAvailable && hasTouchedLetterInTheBoard);
     }
 
     private hasTouchedAletterVerticallyInTheBoard(
         firstRowNumber: number,
         columnIndex: number,
-        letters: Array<Letter>,
-        wordDirection: WordDirection): boolean {
+        letters: Array<Letter>): boolean {
 
-        let touchedLeftOrRightSquare = this.hasTouchedLeftOrRightLetterVerticalWord(
-            firstRowNumber, columnIndex,
-            letters, wordDirection);
+        let touchedLeftOrRightLetter = this.hasTouchedLetterOnLeftOrRightVertically(
+            firstRowNumber, columnIndex, letters);
 
-        let touchedBeforeOrAfterWord = this.hasTouchedBeforeOrAfterWord(
-            firstRowNumber, columnIndex,
-            letters, wordDirection);
+        let touchedBeforeOrAfterWord = this.hasTouchedALetterBeforeOrAfterWord(
+            firstRowNumber, columnIndex, letters);
 
-        return touchedLeftOrRightSquare || touchedBeforeOrAfterWord;
+        return touchedLeftOrRightLetter || touchedBeforeOrAfterWord;
     }
 
-    private hasTouchedLeftOrRightLetterVerticalWord(
+    private hasTouchedLetterOnLeftOrRightVertically(
         firstRowNumber: number,
         columnIndex: number,
-        letters: Array<Letter>,
-        wordDirection: WordDirection): boolean {
+        letters: Array<Letter>): boolean {
 
         let touchedLeftOrRightSquare = false;
         let leftSquareOffset = 2;
@@ -103,9 +95,7 @@ export class VerticalWordValidator {
         for (let index = 0; index < letters.length && !touchedLeftOrRightSquare; ++index) {
 
             // Calculate and find the next values for the placement
-            let nextRowIndex = (wordDirection === WordDirection.UP) ?
-                firstRowNumber - index :
-                firstRowNumber + index;
+            let nextRowIndex = firstRowNumber + index;
 
             if (!BoardHelper.isValidRowPosition(nextRowIndex)) {
                 return false;
@@ -125,24 +115,19 @@ export class VerticalWordValidator {
         return touchedLeftOrRightSquare;
     }
 
-    private hasTouchedBeforeOrAfterWord(
+    private hasTouchedALetterBeforeOrAfterWord(
         firstRowNumber: number,
         columnIndex: number,
-        letters: Array<Letter>,
-        wordDirection: WordDirection): boolean {
+        letters: Array<Letter>): boolean {
 
         let touchedBeforeOrAfterWord = false;
         let firstSquareOffset = 1;
         let lastSquareOffset = letters.length;
 
         // Calculate and find the next values for the placement
-        let beforeWordRowIndex = (wordDirection === WordDirection.UP) ?
-            firstRowNumber + firstSquareOffset :
-            firstRowNumber - firstSquareOffset;
+        let beforeWordRowIndex = firstRowNumber - firstSquareOffset;
 
-        let afterWordRowIndex = (wordDirection === WordDirection.UP) ?
-            firstRowNumber - lastSquareOffset :
-            firstRowNumber + lastSquareOffset;
+        let afterWordRowIndex = firstRowNumber + lastSquareOffset;
 
         let touchedBeforeWord = (BoardHelper.isValidColumnPosition(columnIndex - 1)) ?
             (BoardHelper.isValidRowPosition(beforeWordRowIndex) ?

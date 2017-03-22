@@ -11,20 +11,22 @@ import { SquareType } from "../../models/square/square-type";
 import { IPlaceWordResponse } from "../commons/command/place-word-response.interface";
 import { LetterBankHandler } from '../letterbank-handler';
 import { VerticalWordValidator } from './vertical-word-validator';
-// import { HorizontalWordValidator } from './horizontal-word-validator';
+import { HorizontalWordValidator } from './horizontal-word-validator';
 
 import { IValidationRequest } from './validation-request.interface';
 
 export class BoardManager {
     private _letterBankHandler: LetterBankHandler;
     private _verticalWordValidator: VerticalWordValidator;
-    // private _horizontalWordValidator: HorizontalWordValidator;
+    private _horizontalWordValidator: HorizontalWordValidator;
+
     private _player: Player;
     private _board: Board;
 
     constructor() {
         this._letterBankHandler = new LetterBankHandler();
         this._verticalWordValidator = new VerticalWordValidator();
+        this._horizontalWordValidator = new HorizontalWordValidator();
     }
 
     public placeWordInBoard(
@@ -37,7 +39,6 @@ export class BoardManager {
 
         let firstRowIndex = response._squarePosition._row.toUpperCase();
         let firstColumnIndex = response._squarePosition._column;
-        let orientation = response._wordOrientation;
         let letters = response._letters;
         let scrabbleLetters = this._letterBankHandler.parseFromListOfStringToListOfLetter(letters);
 
@@ -46,20 +47,13 @@ export class BoardManager {
         ExceptionHelper.throwNullArgumentException(scrabbleLetters);
 
         let isPlaced = false;
-        if (orientation === CommandsHelper.HORIZONTAL_ORIENTATION) {
-            // let placedRight = this.placeLetterInHorizontalOrientation(
-            //     firstRowIndex, firstColumnIndex, scrabbleLetters, WordDirection.RIGHT);
+        if (response._wordOrientation === CommandsHelper.HORIZONTAL_ORIENTATION) {
+            isPlaced = this.placeWordInHorizontalOrientation(
+                firstRowIndex, firstColumnIndex, scrabbleLetters);
 
-            // isPlaced = (placedRight) ? placedRight : this.placeLetterInHorizontalOrientation(
-            //     firstRowIndex, firstColumnIndex, scrabbleLetters, WordDirection.LEFT);
-
-        } else if (orientation === CommandsHelper.VERTICAL_ORIENTATION) {
-
-            let placedDown = this.placeLetterInVerticalOrientation(
-                firstRowIndex, firstColumnIndex, scrabbleLetters, WordDirection.DOWN);
-
-            isPlaced = (placedDown) ? placedDown : this.placeLetterInVerticalOrientation(
-                firstRowIndex, firstColumnIndex, scrabbleLetters, WordDirection.UP);
+        } else if (response._wordOrientation === CommandsHelper.VERTICAL_ORIENTATION) {
+            isPlaced = this.placeWordInVerticalOrientation(
+                firstRowIndex, firstColumnIndex, scrabbleLetters);
         }
 
         if (isPlaced) {
@@ -69,18 +63,25 @@ export class BoardManager {
         return isPlaced;
     }
 
-    private placeLetterInHorizontalOrientation(
+    private placeWordInHorizontalOrientation(
         firstRowIndex: string,
-        firstColumnIndex: number,
+        columnIndex: number,
         letters: Array<Letter>): boolean {
 
-        let lastLetterColumnPosition = letters.length + firstColumnIndex - 1;
-        if (!BoardHelper.isValidColumnPosition(lastLetterColumnPosition)) {
+        let request: IValidationRequest = {
+            _firstRowNumber: firstRowIndex.toUpperCase().charCodeAt(0),
+            _columnIndex: columnIndex,
+            _letters: letters,
+            _player: this._player
+        }
+
+        if (!this._horizontalWordValidator.matchHorizontalPlacementRules(request, this._board)) {
             return false;
         }
 
-        for (let index = 0; index < (letters.length); ++index) {
-            let nextColumnIndex = index + firstColumnIndex;
+        for (let index = 0; index < letters.length; ++index) {
+
+            let nextColumnIndex = columnIndex + index;
 
             // Get the row number from the given letter
             let rowLetterToRowNumber = firstRowIndex.toUpperCase()
@@ -91,29 +92,23 @@ export class BoardManager {
                 this._board.squares[rowLetterToRowNumber][nextColumnIndex - 1].squareValue =
                     letters[index].alphabetLetter;
                 this._board.squares[rowLetterToRowNumber][nextColumnIndex - 1].isBusy = true;
-            } else {
-                if (currentSquare.letter.alphabetLetter !== letters[index].alphabetLetter) {
-                    return false;
-                }
             }
         }
 
         return true;
     }
 
-    private placeLetterInVerticalOrientation(
+    private placeWordInVerticalOrientation(
         firstRowIndex: string,
         columnIndex: number,
-        letters: Array<Letter>,
-        wordDirection: WordDirection): boolean {
+        letters: Array<Letter>): boolean {
 
         let firstRowNumber = firstRowIndex.toUpperCase().charCodeAt(0);
         let request: IValidationRequest = {
             _firstRowNumber: firstRowNumber,
             _columnIndex: columnIndex,
             _letters: letters,
-            _player: this._player,
-            _wordDirection: wordDirection
+            _player: this._player
         }
 
         if (!this._verticalWordValidator.matchVerticalPlacementRules(request, this._board)) {
@@ -122,9 +117,7 @@ export class BoardManager {
 
         for (let index = 0; index < letters.length; ++index) {
 
-            let nextRowIndex = (wordDirection === WordDirection.UP) ?
-                firstRowNumber - index :
-                firstRowNumber + index;
+            let nextRowIndex = firstRowNumber + index;
 
             // Get the row number from the given letter
             let nextRowLetter = BoardHelper.parseFromNumberToCharacter(nextRowIndex);
