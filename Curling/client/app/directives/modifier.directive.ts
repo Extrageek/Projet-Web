@@ -1,7 +1,5 @@
 import { Directive, Input } from '@angular/core';
-import { RenderService } from './../services/game-physics/render.service';
-
-import { TextureService } from './../services/game-physics/texture.service';
+import { RenderService } from '../services/mainGame/render.service';
 
 @Directive({
     selector: 'modifier'

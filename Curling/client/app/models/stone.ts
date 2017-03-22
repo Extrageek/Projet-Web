@@ -15,7 +15,7 @@ export enum StoneColor {
 export class Stone extends Group implements GameComponent {
 
     private static readonly STONES_PATH =
-        ["/assets/models/json/curling-stone-red.json", "/assets/models/json/curling-stone-blue.json"];
+        ["/assets/models/json/curling-stone-blue.json", "/assets/models/json/curling-stone-red.json"];
     private static readonly BOUNDING_SPHERE_RADIUS = 0.26;
     private static readonly SCALE = {x: 1, y: 1, z: 1};
     private static readonly MATERIAL_PROPERTIES = {wireframe: false, shininess: 0.7};

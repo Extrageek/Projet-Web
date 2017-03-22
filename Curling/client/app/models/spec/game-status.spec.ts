@@ -12,35 +12,35 @@ describe("GamesStatus should", () => {
         expect(_gameStatus.currentSet).to.be.equal(1);
         expect(_gameStatus.scorePlayer).to.be.equal(0);
         expect(_gameStatus.scoreComputer).to.be.equal(0);
-        expect(_gameStatus.currentStonesPlayer).to.be.equal(8);
-        expect(_gameStatus.currentStonesComputer).to.be.equal(8);
+        expect(_gameStatus.currentStonesPlayer).to.be.equal(GameStatus.INITIAL_NUMBER_OF_STONES);
+        expect(_gameStatus.currentStonesComputer).to.be.equal(GameStatus.INITIAL_NUMBER_OF_STONES);
         expect(_gameStatus.isLaunched).to.be.equal(false);
-        expect(_gameStatus.isShooting).to.be.equal(false);
+        //expect(_gameStatus.isShooting).to.be.equal(false);
     });
 
     it("decrement number of stones left for player when used", () => {
         _gameStatus.currentPlayer = CurrentPlayer.BLUE;
         _gameStatus.usedStone();
-        expect(_gameStatus.currentStonesPlayer).to.be.equal(7);
-        expect(_gameStatus.currentStonesComputer).to.be.equal(8);
+        expect(_gameStatus.currentStonesPlayer).to.be.equal(GameStatus.INITIAL_NUMBER_OF_STONES - 1);
+        expect(_gameStatus.currentStonesComputer).to.be.equal(GameStatus.INITIAL_NUMBER_OF_STONES);
     });
 
     it("decrement number of stones left for computer when used", () => {
         _gameStatus.currentPlayer = CurrentPlayer.RED;
         _gameStatus.usedStone();
-        expect(_gameStatus.currentStonesPlayer).to.be.equal(8);
-        expect(_gameStatus.currentStonesComputer).to.be.equal(7);
+        expect(_gameStatus.currentStonesPlayer).to.be.equal(GameStatus.INITIAL_NUMBER_OF_STONES);
+        expect(_gameStatus.currentStonesComputer).to.be.equal(GameStatus.INITIAL_NUMBER_OF_STONES - 1);
         _gameStatus.nextPlayer();
-        _gameStatus.isShooting = true;
+        //_gameStatus.isShooting = true;
         expect(_gameStatus.currentPlayer).to.be.equal(CurrentPlayer.BLUE);
-        expect(_gameStatus.isShooting).to.be.equal(true);
+        //expect(_gameStatus.isShooting).to.be.equal(true);
     });
 
     it("does not decrement number of stones left when used", () => {
         _gameStatus.currentPlayer = CurrentPlayer.INVALID;
         _gameStatus.usedStone();
-        expect(_gameStatus.currentStonesPlayer).to.be.equal(8);
-        expect(_gameStatus.currentStonesComputer).to.be.equal(8);
+        expect(_gameStatus.currentStonesPlayer).to.be.equal(GameStatus.INITIAL_NUMBER_OF_STONES);
+        expect(_gameStatus.currentStonesComputer).to.be.equal(GameStatus.INITIAL_NUMBER_OF_STONES);
     });
 
     it("add score for the player when he wins a set", () => {
@@ -60,8 +60,8 @@ describe("GamesStatus should", () => {
 
     it("reset the number of stones when you finish a set", () => {
         _gameStatus.resetStones();
-        expect(_gameStatus.currentStonesComputer).to.be.equal(8);
-        expect(_gameStatus.currentStonesPlayer).to.be.equal(8);
+        expect(_gameStatus.currentStonesComputer).to.be.equal(GameStatus.INITIAL_NUMBER_OF_STONES);
+        expect(_gameStatus.currentStonesPlayer).to.be.equal(GameStatus.INITIAL_NUMBER_OF_STONES);
     });
 
     it("reset all status", () => {
@@ -69,8 +69,8 @@ describe("GamesStatus should", () => {
         expect(_gameStatus.currentSet).to.be.equal(1);
         expect(_gameStatus.scorePlayer).to.be.equal(0);
         expect(_gameStatus.scoreComputer).to.be.equal(0);
-        expect(_gameStatus.currentStonesPlayer).to.be.equal(8);
-        expect(_gameStatus.currentStonesComputer).to.be.equal(8);
+        expect(_gameStatus.currentStonesPlayer).to.be.equal(GameStatus.INITIAL_NUMBER_OF_STONES);
+        expect(_gameStatus.currentStonesComputer).to.be.equal(GameStatus.INITIAL_NUMBER_OF_STONES);
         expect(_gameStatus.isLaunched).to.be.equal(true);
     });
 });
