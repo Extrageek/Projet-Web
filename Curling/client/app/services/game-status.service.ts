@@ -4,6 +4,8 @@ import { CurrentPlayer } from "./../models/current-player";
 @Injectable()
 export class GameStatusService {
     public static readonly INITIAL_NUMBER_OF_STONES = 8;
+    public static readonly DEFAULT_SCORE = 0;
+    public static readonly DEFAULT_SET = 0;
 
     private _scorePlayer: number;
     private _scoreComputer: number;
@@ -14,9 +16,9 @@ export class GameStatusService {
     private _currentPlayer: CurrentPlayer;
 
     constructor() {
-        this._scorePlayer = 0;
-        this._scoreComputer = 0;
-        this._currentSet = 1;
+        this._scorePlayer = GameStatusService.DEFAULT_SCORE;
+        this._scoreComputer = GameStatusService.DEFAULT_SCORE;
+        this._currentSet = GameStatusService.DEFAULT_SET;
         this._currentStonesPlayer = GameStatusService.INITIAL_NUMBER_OF_STONES;
         this._currentStonesComputer = GameStatusService.INITIAL_NUMBER_OF_STONES;
         this._isLaunched = false;
@@ -113,9 +115,9 @@ export class GameStatusService {
     }
 
     public resetGameStatus(): void {
-        this.scorePlayer = 0;
-        this.scoreComputer = 0;
-        this.currentSet = 1;
+        this.scorePlayer = GameStatusService.DEFAULT_SCORE;
+        this.scoreComputer = GameStatusService.DEFAULT_SCORE;
+        this.currentSet = GameStatusService.DEFAULT_SET;
         this.currentStonesPlayer = GameStatusService.INITIAL_NUMBER_OF_STONES;
         this.currentStonesComputer = GameStatusService.INITIAL_NUMBER_OF_STONES;
         this.isLaunched = true;

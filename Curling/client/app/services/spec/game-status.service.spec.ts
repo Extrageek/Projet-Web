@@ -11,9 +11,9 @@ describe("GameStatusService should", () => {
     });
 
     it("initialize the game correctly", () => {
-        expect(_gameStatus.currentSet).to.be.equal(1);
-        expect(_gameStatus.scorePlayer).to.be.equal(0);
-        expect(_gameStatus.scoreComputer).to.be.equal(0);
+        expect(_gameStatus.currentSet).to.be.equal(GameStatusService.DEFAULT_SET);
+        expect(_gameStatus.scorePlayer).to.be.equal(GameStatusService.DEFAULT_SCORE);
+        expect(_gameStatus.scoreComputer).to.be.equal(GameStatusService.DEFAULT_SCORE);
         expect(_gameStatus.currentStonesPlayer).to.be.equal(GameStatusService.INITIAL_NUMBER_OF_STONES);
         expect(_gameStatus.currentStonesComputer).to.be.equal(GameStatusService.INITIAL_NUMBER_OF_STONES);
         expect(_gameStatus.isLaunched).to.be.equal(false);
@@ -68,9 +68,9 @@ describe("GameStatusService should", () => {
 
     it("reset all status", () => {
         _gameStatus.resetGameStatus();
-        expect(_gameStatus.currentSet).to.be.equal(1);
-        expect(_gameStatus.scorePlayer).to.be.equal(0);
-        expect(_gameStatus.scoreComputer).to.be.equal(0);
+        expect(_gameStatus.currentSet).to.be.equal(GameStatusService.DEFAULT_SET);
+        expect(_gameStatus.scorePlayer).to.be.equal(GameStatusService.DEFAULT_SCORE);
+        expect(_gameStatus.scoreComputer).to.be.equal(GameStatusService.DEFAULT_SCORE);
         expect(_gameStatus.currentStonesPlayer).to.be.equal(GameStatusService.INITIAL_NUMBER_OF_STONES);
         expect(_gameStatus.currentStonesComputer).to.be.equal(GameStatusService.INITIAL_NUMBER_OF_STONES);
         expect(_gameStatus.isLaunched).to.be.equal(true);

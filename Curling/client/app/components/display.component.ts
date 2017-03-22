@@ -39,7 +39,7 @@ export class DisplayComponent implements OnInit {
         if (this._userSetting.name === "") {
             this.router.navigate(['/']);
         }
-        this._gameStatus = new GameStatusService;
+        this._gameStatus = this.gameStatusService;
         this.getComputerName();
     }
 
