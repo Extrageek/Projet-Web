@@ -1,44 +1,79 @@
 import { GameStatusService } from './../game-status.service';
-import { GameStatus } from './../../models/game-status';
+import { CurrentPlayer } from "./../../models/current-player";
+
 import { expect } from "chai";
 
-let _gameStatusService: GameStatusService;
+let _gameStatus: GameStatusService;
 
 describe("GameStatusService should", () => {
     beforeEach(() => {
-        _gameStatusService = new GameStatusService();
+        _gameStatus = new GameStatusService();
     });
 
-    it("initialize the game status service correctly", () => {
-        expect(_gameStatusService.gameStatus.currentSet).to.be.equal(1);
-        expect(_gameStatusService.gameStatus.scorePlayer).to.be.equal(0);
-        expect(_gameStatusService.gameStatus.scoreComputer).to.be.equal(0);
-        expect(_gameStatusService.gameStatus.currentStonesPlayer).to.be.equal(GameStatus.INITIAL_NUMBER_OF_STONES);
-        expect(_gameStatusService.gameStatus.currentStonesComputer).to.be.equal(GameStatus.INITIAL_NUMBER_OF_STONES);
-        expect(_gameStatusService.gameStatus.isLaunched).to.be.equal(false);
+    it("initialize the game correctly", () => {
+        expect(_gameStatus.currentSet).to.be.equal(1);
+        expect(_gameStatus.scorePlayer).to.be.equal(0);
+        expect(_gameStatus.scoreComputer).to.be.equal(0);
+        expect(_gameStatus.currentStonesPlayer).to.be.equal(GameStatusService.INITIAL_NUMBER_OF_STONES);
+        expect(_gameStatus.currentStonesComputer).to.be.equal(GameStatusService.INITIAL_NUMBER_OF_STONES);
+        expect(_gameStatus.isLaunched).to.be.equal(false);
+        //expect(_gameStatus.isShooting).to.be.equal(false);
     });
 
-    it("set game status correctly", () => {
-        let _gameStatus = new GameStatus();
-        _gameStatus.currentSet = 2;
-        _gameStatus.currentStonesComputer = 4;
-        _gameStatus.currentStonesPlayer = 4;
-        _gameStatus.scoreComputer = 3;
-        _gameStatus.scorePlayer = 5;
-        _gameStatus.isLaunched = true;
-        _gameStatusService.gameStatus = _gameStatus;
-        expect(_gameStatusService.gameStatus).to.be.equal(_gameStatus);
+    it("decrement number of stones left for player when used", () => {
+        _gameStatus.currentPlayer = CurrentPlayer.BLUE;
+        _gameStatus.usedStone();
+        expect(_gameStatus.currentStonesPlayer).to.be.equal(GameStatusService.INITIAL_NUMBER_OF_STONES - 1);
+        expect(_gameStatus.currentStonesComputer).to.be.equal(GameStatusService.INITIAL_NUMBER_OF_STONES);
     });
-/*
-    it("choose the first player to play randomly in case the player is first", () => {
-        let nTrue = 0;
-        let nFalse = 0;
-        const N_GENERATION = 100;
-        for (let i = 0; i < N_GENERATION; i++) {
-            let alea = _gameStatusService.randomFirstPlayer();
-            alea ? nTrue++ : nFalse++;
-        }
-        expect(nTrue).to.be.greaterThan(30).and.lessThan(70);
+
+    it("decrement number of stones left for computer when used", () => {
+        _gameStatus.currentPlayer = CurrentPlayer.RED;
+        _gameStatus.usedStone();
+        expect(_gameStatus.currentStonesPlayer).to.be.equal(GameStatusService.INITIAL_NUMBER_OF_STONES);
+        expect(_gameStatus.currentStonesComputer).to.be.equal(GameStatusService.INITIAL_NUMBER_OF_STONES - 1);
+        _gameStatus.nextPlayer();
+        //_gameStatus.isShooting = true;
+        expect(_gameStatus.currentPlayer).to.be.equal(CurrentPlayer.BLUE);
+        //expect(_gameStatus.isShooting).to.be.equal(true);
     });
-*/
+
+    it("does not decrement number of stones left when used", () => {
+        _gameStatus.currentPlayer = CurrentPlayer.INVALID;
+        _gameStatus.usedStone();
+        expect(_gameStatus.currentStonesPlayer).to.be.equal(GameStatusService.INITIAL_NUMBER_OF_STONES);
+        expect(_gameStatus.currentStonesComputer).to.be.equal(GameStatusService.INITIAL_NUMBER_OF_STONES);
+    });
+
+    it("add score for the player when he wins a set", () => {
+        _gameStatus.incrementScorePlayer(2);
+        expect(_gameStatus.scorePlayer).to.be.equal(2);
+    });
+
+    it("add score for the _scoreComputer when he wins a set", () => {
+        _gameStatus.incrementScoreComputer(2);
+        expect(_gameStatus.scoreComputer).to.be.equal(2);
+    });
+
+    it("change the status of the game when it's lunched", () => {
+        _gameStatus.launchGame();
+        expect(_gameStatus.isLaunched).to.be.equal(true);
+    });
+
+    it("reset the number of stones when you finish a set", () => {
+        _gameStatus.resetStones();
+        expect(_gameStatus.currentStonesComputer).to.be.equal(GameStatusService.INITIAL_NUMBER_OF_STONES);
+        expect(_gameStatus.currentStonesPlayer).to.be.equal(GameStatusService.INITIAL_NUMBER_OF_STONES);
+    });
+
+    it("reset all status", () => {
+        _gameStatus.resetGameStatus();
+        expect(_gameStatus.currentSet).to.be.equal(1);
+        expect(_gameStatus.scorePlayer).to.be.equal(0);
+        expect(_gameStatus.scoreComputer).to.be.equal(0);
+        expect(_gameStatus.currentStonesPlayer).to.be.equal(GameStatusService.INITIAL_NUMBER_OF_STONES);
+        expect(_gameStatus.currentStonesComputer).to.be.equal(GameStatusService.INITIAL_NUMBER_OF_STONES);
+        expect(_gameStatus.isLaunched).to.be.equal(true);
+    });
+
 });

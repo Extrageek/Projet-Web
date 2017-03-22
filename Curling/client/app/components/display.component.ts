@@ -1,7 +1,6 @@
 import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { GameStatus } from '../models/game-status';
 import { UserSetting } from '../models/user-setting';
 
 import { RestApiProxyService } from './../services/rest-api-proxy.service';
@@ -17,7 +16,7 @@ import { GameStatusService } from './../services/game-status.service';
 })
 export class DisplayComponent implements OnInit {
     _userSetting: UserSetting;
-    _gameStatus: GameStatus;
+    _gameStatus: GameStatusService;
     _computerName: string;
 
     @ViewChild("hamburger") hamburger: ElementRef;
@@ -32,15 +31,15 @@ export class DisplayComponent implements OnInit {
     constructor(
         private router: Router,
         private api: RestApiProxyService,
-        private userSettingService: UserService,
+        private userService: UserService,
         private gameStatusService: GameStatusService) { }
 
     ngOnInit() {
-        this._userSetting = this.userSettingService.userSetting;
+        this._userSetting = this.userService.userSetting;
         if (this._userSetting.name === "") {
             this.router.navigate(['/']);
         }
-        this._gameStatus = this.gameStatusService.gameStatus;
+        this._gameStatus = new GameStatusService;
         this.getComputerName();
     }
 
@@ -50,7 +49,7 @@ export class DisplayComponent implements OnInit {
     }
 
     public getComputerName(): void {
-        this._computerName = this.userSettingService.getComputerName();
+        this._computerName = this.userService.getComputerName();
     }
 
     public gameOver() {

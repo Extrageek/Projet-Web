@@ -1,7 +1,7 @@
 import { AbstractGameState } from "./abstract-game-state";
 import { IGameInfo } from "../game-handler/game-info.interface";
 import { Stone } from "../../models/stone";
-import { CurrentPlayer } from "../../models/game-status";
+import { CurrentPlayer } from "../../models/current-player";
 import { PlayerTurn } from "./player-turn";
 import { ComputerTurn } from "./computer-turn";
 

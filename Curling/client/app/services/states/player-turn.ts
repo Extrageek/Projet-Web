@@ -5,7 +5,7 @@ import { IGameInfo } from "../game-handler/game-info.interface";
 import { CameraType } from "../game-physics/camera-type";
 import { GameComponent } from "../../models/game-component.interface";
 import { Shooting } from "./shooting";
-import { CurrentPlayer } from "../../models/game-status";
+import { CurrentPlayer } from "../../models/current-player";
 
 export class PlayerTurn extends AbstractGameState implements GameComponent {
 

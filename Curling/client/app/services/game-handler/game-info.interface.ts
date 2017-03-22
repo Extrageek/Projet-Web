@@ -5,7 +5,7 @@ import { TextureHandler } from "../views/texture-handler";
 import { CameraService } from "../views/cameras.service";
 import { CameraType } from "../game-physics/camera-type";
 import { GameComponent } from "../../models/game-component.interface";
-import { GameStatus } from "../../models/game-status";
+import { GameStatusService } from "./../game-status.service";
 import { AbstractGameState } from "../states/abstract-game-state";
 
 export interface IGameInfo {
@@ -21,7 +21,7 @@ export interface IGameInfo {
     };
     scene: Scene;
     mousePositionPlaneXZ: Vector3;
-    gameStatus: GameStatus;
+    gameStatus: GameStatusService;
     gameState: AbstractGameState;
     //Contains all the GameComponent to update. Each property of this object must be a GameComponent.
     gameComponentsToUpdate: Object;

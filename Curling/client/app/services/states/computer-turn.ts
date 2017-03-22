@@ -2,7 +2,7 @@ import { Vector3 } from "three";
 
 import { AbstractGameState } from "./abstract-game-state";
 import { IGameInfo } from "../game-handler/game-info.interface";
-import { CurrentPlayer } from "../../models/game-status";
+import { CurrentPlayer } from "../../models/current-player";
 import { Shooting } from "./shooting";
 
 export class ComputerTurn extends AbstractGameState {
