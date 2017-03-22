@@ -101,7 +101,7 @@ export class SocketConnectionHandler {
                         }
 
                     } else {
-                        console.log("Already exists");
+                        // console.log("Already exists");
                         // Emit only to the sender
                         socket.emit(SocketEventType.usernameAlreadyExist);
                     }

@@ -1,7 +1,7 @@
 import { expect, assert } from "chai";
 
 import { Player } from "../../models/player";
-import { BoardManager } from "../board-manager";
+import { BoardManager } from "../board/board-manager";
 import { IPlaceWordResponse } from "../commons/command/place-word-response.interface";
 
 describe("BoardManager", () => {

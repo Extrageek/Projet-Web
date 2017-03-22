@@ -1,4 +1,5 @@
 import { Room } from "./room";
+import { Letter } from "./letter";
 
 export class Player {
 
@@ -6,7 +7,6 @@ export class Player {
     private _numberOfPlayers: number;
     private _socketId: string;
     private _score : number;
-
 
     // The constructor of a player
     constructor(username: string, numberOfPlayers: number, socketId: string) {
@@ -59,5 +59,9 @@ export class Player {
     }
     public set socketId(value: string) {
         this._socketId = value;
+    }
+
+    public easelHasLetter(letter: Letter): boolean {
+        return true;
     }
 }

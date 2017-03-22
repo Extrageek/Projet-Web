@@ -26,7 +26,7 @@ import { SocketEventType } from '../../commons/socket-eventType';
 
 import { CommandStatus } from "../commons/command-status";
 import { CommandType } from "../commons/command-type";
-import { ICommandRequest } from "../commons/command-request";
+import { ICommandRequest } from "../commons/command-request.interface";
 
 import { MessageCommand } from '../message-command';
 import { ChangeLettersCommand } from '../change-letters-command';

@@ -3,6 +3,7 @@ import { BoardColumn } from "./board-column";
 import { Square } from "../square/square";
 import { SquarePosition } from "../square/square-position";
 import { SquareType } from "../square/square-type";
+import { BoardHelper } from '../../services/board/board-helper';
 
 const BOARD_SIZE = 15;
 
