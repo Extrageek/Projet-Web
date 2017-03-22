@@ -7,6 +7,7 @@ import { Player } from "../models/player";
 import { Board } from '../models/board/board';
 import { Letter } from "../models/letter";
 import { SquareType } from "../models/square/square-type";
+import { SquarePosition } from "../models/square/square-position";
 import { IPlaceWordResponse } from "../services/commons/command/place-word-response.interface";
 import { LetterBankHandler } from './letterbank-handler';
 
@@ -22,10 +23,7 @@ export class BoardManager {
         this._exceptionHelper = new ExceptionHelper();
     }
 
-    public placeWordInBoard(
-        response: IPlaceWordResponse,
-        board: Board,
-        player: Player): boolean {
+    public placeWordInBoard(response: IPlaceWordResponse, board: Board, player: Player): boolean {
 
         this._board = board;
         this._player = player;
@@ -44,7 +42,8 @@ export class BoardManager {
         if (orientation === CommandsHelper.HORIZONTAL_ORIENTATION) {
             isPlaced = this.placeLetterInHorizontalOrientation(firstRowIndex, firstColumnIndex, scrabbleLetters);
 
-        } else if (orientation === CommandsHelper.VERTICAL_ORIENTATION) {
+        }
+        else if (orientation === CommandsHelper.VERTICAL_ORIENTATION) {
 
             let placedDown = this.placeLetterInVerticalOrientation(
                 firstRowIndex, firstColumnIndex, scrabbleLetters, WordDirection.DOWN);
@@ -62,7 +61,7 @@ export class BoardManager {
     }
 
     private placeLetterInHorizontalOrientation(
-        firstRowIndex: string,
+        rowIndex: string,
         firstColumnIndex: number,
         letters: Array<Letter>): boolean {
 
@@ -75,18 +74,19 @@ export class BoardManager {
             let nextColumnIndex = index + firstColumnIndex;
 
             // Get the row number from the given letter
-            let rowLetterToRowNumber = firstRowIndex.toUpperCase()
+            let rowLetterToRowNumber = rowIndex.toUpperCase()
                 .charCodeAt(0) - LetterHelper.LETTER_A_KEY_CODE;
             let currentSquare = this._board.squares[rowLetterToRowNumber][nextColumnIndex - 1];
 
+            // If square is empty, the letter can be placed
             if (!currentSquare.isBusy) {
                 this._board.squares[rowLetterToRowNumber][nextColumnIndex - 1].squareValue =
                     letters[index].alphabetLetter;
+                this._board.lastLettersAdded.push(new SquarePosition(rowIndex, nextColumnIndex - 1));
                 this._board.squares[rowLetterToRowNumber][nextColumnIndex - 1].isBusy = true;
-            } else {
-                if (currentSquare.letter.alphabetLetter !== letters[index].alphabetLetter) {
-                    return false;
-                }
+            }
+            else if (currentSquare.letter.alphabetLetter !== letters[index].alphabetLetter) {
+                return false;
             }
         }
 

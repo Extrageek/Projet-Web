@@ -1,4 +1,4 @@
-import { ICommandRequest } from "../commons/command-request";
+import { ICommandRequest } from "../commons/command-request.interface";
 import { CommandStatus } from "../commons/command-status";
 import { CommandType } from "../commons/command-type";
 import { expect } from "chai";

@@ -9,6 +9,14 @@ const BOARD_SIZE = 15;
 export class Board {
     private _squares: Array<Array<Square>>;
     private _isEmpty: boolean;
+    private _lastLettersAdded : Array<SquarePosition>;
+
+    public get lastLettersAdded() : Array<SquarePosition> {
+        return this._lastLettersAdded;
+    }
+    public set lastLettersAdded(v : Array<SquarePosition>) {
+        this._lastLettersAdded = v;
+    }
 
     public get isEmpty(): boolean {
         return this._isEmpty;
@@ -26,6 +34,7 @@ export class Board {
         this.generateBoard();
         this.assignTypesToSquares();
         this._isEmpty = true;
+        this._lastLettersAdded = new Array<SquarePosition>();
     }
 
     private generateBoard(): void {
