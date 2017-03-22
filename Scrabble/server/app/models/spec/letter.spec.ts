@@ -19,26 +19,33 @@ describe("Letter should", () => {
         expect(_letter.alphabetLetter).to.be.equal(_alphabetLetter);
         expect(_letter.point).to.be.equal(_point);
         expect(_letter.quantity).to.be.equal(_quantity);
+        expect(_letter.imageSource).to.be.equal("");
     });
+
     it("get the alphabet letter correctly", () => {
         expect(_letter.alphabetLetter).to.be.equal(_alphabetLetter);
     });
+
     it("set the alphabet letter corectly", () => {
         _alphabetLetter = Alphabet.letterR;
         _letter.alphabetLetter = Alphabet.letterR;
         expect(_letter.alphabetLetter).to.be.equal(_alphabetLetter);
     });
+
     it("get the point value of a letter corectly", () => {
         expect(_letter.point).to.be.equal(_point);
     });
+
     it("set the point value of a letter corectly", () => {
         _point = AlphabetPoint.letterR;
         _letter.point = AlphabetPoint.letterR;
         expect(_letter.point).to.be.equal(_point);
     });
+
     it("get the quantity for a letter corectly", () => {
         expect(_letter.quantity).to.be.equal(_quantity);
     });
+
     it("set the score of the player corectly", () => {
         _quantity = AlphabetQuantity.letterR;
         _letter.quantity = AlphabetQuantity.letterR;
