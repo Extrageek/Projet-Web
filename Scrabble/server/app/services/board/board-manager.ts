@@ -73,7 +73,7 @@ export class BoardManager {
             _columnIndex: columnIndex,
             _letters: letters,
             _player: this._player
-        }
+        };
 
         if (!this._horizontalWordValidator.matchHorizontalPlacementRules(request, this._board)) {
             return false;
@@ -109,7 +109,7 @@ export class BoardManager {
             _columnIndex: columnIndex,
             _letters: letters,
             _player: this._player
-        }
+        };
 
         if (!this._verticalWordValidator.matchVerticalPlacementRules(request, this._board)) {
             return false;
