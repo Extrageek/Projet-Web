@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { MdSnackBar } from '@angular/material';
 
-import { RenderService } from './../services/game-physics/render.service';
+import { RenderService } from '../services/mainGame/render.service';
 
 @Component({
     selector: 'my-gl',

@@ -8,23 +8,24 @@ export enum CurrentPlayer {
 
 @Injectable()
 export class GameStatus {
+
+    public static readonly INITIAL_NUMBER_OF_STONES = 8;
+
     private _scorePlayer: number;
     private _scoreComputer: number;
     private _currentSet: number;
     private _currentStonesPlayer: number;
     private _currentStonesComputer: number;
     private _isLaunched: boolean;
-    private _isShooting: boolean;
     private _currentPlayer: CurrentPlayer;
 
     constructor() {
         this._scorePlayer = 0;
         this._scoreComputer = 0;
         this._currentSet = 1;
-        this._currentStonesPlayer = 8;
-        this._currentStonesComputer = 8;
+        this._currentStonesPlayer = GameStatus.INITIAL_NUMBER_OF_STONES;
+        this._currentStonesComputer = GameStatus.INITIAL_NUMBER_OF_STONES;
         this._isLaunched = false;
-        this._isShooting = false;
         this._currentPlayer = CurrentPlayer.INVALID;
     }
 
@@ -76,14 +77,6 @@ export class GameStatus {
         this._isLaunched = v ;
     }
 
-    public get isShooting(): boolean {
-        return this._isShooting;
-    }
-
-    public set isShooting(v: boolean ) {
-        this._isShooting = v ;
-    }
-
     public set currentPlayer(v : number) {
         this._currentPlayer = v;
     }
@@ -117,17 +110,29 @@ export class GameStatus {
     }
 
     public resetStones(): void {
-        this._currentStonesComputer = 8;
-        this._currentStonesPlayer = 8;
+        this._currentStonesComputer = GameStatus.INITIAL_NUMBER_OF_STONES;
+        this._currentStonesPlayer = GameStatus.INITIAL_NUMBER_OF_STONES;
     }
 
     public resetGameStatus(): void {
         this._scorePlayer = 0;
         this._scoreComputer = 0;
         this._currentSet = 1;
-        this._currentStonesPlayer = 8;
-        this._currentStonesComputer = 8;
+        this._currentStonesPlayer = GameStatus.INITIAL_NUMBER_OF_STONES;
+        this._currentStonesComputer = GameStatus.INITIAL_NUMBER_OF_STONES;
         this._isLaunched = true;
         this._currentPlayer = CurrentPlayer.INVALID;
+    }
+
+    public randomFirstPlayer(): boolean {
+        let randomNumber = Math.round(Math.random() * 1000) % 2;
+        if (randomNumber === 0) {
+            this.currentPlayer = CurrentPlayer.BLUE;
+            return true;
+        }
+        else {
+            this.currentPlayer = CurrentPlayer.RED;
+            return false;
+        }
     }
 }
