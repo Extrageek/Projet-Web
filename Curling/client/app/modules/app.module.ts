@@ -22,7 +22,7 @@ import { CameraService } from './../services/views/cameras.service';
 import { LightingService } from './../services/views/ligthing.service';
 
 @NgModule({
-  imports: [ BrowserModule, FormsModule, AppRoutingModule, MaterialModule.forRoot()],
+  imports: [ BrowserModule, FormsModule, AppRoutingModule, MaterialModule],
   declarations: [ AppComponent, GlComponent, LeaderboardComponent, ModifierDirective,
                   UsernameComponent, DifficultyComponent, DisplayComponent],
   providers: [ RenderService, RestApiProxyService, UserService,

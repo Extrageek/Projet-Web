@@ -23,7 +23,7 @@ export class ComputerTurn extends AbstractGameState {
     }
 
     /**
-     * Get the instance of the state ComputerTurn. This state is used while the computer is aiming and chosing power.
+     * Get the instance of the state ComputerTurn. sThis state is used while the computer is aiming and chosing power.
      * @returns The ComputerTurn state of null if the createInstance method has not been called.
      */
     public static getInstance(): AbstractGameState {
@@ -36,7 +36,7 @@ export class ComputerTurn extends AbstractGameState {
 
     protected performEnteringState(): void {
         this._gameInfo.speed = 1;
-        this._gameInfo.direction = new Vector3(0, 0, 1);
+        this._gameInfo.direction = new Vector3(-5, 0, 1);
         this.leaveState(Shooting.getInstance());
     }
 
