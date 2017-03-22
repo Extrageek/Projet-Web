@@ -3,7 +3,7 @@ import { Room } from "../models/room";
 import { Player } from "../models/player";
 import { CommandType } from "./commons/command/command-type";
 import { CommandStatus } from "./commons/command/command-status";
-import { IPlaceWordResponse } from "./commons/place-command-response.interface";
+import { IPlaceWordResponse } from "./commons/command/place-word-response.interface";
 import { ICommandMessage } from "./commons/message/command-message.interface";
 import { IRoomMessage } from "./commons/message/room-message.interface";
 

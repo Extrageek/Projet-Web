@@ -1,6 +1,6 @@
 import { SocketService } from './socket-service';
-import { ICommand } from "./command.interface";
-import { ICommandRequest } from "./commons/command-request";
+import { ICommand } from "./commons/command.interface";
+import { ICommandRequest } from "./commons/command-request.interface";
 import { CommandStatus } from './commons/command-status';
 import { CommandType } from './commons/command-type';
 import { CommandsHelper } from "./commons/commands-helper";

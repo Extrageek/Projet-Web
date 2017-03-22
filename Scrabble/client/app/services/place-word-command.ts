@@ -7,11 +7,11 @@ import { IScrabbleLetter } from "../models/scrabble-letter";
 import { ISquarePosition } from "../models/square-position";
 import { BoardColumn } from "../models/board";
 
-import { ICommand } from "./command.interface";
-import { IPlaceWordResponse } from "./place-command-response.interface";
+import { ICommand } from "./commons/command.interface";
+import { IPlaceWordResponse } from "./commons/place-command-response.interface";
 
 import { LetterHelper } from "../commons/letter-helper";
-import { ICommandRequest } from "./commons/command-request";
+import { ICommandRequest } from "./commons/command-request.interface";
 import { CommandStatus } from './commons/command-status';
 import { CommandType } from './commons/command-type';
 import { CommandsHelper } from "./commons/commands-helper";

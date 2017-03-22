@@ -1,39 +1,29 @@
-import { Room } from "./room";
-import { Letter } from "./letter";
+import { IScrabbleLetter } from "./scrabble-letter";
 
 export class Player {
 
     private _username: string;
     private _numberOfPlayers: number;
     private _socketId: string;
-    private _score : number;
-
+    private _score: number;
+    private _letters: Array<IScrabbleLetter>;
     // The constructor of a player
-    constructor(username: string, numberOfPlayers: number, socketId: string) {
+    constructor(username: string) {
 
         if (username === null) {
             throw new Error("Argument error: The username cannot be null");
         }
-        if (numberOfPlayers < Room.roomMinCapacity || numberOfPlayers > Room.roomMaxCapacity) {
-            throw new RangeError("Argument error: The number of players should be between 1 and 4");
-        }
-
-        if (socketId === null) {
-            throw new Error("Argument error: The socket id of the player cannot be null");
-        }
-
         this._username = username;
-        this._numberOfPlayers = numberOfPlayers;
-        this.socketId = socketId;
         this._score = 0;
+        this.letters = new Array<IScrabbleLetter>();
     }
 
-    // The player score
-    public get score() : number {
-        return this._score;
+    public get letters(): Array<IScrabbleLetter> {
+        return this._letters;
     }
-    public set score(v : number) {
-        this._score = v;
+
+    public set letters(letters: Array<IScrabbleLetter>) {
+        this._letters = letters;
     }
 
     // The player name
@@ -61,7 +51,10 @@ export class Player {
         this._socketId = value;
     }
 
-    public easelHasLetter(letter: Letter): boolean {
-        return true;
+    public get score(): number {
+        return this._score;
+    }
+    public set score(v: number) {
+        this._score = v;
     }
 }

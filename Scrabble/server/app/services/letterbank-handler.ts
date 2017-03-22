@@ -65,7 +65,7 @@ export class LetterBankHandler {
     }
 
     private putLetterBackInBank(lettersToBeChanged: Array<Letter>) {
-          for (let index = 0; index < lettersToBeChanged.length; index++) {
+        for (let index = 0; index < lettersToBeChanged.length; index++) {
             this.bank.putLetterBackInBank(lettersToBeChanged[index]);
         }
         // lettersToBeChanged.map((letter) => {
@@ -88,7 +88,10 @@ export class LetterBankHandler {
 
         let letters = new Array<Letter>();
         alphabets.forEach((element => {
-            let letter = this._bank.bank.filter((alphaLetter) => alphaLetter.alphabetLetter === element)[0];
+            let letter = this._bank.bank.filter((alphaLetter) => {
+                let alphabet = (element === "*") ? "blank" : element;
+                return alphaLetter.alphabetLetter === alphabet;
+            })[0];
             letters.push(letter);
         }));
 

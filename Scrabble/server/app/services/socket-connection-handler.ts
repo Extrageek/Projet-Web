@@ -11,7 +11,7 @@ import { SocketEventType } from "./commons/socket-eventType";
 import { CommandType } from "./commons/command/command-type";
 import { CommandStatus } from "./commons/command/command-status";
 import { ICommandRequest } from "./commons/command/command-request";
-import { IPlaceWordResponse } from "./commons/place-command-response.interface";
+import { IPlaceWordResponse } from "./commons/command/place-word-response.interface";
 import { ICommandMessage } from "./commons/message/command-message.interface";
 
 import { IRoomMessage } from "./commons/message/room-message.interface";
@@ -90,7 +90,7 @@ export class SocketConnectionHandler {
                         // Emit to all the player in the room.
                         this._socket.to(response._roomId).emit(SocketEventType.joinRoom, response);
 
-                        // TODO: Handle the unsubscribe to the timer after a clean debug
+                        // Subscribe to the timer in the room if the room is ready
                         if (room.isFull()) {
                             this._socket.to(response._roomId).emit(SocketEventType.updateBoard, room.board);
                             let test = room.timerService.timer().subscribe(
@@ -101,7 +101,7 @@ export class SocketConnectionHandler {
                         }
 
                     } else {
-                        console.log("Already exists");
+                        // console.log("Already exists");
                         // Emit only to the sender
                         socket.emit(SocketEventType.usernameAlreadyExist);
                     }
@@ -168,12 +168,19 @@ export class SocketConnectionHandler {
                 .createPlaceWordResponse(player.username, room, request._commandStatus, request._response);
 
             if (response._commandStatus === CommandStatus.Ok) {
-                // Update the players queues for everyone in the room
-                let playersQueues = room.getAndUpdatePlayersQueue();
-                this._socket.to(room.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
+                if (room.placeWordInTheBoard(request._response, player)) {
+
+                    // Place the word in the board and emit an update board to the room members
+                    this._socket.to(room.roomId).emit(SocketEventType.updateBoard, room.board);
+
+                    // Update the players queues for everyone in the room
+                    let playersQueues = room.getAndUpdatePlayersQueue();
+                    this._socket.to(room.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
+                } else {
+                    response._commandStatus = CommandStatus.NotAllowed;
+                }
             }
 
-            // Emit a message with the new letters to the sender
             this._socket.to(response._room.roomId).emit(SocketEventType.commandRequest, response);
             this._socket.to(response._room.roomId).emit(SocketEventType.placeWordCommandRequest, response);
 

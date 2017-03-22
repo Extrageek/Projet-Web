@@ -4,6 +4,8 @@ import { Letter } from "./letter";
 import { Board } from "./board/board";
 import { TimerService } from "../services/timer.service";
 import { LetterBankHandler } from "../services/letterbank-handler";
+import { BoardManager } from "../services/board/board-manager";
+import { IPlaceWordResponse } from "../services/commons/command/place-word-response.interface";
 
 let uuid = require('node-uuid');
 
@@ -14,7 +16,9 @@ export class Room {
 
     private _playersQueue: QueueCollection<Player>;
     private _letterBankHandler: LetterBankHandler;
+    private _boardManager: BoardManager;
     private _timerService: TimerService;
+
     private _roomCapacity: number;
     private _roomId: string;
     private _board: Board;
@@ -32,6 +36,7 @@ export class Room {
         this._roomCapacity = roomCapacity;
         this._playersQueue = new QueueCollection<Player>();
         this._letterBankHandler = new LetterBankHandler();
+        this._boardManager = new BoardManager();
         this._timerService = new TimerService();
         this._roomId = uuid.v1(); // Generate a v1 (time-based) id
         this._board = new Board();
@@ -55,7 +60,7 @@ export class Room {
     }
 
     // The board of the room
-    public get board() : Board {
+    public get board(): Board {
         return this._board;
     }
 
@@ -142,5 +147,9 @@ export class Room {
 
     public getInitialsLetters(): Array<string> {
         return this.letterBankHandler.initializeEasel();
+    }
+
+    public placeWordInTheBoard(response: IPlaceWordResponse, player: Player): boolean {
+        return this._boardManager.placeWordInBoard(response, this._board, player);
     }
 }

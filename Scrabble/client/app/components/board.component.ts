@@ -10,10 +10,10 @@ import { SocketService } from "../services/socket-service";
 import { BoardManagerService } from "../services/board-manager.service";
 import { ExceptionHelperService } from "../services/exception-helper.service";
 
-import { IPlaceWordResponse } from "../services/place-command-response.interface";
+import { IPlaceWordResponse } from "../services/commons/place-command-response.interface";
 import { CommandType } from "../services/commons/command-type";
 import { CommandStatus } from "../services/commons/command-status";
-import { ICommandRequest } from '../services/commons/command-request';
+import { ICommandRequest } from '../services/commons/command-request.interface';
 import { ICommandMessage } from "../commons/messages/command-message.interface";
 
 import { Subscription } from "rxjs/Subscription";
