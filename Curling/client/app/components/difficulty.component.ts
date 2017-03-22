@@ -1,20 +1,18 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Difficulty } from '../models/user-setting';
-
 import { UserSettingService } from './../services/user-setting.service';
 import { RestApiProxyService } from './../services/rest-api-proxy.service';
 
 @Component({
     moduleId: module.id,
     selector: 'difficulty-component',
-    templateUrl: '../../assets/templates/difficulty-component.html',
+    templateUrl: '/assets/templates/difficulty-component.html',
     styleUrls: ['../../assets/stylesheets/username-component.css']
 })
 export class DifficultyComponent implements OnInit {
     _username: string;
-    _difficulty: Difficulty;
+    _difficulty: string;
 
     constructor(private router: Router,
         private userSettingService: UserSettingService,
@@ -25,6 +23,7 @@ export class DifficultyComponent implements OnInit {
         if (this._username === "") {
             this.router.navigate(['/']);
         }
+        this._difficulty = "0";
     }
 
     @HostListener('window:beforeunload')
@@ -33,7 +32,8 @@ export class DifficultyComponent implements OnInit {
     }
 
     public launchGame() {
-        this.userSettingService.userSetting.difficulty = this._difficulty;
+        let RADIX = 10;
+        this.userSettingService.userSetting.difficulty = parseInt(this._difficulty, RADIX);
         this.router.navigate(['/game']);
     }
 }
