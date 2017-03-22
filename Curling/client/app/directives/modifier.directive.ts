@@ -1,12 +1,11 @@
 import { Directive, Input } from '@angular/core';
-import { RenderService } from '../services/mainGame/render.service';
+import { RenderService } from '../services/game-handler/render.service';
 
 @Directive({
     selector: 'modifier'
 })
 
 export class ModifierDirective {
-    public scale = 1;
     constructor(private _renderService: RenderService) {
     }
 
@@ -24,24 +23,4 @@ export class ModifierDirective {
         }
         this._renderService.updateText(value);
     }
-
-    public addStars(stars: number) {
-        //this._renderService.addStars(stars);
-    }
-
-    public updateScale(newScale: number) {
-        //this._renderService.updateScale(newScale);
-    }
-
-    /*
-    public printService(): void {
-        this._renderService.print();
-        if (true) {
-            function s() {
-                let x = '';
-                return / <NBSP>regexp/;
-            }
-        }
-    }
-    */
 }

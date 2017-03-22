@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { MdSnackBar } from '@angular/material';
 
-import { RenderService } from '../services/mainGame/render.service';
+import { RenderService } from '../services/game-handler/render.service';
 
 @Component({
     selector: 'my-gl',
@@ -44,17 +44,6 @@ export class GlComponent implements OnInit {
     public get renderService(): RenderService {
         return this._renderService;
     }
-    // private displaceX(): void{
-    //     this.renderService.translateMesh(this.xmodel, 0);
-    // }
-
-    // private displaceY(): void{
-    //     this.renderService.translateMesh(0, this.ymodel);
-    // }
-
-    // private displaceCameraZ(): void{
-    //     this.renderService.translateCamera(0, 0, this.zCamera);
-    // }
 
     public showNotImplemented(): void {
         this.snackbar.open('Sorry, this is not implemented yet. Would you do it for me? :)', 'Yes');

@@ -1,7 +1,7 @@
 import { Clock, Vector3 } from "three";
 
-import { AbstractGameState } from "./abstractGameState";
-import { IGameInfo } from "../mainGame/game-info.interface";
+import { AbstractGameState } from "./abstract-game-state";
+import { IGameInfo } from "../game-handler/game-info.interface";
 import { CameraType } from "../game-physics/camera-type";
 import { GameComponent } from "../../models/game-component.interface";
 import { Shooting } from "./shooting";

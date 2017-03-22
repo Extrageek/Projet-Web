@@ -1,7 +1,7 @@
-import { AbstractGameState } from "./abstractGameState";
-import { IGameInfo } from "../mainGame/game-info.interface";
-import { LoadingStone } from "./loadingStone";
-import { EndGame } from "./endGame";
+import { AbstractGameState } from "./abstract-game-state";
+import { IGameInfo } from "../game-handler/game-info.interface";
+import { LoadingStone } from "./loading-stone";
+import { EndGame } from "./end-game";
 import { CurrentPlayer } from "../../models/game-status";
 
 export class EndSet extends AbstractGameState {

@@ -1,9 +1,9 @@
-import { AbstractGameState } from "./abstractGameState";
-import { IGameInfo } from "../mainGame/game-info.interface";
+import { AbstractGameState } from "./abstract-game-state";
+import { IGameInfo } from "../game-handler/game-info.interface";
 import { Stone } from "../../models/stone";
 import { CurrentPlayer } from "../../models/game-status";
-import { PlayerTurn } from "./playerTurn";
-import { ComputerTurn } from "./computerTurn";
+import { PlayerTurn } from "./player-turn";
+import { ComputerTurn } from "./computer-turn";
 
 export class LoadingStone extends AbstractGameState {
 

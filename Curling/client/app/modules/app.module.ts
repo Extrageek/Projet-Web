@@ -14,9 +14,9 @@ import { DisplayComponent } from '../components/display.component';
 
 import { ModifierDirective } from '../directives/modifier.directive';
 
-import { RenderService } from '../services/mainGame/render.service';
+import { RenderService } from '../services/game-handler/render.service';
 import { RestApiProxyService } from './../services/rest-api-proxy.service';
-import { UserSettingService } from './../services/user-setting.service';
+import { UserService } from './../services/user.service';
 import { GameStatusService } from './../services/game-status.service';
 import { CameraService } from './../services/views/cameras.service';
 import { LightingService } from './../services/views/ligthing.service';
@@ -25,7 +25,7 @@ import { LightingService } from './../services/views/ligthing.service';
   imports: [ BrowserModule, FormsModule, AppRoutingModule, MaterialModule.forRoot()],
   declarations: [ AppComponent, GlComponent, LeaderboardComponent, ModifierDirective,
                   UsernameComponent, DifficultyComponent, DisplayComponent],
-  providers: [ RenderService, RestApiProxyService, UserSettingService,
+  providers: [ RenderService, RestApiProxyService, UserService,
                GameStatusService, CameraService, LightingService ],
   bootstrap: [ AppComponent ]
 })

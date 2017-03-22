@@ -14,13 +14,13 @@ import { CameraType } from '../game-physics/camera-type';
 import { LightingService } from './../views/ligthing.service';
 import { TextureHandler } from '../views/texture-handler';
 import { IGameInfo } from "./game-info.interface";
-import { AbstractGameState } from "../states/abstractGameState";
-import { LoadingStone } from "../states/loadingStone";
-import { PlayerTurn } from "../states/playerTurn";
-import { ComputerTurn } from "../states/computerTurn";
+import { AbstractGameState } from "../states/abstract-game-state";
+import { LoadingStone } from "../states/loading-stone";
+import { PlayerTurn } from "../states/player-turn";
+import { ComputerTurn } from "../states/computer-turn";
 import { Shooting } from "../states/shooting";
-import { EndSet } from "../states/endSet";
-import { EndGame } from "../states/endGame";
+import { EndSet } from "../states/end-set";
+import { EndGame } from "../states/end-game";
 
 @Injectable()
 export class RenderService {

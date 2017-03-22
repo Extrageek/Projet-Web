@@ -5,7 +5,7 @@ import { GameStatus } from '../models/game-status';
 import { UserSetting } from '../models/user-setting';
 
 import { RestApiProxyService } from './../services/rest-api-proxy.service';
-import { UserSettingService } from './../services/user-setting.service';
+import { UserService } from './../services/user.service';
 import { GameStatusService } from './../services/game-status.service';
 
 @Component({
@@ -32,7 +32,7 @@ export class DisplayComponent implements OnInit {
     constructor(
         private router: Router,
         private api: RestApiProxyService,
-        private userSettingService: UserSettingService,
+        private userSettingService: UserService,
         private gameStatusService: GameStatusService) { }
 
     ngOnInit() {
@@ -41,6 +41,7 @@ export class DisplayComponent implements OnInit {
             this.router.navigate(['/']);
         }
         this._gameStatus = this.gameStatusService.gameStatus;
+        this.getComputerName();
     }
 
     public toggleOverlay() {

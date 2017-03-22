@@ -2,8 +2,6 @@ import { UserSetting, Difficulty } from './../user-setting';
 import { expect } from "chai";
 
 let _userSetting: UserSetting;
-// let _username = "Michel";
-// let _difficulty = Difficulty.HARD;
 
 describe("UserSetting should", () => {
     beforeEach(() => {

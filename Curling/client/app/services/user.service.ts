@@ -3,7 +3,7 @@ import { UserSetting, Difficulty } from './../models/user-setting';
 import { RestApiProxyService } from './rest-api-proxy.service';
 
 @Injectable()
-export class UserSettingService {
+export class UserService {
     private _userSetting: UserSetting;
 
     constructor(private api: RestApiProxyService) {

@@ -1,4 +1,4 @@
-import { IGameInfo } from "../mainGame/game-info.interface";
+import { IGameInfo } from "../game-handler/game-info.interface";
 
 export abstract class AbstractGameState {
 

@@ -1,7 +1,7 @@
 import { Vector3 } from "three";
 
-import { AbstractGameState } from "./abstractGameState";
-import { IGameInfo } from "../mainGame/game-info.interface";
+import { AbstractGameState } from "./abstract-game-state";
+import { IGameInfo } from "../game-handler/game-info.interface";
 import { CurrentPlayer } from "../../models/game-status";
 import { Shooting } from "./shooting";
 
