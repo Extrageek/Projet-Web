@@ -1,5 +1,5 @@
 <div id="easelContainer">
-    <ng-container *ngFor="let letter of _letters; let i = index; let j = index;">
+    <ng-container *ngFor="let letter of letters; let i = index; let j = index;">
         <input #easelCell id="easelCell_{{j}}" type="image" src="../../assets/images/{{letter._alphabetLetter}}.jpg" (keydown)="onKeyDownEventHandler($event, easelCell.id, letter)">
     </ng-container>
 </div>

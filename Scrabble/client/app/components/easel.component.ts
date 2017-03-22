@@ -38,7 +38,11 @@ export class EaselComponent implements OnInit, OnDestroy {
     private _exchangeLetterSubcription: Subscription;
     private _initializeEaselSubscription: Subscription;
 
+<<<<<<< HEAD
     public get letters() : Array<IScrabbleLetter> {
+=======
+    public get letters(): Array<IScrabbleLetter> {
+>>>>>>> 55b2afa0bf2b19a0a4cad466cdf4ebfa12231114
         return this._letters;
     }
 

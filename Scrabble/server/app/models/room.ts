@@ -4,7 +4,7 @@ import { Letter } from "./letter";
 import { Board } from "./board/board";
 import { TimerService } from "../services/timer.service";
 import { LetterBankHandler } from "../services/letterbank-handler";
-import { BoardManager } from "../services/board-manager";
+import { BoardManager } from "../services/board/board-manager";
 import { IPlaceWordResponse } from "../services/commons/command/place-word-response.interface";
 
 let uuid = require('node-uuid');
