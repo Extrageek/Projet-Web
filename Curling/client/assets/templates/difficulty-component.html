@@ -3,15 +3,15 @@
         <div> Bonjour {{_username}}, veuillez choisir le niveau de difficulte :</div>
         <div class="radio">
             <label>
-                <input type='radio' value='NORMAL' name='normal' [(ngModel)]='_difficulty'> Normal 
+                <input type='radio' value= "0" name='difficulty' [(ngModel)]='_difficulty'> Facile
             </label>
         </div>
         <div class="radio">
             <label>
-                <input type='radio' value='HARD' name='hard' [(ngModel)]='_difficulty'> Difficile
+                <input type='radio' value= "1" name='difficulty' [(ngModel)]='_difficulty'> Difficile
             </label>
         </div>
-
-        <button type="submit" class="btn btn-secondary btn-lg" (click)='launchGame()'>Commencer la partie !</button>
+         <button type="submit" class="btn btn-primary btn-lg" (click)='launchGame()'>Commencer la partie !</button>
     </div>
 </form>
+
