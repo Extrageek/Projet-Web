@@ -75,14 +75,14 @@ export class RenderService {
         this._currentCamera = this._gameInfo.cameraService.perspectiveCamera;
 
         //Part 2: Scenery
-        this.loadLine();
-        this._lightingService.setUpLighting(this._gameInfo.scene);
         this.generateSkybox();
+        this._lightingService.setUpLighting(this._gameInfo.scene);
 
         //Part 3: Components
         this.loadTextureHandler();
         this.loadRink();
         this.loadArena();
+        this.loadLine();
 
         //Part 4: Service
         this.linkRenderServerToCanvas(container);
@@ -274,15 +274,5 @@ export class RenderService {
 
     public updateText(newText: string) {
         //this._textureHandler.setText(newText, this._scene);
-    }
-
-    public print() {
-        console.log(this);
-    }
-
-    public translateMesh(x: number, y: number) {
-        print();
-        this._mesh.position.x += x;
-        this._mesh.position.y += y;
     }
 }

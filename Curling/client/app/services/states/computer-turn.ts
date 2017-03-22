@@ -9,7 +9,7 @@ export class ComputerTurn extends AbstractGameState {
 
     private static _instance: AbstractGameState = null;
 
-    private _speed = 5;
+    private _speed = 50;
 
     /**
      * Initialize the unique ComputerTurn state.
@@ -35,7 +35,7 @@ export class ComputerTurn extends AbstractGameState {
     }
 
     protected performEnteringState(): void {
-        this._gameInfo.speed = 1;
+        this._gameInfo.speed = this._speed;
         this._gameInfo.direction = new Vector3(0, 0, 1);
         this.leaveState(Shooting.getInstance());
     }
