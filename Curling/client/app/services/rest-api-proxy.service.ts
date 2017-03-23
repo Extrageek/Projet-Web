@@ -3,8 +3,8 @@ import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
+import { GameStatusService } from './game-status.service';
 import { UserSetting } from './../models/user-setting';
-import { GameStatus } from './../models/game-status';
 import { Record } from './../models/record';
 
 
@@ -15,7 +15,7 @@ export class RestApiProxyService {
 
     constructor(private http: Http) { }
 
-    public async createGameRecord(userSetting: UserSetting, gameStatus: GameStatus): Promise<boolean> {
+    public async createGameRecord(userSetting: UserSetting, gameStatus: GameStatusService): Promise<boolean> {
         return await this.http
             .post(this._urlApi + "game-over", JSON.stringify({
                 username: userSetting.name,
@@ -96,9 +96,4 @@ export class RestApiProxyService {
         console.log(records);
         return records;
     }
-
-    // private handleError(error: any): Promise<any> {
-    //     console.error("An error occurred", error); // for demo purposes only
-    //     return Promise.reject(error.message || error);
-    // }
 }

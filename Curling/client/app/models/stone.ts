@@ -1,5 +1,6 @@
 import { ObjectLoader, Group, MeshPhongMaterial, Object3D, Sphere, Vector3 } from "three";
 import { GameComponent } from "./game-component.interface";
+import { Observable } from "rxjs/Observable";
 
 export enum StoneSpin {
     CounterClockwise = 0,
@@ -161,11 +162,29 @@ export class Stone extends Group implements GameComponent {
         this._boundingSphere.set(this.position, Stone.BOUNDING_SPHERE_RADIUS);
     }
 
-    public changeStoneOpacity(): number {
-      for (let i = 0; i < this.children.length; i ++) {
-          (<THREE.Mesh>this.children[i]).material.transparent = true;
-          (<THREE.Mesh>this.children[i]).material.opacity = 0.5 + 0.5 * Math.sin(new Date().getTime() * .0025);
-      }
-        return (<THREE.Mesh>this.children[0]).material.opacity;
+public changeStoneOpacity() {
+    for (let i = 0; i < this.children.length; i ++) {
+        (<THREE.Mesh>this.children[i]).material.transparent = true;
+        (<THREE.Mesh>this.children[i]).material.opacity = 1;
+    }
+
+    let observable = new Observable((observer: any) => {
+        let millisecond = 0;
+        let id = setInterval(() => {
+
+            for (let i = 0; i < this.children.length; i ++) {
+                if((<THREE.Mesh>this.children[i]).material.opacity > 0) {
+                    (<THREE.Mesh>this.children[i]).material.opacity -= 0.01;
+                }
+            }
+            millisecond += 10;
+            if(millisecond == 1000) {
+                observer.next();
+                clearTimeout(id);
+            }
+        }, 10);
+    });
+
+    return observable;
     }
 }

@@ -1,8 +1,9 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { UserSettingService } from './../services/user-setting.service';
+import { UserService } from './../services/user.service';
 import { RestApiProxyService } from './../services/rest-api-proxy.service';
+import { Difficulty } from '../models/user-setting';
 
 @Component({
     moduleId: module.id,
@@ -15,7 +16,7 @@ export class DifficultyComponent implements OnInit {
     _difficulty: string;
 
     constructor(private router: Router,
-        private userSettingService: UserSettingService,
+        private userSettingService: UserService,
         private api: RestApiProxyService) { }
 
     ngOnInit() {
@@ -33,7 +34,11 @@ export class DifficultyComponent implements OnInit {
 
     public launchGame() {
         let RADIX = 10;
-        this.userSettingService.userSetting.difficulty = parseInt(this._difficulty, RADIX);
+        if(parseInt(this._difficulty, RADIX) == 0) {
+            this.userSettingService.userSetting.difficulty = Difficulty.NORMAL;
+        } else {
+            this.userSettingService.userSetting.difficulty = Difficulty.HARD;
+        }
         this.router.navigate(['/game']);
     }
 }

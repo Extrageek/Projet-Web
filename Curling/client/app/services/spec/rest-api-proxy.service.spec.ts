@@ -15,19 +15,19 @@ import { MockBackend, MockConnection } from '@angular/http/testing';
 import { expect } from 'chai';
 
 import { UserSetting } from './../../models/user-setting';
-import { GameStatus } from './../../models/game-status';
 import { Record } from './../../models/record';
 import { RestApiProxyService } from './../rest-api-proxy.service';
+import { GameStatusService } from "./../game-status.service";
 
 
 let userSetting: UserSetting;
-let gameStatus: GameStatus;
+let gameStatus: GameStatusService;
 
 describe('RestApiProxyService - createGameRecord', () => {
 
     beforeEach(async () => {
         userSetting = new UserSetting();
-        gameStatus = new GameStatus();
+        gameStatus = new GameStatusService();
         TestBed.configureTestingModule({
             providers: [
                 {   // Import the necessary providers
@@ -134,7 +134,7 @@ describe('RestApiProxyService - verifyUsername', () => {
 
     beforeEach(async () => {
         userSetting = new UserSetting();
-        gameStatus = new GameStatus();
+        gameStatus = new GameStatusService();
         TestBed.configureTestingModule({
             providers: [
                 {   // Import the necessary providers

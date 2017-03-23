@@ -7,8 +7,12 @@ import { RoomHandler } from "../room-handler";
 import { SocketEventType } from "../commons/socket-eventType";
 import { CommandType } from "../commons/command/command-type";
 import { CommandStatus } from "../commons/command/command-status";
+import { IPlaceWordResponse } from "../commons/command/place-word-response.interface";
+import { ICommandRequest } from "../commons/command/command-request";
 import { IRoomMessage } from "../commons/message/room-message.interface";
 import { ICommandMessage } from "../commons/message/command-message.interface";
+
+import { SquarePosition } from "../../models/square/square-position";
 
 const fakePortNumber = 8080;
 const fakeServerUrl = "http://127.0.0.1:" + `${fakePortNumber}`;
@@ -27,7 +31,6 @@ let options = {
     transports: ['websocket'],
     forceNew: true
 };
-
 
 let userCounter = 0;
 const playerName1 = "Marie";
@@ -221,11 +224,20 @@ describe("SocketConnectionHandler, should create a socket connection handler", (
                 expect(response).to.not.be.null;
             });
 
+            let squarePosition = new SquarePosition('h', 8);
             let letterToPlace = ['A', 'B', 'C'];
-            let request = {
-                commandType: CommandType.PlaceCmd,
-                commandStatus: CommandStatus.Ok,
-                data: letterToPlace
+
+            // place a letter in the center of the board
+            let response: IPlaceWordResponse = {
+                _letters: letterToPlace,
+                _squarePosition: { _row: squarePosition.row, _column: squarePosition.column },
+                _wordOrientation: 'v'
+            };
+
+            let request: ICommandRequest<IPlaceWordResponse> = {
+                _commandStatus: CommandStatus.Ok,
+                _commandType: CommandType.PlaceCmd,
+                _response: response
             };
 
             client2.emit(SocketEventType.newGameRequest, { username: "234csaa", gameType: 2 });

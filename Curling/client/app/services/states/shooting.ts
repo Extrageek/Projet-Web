@@ -1,7 +1,7 @@
-import { AbstractGameState } from "./abstractGameState";
-import { IGameInfo } from "../mainGame/game-info.interface";
-import { LoadingStone } from "./loadingStone";
-import { EndSet } from "./endSet";
+import { AbstractGameState } from "./abstract-game-state";
+import { IGameInfo } from "../game-handler/game-info.interface";
+import { LoadingStone } from "./loading-stone";
+import { EndSet } from "./end-set";
 
 export class Shooting extends AbstractGameState {
 

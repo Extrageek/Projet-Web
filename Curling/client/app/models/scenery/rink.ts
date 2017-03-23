@@ -4,7 +4,7 @@ import { RinkInfo } from "./rink-info.interface";
 export class Rink extends Group implements RinkInfo {
     public static readonly TARGET_CENTER = new Vector3(/*TODO:Find the center*/);
     public static readonly TARGET_RADIUS = 1/*TODO:Find the radius*/;
-    public static readonly INITIAL_STONE_POSITION = new Vector3(0, 0, -20);
+    public static readonly INITIAL_STONE_POSITION = new Vector3(0, 0, -11.4);
 
     private static readonly MODEL_PATH = "/assets/models/json/curling-rink.json";
     private static readonly POSITION = {x: 0, y: 0, z: 0};

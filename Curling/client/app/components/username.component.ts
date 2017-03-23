@@ -2,7 +2,7 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { RestApiProxyService } from './../services/rest-api-proxy.service';
-import { UserSettingService } from './../services/user-setting.service';
+import { UserService } from './../services/user.service';
 
 @Component({
     moduleId: module.id,
@@ -20,7 +20,7 @@ export class UsernameComponent {
     constructor(
         private router: Router,
         private restApiProxyService: RestApiProxyService,
-        private userSettingService: UserSettingService) {
+        private userSettingService: UserService) {
     }
 
     public async verifyUsername(username: string) {
