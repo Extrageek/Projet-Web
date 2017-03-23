@@ -43,7 +43,8 @@ export class DisplayComponent implements OnInit {
         this.getComputerName();
     }
 
-    public toggleOverlay() {
+    public toggleOverlay(event: MouseEvent) {
+        event.stopImmediatePropagation();
         this.hamburger.nativeElement.classList.toggle("is-active");
         this.overlay.nativeElement.classList.toggle("is-open-menu");
     }
