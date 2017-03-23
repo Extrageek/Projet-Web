@@ -2,7 +2,7 @@ import { ObjectLoader, Group, MeshPhongMaterial, Object3D, BoxGeometry, Vector3 
 
 export class Broom extends Group {
 
-    private static readonly BROOM_PATH = ["/assets/models/json/broom-red.json"];
+    private static readonly BROOM_PATH = ["/assets/models/json/broom.json"];
     private static readonly SCALE = { x: 0.4, y: 0.4, z: 0.4};
     private static readonly MATERIAL_PROPERTIES = { wireframe: false, shininess: 0.7 };
 
