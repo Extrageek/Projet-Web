@@ -24,7 +24,7 @@ export class Stone extends Group implements GameComponent {
     public static readonly SPEED_DIMINUTION_NUMBER_WITH_SWEEP = 0.09;
     private static readonly MINIMUM_SPEED = 0.001;
 
-    private static readonly THETA = Math.PI * 1 / 128;
+    private static readonly THETA = Math.PI / 128;
 
     public _material: MeshPhongMaterial;
     private _stoneColor: StoneColor;
@@ -93,10 +93,6 @@ export class Stone extends Group implements GameComponent {
         this._sweeping = sweep;
     }
 
-    public set position(position: Vector3) {
-        this.position = position;
-    }
-
     public get speed(): number {
         return this._speed;
     }
@@ -144,10 +140,7 @@ export class Stone extends Group implements GameComponent {
                 this._speed * timePerFrame - Stone.SPEED_DIMINUTION_NUMBER * Math.pow(timePerFrame, 2) / 2)
                 .applyMatrix3(this._curlMatrix)
             );
-            console.log("next");
-            console.log(this.position.x);
-            console.log(this.position.y);
-            console.log(this.position.z);
+            this.position.y = 0;
             this.decrementSpeed(timePerFrame);
             this.calculateNewBoundingSphere();
         }
@@ -175,20 +168,20 @@ export class Stone extends Group implements GameComponent {
     }
 
     public changeStoneOpacity() {
-        for (let i = 0; i < this.children.length; i++) {
-            (<THREE.Mesh>this.children[i]).material.transparent = true;
-            (<THREE.Mesh>this.children[i]).material.opacity = 1;
-        }
+        this.traverse((child) => {
+            (<THREE.Mesh>child).material.transparent = true;
+            (<THREE.Mesh>child).material.opacity = 1;
+        });
 
         let observable = new Observable((observer: any) => {
             let millisecond = 0;
             let id = setInterval(() => {
 
-                for (let i = 0; i < this.children.length; i++) {
-                    if ((<THREE.Mesh>this.children[i]).material.opacity > 0) {
-                        (<THREE.Mesh>this.children[i]).material.opacity -= 0.01;
+                this.traverse((child) => {
+                    if ((<THREE.Mesh>child).material.opacity > 0) {
+                        (<THREE.Mesh>child).material.opacity -= 0.01;
                     }
-                }
+                });
                 millisecond += 10;
                 if (millisecond === 1000) {
                     observer.next();
