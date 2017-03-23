@@ -367,4 +367,83 @@ describe('RestApiProxyService - getAllRecords', () => {
     );
 });
 
+describe('RestApiProxyService - removeUsername ', () => {
 
+    beforeEach(async () => {
+        gameStatus = new GameStatusService();
+        TestBed.configureTestingModule({
+            providers: [
+                {   // Import the necessary providers
+                    provide: Http,
+
+                    // Add a factory for the backend
+                    useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
+                        return new Http(backend, defaultOptions);
+                    },
+                    deps: [MockBackend, BaseRequestOptions]
+                },
+                RestApiProxyService,
+                MockBackend,
+                BaseRequestOptions
+            ]
+        });
+    });
+
+    it("Should return true since the request has been completed successfully.",
+        inject([RestApiProxyService, MockBackend],
+            fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
+
+                mockBackend.connections.subscribe((connection: MockConnection) => {
+
+                    //Check the expected Url to the server
+                    expect(connection.request.url).to.deep.equal('http://localhost:3003/api/logout');
+
+                    // Send the fake data to the caller
+                    connection.mockRespond(new Response(new ResponseOptions({
+                        body: {},
+                        status: 200
+                    })));
+                });
+
+                let response: boolean;
+                // Make the fake call to the server
+                restApiProxyService.removeUsername(username)
+                    .then(data => {
+                        response = data;
+                    })
+                    .catch(error => {
+                        response = false;
+                    });
+
+                tick();
+
+                // Check for the expected response.
+                expect(response).to.be.equal(true);
+            }))
+    );
+    it("Should return false because of an internal error",
+        inject([RestApiProxyService, MockBackend],
+            fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
+                mockBackend.connections.subscribe((connection: MockConnection) => {
+                    //Check the expected Url to the server
+                    expect(connection.request.url).to.deep.equal('http://localhost:3003/api/logout');
+                    connection.mockError();
+                });
+
+                let response: boolean;
+                // Make the fake call to the server
+                restApiProxyService.removeUsername(username)
+                    .then(data => {
+                        response = data;
+                    })
+                    .catch(error => {
+                        response = false;
+                    });
+
+                tick();
+
+                // Check for the expected response.
+                expect(response).to.be.equal(false);
+            }))
+    );
+});

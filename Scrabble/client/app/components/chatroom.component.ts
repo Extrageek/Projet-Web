@@ -32,10 +32,13 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
     private _onInvalidCommandSubscription: Subscription;
     private _onNotAllowedCommandSubscription: Subscription;
 
+    private _hasNewMessages: boolean;
+
     @ViewChild("scroll") private myScrollContainer: ElementRef;
 
     constructor(private route: ActivatedRoute, private socketService: SocketService) {
         this._messageArray = new Array<IRoomMessage>();
+        this._hasNewMessages = false;
     }
 
     ngOnInit(): void {
@@ -60,6 +63,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
             .subscribe((response: ICommandMessage<any>) => {
                 if (response !== undefined && response._message !== null) {
                     this._messageArray.push(response);
+                    this._hasNewMessages = true;
                     console.log("CommandRequest Chatroom", response);
                 }
             });
@@ -71,6 +75,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
             .subscribe((response: IRoomMessage) => {
                 if (response !== undefined && response._message !== null) {
                     this._messageArray.push(response);
+                    this._hasNewMessages = true;
                     console.log("Chat room:Joined ", response._message);
                 }
             });
@@ -82,6 +87,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
             .subscribe((response: IRoomMessage) => {
                 if (response !== undefined && response._message !== null) {
                     this._messageArray.push(response);
+                    this._hasNewMessages = true;
                     console.log("Chat room: Leave ", response._message);
                 }
             });
@@ -93,6 +99,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
             .subscribe((response: any) => {
                 if (response !== undefined && response._message !== null) {
                     this._messageArray.push(response as IRoomMessage);
+                    this._hasNewMessages = true;
                     console.log("Chat room: ", response.message, response.date);
                 }
             });
@@ -110,6 +117,14 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
         this.socketService.emitMessage(SocketEventType.MESSAGE, request);
     }
 
+    public print(message: IGameMessage) {
+        if (message._commandType === CommandType.GuideCmd) {
+            this._messageArray.push(message);
+            this._hasNewMessages = true;
+            console.log("sasa");
+        }
+    }
+
     // Use to add a scroller to the chatroom
     private scrollToBottom() {
         try {
@@ -121,6 +136,9 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
 
     // Use to help the user when scrolling
     ngAfterViewChecked() {
-        this.scrollToBottom();
+        if (this._hasNewMessages) {
+            this.scrollToBottom();
+            this._hasNewMessages = false;
+        }
     }
 }
