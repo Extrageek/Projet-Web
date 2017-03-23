@@ -54,6 +54,7 @@ export class StoneHandler implements GameComponent {
     }
 
     public removeOutOfBoundsStones(scene: Scene) {
+        console.log(this._stonesToBeRemoved.length);
         for (let stone of this._stonesToBeRemoved) {
             scene.remove(stone);
         }
@@ -76,7 +77,6 @@ export class StoneHandler implements GameComponent {
 
     public generateNewStone(): Promise<Stone> {
         this._currentPlayer = (this._currentPlayer + 1) % StoneColor.NumberOfColors;
-        console.log("generating" + this._currentPlayer);
         return Stone.createStone(this._objectLoader, this._currentPlayer, this._rinkInfo.initialStonePosition)
             .then((stone: Stone) => {
                 this._stoneOnTheGame.push(stone);

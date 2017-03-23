@@ -114,7 +114,6 @@ export class PlayerTurn extends AbstractGameState implements GameComponent {
             this._powerTimer.stop();
 
             let timeDelta = (this._powerTimer.oldTime - this._powerTimer.startTime) / 1000;
-            console.log(timeDelta);
             if (timeDelta > PlayerTurn.SHOT_POWER_MINIMUM) {
                 this._gameInfo.speed = PlayerTurn.SHOT_POWER_OFFSET;
                 this._gameInfo.speed += (timeDelta > PlayerTurn.SHOT_POWER_MAXIMUM) ?
@@ -129,7 +128,6 @@ export class PlayerTurn extends AbstractGameState implements GameComponent {
     public update(timePerFrame: number) {
         if (this._mouseIsPressed) {
             this._powerTimer.getDelta();
-            console.log(this._powerTimer.oldTime - this._powerTimer.startTime);
             this._gameInfo.power = Math.min((this._powerTimer.oldTime - this._powerTimer.startTime) / 1000 /
                 PlayerTurn.SHOT_POWER_MAXIMUM * PlayerTurn.MAX_PROGRESS_BAR_PERCENT,
                 PlayerTurn.MAX_PROGRESS_BAR_PERCENT

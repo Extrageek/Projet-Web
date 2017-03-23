@@ -144,10 +144,12 @@ export class Stone extends Group implements GameComponent {
                 this._speed * timePerFrame - Stone.SPEED_DIMINUTION_NUMBER * Math.pow(timePerFrame, 2) / 2)
                 .applyMatrix3(this._curlMatrix)
             );
+            /*
             console.log("next");
             console.log(this.position.x);
             console.log(this.position.y);
             console.log(this.position.z);
+            */
             this.decrementSpeed(timePerFrame);
             this.calculateNewBoundingSphere();
         }
@@ -170,7 +172,11 @@ export class Stone extends Group implements GameComponent {
         }
     }
 
-    private calculateNewBoundingSphere() {
+    /**
+     * Calculate the bounding sphere for collision and out of bounds detection.
+     * Only call this function if the position is manually changed.
+     */
+    public calculateNewBoundingSphere() {
         this._boundingSphere.set(this.position, Stone.BOUNDING_SPHERE_RADIUS);
     }
 
