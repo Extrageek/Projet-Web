@@ -5,27 +5,28 @@ import { CameraType } from "./../../services/game-physics/camera-type";
 import { EndSet } from "./end-set";
 import { GameComponent } from "../../models/game-component.interface";
 
-export class Shooting extends AbstractGameState implements GameComponent {
+export class PlayerShooting extends AbstractGameState implements GameComponent {
 
     private static _instance: AbstractGameState = null;
-    private static readonly UPDATE_NAME = "Shooting";
+    private static readonly UPDATE_NAME = "PlayerShooting";
+    private isHoldingMouseButton = false;
     /**
-     * Initialize the unique Shooting state.
+     * Initialize the unique PlayerShooting state.
      * @param gameInfo The informations to use by the state.
      * @param doInitialization Set to true only if the game is entering immediatly in this state.
      *  Only one game state could be constructed with this value at true, because only one game state
      *  must be active at a time.
      */
     public static createInstance(gameInfo: IGameInfo, doInitialization = false): void {
-        Shooting._instance = new Shooting(gameInfo, doInitialization);
+        PlayerShooting._instance = new PlayerShooting(gameInfo, doInitialization);
     }
 
     /**
-     * Get the instance of the state Shooting. This state is used while the stones are moving.
-     * @returns The Shooting state of null if the createInstance method has not been called.
+     * Get the instance of the state PlayerShooting. This state is used while the stones are moving.
+     * @returns The PlayerShooting state of null if the createInstance method has not been called.
      */
     public static getInstance(): AbstractGameState {
-        return Shooting._instance;
+        return PlayerShooting._instance;
     }
 
     private constructor(gameInfo: IGameInfo, doInitialization = false) {
@@ -33,8 +34,10 @@ export class Shooting extends AbstractGameState implements GameComponent {
     }
 
     protected performEnteringState(): void {
-
-        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, Shooting.UPDATE_NAME, {value: this});
+        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, PlayerShooting.UPDATE_NAME, {value: this});
+        this._gameInfo.scene.add(this._gameInfo.broom);
+        //TODO : CHANGE GREEN ONCE YOU PASS THE FIRST LINE
+        this._gameInfo.broom.changeToGreen();
         this._gameInfo.stoneHandler.performShot(
             this._gameInfo.direction,
             this._gameInfo.speed,
@@ -53,9 +56,8 @@ export class Shooting extends AbstractGameState implements GameComponent {
     }
 
     protected performLeavingState() {
-
-        this._gameInfo.broom.opacityOn();
-        this._gameInfo.broom.changeToRed();
+        delete this._gameInfo.gameComponentsToUpdate[PlayerShooting.UPDATE_NAME];
+        this._gameInfo.scene.remove(this._gameInfo.broom);
         this._gameInfo.stoneHandler.removeOutOfBoundsStones(this._gameInfo.scene);
         this._gameInfo.gameStatus.nextPlayer();
         this._gameInfo.cameraService.replacePCameraToInitialPosition();
@@ -70,15 +72,16 @@ export class Shooting extends AbstractGameState implements GameComponent {
         else if (this._gameInfo.currentCamera === CameraType.ORTHOGRAPHIC_CAM) {
             currentCamera = this._gameInfo.cameraService.topViewCamera;
         }
-        let x = (event.clientX / window.innerWidth) * 2 - 1;
-        let y = - (event.clientY / window.innerHeight) * 2 + 1;
 
-        let mouseVector = new THREE.Vector3(x, y, 0.5);
+        this._gameInfo.mousePositionPlaneXZ.x = (event.clientX / window.innerWidth) * 2 - 1;
+        this._gameInfo.mousePositionPlaneXZ.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+        let mouseVector = new THREE.Vector3(this._gameInfo.mousePositionPlaneXZ.x,
+            this._gameInfo.mousePositionPlaneXZ.y, 0.5);
         mouseVector.unproject(currentCamera);
-        let direction = mouseVector.sub(currentCamera.position ).normalize();
+        let direction = mouseVector.sub(currentCamera.position).normalize();
         let distance = - currentCamera.position.z / direction.z;
         let position = currentCamera.position.clone().add( direction.multiplyScalar(distance));
-
         this._gameInfo.broom.position.set(position.x, 0 , position.y + 8.5);
         return null;
     }
@@ -89,6 +92,10 @@ export class Shooting extends AbstractGameState implements GameComponent {
             // TODO : A VOIR COMMENT ENLEVER GET ELEM
             let sound = document.getElementById("broomIn");
             (<HTMLAudioElement>sound).play();
+            if(!this.isHoldingMouseButton) {
+                this.isHoldingMouseButton = true;
+                this._gameInfo.broom.verifyBroomCollision(this._gameInfo.stoneHandler.stoneOnTheGame);
+            }
         }
         return null;
     }
@@ -97,6 +104,7 @@ export class Shooting extends AbstractGameState implements GameComponent {
         if (!this._gameInfo.broom.isRed()) {
             this._gameInfo.broom.translateZ(0.3);
             console.log("in out");
+            this.isHoldingMouseButton = false;
             // TODO : A VOIR COMMENT ENLEVER GET ELEM
             let sound = document.getElementById("broomOut");
             (<HTMLAudioElement>sound).play();
@@ -105,9 +113,8 @@ export class Shooting extends AbstractGameState implements GameComponent {
     }
 
     public update(timePerFrame: number) {
-        if (this._gameInfo.stoneHandler.checkPassHogLine()) {
-            this._gameInfo.broom.changeToRed();
+         if (this._gameInfo.stoneHandler.checkPassHogLine()) {
+             this._gameInfo.broom.changeToRed();
         }
     }
-
 }

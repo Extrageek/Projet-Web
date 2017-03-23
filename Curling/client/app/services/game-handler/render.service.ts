@@ -1,7 +1,9 @@
 import { Injectable } from "@angular/core";
-import { Scene, PerspectiveCamera, WebGLRenderer, Renderer,
+import {
+    Scene, PerspectiveCamera, WebGLRenderer, Renderer,
     ObjectLoader, Geometry, CubeGeometry, MeshBasicMaterial, MeshFaceMaterial, Mesh, Line,
-    LineDashedMaterial, ImageUtils, BackSide, Vector3, Clock } from "three";
+    LineDashedMaterial, ImageUtils, BackSide, Vector3, Clock
+} from "three";
 import { GameStatusService } from './../game-status.service';
 import { CameraService } from './../views/cameras.service';
 import { Arena } from './../../models/scenery/arena';
@@ -19,27 +21,30 @@ import { IGameInfo } from "./game-info.interface";
 import { LoadingStone } from "./../../models/states/loading-stone";
 import { PlayerTurn } from "./../../models/states/player-turn";
 import { ComputerTurn } from "./../../models/states/computer-turn";
-import { Shooting } from "./../../models/states/shooting";
+import { PlayerShooting } from "./../../models/states/player-shooting";
+import { ComputerShooting } from "./../../models/states/computer-shooting";
 import { EndSet } from "./../../models/states/end-set";
 import { EndGame } from "./../../models/states/end-game";
 
 @Injectable()
 export class RenderService {
 
-    private static readonly NUMBER_OF_MODELS_TO_LOAD = 3;
+    private static readonly NUMBER_OF_MODELS_TO_LOAD = 4;
 
     private _numberOfModelsLoaded: number;
     private _currentCamera: PerspectiveCamera;
     private _lightingService: LightingService;
     private _objectLoader: ObjectLoader;
-    private _mesh: Mesh;
+    private _mesh : Mesh;
     private _clock: Clock;
     private _renderer: Renderer;
     private _animationStarted: boolean;
 
     _gameInfo: IGameInfo;
 
-    constructor(gameStatusService: GameStatusService, cameraService: CameraService, lightingService: LightingService) {
+    constructor(gameStatusService: GameStatusService,
+        cameraService: CameraService,
+        lightingService: LightingService) {
         console.log("here!");
         this._gameInfo = {
             gameStatus: gameStatusService,
@@ -49,7 +54,7 @@ export class RenderService {
             currentCamera: CameraType.PERSPECTIVE_CAM,
             gameComponentsToUpdate: new Object(),
             isSelectingPower: false,
-            line: {lineGeometry: null, lineDashedMaterial: null, lineMesh: null, lineAnimationSlower: null},
+            line: { lineGeometry: null, lineDashedMaterial: null, lineMesh: null, lineAnimationSlower: null },
             mousePositionPlaneXZ: new Vector3(0, 0, 0),
             power: 0,
             gameState: null,
@@ -59,7 +64,7 @@ export class RenderService {
             textureHandler: null
         };
         this._lightingService = lightingService;
-        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "cameraService", {value: cameraService});
+        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "cameraService", { value: cameraService });
         this._gameInfo.gameStatus.randomFirstPlayer();
         this._animationStarted = false;
         this._numberOfModelsLoaded = 0;
@@ -67,11 +72,10 @@ export class RenderService {
     }
 
     public init(container: HTMLElement) {
-        console.log("init!");
         //Clock for the time per frame.
         this._clock = new Clock(false);
 
-        this._renderer = new WebGLRenderer({antialias: true, devicePixelRatio: window.devicePixelRatio});
+        this._renderer = new WebGLRenderer({ antialias: true, devicePixelRatio: window.devicePixelRatio });
         this._renderer.setSize(window.innerWidth, window.innerHeight, true);
 
         this._currentCamera = this._gameInfo.cameraService.perspectiveCamera;
@@ -96,7 +100,7 @@ export class RenderService {
 
     public loadLine() {
         let geometry = new Geometry();
-        geometry.vertices.push(new Vector3(0, 0.1, -11.1)); // First HogLine
+        geometry.vertices.push(new Vector3(0, 0.1, -18)); // First HogLine
         geometry.vertices.push(new Vector3(0, 0.1, 22.4)); // EndPoint
         geometry.computeLineDistances();
 
@@ -127,14 +131,14 @@ export class RenderService {
     /**
      * See : http://danni-three.blogspot.ca/2013/09/threejs-skybox.html
      */
-    private generateSkybox() {
+    public generateSkybox() {
         let imagePrefix = "../../assets/images/scenery_";
         let directions = ["right", "left", "up", "down", "front", "back"];
         let imageSuffix = ".jpg";
         let materialArray = Array<MeshBasicMaterial>();
         for (let i = 0; i < 6; i++) {
-            materialArray.push( new MeshBasicMaterial({
-                map: ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
+            materialArray.push(new MeshBasicMaterial({
+                map: ImageUtils.loadTexture(imagePrefix + directions[i] + imageSuffix),
                 side: BackSide
             }));
         }
@@ -143,7 +147,6 @@ export class RenderService {
         this._mesh = new Mesh(geometry, material);
         this._gameInfo.scene.add(this._mesh);
     }
-
 
     private loadTextureHandler() {
         TextureHandler.createTextureHandler(this._gameInfo.scene)
@@ -158,11 +161,9 @@ export class RenderService {
     }
     public loadBroom() {
         Broom.createBroom(this._objectLoader, new Vector3(0, 0, -11.4))
-            .then((broom : Broom) => {
-                console.log("createBroom");
-                broom.opacityOn();
-                this._gameInfo.scene.add(broom);
+            .then((broom: Broom) => {
                 this._gameInfo.broom = broom;
+                this.onFinishedLoadingModel();
             });
     }
 
@@ -175,18 +176,19 @@ export class RenderService {
 
     private loadArena() {
         Arena.createArena(this._objectLoader).then((arena: Arena) => {
+            //this._sceneryService.mesh.add(arena);
             this._mesh.add(arena);
             this.onFinishedLoadingModel();
         });
     }
 
     //Must be called after the rinkinfo is initialised.
-    public loadStoneHandler(rinkInfo: RinkInfo) {
+    private loadStoneHandler(rinkInfo: RinkInfo) {
         let stoneColor: StoneColor;
         stoneColor = this._gameInfo.gameStatus.currentPlayer === 0 ? StoneColor.Blue : StoneColor.Red;
         this._gameInfo.stoneHandler = new StoneHandler(this._objectLoader, rinkInfo, stoneColor);
         Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "stoneHandler",
-            {value: this._gameInfo.stoneHandler});
+            { value: this._gameInfo.stoneHandler });
         this.initializeAllStates(stoneColor);
         this._gameInfo.gameState = LoadingStone.getInstance();
         this.onFinishedLoadingModel();
@@ -196,7 +198,8 @@ export class RenderService {
         LoadingStone.createInstance(this._gameInfo, true);
         PlayerTurn.createInstance(this._gameInfo);
         ComputerTurn.createInstance(this._gameInfo);
-        Shooting.createInstance(this._gameInfo);
+        PlayerShooting.createInstance(this._gameInfo);
+        ComputerShooting.createInstance(this._gameInfo);
         EndSet.createInstance(this._gameInfo);
         EndGame.createInstance(this._gameInfo);
     }

@@ -134,6 +134,7 @@ export class StoneHandler implements GameComponent {
             this._stoneOnTheGame.splice(index, 1);
         }
     }
+
     private verifyOutOfBounds() {
         this._stoneOnTheGame.map((stone: Stone) => {
             if (!(this._boundingRink.intersectsSphere(stone.boundingSphere))) {

@@ -3,7 +3,7 @@ import { AbstractGameState } from "./abstract-game-state";
 import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { CameraType } from "./../../services/game-physics/camera-type";
 import { GameComponent } from "../../models/game-component.interface";
-import { Shooting } from "./shooting";
+import { PlayerShooting } from "./player-shooting";
 import { CurrentPlayer } from "../../models/current-player";
 import { calculateMousePosition } from "./../../services/game-physics/mouse-position-calculate";
 
@@ -108,12 +108,9 @@ export class PlayerTurn extends AbstractGameState implements GameComponent {
                 this._gameInfo.speed += (timeDelta > PlayerTurn.SHOT_POWER_MAXIMUM) ?
                     PlayerTurn.SHOT_POWER_MAXIMUM : timeDelta;
                 this._gameInfo.direction = this._gameInfo.line.lineGeometry.vertices[1].clone().normalize();
-                newState = Shooting.getInstance();
+                newState = PlayerShooting.getInstance();
             }
         }
-        this._gameInfo.broom.opacityOff();
-        //TODO : CHANGE GREEN ONCE YOU PASS THE FIRST LINE
-        this._gameInfo.broom.changeToGreen();
         return newState;
     }
 

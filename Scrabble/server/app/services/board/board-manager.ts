@@ -97,9 +97,10 @@ export class BoardManager {
             if (!currentSquare.isBusy) {
                 this._board.squares[firstRowIndex][nextColumnIndex].squareValue =
                     letters[index].alphabetLetter;
+                this._board.squares[firstRowIndex][nextColumnIndex].letter = letters[index];
                 this._board.squares[firstRowIndex][nextColumnIndex].isBusy = true;
                 this._player.easel.removeLetter(letters[index].alphabetLetter);
-                this._board.addLastLetterAdded(firstRowIndex, columnIndex);
+                this._board.addLastLetterAdded(firstRowIndex, nextColumnIndex);
             }
         }
 
@@ -130,9 +131,10 @@ export class BoardManager {
             if (!nextSquare.isBusy) {
                 this._board.squares[nextRowIndex][columnIndex].squareValue =
                     letters[index].alphabetLetter;
+                this._board.squares[nextRowIndex][columnIndex].letter = letters[index];
                 this._board.squares[nextRowIndex][columnIndex].isBusy = true;
                 this._player.easel.removeLetter(letters[index].alphabetLetter);
-                this._board.addLastLetterAdded(firstRowIndex, columnIndex);
+                this._board.addLastLetterAdded(nextRowIndex, columnIndex);
             }
         }
         return true;
