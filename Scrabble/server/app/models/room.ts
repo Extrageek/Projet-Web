@@ -137,6 +137,15 @@ export class Room {
         return hasChanged;
     }
 
+    public refillPlayerEasel(socketId: String) {
+        this.players.forEach((player: Player) => {
+            if (player.socketId === socketId) {
+                let newLetters = this._letterBankHandler.refillEasel(7 - player.easel.letters.length);
+                player.easel.addLetters(newLetters);
+            }
+        });
+    }
+
     public getAndUpdatePlayersQueue(): Array<string> {
         let newPlayerOrder = new Array<string>();
         let players = this._playersQueue.updateAndGetQueuePriorities();

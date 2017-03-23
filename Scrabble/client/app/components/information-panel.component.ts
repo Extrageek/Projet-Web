@@ -36,8 +36,8 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.onUpdatePlayersQueueEvent();
         this.onUpdateScore();
-        this.onUpdateEasel();
-        this.initializeEaselOnConnection();
+        this.onUpdateLetterInBank();
+        this.onUpdateLetterInEasel();
     }
 
     ngAfterViewInit() {
@@ -54,17 +54,17 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
             });
     }
 
-    private initializeEaselOnConnection(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.INITIALIZE_EASEL)
-            .subscribe((response: Array<string>) => {
-                this._lettersOnEasel = response.length;
+    private onUpdateLetterInEasel(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.UPDATE_LETTER_IN_EASEL)
+            .subscribe((response: number) => {
+                this._lettersOnEasel = response;
             });
     }
 
-    private onUpdateEasel(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.UPDATE_EASEL)
-            .subscribe((response: Array<string>) => {
-                this._lettersOnEasel = response.length;
+    private onUpdateLetterInBank(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.UPDATE_LETTER_IN_BANK)
+            .subscribe((response: number) => {
+                this._lettersInBank = response;
             });
     }
 

@@ -112,7 +112,6 @@ export class LetterBankHandler {
     }
 
     public getNumberOfLettersInBank(): number {
-        let numberOfLetters = this.bank.numberOfLettersInBank;
         return this.bank.numberOfLettersInBank;
     }
 }

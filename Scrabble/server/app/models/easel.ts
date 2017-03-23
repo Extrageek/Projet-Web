@@ -28,7 +28,17 @@ export class Easel {
         });
     }
 
-    public removeLetter(letterChar: string){
+    public addLetters(newLetters: Array<Letter>) {
+        newLetters.forEach((letter: Letter) => {
+            this._letters.push(letter);
+        });
+    }
+
+    public addLetter(newLetter: Letter) {
+        this._letters.push(newLetter);
+    }
+
+    public removeLetter(letterChar: string) {
         let index = this._letters.findIndex((letter: Letter) => {
             return letter.alphabetLetter === letterChar;
         });
