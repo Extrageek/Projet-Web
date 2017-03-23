@@ -1,7 +1,8 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { UserService, Difficulty } from './../services/user.service';
+import { UserService } from './../services/user.service';
+import { Difficulty } from './../models/difficulty';
 import { RestApiProxyService } from './../services/rest-api-proxy.service';
 
 @Component({

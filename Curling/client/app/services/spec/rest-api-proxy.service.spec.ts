@@ -14,8 +14,8 @@ import {
 import { MockBackend, MockConnection } from '@angular/http/testing';
 import { expect } from 'chai';
 
-import { Difficulty } from './../user.service';
 import { Record } from './../../models/record';
+import { Difficulty } from './../../models/difficulty';
 import { RestApiProxyService } from './../rest-api-proxy.service';
 import { GameStatusService } from "./../game-status.service";
 

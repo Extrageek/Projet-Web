@@ -6,7 +6,7 @@ import { CameraService } from "../views/cameras.service";
 import { CameraType } from "../game-physics/camera-type";
 import { GameComponent } from "../../models/game-component.interface";
 import { GameStatusService } from "./../game-status.service";
-import { AbstractGameState } from "../states/abstract-game-state";
+import { AbstractGameState } from "./../../models/states/abstract-game-state";
 import { Broom } from "../../models/broom";
 
 export interface IGameInfo {

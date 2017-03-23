@@ -1,4 +1,5 @@
-import { UserService, Difficulty } from './../user.service';
+import { UserService } from './../user.service';
+import { Difficulty } from './../../models/difficulty';
 import { RestApiProxyService } from './../rest-api-proxy.service';
 import {
     Http, ResponseOptions,

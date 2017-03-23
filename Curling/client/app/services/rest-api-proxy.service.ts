@@ -4,7 +4,7 @@ import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { GameStatusService } from './game-status.service';
-import { Difficulty } from './user.service';
+import { Difficulty } from './../models/difficulty';
 import { Record } from './../models/record';
 
 

@@ -16,12 +16,12 @@ import { Broom } from './../../models/broom';
 import { LightingService } from './../views/ligthing.service';
 import { TextureHandler } from '../views/texture-handler';
 import { IGameInfo } from "./game-info.interface";
-import { LoadingStone } from "../states/loading-stone";
-import { PlayerTurn } from "../states/player-turn";
-import { ComputerTurn } from "../states/computer-turn";
-import { Shooting } from "../states/shooting";
-import { EndSet } from "../states/end-set";
-import { EndGame } from "../states/end-game";
+import { LoadingStone } from "./../../models/states/loading-stone";
+import { PlayerTurn } from "./../../models/states/player-turn";
+import { ComputerTurn } from "./../../models/states/computer-turn";
+import { Shooting } from "./../../models/states/shooting";
+import { EndSet } from "./../../models/states/end-set";
+import { EndGame } from "./../../models/states/end-game";
 
 @Injectable()
 export class RenderService {

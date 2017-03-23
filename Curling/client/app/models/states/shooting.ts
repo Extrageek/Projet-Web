@@ -1,7 +1,7 @@
 import { AbstractGameState } from "./abstract-game-state";
-import { IGameInfo } from "../game-handler/game-info.interface";
+import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { LoadingStone } from "./loading-stone";
-import { CameraType } from "../game-physics/camera-type";
+import { CameraType } from "./../../services/game-physics/camera-type";
 import { EndSet } from "./end-set";
 import { GameComponent } from "../../models/game-component.interface";
 

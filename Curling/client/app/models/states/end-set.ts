@@ -1,5 +1,5 @@
 import { AbstractGameState } from "./abstract-game-state";
-import { IGameInfo } from "../game-handler/game-info.interface";
+import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { LoadingStone } from "./loading-stone";
 import { EndGame } from "./end-game";
 import { CurrentPlayer } from "../../models/current-player";
