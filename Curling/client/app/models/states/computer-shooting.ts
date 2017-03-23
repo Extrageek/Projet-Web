@@ -5,27 +5,27 @@ import { CameraType } from "./../../services/game-physics/camera-type";
 import { EndSet } from "./end-set";
 import { GameComponent } from "../../models/game-component.interface";
 
-export class Shooting extends AbstractGameState implements GameComponent {
+export class ComputerShooting extends AbstractGameState implements GameComponent {
 
     private static _instance: AbstractGameState = null;
-    private static readonly UPDATE_NAME = "Shooting";
+    private static readonly UPDATE_NAME = "ComputerShooting";
     /**
-     * Initialize the unique Shooting state.
+     * Initialize the unique PlayerShooting state.
      * @param gameInfo The informations to use by the state.
      * @param doInitialization Set to true only if the game is entering immediatly in this state.
      *  Only one game state could be constructed with this value at true, because only one game state
      *  must be active at a time.
      */
     public static createInstance(gameInfo: IGameInfo, doInitialization = false): void {
-        Shooting._instance = new Shooting(gameInfo, doInitialization);
+        ComputerShooting._instance = new ComputerShooting(gameInfo, doInitialization);
     }
 
     /**
-     * Get the instance of the state Shooting. This state is used while the stones are moving.
-     * @returns The Shooting state of null if the createInstance method has not been called.
+     * Get the instance of the state PlayerShooting. This state is used while the stones are moving.
+     * @returns The PlayerShooting state of null if the createInstance method has not been called.
      */
     public static getInstance(): AbstractGameState {
-        return Shooting._instance;
+        return ComputerShooting._instance;
     }
 
     private constructor(gameInfo: IGameInfo, doInitialization = false) {
@@ -33,8 +33,7 @@ export class Shooting extends AbstractGameState implements GameComponent {
     }
 
     protected performEnteringState(): void {
-
-        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, Shooting.UPDATE_NAME, {value: this});
+        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, ComputerShooting.UPDATE_NAME, {value: this});
         this._gameInfo.stoneHandler.performShot(
             this._gameInfo.direction,
             this._gameInfo.speed,
@@ -53,61 +52,28 @@ export class Shooting extends AbstractGameState implements GameComponent {
     }
 
     protected performLeavingState() {
-
-        this._gameInfo.broom.opacityOn();
-        this._gameInfo.broom.changeToRed();
+        delete this._gameInfo.gameComponentsToUpdate[ComputerShooting.UPDATE_NAME];
         this._gameInfo.stoneHandler.removeOutOfBoundsStones(this._gameInfo.scene);
         this._gameInfo.gameStatus.nextPlayer();
         this._gameInfo.cameraService.replacePCameraToInitialPosition();
     }
 
     protected performMouseMove(event: MouseEvent): AbstractGameState {
-
-        let currentCamera: THREE.Camera;
-        if (this._gameInfo.currentCamera === CameraType.PERSPECTIVE_CAM) {
-            currentCamera = this._gameInfo.cameraService.perspectiveCamera;
-        }
-        else if (this._gameInfo.currentCamera === CameraType.ORTHOGRAPHIC_CAM) {
-            currentCamera = this._gameInfo.cameraService.topViewCamera;
-        }
-        let x = (event.clientX / window.innerWidth) * 2 - 1;
-        let y = - (event.clientY / window.innerHeight) * 2 + 1;
-
-        let mouseVector = new THREE.Vector3(x, y, 0.5);
-        mouseVector.unproject(currentCamera);
-        let direction = mouseVector.sub(currentCamera.position ).normalize();
-        let distance = - currentCamera.position.z / direction.z;
-        let position = currentCamera.position.clone().add( direction.multiplyScalar(distance));
-
-        this._gameInfo.broom.position.set(position.x, 0 , position.y + 8.5);
+        //Do nothing
         return null;
     }
 
     protected performMouseButtonPress(): AbstractGameState {
-        if (!this._gameInfo.broom.isRed()) {
-            this._gameInfo.broom.position.add(new THREE.Vector3(0.2, 0, 0));
-            // TODO : A VOIR COMMENT ENLEVER GET ELEM
-            let sound = document.getElementById("broomIn");
-            (<HTMLAudioElement>sound).play();
-        }
+        //Do nothing
         return null;
     }
 
     protected performMouseButtonReleased(): AbstractGameState {
-        if (!this._gameInfo.broom.isRed()) {
-            this._gameInfo.broom.translateZ(0.3);
-            console.log("in out");
-            // TODO : A VOIR COMMENT ENLEVER GET ELEM
-            let sound = document.getElementById("broomOut");
-            (<HTMLAudioElement>sound).play();
-        }
+        //Do nothing
         return null;
     }
 
     public update(timePerFrame: number) {
-        if (this._gameInfo.stoneHandler.checkPassHogLine()) {
-            this._gameInfo.broom.changeToRed();
-        }
+        //TODO: Implement moving broom by the computer and the sound.
     }
-
 }

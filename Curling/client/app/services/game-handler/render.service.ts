@@ -19,14 +19,15 @@ import { IGameInfo } from "./game-info.interface";
 import { LoadingStone } from "./../../models/states/loading-stone";
 import { PlayerTurn } from "./../../models/states/player-turn";
 import { ComputerTurn } from "./../../models/states/computer-turn";
-import { Shooting } from "./../../models/states/shooting";
+import { PlayerShooting } from "./../../models/states/player-shooting";
+import { ComputerShooting } from "./../../models/states/computer-shooting";
 import { EndSet } from "./../../models/states/end-set";
 import { EndGame } from "./../../models/states/end-game";
 
 @Injectable()
 export class RenderService {
 
-    private static readonly NUMBER_OF_MODELS_TO_LOAD = 3;
+    private static readonly NUMBER_OF_MODELS_TO_LOAD = 4;
 
     private _numberOfModelsLoaded: number;
     private _currentCamera: PerspectiveCamera;
@@ -159,10 +160,8 @@ export class RenderService {
     public loadBroom() {
         Broom.createBroom(this._objectLoader, new Vector3(0, 0, -11.4))
             .then((broom : Broom) => {
-                console.log("createBroom");
-                broom.opacityOn();
-                this._gameInfo.scene.add(broom);
                 this._gameInfo.broom = broom;
+                this.onFinishedLoadingModel();
             });
     }
 
@@ -196,7 +195,8 @@ export class RenderService {
         LoadingStone.createInstance(this._gameInfo, true);
         PlayerTurn.createInstance(this._gameInfo);
         ComputerTurn.createInstance(this._gameInfo);
-        Shooting.createInstance(this._gameInfo);
+        PlayerShooting.createInstance(this._gameInfo);
+        ComputerShooting.createInstance(this._gameInfo);
         EndSet.createInstance(this._gameInfo);
         EndGame.createInstance(this._gameInfo);
     }
