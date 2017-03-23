@@ -184,6 +184,16 @@ export class Room {
         return hasBeenPlaced;
     }
 
+    public verifyWordsCreated(response: IPlaceWordResponse, socketId: string): boolean {
+        let areValidWords = false;
+        this._playersQueue.forEach((player: Player) => {
+            if (player.socketId === socketId) {
+                areValidWords = this._board.verificationService.verifyWordsCreated(response, this._board);
+            }
+        });
+        return areValidWords;
+    }
+
     public removeLastLettersPlacedAndRefill(socketId: string): Array<string> {
         let removedLetters = this._board.removeLastLettersAddedFromBoard();
         let previousEasel: Array<string>;

@@ -1,9 +1,8 @@
 import { Alphabet } from "./commons/alphabet";
-import { AlphabetPoint } from "./commons/alphabet-point";
 
 export class Letter {
     private _alphabetLetter: string;
-    private _point: AlphabetPoint;
+    private _point: number;
     private _quantity: number;
     private _imageSource: string;
 
@@ -19,11 +18,11 @@ export class Letter {
         this._alphabetLetter = letter;
     }
 
-    public get point(): AlphabetPoint {
+    public get point(): number {
         return this._point;
     }
 
-    public set point(value: AlphabetPoint) {
+    public set point(value: number) {
         this._point = value;
     }
 
@@ -35,7 +34,7 @@ export class Letter {
         this._quantity = quantity;
     }
 
-    constructor(letter: string, point: AlphabetPoint, quantity: number) {
+    constructor(letter: string, point: number, quantity: number) {
         this._alphabetLetter = letter;
         this._point = point;
         this._quantity = quantity;

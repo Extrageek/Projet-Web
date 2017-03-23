@@ -1,13 +1,12 @@
 import { Letter } from "../letter";
 import { Alphabet } from "../commons/alphabet";
-import { AlphabetPoint } from "../commons/alphabet-point";
 import { AlphabetQuantity } from "../commons/alphabet-quantity";
 
 import { expect } from "chai";
 
 let _letter: Letter;
-let _alphabetLetter = Alphabet.letterE;
-let _point = AlphabetPoint.letterE;
+let _alphabetLetter = Alphabet.letterE.letter;
+let _point = Alphabet.letterE.point;
 let _quantity = AlphabetQuantity.letterE;
 
 describe("Letter should", () => {
@@ -27,8 +26,8 @@ describe("Letter should", () => {
     });
 
     it("set the alphabet letter corectly", () => {
-        _alphabetLetter = Alphabet.letterR;
-        _letter.alphabetLetter = Alphabet.letterR;
+        _alphabetLetter = Alphabet.letterR.letter;
+        _letter.alphabetLetter = Alphabet.letterR.letter;
         expect(_letter.alphabetLetter).to.be.equal(_alphabetLetter);
     });
 
@@ -37,8 +36,8 @@ describe("Letter should", () => {
     });
 
     it("set the point value of a letter corectly", () => {
-        _point = AlphabetPoint.letterR;
-        _letter.point = AlphabetPoint.letterR;
+        _point = Alphabet.letterR.point;
+        _letter.point = Alphabet.letterR.point;
         expect(_letter.point).to.be.equal(_point);
     });
 
