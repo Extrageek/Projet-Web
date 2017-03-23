@@ -30,10 +30,10 @@
 		{
 			"uuid": "E1BDE7B2-FEA4-408E-871B-4C2F240C4A60",
 			"type": "MeshStandardMaterial",
-			"color": 16777215,
+			"color": 16716055,
 			"roughness": 0.5,
 			"metalness": 0.5,
-			"emissive": 16711680,
+			"emissive": 16716055,
 			"vertexColors": 2,
 			"depthFunc": 3,
 			"depthTest": true,
@@ -44,10 +44,10 @@
 		{
 			"uuid": "7EDCF73F-F576-47A5-9563-6D949DD1C2D1",
 			"type": "MeshStandardMaterial",
-			"color": 16777215,
+			"color": 16716055,
 			"roughness": 0.5,
 			"metalness": 0.5,
-			"emissive": 16711680,
+			"emissive": 16716055,
 			"vertexColors": 2,
 			"transparent": true,
 			"depthFunc": 3,
@@ -60,13 +60,13 @@
 		"uuid": "428835B1-3E4E-4190-8F26-7BC11D6643F7",
 		"type": "Group",
 		"name": "Group 1",
-		"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+		"matrix": [0,0,0.5,0,0,0.5,0,0,-0.5,0,0,0,0,0.1,0,1],
 		"children": [
 			{
 				"uuid": "73CE45AA-1E07-4F31-8541-BFD9E7872CC5",
 				"type": "Mesh",
 				"name": "stick",
-				"matrix": [1,0,0,0,0,0.939693,0.34202,0,0,-0.34202,0.939693,0,0,2.12,0,1],
+				"matrix": [0.968583,0.17024,-0.181287,0,0,0.728969,0.684547,0,0.24869,-0.663041,0.706067,0,0,1.364871,0.624711,1],
 				"geometry": "D9EB6707-9BD7-4BAF-ADF2-C34F8E74EE7C",
 				"material": "E1BDE7B2-FEA4-408E-871B-4C2F240C4A60"
 			},

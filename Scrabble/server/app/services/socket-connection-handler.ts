@@ -93,6 +93,9 @@ export class SocketConnectionHandler {
                         // Subscribe to the timer in the room if the room is ready
                         if (room.isFull()) {
                             this._socket.to(response._roomId).emit(SocketEventType.updateBoard, room.board);
+                            // this._socket.to(response._roomId)
+                            //     .emit(SocketEventType.updateLetterInBank, room.letterBankHandler.bank.bank.length);
+                            // socket.emit(SocketEventType.updateLetterInEasel, player.easel.letters.length);
                             let test = room.timerService.timer().subscribe(
                                 (counter: { minutes: number, seconds: number }) => {
                                     // Send the counter value to the members of the room
@@ -150,6 +153,10 @@ export class SocketConnectionHandler {
                 let newEasel = room.letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
                 // Emit a message with the new letters to the sender
                 socket.emit(SocketEventType.updateEasel, newEasel);
+                socket.emit(SocketEventType.updateLetterInEasel, newEasel.length);
+                this._socket.to(room.roomId)
+                    .emit(SocketEventType.updateLetterInBank, room.letterBankHandler.bank.numberOfLettersInBank);
+
                 // Update the players queues for everyone in the room
                 let playersQueues = room.getAndUpdatePlayersQueue();
                 this._socket.to(room.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
@@ -167,12 +174,34 @@ export class SocketConnectionHandler {
                 .createPlaceWordResponse(player.username, room, request._commandStatus, request._response);
 
             if (response._commandStatus === CommandStatus.Ok) {
-                if (room.placeWordInTheBoard(request._response, player)) {
-
+                if (room.placeWordInTheBoard(request._response, player.username)) {
                     // Place the word in the board and emit an update board to the room members
                     this._socket.to(room.roomId).emit(SocketEventType.updateBoard, room.board);
                     // Update easel for the player
-                    socket.emit(SocketEventType.updateEasel, player.easel.letters);
+                    room.refillPlayerEasel(player.socketId);
+                    let newEasel = room.letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
+                    socket.emit(SocketEventType.updateEasel, newEasel);
+                    socket.emit(SocketEventType.updateLetterInEasel, newEasel.length);
+                    this._socket.to(room.roomId)
+                        .emit(SocketEventType.updateLetterInBank, room.letterBankHandler.bank.numberOfLettersInBank);
+
+                    ////////////////// verification
+                    // creer update score
+                    // creer update n lettre chevalet
+                    // creer update n lettre banque restante
+                    room.refillPlayerEasel(player.socketId);
+                    newEasel = room.letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
+                    socket.emit(SocketEventType.updateEasel, newEasel);
+                    socket.emit(SocketEventType.updateLetterInEasel, newEasel.length);
+                    this._socket.to(room.roomId)
+                        .emit(SocketEventType.updateLetterInBank, room.letterBankHandler.bank.numberOfLettersInBank);
+
+                    // si la verif nest pas bonne retirer les lettres du board et les replacer sur le easel
+                    // mettre a jour le board et easel
+
+                    // this._socket.to(room.roomId).emit(SocketEventType.updateBoard, room.board);
+                    // socket.emit(SocketEventType.updateEasel, player.easel.letters);
+
 
                     // Update the players queues for everyone in the room
                     let playersQueues = room.getAndUpdatePlayersQueue();
@@ -180,14 +209,6 @@ export class SocketConnectionHandler {
                 } else {
                     response._commandStatus = CommandStatus.NotAllowed;
                 }
-
-                // verification
-
-                // si la verif nest pas bonne retirer les lettres du board et les replacer sur le easel
-                // mettre a jour le board et easel
-
-                // this._socket.to(room.roomId).emit(SocketEventType.updateBoard, room.board);
-                // socket.emit(SocketEventType.updateEasel, player.easel.letters);
             }
 
             this._socket.to(response._room.roomId).emit(SocketEventType.commandRequest, response);
@@ -252,6 +273,9 @@ export class SocketConnectionHandler {
 
                     // Emit a message with the new letters to the sender
                     socket.emit(SocketEventType.initializeEasel, initialsLetters);
+                    socket.emit(SocketEventType.updateLetterInEasel, initialsLetters.length);
+                    this._socket.to(room.roomId)
+                        .emit(SocketEventType.updateLetterInBank, room.letterBankHandler.bank.numberOfLettersInBank);
 
                     // Update the players queue for everyone in the room
                     let playersQueues = room.getAndUpdatePlayersQueue();

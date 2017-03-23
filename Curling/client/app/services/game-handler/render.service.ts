@@ -1,20 +1,21 @@
 import { Injectable } from "@angular/core";
-import { Scene, PerspectiveCamera, WebGLRenderer, Renderer, ObjectLoader, FontLoader, Geometry, CubeGeometry,
-    TextGeometry, MeshBasicMaterial, MeshFaceMaterial, MeshPhongMaterial, MultiMaterial, Mesh, SpotLight, Group,
-    Line, LineDashedMaterial, Font, ImageUtils, BackSide, FlatShading, SmoothShading, Vector3, Clock } from "three";
+import { Scene, PerspectiveCamera, WebGLRenderer, Renderer,
+    ObjectLoader, Geometry, CubeGeometry, MeshBasicMaterial, MeshFaceMaterial, Mesh, Line,
+    LineDashedMaterial, ImageUtils, BackSide, Vector3, Clock } from "three";
 import { GameStatusService } from './../game-status.service';
 import { CameraService } from './../views/cameras.service';
 import { Arena } from './../../models/scenery/arena';
 import { Rink } from './../../models/scenery/rink';
-import { Stone, StoneColor } from './../../models/stone';
+import { StoneColor } from './../../models/stone';
 import { RinkInfo } from './../../models/scenery/rink-info.interface';
-import { StoneHandler, Points } from '../game-physics/stone-handler';
+import { StoneHandler } from '../game-physics/stone-handler';
 import { CameraType } from '../game-physics/camera-type';
+
+import { Broom } from './../../models/broom';
 
 import { LightingService } from './../views/ligthing.service';
 import { TextureHandler } from '../views/texture-handler';
 import { IGameInfo } from "./game-info.interface";
-import { AbstractGameState } from "../states/abstract-game-state";
 import { LoadingStone } from "../states/loading-stone";
 import { PlayerTurn } from "../states/player-turn";
 import { ComputerTurn } from "../states/computer-turn";
@@ -43,6 +44,7 @@ export class RenderService {
         this._gameInfo = {
             gameStatus: gameStatusService,
             cameraService: cameraService,
+            broom: null,
             scene: new Scene(),
             currentCamera: CameraType.PERSPECTIVE_CAM,
             gameComponentsToUpdate: new Object(),
@@ -83,7 +85,7 @@ export class RenderService {
         this.loadRink();
         this.loadArena();
         this.loadLine();
-
+        this.loadBroom();
         //Part 4: Service
         this.linkRenderServerToCanvas(container);
 
@@ -112,6 +114,8 @@ export class RenderService {
         this._gameInfo.line.lineAnimationSlower = 0;
         this._gameInfo.scene.add(this._gameInfo.line.lineMesh);
     }
+
+
 
     public linkRenderServerToCanvas(container: HTMLElement) {
         // Inser the canvas into the DOM
@@ -150,6 +154,15 @@ export class RenderService {
             .catch((error) => {
                 //Switch to error state
                 console.log(error);
+            });
+    }
+    public loadBroom() {
+        Broom.createBroom(this._objectLoader, new Vector3(0, 0, -11.4))
+            .then((broom : Broom) => {
+                console.log("createBroom");
+                broom.opacityOn();
+                this._gameInfo.scene.add(broom);
+                this._gameInfo.broom = broom;
             });
     }
 
@@ -211,12 +224,12 @@ export class RenderService {
     }
 
     private animate() {
-        window.requestAnimationFrame(_ => this.animate());
+        window.requestAnimationFrame(() => this.animate());
 
         if (this._clock.running === true) {
             let timePerFrame = this._clock.getDelta();
             let keys = Object.getOwnPropertyNames(this._gameInfo.gameComponentsToUpdate);
-            keys.forEach((key: string, index: number, array: string[]) => {
+            keys.forEach((key: string) => {
                 this._gameInfo.gameComponentsToUpdate[key].update(timePerFrame);
             });
         }

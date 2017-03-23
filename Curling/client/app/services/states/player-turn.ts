@@ -1,5 +1,4 @@
 import { Clock, Vector3 } from "three";
-
 import { AbstractGameState } from "./abstract-game-state";
 import { IGameInfo } from "../game-handler/game-info.interface";
 import { CameraType } from "../game-physics/camera-type";
@@ -70,18 +69,21 @@ export class PlayerTurn extends AbstractGameState implements GameComponent {
     }
 
     public performMouseMove(event: MouseEvent): AbstractGameState {
+
         if (this._gameInfo.currentCamera === CameraType.PERSPECTIVE_CAM) {
             this._gameInfo.mousePositionPlaneXZ.set(
                 -(event.clientX / window.innerWidth) / 0.02215 + 22.55, // Numbers to align with the rink model
                 0,
                 (event.clientY / window.innerHeight) / 0.008 + 46.75 // Numbers to align with the rink model
             );
+
         } else if (this._gameInfo.currentCamera === CameraType.ORTHOGRAPHIC_CAM) {
             this._gameInfo.mousePositionPlaneXZ.set(
                 -(event.clientY / window.innerHeight) / 0.038 + 13.2 ,
                 0,
                  (event.clientX / window.innerWidth) / 0.0268 - 18.6
             );
+
         } else {
             console.error("calculateMousePosition : camera unrecognized");
         }
@@ -94,8 +96,10 @@ export class PlayerTurn extends AbstractGameState implements GameComponent {
         if (this._gameInfo.mousePositionPlaneXZ.x > PlayerTurn.SHOT_ANGLE_MAXIMUM) {
             this._gameInfo.mousePositionPlaneXZ.x = PlayerTurn.SHOT_ANGLE_MAXIMUM;
         }
+
         return null;
     }
+
 
     public performMouseButtonPress(): AbstractGameState {
         if (!this._mouseIsPressed) {
@@ -122,6 +126,9 @@ export class PlayerTurn extends AbstractGameState implements GameComponent {
                 newState = Shooting.getInstance();
             }
         }
+        this._gameInfo.broom.opacityOff();
+        //TODO : CHANGE GREEN ONCE YOU PASS THE FIRST LINE
+        this._gameInfo.broom.changeToGreen();
         return newState;
     }
 
@@ -147,4 +154,5 @@ export class PlayerTurn extends AbstractGameState implements GameComponent {
         this._gameInfo.line.lineGeometry.computeLineDistances();
         this._gameInfo.line.lineGeometry.verticesNeedUpdate = true;
     }
+
 }

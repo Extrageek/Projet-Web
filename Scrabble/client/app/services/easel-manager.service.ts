@@ -131,6 +131,7 @@ export class EaselManagerService {
         let listOfChar = new Array<string>();
         for (let index = 0; index < texte.length; ++index) {
             listOfChar.push(texte[index].toUpperCase());
+            console.log("MOT A PLACER   --", listOfChar);
         }
         return listOfChar;
     }

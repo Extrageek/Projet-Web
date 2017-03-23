@@ -7,8 +7,11 @@ import { CommandsHelper } from "../services/commons/command/command-helper";
 export class Easel {
     private _letters: Array<Letter>;
 
-    constructor() {
+    constructor(letters?: Array<Letter>) {
         this._letters = new Array<Letter>();
+        if (letters) {
+            this.replaceLetters(letters);
+        }
     }
 
     public get letters(): Array<Letter> {
@@ -16,6 +19,34 @@ export class Easel {
     }
     public set letters(v: Array<Letter>) {
         this._letters = v;
+    }
+
+    public replaceLetters(newLetters: Array<Letter>) {
+        this.clearEasel();
+        newLetters.forEach((letter: Letter) => {
+            this._letters.push(new Letter(letter.alphabetLetter, letter.point, letter.quantity));
+        });
+    }
+
+    public addLetters(newLetters: Array<Letter>) {
+        newLetters.forEach((letter: Letter) => {
+            this._letters.push(letter);
+        });
+    }
+
+    public addLetter(newLetter: Letter) {
+        this._letters.push(newLetter);
+    }
+
+    public removeLetter(letterChar: string) {
+        let index = this._letters.findIndex((letter: Letter) => {
+            return letter.alphabetLetter === letterChar;
+        });
+        this._letters.splice(index, 1);
+    }
+
+    public clearEasel() {
+        this._letters.splice(0);
     }
 
     public containsLetter(letter: Letter): boolean {

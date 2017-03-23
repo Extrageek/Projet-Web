@@ -174,10 +174,10 @@ describe("StoneHandler tests should", () => {
                 do60Updates(stoneHandler);
 
                 expect(stone1.position.x).to.not.equal(0.1, "stone 1 x should have moved.");
-                //expect(stone1.position.y).to.equal(0, "stone 1 y should not have moved.");
+                expect(stone1.position.y).to.equal(0, "stone 1 y should not have moved.");
                 expect(stone1.position.z).to.not.equal(0, "stone 1 z should have moved.");
                 expect(stone2.position.x).to.not.equal(0, "stone 2 x should have moved.");
-                //expect(stone2.position.y).to.equal(0, "stone 2 y should not have moved.");
+                expect(stone2.position.y).to.equal(0, "stone 2 y should not have moved.");
                 expect(stone2.position.z).to.not.equal(1, "stone 2 z should have moved.");
                 expect(direction2.angleTo(stone2.direction)).to.be.greaterThan(Math.PI/12,
                     "direction should have changed.");
@@ -202,13 +202,13 @@ describe("StoneHandler tests should", () => {
                     do60Updates(stoneHandler);
 
                     expect(stone1.position.x).to.not.equal(-0.27, "stone 1 x should have moved");
-                    //expect(stone1.position.y).to.equal(0, "stone 1 y should not have moved.");
+                    expect(stone1.position.y).to.equal(0, "stone 1 y should not have moved.");
                     expect(stone1.position.z).to.not.equal(0, "stone 1 z should have moved.");
                     expect(stone2.position.x).to.not.equal(0.27, "stone 2 x should have moved");
-                    //expect(stone2.position.y).to.equal(0, "stone 2 y should not have moved.");
+                    expect(stone2.position.y).to.equal(0, "stone 2 y should not have moved.");
                     expect(stone2.position.z).to.not.equal(0, "stone 2 z should have moved.");
                     expect(stone3.position.x).to.not.equal(0, "stone 2 x should have moved");
-                    //expect(stone3.position.y).to.not.equal(0, "stone 2 y should not have moved.");
+                    expect(stone3.position.y).to.equal(0, "stone 2 y should not have moved.");
                     expect(stone3.position.z).to.not.equal(-1, "stone 2 z should have moved.");
                     expect(stone2.speed).to.not.equal(0, "stone 2 should still be in movement.");
                     expect(stone1.speed).to.not.equal(0, "stone 1 should still be in movement.");

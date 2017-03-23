@@ -3,6 +3,7 @@ import { BoardColumn } from "./board-column";
 import { Square } from "../square/square";
 import { SquarePosition } from "../square/square-position";
 import { SquareType } from "../square/square-type";
+import { LetterHelper } from "../commons/letter-helper";
 import { BoardHelper } from '../../services/board/board-helper';
 
 const BOARD_SIZE = 15;
@@ -10,13 +11,34 @@ const BOARD_SIZE = 15;
 export class Board {
     private _squares: Array<Array<Square>>;
     private _isEmpty: boolean;
-    private _lastLettersAdded : Array<SquarePosition>;
+    private _lastLettersAdded: Array<SquarePosition>;
 
-    public get lastLettersAdded() : Array<SquarePosition> {
+    constructor() {
+        this._squares = new Array<Array<Square>>();
+        this.generateBoard();
+        this.assignTypesToSquares();
+        this._isEmpty = true;
+        this._lastLettersAdded = new Array<SquarePosition>();
+    }
+
+    public get lastLettersAdded(): Array<SquarePosition> {
         return this._lastLettersAdded;
     }
-    public set lastLettersAdded(v : Array<SquarePosition>) {
+
+    public set lastLettersAdded(v: Array<SquarePosition>) {
         this._lastLettersAdded = v;
+    }
+
+    public resetLastLettersAdded() {
+        this._lastLettersAdded.splice(0, this.lastLettersAdded.length);
+    }
+
+    public addLastLetterAdded(rowIndex: number, columnIndex: number) {
+        this._lastLettersAdded.push(
+            new SquarePosition(
+                BoardHelper.parseFromNumberToCharacter(rowIndex + LetterHelper.LETTER_A_KEY_CODE),
+                columnIndex)
+        );
     }
 
     public get isEmpty(): boolean {
@@ -28,14 +50,6 @@ export class Board {
 
     public get squares(): Array<Array<Square>> {
         return this._squares;
-    }
-
-    constructor() {
-        this._squares = new Array<Array<Square>>();
-        this.generateBoard();
-        this.assignTypesToSquares();
-        this._isEmpty = true;
-        this._lastLettersAdded = new Array<SquarePosition>();
     }
 
     private generateBoard(): void {
