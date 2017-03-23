@@ -44,6 +44,7 @@
     word-wrap: break-word;
     border-radius: 12px;
     padding: 6px;
+    white-space: pre-line; /*to show the endline in messages*/
 }
 
 .self-message p.msg{

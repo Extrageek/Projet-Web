@@ -169,14 +169,22 @@ describe("Room", () => {
 
     it("handle the letter bank to change a player's letters", () => {
         let roomCapacity = 2;
-        let fakeRoom = new Room(roomCapacity);
-        let fakeLettersToChange: Array<string>;
-        let fakeLettersReceived: Array<string>;
+        let room = new Room(roomCapacity);
+        let numberOfPlayers = 2;
+        let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+        let player2 = new Player(fakename2, numberOfPlayers, fakeSocketId2);
 
-        fakeLettersToChange = ['A', 'B', 'C'];
-        let hasChanged = fakeRoom.exchangeThePlayerLetters(fakeSocketId1, fakeLettersToChange);
-        expect(hasChanged).to.be.true;
-        expect(fakeLettersToChange.length).to.be.equal(fakeLettersReceived.length);
+        room.addPlayer(player1);
+        room.addPlayer(player2);
+
+        // initialize the players easels
+        let initialLettersOfPlayer1 = room.getInitialsLetters(player1.username);
+
+        // Change 2 letters of the player1
+        let lettersToChange = [initialLettersOfPlayer1[0], initialLettersOfPlayer1[1]];
+
+        let hasChanged = room.exchangeThePlayerLetters(fakeSocketId1, lettersToChange);
+        assert(hasChanged === true);
     });
 
     it("should return initial 7 letters to initialize the player easel", () => {

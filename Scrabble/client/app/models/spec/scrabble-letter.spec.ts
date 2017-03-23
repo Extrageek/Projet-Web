@@ -1,7 +1,7 @@
 import { expect } from "chai";
 
 import { IScrabbleLetter } from "../scrabble-letter";
-import { Alphabet } from "../commons//alphabet";
+import { Alphabet } from "../commons/alphabet";
 
 let _letter: IScrabbleLetter;
 
@@ -12,9 +12,8 @@ describe("ScrabbleLetter letter validation - ", () => {
     });
 
     it("should be an instance of ScrabbleLetter", () => {
-        expect(_letter).to.have.lengthOf(2);
-        expect(_letter).to.have.property("_alphabetLetter").with.lengthOf(1);
-        expect(_letter).to.have.property("_imageSource").with.lengthOf(1);
+        expect(_letter._alphabetLetter).to.be.equal(Alphabet.LETTER_C);
+        expect(_letter._imageSource).to.be.equal("");
     });
 
     it("_alphabetLetter should be a string", () => {

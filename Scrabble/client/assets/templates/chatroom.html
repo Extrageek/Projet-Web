@@ -27,7 +27,10 @@
                     <p *ngIf="response._commandType === 0" class="msg">
                         {{response._message}}
                     </p>
-                    <p *ngIf="response._commandType !== 0" 
+                    <p *ngIf="response._commandType === 4" class="msg">
+                        {{response._message}}
+                    </p>
+                    <p *ngIf="response._commandType !== 0 && response._commandType !== 4" 
                     [ngClass]="{'command-request-ok':response._commandStatus===0,
                      'command-request-error':response._commandStatus!==0}">
                         {{response._message}}

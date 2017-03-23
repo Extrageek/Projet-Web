@@ -161,7 +161,9 @@ export class Stone extends Group implements GameComponent {
 
     private decrementSpeed(timePerFrame: number) {
         if (this._sweeping) {
+            console.log("lkxdc");
             this._speed -= timePerFrame * Stone.SPEED_DIMINUTION_NUMBER_WITH_SWEEP;
+            this._sweeping = false;
         }
         else {
             this._speed -= timePerFrame * Stone.SPEED_DIMINUTION_NUMBER;
