@@ -1,6 +1,7 @@
 import { BoardRows } from "./board-rows";
 import { BoardColumn } from "./board-column";
 import { Square } from "../square/square";
+import { Letter } from "../letter";
 import { SquarePosition } from "../square/square-position";
 import { SquareType } from "../square/square-type";
 import { LetterHelper } from "../commons/letter-helper";
@@ -33,11 +34,28 @@ export class Board {
         this._lastLettersAdded.splice(0, this.lastLettersAdded.length);
     }
 
+    public removeLastLettersAddedFromBoard(): Array<Letter> {
+        let removedLetters = new Array<Letter>();
+        for (let index = 0; index < this._lastLettersAdded.length; index++) {
+            let rowIndex = BoardHelper.convertCharToIndex(this._lastLettersAdded[index].row);
+            let columnIndex = this._lastLettersAdded[index].column - 1;
+            let letter = this._squares[rowIndex][columnIndex].letter;
+            removedLetters.push(new Letter(letter.alphabetLetter, letter.point, letter.quantity));
+
+            console.log(" last letter removed --------- ", removedLetters[removedLetters.length - 1].alphabetLetter);
+            this._squares[rowIndex][columnIndex].letter = new Letter("", 0, 0);
+            this._squares[rowIndex][columnIndex].squareValue = this._squares[rowIndex][columnIndex].type.toString();
+        }
+        this.resetLastLettersAdded();
+        return removedLetters;
+    }
+
+
     public addLastLetterAdded(rowIndex: number, columnIndex: number) {
         this._lastLettersAdded.push(
             new SquarePosition(
                 BoardHelper.parseFromNumberToCharacter(rowIndex + LetterHelper.LETTER_A_KEY_CODE),
-                columnIndex)
+                columnIndex + 1)
         );
     }
 
