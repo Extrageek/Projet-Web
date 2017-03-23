@@ -1,5 +1,4 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { MdSnackBar } from '@angular/material';
 
 import { RenderService } from '../services/game-handler/render.service';
 
@@ -38,14 +37,9 @@ export class GlComponent implements OnInit {
 
     constructor(
         private _renderService: RenderService,
-        private snackbar: MdSnackBar
     ) { }
 
     public get renderService(): RenderService {
         return this._renderService;
-    }
-
-    public showNotImplemented(): void {
-        this.snackbar.open('Sorry, this is not implemented yet. Would you do it for me? :)', 'Yes');
     }
 }

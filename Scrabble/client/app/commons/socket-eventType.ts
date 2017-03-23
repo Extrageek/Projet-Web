@@ -34,9 +34,9 @@ export class SocketEventType {
     static INITIALIZE_EASEL = "initializeEasel";
 
     static UPDATE_PLAYERS_QUEUE = "updatePlayersQueue";
-    static CHANGE_LETTERS_REQUEST = "!changer";
-    static PLACE_WORD_COMMAND_REQUEST = "!place";
-    static PASS_COMMAND_REQUEST = "!passer";
+    static CHANGE_LETTERS_REQUEST = "changer";
+    static PLACE_WORD_COMMAND_REQUEST = "placer";
+    static PASS_COMMAND_REQUEST = "passer";
 
     static TIMER_EVENT = "timerEvent";
     static UPDATE_BOARD = "updateBoard";

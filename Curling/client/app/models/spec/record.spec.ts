@@ -1,5 +1,5 @@
 import { Record } from './../record';
-import { Difficulty } from './../user-setting';
+import { Difficulty } from './../difficulty';
 import { expect } from "chai";
 
 let _record: Record;

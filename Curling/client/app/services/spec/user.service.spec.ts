@@ -1,4 +1,5 @@
 import { UserService } from './../user.service';
+import { Difficulty } from './../../models/difficulty';
 import { RestApiProxyService } from './../rest-api-proxy.service';
 import {
     Http, ResponseOptions,
@@ -6,10 +7,8 @@ import {
     BaseRequestOptions,
     ConnectionBackend
 } from '@angular/http';
-import { UserSetting } from './../../models/user-setting';
 
 import { MockBackend, MockConnection } from '@angular/http/testing';
-import { Difficulty } from './../../models/user-setting';
 import { expect } from "chai";
 import { TestBed, tick, inject, fakeAsync } from "@angular/core/testing";
 
@@ -38,8 +37,8 @@ describe("UserSettingService should", () => {
     it("initialize the user setting service correctly",
         inject([UserService, RestApiProxyService],
             fakeAsync((_userSettingService: UserService, api: RestApiProxyService) => {
-                expect(_userSettingService.userSetting.name).to.be.equal("");
-                expect(_userSettingService.userSetting.difficulty).to.be.equal(Difficulty.NORMAL);
+                expect(_userSettingService.name).to.be.equal("");
+                expect(_userSettingService.difficulty).to.be.equal(Difficulty.NORMAL);
             })));
 
     // Tests for verifyUsername
@@ -111,62 +110,18 @@ describe("UserSettingService should", () => {
                 expect(retour).to.be.false;
             })));
 
-    // Tests for the UserSetting gettter
-    it("get userSetting correctly",
-        inject([UserService],
-            fakeAsync((_userSettingService: UserService) => {
-                let _user = new UserSetting();
-                _user.name = '';
-                _user.difficulty = Difficulty.NORMAL;
-                expect(_userSettingService.userSetting.name).to.be.equal(_user.name);
-                expect(_userSettingService.userSetting.difficulty).to.be.equal(_user.difficulty);
-            })));
-
-    // Tests for the UserSetting setter
-    it("set UserSetting correctly",
-        inject([UserService, RestApiProxyService],
-            fakeAsync((_userSettingService: UserService, api: RestApiProxyService) => {
-                let _user = new UserSetting();
-                _userSettingService.userSetting.name = "test";
-                _userSettingService.userSetting = _user;
-                expect(_userSettingService.userSetting.name).to.be.equal(_user.name);
-                expect(_userSettingService.userSetting.difficulty).to.be.equal(_user.difficulty);
-                expect(_userSettingService.userSetting).to.be.equal(_user);
-            })));
-
-    // Tests for setName
-    it("set name correctly",
-        inject([UserService, RestApiProxyService],
-            fakeAsync((_userSettingService: UserService, api: RestApiProxyService) => {
-                let _user = new UserSetting();
-                _user.name = "Louis";
-                _userSettingService.setName("Louis");
-                expect(_userSettingService.userSetting.name).to.be.equal(_user.name);
-            })));
-
-    // Tests for setDifficulty
-    it("set Difficulty correctly",
-        inject([UserService, RestApiProxyService],
-            fakeAsync((_userSettingService: UserService, api: RestApiProxyService) => {
-                let _user = new UserSetting();
-                _user.difficulty = Difficulty.HARD;
-                _userSettingService.setDifficulty(Difficulty.HARD);
-                expect(_userSettingService.userSetting.difficulty).to.be.equal(_user.difficulty);
-            })));
-
-
     // Tests for getComputerName
     it("get computerName correctly in case difficulty is Normal",
         inject([UserService, RestApiProxyService],
             fakeAsync((_userSettingService: UserService, api: RestApiProxyService) => {
-                _userSettingService.setDifficulty(Difficulty.NORMAL);
+                _userSettingService.difficulty = Difficulty.NORMAL;
                 expect(_userSettingService.getComputerName()).to.contains("CPU Normal");
             })));
 
     it("get computerName correctly in case difficulty is Hard",
         inject([UserService, RestApiProxyService],
             fakeAsync((_userSettingService: UserService, api: RestApiProxyService) => {
-                _userSettingService.setDifficulty(Difficulty.HARD);
+                _userSettingService.difficulty = Difficulty.HARD;
                 expect(_userSettingService.getComputerName()).to.contains("CPU Difficile");
             })));
 

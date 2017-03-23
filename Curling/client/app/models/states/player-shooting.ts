@@ -1,31 +1,31 @@
 import { AbstractGameState } from "./abstract-game-state";
-import { IGameInfo } from "../game-handler/game-info.interface";
+import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { LoadingStone } from "./loading-stone";
-import { CameraType } from "../game-physics/camera-type";
+import { CameraType } from "./../../services/game-physics/camera-type";
 import { EndSet } from "./end-set";
 import { GameComponent } from "../../models/game-component.interface";
 
-export class Shooting extends AbstractGameState implements GameComponent {
+export class PlayerShooting extends AbstractGameState implements GameComponent {
 
     private static _instance: AbstractGameState = null;
-    private static readonly UPDATE_NAME = "Shooting";
+    private static readonly UPDATE_NAME = "PlayerShooting";
     /**
-     * Initialize the unique Shooting state.
+     * Initialize the unique PlayerShooting state.
      * @param gameInfo The informations to use by the state.
      * @param doInitialization Set to true only if the game is entering immediatly in this state.
      *  Only one game state could be constructed with this value at true, because only one game state
      *  must be active at a time.
      */
     public static createInstance(gameInfo: IGameInfo, doInitialization = false): void {
-        Shooting._instance = new Shooting(gameInfo, doInitialization);
+        PlayerShooting._instance = new PlayerShooting(gameInfo, doInitialization);
     }
 
     /**
-     * Get the instance of the state Shooting. This state is used while the stones are moving.
-     * @returns The Shooting state of null if the createInstance method has not been called.
+     * Get the instance of the state PlayerShooting. This state is used while the stones are moving.
+     * @returns The PlayerShooting state of null if the createInstance method has not been called.
      */
     public static getInstance(): AbstractGameState {
-        return Shooting._instance;
+        return PlayerShooting._instance;
     }
 
     private constructor(gameInfo: IGameInfo, doInitialization = false) {
@@ -33,8 +33,10 @@ export class Shooting extends AbstractGameState implements GameComponent {
     }
 
     protected performEnteringState(): void {
-
-        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, Shooting.UPDATE_NAME, {value: this});
+        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, PlayerShooting.UPDATE_NAME, {value: this});
+        this._gameInfo.scene.add(this._gameInfo.broom);
+        //TODO : CHANGE GREEN ONCE YOU PASS THE FIRST LINE
+        this._gameInfo.broom.changeToGreen();
         this._gameInfo.stoneHandler.performShot(
             this._gameInfo.direction,
             this._gameInfo.speed,
@@ -53,9 +55,8 @@ export class Shooting extends AbstractGameState implements GameComponent {
     }
 
     protected performLeavingState() {
-
-        this._gameInfo.broom.opacityOn();
-        this._gameInfo.broom.changeToRed();
+        delete this._gameInfo.gameComponentsToUpdate[PlayerShooting.UPDATE_NAME];
+        this._gameInfo.scene.remove(this._gameInfo.broom);
         this._gameInfo.stoneHandler.removeOutOfBoundsStones(this._gameInfo.scene);
         this._gameInfo.gameStatus.nextPlayer();
         this._gameInfo.cameraService.replacePCameraToInitialPosition();
@@ -109,5 +110,4 @@ export class Shooting extends AbstractGameState implements GameComponent {
             this._gameInfo.broom.changeToRed();
         }
     }
-
 }

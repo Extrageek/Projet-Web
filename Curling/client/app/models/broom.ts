@@ -50,20 +50,4 @@ export class Broom extends Group {
     public isRed(): Boolean {
         return this._redBroom;
     }
-
-    public opacityOff() {
-        for (let i = 0; i < this.children.length; i++) {
-            let child = this.children[i];
-            (<THREE.Mesh>child).material.transparent = false;
-            (<THREE.Mesh>child).material.opacity = 1;
-        }
-    }
-
-    public opacityOn() {
-        for (let i = 0; i < this.children.length; i++) {
-            let child = this.children[i];
-            (<THREE.Mesh>child).material.transparent = true;
-            (<THREE.Mesh>child).material.opacity = 0;
-        }
-    }
 }

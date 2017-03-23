@@ -1,33 +1,35 @@
 import { Injectable } from '@angular/core';
-import { UserSetting, Difficulty } from './../models/user-setting';
 import { RestApiProxyService } from './rest-api-proxy.service';
+import { Difficulty } from './../models/difficulty';
 
 @Injectable()
 export class UserService {
-    private _userSetting: UserSetting;
+    private _name: string;
+    private _difficulty: Difficulty;
+
+    public get name(): string {
+        return this._name;
+    }
+
+    public set name(value: string) {
+        this._name = value;
+    }
+
+    public get difficulty(): Difficulty {
+        return this._difficulty;
+    }
+
+    public set difficulty(value: Difficulty) {
+        this._difficulty = value;
+    }
 
     constructor(private api: RestApiProxyService) {
-        this._userSetting = new UserSetting();
-    }
-
-    public get userSetting(): UserSetting {
-        return this._userSetting;
-    }
-
-    public set userSetting(value: UserSetting) {
-        this._userSetting = value;
-    }
-
-    public setName(username: string) {
-        this._userSetting.name = username;
-    }
-
-    public setDifficulty(difficulty: Difficulty) {
-        this._userSetting.difficulty = difficulty;
+        this._name = '';
+        this._difficulty = Difficulty.NORMAL;
     }
 
     public getComputerName(): string {
-        if (this._userSetting.difficulty === Difficulty.NORMAL) {
+        if (this.difficulty === Difficulty.NORMAL) {
             return "CPU Normal";
         } else {
             return "CPU Difficile";
@@ -55,7 +57,7 @@ export class UserService {
                     throw error;
                 });
             if (isValid) {
-                this.setName(username);
+                this.name = username;
                 return true;
             } else {
                 return false;

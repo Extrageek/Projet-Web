@@ -16,17 +16,18 @@ import { Broom } from './../../models/broom';
 import { LightingService } from './../views/ligthing.service';
 import { TextureHandler } from '../views/texture-handler';
 import { IGameInfo } from "./game-info.interface";
-import { LoadingStone } from "../states/loading-stone";
-import { PlayerTurn } from "../states/player-turn";
-import { ComputerTurn } from "../states/computer-turn";
-import { Shooting } from "../states/shooting";
-import { EndSet } from "../states/end-set";
-import { EndGame } from "../states/end-game";
+import { LoadingStone } from "./../../models/states/loading-stone";
+import { PlayerTurn } from "./../../models/states/player-turn";
+import { ComputerTurn } from "./../../models/states/computer-turn";
+import { PlayerShooting } from "./../../models/states/player-shooting";
+import { ComputerShooting } from "./../../models/states/computer-shooting";
+import { EndSet } from "./../../models/states/end-set";
+import { EndGame } from "./../../models/states/end-game";
 
 @Injectable()
 export class RenderService {
 
-    private static readonly NUMBER_OF_MODELS_TO_LOAD = 3;
+    private static readonly NUMBER_OF_MODELS_TO_LOAD = 4;
 
     private _numberOfModelsLoaded: number;
     private _currentCamera: PerspectiveCamera;
@@ -128,8 +129,8 @@ export class RenderService {
      * See : http://danni-three.blogspot.ca/2013/09/threejs-skybox.html
      */
     private generateSkybox() {
-        let imagePrefix = "../../assets/images/frozen_";
-        let directions = ["rt", "lf", "up", "dn", "ft", "bk"];
+        let imagePrefix = "../../assets/images/scenery_";
+        let directions = ["right", "left", "up", "down", "front", "back"];
         let imageSuffix = ".jpg";
         let materialArray = Array<MeshBasicMaterial>();
         for (let i = 0; i < 6; i++) {
@@ -159,10 +160,8 @@ export class RenderService {
     public loadBroom() {
         Broom.createBroom(this._objectLoader, new Vector3(0, 0, -11.4))
             .then((broom : Broom) => {
-                console.log("createBroom");
-                broom.opacityOn();
-                this._gameInfo.scene.add(broom);
                 this._gameInfo.broom = broom;
+                this.onFinishedLoadingModel();
             });
     }
 
@@ -196,7 +195,8 @@ export class RenderService {
         LoadingStone.createInstance(this._gameInfo, true);
         PlayerTurn.createInstance(this._gameInfo);
         ComputerTurn.createInstance(this._gameInfo);
-        Shooting.createInstance(this._gameInfo);
+        PlayerShooting.createInstance(this._gameInfo);
+        ComputerShooting.createInstance(this._gameInfo);
         EndSet.createInstance(this._gameInfo);
         EndGame.createInstance(this._gameInfo);
     }

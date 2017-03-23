@@ -35,7 +35,7 @@ export class UsernameComponent {
         });
         if (isValid) {
             this.alertBox.nativeElement.classList.add("fade");
-            this.userSettingService.setName(username);
+            this.userSettingService.name = username;
             this.router.navigate(["/difficulty"]);
         }
         else {

@@ -1,15 +1,16 @@
 import { Clock, Vector3 } from "three";
 import { AbstractGameState } from "./abstract-game-state";
-import { IGameInfo } from "../game-handler/game-info.interface";
-import { CameraType } from "../game-physics/camera-type";
+import { IGameInfo } from "./../../services/game-handler/game-info.interface";
+import { CameraType } from "./../../services/game-physics/camera-type";
 import { GameComponent } from "../../models/game-component.interface";
-import { Shooting } from "./shooting";
+import { PlayerShooting } from "./player-shooting";
 import { CurrentPlayer } from "../../models/current-player";
+import { calculateMousePosition } from "./../../services/game-physics/mouse-position-calculate";
 
 export class PlayerTurn extends AbstractGameState implements GameComponent {
 
-    private static readonly SHOT_ANGLE_MINIMUM = -2.25;
-    private static readonly SHOT_ANGLE_MAXIMUM = 2.25;
+    public static readonly SHOT_ANGLE_MINIMUM = -2.25;
+    public static readonly SHOT_ANGLE_MAXIMUM = 2.25;
     private static readonly SHOT_POWER_MINIMUM = 0.2;
     private static readonly SHOT_POWER_MAXIMUM = 4;
     private static readonly SHOT_POWER_OFFSET = 1;
@@ -69,24 +70,8 @@ export class PlayerTurn extends AbstractGameState implements GameComponent {
     }
 
     public performMouseMove(event: MouseEvent): AbstractGameState {
+        this._gameInfo.mousePositionPlaneXZ = calculateMousePosition(event, this._gameInfo.currentCamera);
 
-        if (this._gameInfo.currentCamera === CameraType.PERSPECTIVE_CAM) {
-            this._gameInfo.mousePositionPlaneXZ.set(
-                -(event.clientX / window.innerWidth) / 0.02215 + 22.55, // Numbers to align with the rink model
-                0,
-                (event.clientY / window.innerHeight) / 0.008 + 46.75 // Numbers to align with the rink model
-            );
-
-        } else if (this._gameInfo.currentCamera === CameraType.ORTHOGRAPHIC_CAM) {
-            this._gameInfo.mousePositionPlaneXZ.set(
-                -(event.clientY / window.innerHeight) / 0.038 + 13.2 ,
-                0,
-                 (event.clientX / window.innerWidth) / 0.0268 - 18.6
-            );
-
-        } else {
-            console.error("calculateMousePosition : camera unrecognized");
-        }
         // Clamp to angle range
         // Under
         if (this._gameInfo.mousePositionPlaneXZ.x < PlayerTurn.SHOT_ANGLE_MINIMUM) {
@@ -106,8 +91,8 @@ export class PlayerTurn extends AbstractGameState implements GameComponent {
             this._mouseIsPressed = true;
             this._gameInfo.power = 0;
             this._powerTimer.start();
-            return null;
         }
+        return null;
     }
 
     public performMouseButtonReleased(): AbstractGameState {
@@ -123,12 +108,9 @@ export class PlayerTurn extends AbstractGameState implements GameComponent {
                 this._gameInfo.speed += (timeDelta > PlayerTurn.SHOT_POWER_MAXIMUM) ?
                     PlayerTurn.SHOT_POWER_MAXIMUM : timeDelta;
                 this._gameInfo.direction = this._gameInfo.line.lineGeometry.vertices[1].clone().normalize();
-                newState = Shooting.getInstance();
+                newState = PlayerShooting.getInstance();
             }
         }
-        this._gameInfo.broom.opacityOff();
-        //TODO : CHANGE GREEN ONCE YOU PASS THE FIRST LINE
-        this._gameInfo.broom.changeToGreen();
         return newState;
     }
 

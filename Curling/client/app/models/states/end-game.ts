@@ -1,5 +1,5 @@
 import { AbstractGameState } from "./abstract-game-state";
-import { IGameInfo } from "../game-handler/game-info.interface";
+import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 
 export class EndGame extends AbstractGameState {
 
