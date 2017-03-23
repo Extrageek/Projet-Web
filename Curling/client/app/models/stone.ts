@@ -1,4 +1,4 @@
-import { ObjectLoader, Group, MeshPhongMaterial, Object3D, Sphere, Vector3 } from "three";
+import { ObjectLoader, Group, MeshPhongMaterial, Object3D, Sphere, Vector3, Matrix3 } from "three";
 import { GameComponent } from "./game-component.interface";
 import { Observable } from "rxjs/Observable";
 
@@ -16,13 +16,15 @@ export enum StoneColor {
 export class Stone extends Group implements GameComponent {
 
     private static readonly STONES_PATH =
-        ["/assets/models/json/curling-stone-blue.json", "/assets/models/json/curling-stone-red.json"];
+    ["/assets/models/json/curling-stone-blue.json", "/assets/models/json/curling-stone-red.json"];
     private static readonly BOUNDING_SPHERE_RADIUS = 0.26;
-    private static readonly SCALE = {x: 1, y: 1, z: 1};
-    private static readonly MATERIAL_PROPERTIES = {wireframe: false, shininess: 0.7};
+    private static readonly SCALE = { x: 1, y: 1, z: 1 };
+    private static readonly MATERIAL_PROPERTIES = { wireframe: false, shininess: 0.7 };
     public static readonly SPEED_DIMINUTION_NUMBER = 0.2;
     public static readonly SPEED_DIMINUTION_NUMBER_WITH_SWEEP = 0.09;
     private static readonly MINIMUM_SPEED = 0.001;
+
+    private static readonly THETA = Math.PI * 1 / 128;
 
     public _material: MeshPhongMaterial;
     private _stoneColor: StoneColor;
@@ -35,18 +37,19 @@ export class Stone extends Group implements GameComponent {
     private _boundingSphere: Sphere;
     private _lastBoundingSphere: Sphere;
     private _lastPosition: Vector3;
+    private _curlMatrix: Matrix3;
 
     public static createStone(objectLoader: ObjectLoader, stoneColor: StoneColor,
         initialPosition: Vector3): Promise<Stone> {
-            return new Promise<Stone>((resolve, reject) => {
-                objectLoader.load(
-                    Stone.STONES_PATH[stoneColor],
-                    (obj: Object3D) => {
-                        resolve(new Stone(obj, initialPosition, stoneColor));
-                    }
-                );
-            });
-        }
+        return new Promise<Stone>((resolve, reject) => {
+            objectLoader.load(
+                Stone.STONES_PATH[stoneColor],
+                (obj: Object3D) => {
+                    resolve(new Stone(obj, initialPosition, stoneColor));
+                }
+            );
+        });
+    }
 
     //The constructor is private because the loading of the 3D model is asynchronous.
     //To obtain a Stone object, the createStone method must be called.
@@ -66,6 +69,7 @@ export class Stone extends Group implements GameComponent {
         this._boundingSphere = new Sphere(this.position, Stone.BOUNDING_SPHERE_RADIUS);
         this._lastBoundingSphere = this._boundingSphere;
         this._lastPosition = this.position;
+        this._curlMatrix = new Matrix3();
     }
 
     public get boundingSphere(): Sphere {
@@ -132,10 +136,18 @@ export class Stone extends Group implements GameComponent {
     public update(timePerFrame: number) {
         if (this._speed !== 0) {
             this.saveOldValues();
+            this.calculateCurlMatrix();
             //Applying MRUA equation. Xf = Xi + V0*t + a*t^2 / 2, where t = timePerFrame, V0 = speed,
             //Xf is the final position, Xi is the initial position and a = -SPEED_DIMINUTION_NUMBER.
+            //CurlMatrix is applied to the MRUA equaion to add a spin effect
             this.position.add(this._direction.clone().multiplyScalar(
-                this._speed * timePerFrame - Stone.SPEED_DIMINUTION_NUMBER * Math.pow(timePerFrame, 2) / 2));
+                this._speed * timePerFrame - Stone.SPEED_DIMINUTION_NUMBER * Math.pow(timePerFrame, 2) / 2)
+                .applyMatrix3(this._curlMatrix)
+            );
+            console.log("next");
+            console.log(this.position.x);
+            console.log(this.position.y);
+            console.log(this.position.z);
             this.decrementSpeed(timePerFrame);
             this.calculateNewBoundingSphere();
         }
@@ -162,29 +174,44 @@ export class Stone extends Group implements GameComponent {
         this._boundingSphere.set(this.position, Stone.BOUNDING_SPHERE_RADIUS);
     }
 
-public changeStoneOpacity() {
-    for (let i = 0; i < this.children.length; i ++) {
-        (<THREE.Mesh>this.children[i]).material.transparent = true;
-        (<THREE.Mesh>this.children[i]).material.opacity = 1;
+    public changeStoneOpacity() {
+        for (let i = 0; i < this.children.length; i++) {
+            (<THREE.Mesh>this.children[i]).material.transparent = true;
+            (<THREE.Mesh>this.children[i]).material.opacity = 1;
+        }
+
+        let observable = new Observable((observer: any) => {
+            let millisecond = 0;
+            let id = setInterval(() => {
+
+                for (let i = 0; i < this.children.length; i++) {
+                    if ((<THREE.Mesh>this.children[i]).material.opacity > 0) {
+                        (<THREE.Mesh>this.children[i]).material.opacity -= 0.01;
+                    }
+                }
+                millisecond += 10;
+                if (millisecond === 1000) {
+                    observer.next();
+                    clearTimeout(id);
+                }
+            }, 10);
+        });
+
+        return observable;
     }
 
-    let observable = new Observable((observer: any) => {
-        let millisecond = 0;
-        let id = setInterval(() => {
-
-            for (let i = 0; i < this.children.length; i ++) {
-                if((<THREE.Mesh>this.children[i]).material.opacity > 0) {
-                    (<THREE.Mesh>this.children[i]).material.opacity -= 0.01;
-                }
-            }
-            millisecond += 10;
-            if(millisecond == 1000) {
-                observer.next();
-                clearTimeout(id);
-            }
-        }, 10);
-    });
-
-    return observable;
+    private calculateCurlMatrix() {
+        let theta: number;
+        if (this._spin === StoneSpin.Clockwise) {
+            theta = -Stone.THETA;
+        } else {
+            theta = Stone.THETA;
+        }
+        if (this._curlMatrix !== null || this._curlMatrix !== undefined) {
+            this._curlMatrix.set(
+                Math.cos(theta), 0, Math.sin(theta),
+                0, 1, 0,
+                -Math.sin(theta), 0, Math.cos(theta));
+        }
     }
 }

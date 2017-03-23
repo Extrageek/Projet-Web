@@ -1,5 +1,5 @@
 import { IGameInfo } from "../game-handler/game-info.interface";
-import {forEach} from "@angular/router/src/utils/collection";
+import { forEach } from "@angular/router/src/utils/collection";
 
 export abstract class AbstractGameState {
 
@@ -98,7 +98,7 @@ export abstract class AbstractGameState {
         this.performAction(this.performMouseButtonReleased);
     }
 
-    protected abstract performEnteringState() : void;
+    protected abstract performEnteringState(): void;
 
     protected abstract performLeavingState(): void;
 

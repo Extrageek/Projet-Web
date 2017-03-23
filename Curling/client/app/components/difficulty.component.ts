@@ -34,7 +34,7 @@ export class DifficultyComponent implements OnInit {
 
     public launchGame() {
         let RADIX = 10;
-        if(parseInt(this._difficulty, RADIX) == 0) {
+        if (parseInt(this._difficulty, RADIX) === 0) {
             this.userSettingService.userSetting.difficulty = Difficulty.NORMAL;
         } else {
             this.userSettingService.userSetting.difficulty = Difficulty.HARD;

@@ -93,7 +93,7 @@ export class RestApiProxyService {
                 console.error("ERROR - Rest api getAllRecords - Une erreur est survenue - ", error);
                 throw error;
             });
-        console.log(records);
+        //console.log(records);
         return records;
     }
 }

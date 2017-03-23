@@ -21,7 +21,7 @@ export class StoneHandler implements GameComponent {
     private _currentPlayer: StoneColor;
     private _objectLoader: ObjectLoader;
     private _stoneOnTheGame: Stone[];
-    private _stonesToBeRemoved : Stone[];
+    private _stonesToBeRemoved: Stone[];
     private _currentSpin: StoneSpin;
     private _callbackAfterShotFinished: Function;
     private _boundingRink: Box3;
@@ -35,9 +35,9 @@ export class StoneHandler implements GameComponent {
         this._stonesToBeRemoved = new Array<Stone>();
         this._currentSpin = StoneSpin.Clockwise;
         this._callbackAfterShotFinished = null;
-        this._boundingRink = new Box3( new Vector3(-2.15, 0, -22.5), new Vector3(2.15, 0, 22.5));
-        this._outOfBoundsArea = new Box3( new Vector3(-2.15, 0, -16.25), new Vector3(2.15, 0, 16.25));
-        this._outOfBoundsArea.translate( new Vector3(0,0,-12.25));
+        this._boundingRink = new Box3(new Vector3(-2.15, 0, -22.5), new Vector3(2.15, 0, 22.5));
+        this._outOfBoundsArea = new Box3(new Vector3(-2.15, 0, -16.25), new Vector3(2.15, 0, 16.25));
+        this._outOfBoundsArea.translate(new Vector3(0, 0, -12.25));
     }
 
     public get stoneOnTheGame(): Stone[] {
@@ -62,16 +62,16 @@ export class StoneHandler implements GameComponent {
     public performShot(
         direction: Vector3,
         speed: number,
-        callbackWhenShotFinished: Function = () => {/*Do nothing by default*/}
-        ) {
-            if (this._stoneOnTheGame.length === 0) {
-                throw new RangeError("Cannot perform shot on a stone. No stones has been generated yet.");
-            }
-            let lastIndex = this._stoneOnTheGame.length - 1;
-            this._stoneOnTheGame[lastIndex].speed = speed;
-            this._stoneOnTheGame[lastIndex].direction = direction;
-            this._stoneOnTheGame[lastIndex].spin = this.currentSpin;
-            this._callbackAfterShotFinished = callbackWhenShotFinished;
+        callbackWhenShotFinished: Function = () => {/*Do nothing by default*/ }
+    ) {
+        if (this._stoneOnTheGame.length === 0) {
+            throw new RangeError("Cannot perform shot on a stone. No stones has been generated yet.");
+        }
+        let lastIndex = this._stoneOnTheGame.length - 1;
+        this._stoneOnTheGame[lastIndex].speed = speed;
+        this._stoneOnTheGame[lastIndex].direction = direction;
+        this._stoneOnTheGame[lastIndex].spin = this.currentSpin;
+        this._callbackAfterShotFinished = callbackWhenShotFinished;
     }
 
     public generateNewStone(): Promise<Stone> {
@@ -86,7 +86,7 @@ export class StoneHandler implements GameComponent {
 
     //TODO: Count the points by looking at the RinkInfo and the position of the array of stones.
     public countPoints(): Points {
-         return {player: 0, computer: 0};
+        return { player: 0, computer: 0 };
     }
 
     public cleanAllStones(scene: Scene) {
@@ -105,7 +105,7 @@ export class StoneHandler implements GameComponent {
                     stone.update(timePerFrame);
                     this.resolveCollisions(stone);
                     isCollision = true;
-                } else if (stone.speed == 0) {
+                } else if (stone.speed === 0) {
                     this.removeInvalidStonesFromRink(stone);
                 }
                 aStoneIsMoving = aStoneIsMoving || stone.speed !== 0;
@@ -120,7 +120,7 @@ export class StoneHandler implements GameComponent {
     private removeStone(stone: Stone) {
         let index = this._stoneOnTheGame.indexOf(stone);
         if (index > -1) {
-            this._stoneOnTheGame.splice(index,1);
+            this._stoneOnTheGame.splice(index, 1);
         }
     }
 
@@ -135,12 +135,12 @@ export class StoneHandler implements GameComponent {
         });
     }
     private removeInvalidStonesFromRink(stone: Stone) {
-            if ((this._outOfBoundsArea.intersectsSphere(stone.boundingSphere))) {
-                this.removeStone(stone);
-                stone.changeStoneOpacity().subscribe((count) => {
-                    this._stonesToBeRemoved.push(stone);
-                });
-            }
+        if ((this._outOfBoundsArea.intersectsSphere(stone.boundingSphere))) {
+            this.removeStone(stone);
+            stone.changeStoneOpacity().subscribe((count) => {
+                this._stonesToBeRemoved.push(stone);
+            });
+        }
     }
     private resolveCollisions(stoneToVerify: Stone) {
         let stonesHit = new Array<Stone>();
@@ -164,7 +164,7 @@ export class StoneHandler implements GameComponent {
 
             let newDirection: Vector3 = stonesHit[0].direction.clone().multiplyScalar(stonesHit[0].speed)
                 .add(stoneHiting.direction.clone().multiplyScalar(stoneHiting.speed)
-                .add(stoneToStoneVector))
+                    .add(stoneToStoneVector))
                 .normalize();
 
             let totalSpeed = stonesHit[0].speed + stoneHiting.speed;
