@@ -23,8 +23,15 @@ export class Stone extends Group implements GameComponent {
     public static readonly SPEED_DIMINUTION_NUMBER = 0.2;
     public static readonly SPEED_DIMINUTION_NUMBER_WITH_SWEEP = 0.09;
     private static readonly MINIMUM_SPEED = 0.001;
+    private static readonly SWEEPING_CURL_COEFF = 0.01;
 
-    private static readonly THETA = Math.PI / 128;
+    private _theta: number;
+    public get theta(): number {
+        return this._theta;
+    }
+    public set theta(angle: number) {
+        this._theta = angle;
+    }
 
     public _material: MeshPhongMaterial;
     private _stoneColor: StoneColor;
@@ -69,6 +76,7 @@ export class Stone extends Group implements GameComponent {
         this._boundingSphere = new Sphere(this.position, Stone.BOUNDING_SPHERE_RADIUS);
         this._lastBoundingSphere = this._boundingSphere;
         this._lastPosition = this.position;
+        this.theta = Math.PI / 8000;
         this._curlMatrix = new Matrix3();
     }
 
@@ -123,7 +131,6 @@ export class Stone extends Group implements GameComponent {
         this._spin = s;
     }
 
-
     public revertToLastPosition() {
         this._boundingSphere = this._lastBoundingSphere;
         this.position.copy(this._lastPosition);
@@ -132,16 +139,16 @@ export class Stone extends Group implements GameComponent {
     public update(timePerFrame: number) {
         if (this._speed !== 0) {
             this.saveOldValues();
+            this.calculateRotationAngle();
             this.calculateCurlMatrix();
             //Applying MRUA equation. Xf = Xi + V0*t + a*t^2 / 2, where t = timePerFrame, V0 = speed,
             //Xf is the final position, Xi is the initial position and a = -SPEED_DIMINUTION_NUMBER.
             //CurlMatrix is applied to the MRUA equaion to add a spin effect
-            this.position.add(this._direction.clone().multiplyScalar(
-                this._speed * timePerFrame - Stone.SPEED_DIMINUTION_NUMBER * Math.pow(timePerFrame, 2) / 2)
-                .applyMatrix3(this._curlMatrix)
-            );
-
-            this.position.y = 0;
+            this.position.add((this._direction.applyMatrix3(this._curlMatrix).clone()
+                .multiplyScalar(this._speed * timePerFrame - Stone.SPEED_DIMINUTION_NUMBER
+                * Math.pow(timePerFrame, 2) / 2)
+            ));
+            //this.position.y = 0;
             this.decrementSpeed(timePerFrame);
             this.calculateNewBoundingSphere();
         }
@@ -194,22 +201,36 @@ export class Stone extends Group implements GameComponent {
                 }
             }, 10);
         });
-
         return observable;
     }
 
-    private calculateCurlMatrix() {
-        let theta: number;
-        if (this._spin === StoneSpin.Clockwise) {
-            theta = -Stone.THETA;
-        } else {
-            theta = Stone.THETA;
+    private calculateRotationAngle() {
+        let oldTheta = this.theta;
+        // decrease curl effect with sweeping for clockwise spin
+        if (this._spin === StoneSpin.Clockwise && this.isSweeping) {
+            this.theta = this.theta - Stone.SWEEPING_CURL_COEFF;
         }
+        // decrease curl effect with sweeping for counterclockwise spin
+        else if (this._spin === StoneSpin.CounterClockwise && this.isSweeping) {
+            this.theta = this.theta + Stone.SWEEPING_CURL_COEFF;
+        }
+        // invert spin from counterclockwise to clockwise
+        else if (this._spin === StoneSpin.Clockwise && !this.isSweeping && oldTheta > 0) {
+            this.theta = -this.theta;
+        }
+        // invert spin from clockwise to counterclockwise
+        else if (this._spin === StoneSpin.CounterClockwise && !this.isSweeping && oldTheta < 0) {
+            this.theta = -this.theta;
+        }
+    }
+
+    private calculateCurlMatrix() {
         if (this._curlMatrix !== null || this._curlMatrix !== undefined) {
+            // Rotation matrix Y axis
             this._curlMatrix.set(
-                Math.cos(theta), 0, Math.sin(theta),
+                Math.cos(this.theta), 0, Math.sin(this.theta),
                 0, 1, 0,
-                -Math.sin(theta), 0, Math.cos(theta));
+                -Math.sin(this.theta), 0, Math.cos(this.theta));
         }
     }
 }

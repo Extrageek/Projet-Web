@@ -16,7 +16,6 @@ import { CameraType } from '../game-physics/camera-type';
 import { Broom } from './../../models/broom';
 
 import { LightingService } from './../views/ligthing.service';
-import { SceneryService } from './../views/scenery.service';
 import { TextureHandler } from '../views/texture-handler';
 import { IGameInfo } from "./game-info.interface";
 import { LoadingStone } from "./../../models/states/loading-stone";
@@ -35,9 +34,8 @@ export class RenderService {
     private _numberOfModelsLoaded: number;
     private _currentCamera: PerspectiveCamera;
     private _lightingService: LightingService;
-    private _sceneryService: SceneryService;
     private _objectLoader: ObjectLoader;
-
+    private _mesh : Mesh;
     private _clock: Clock;
     private _renderer: Renderer;
     private _animationStarted: boolean;
@@ -46,8 +44,7 @@ export class RenderService {
 
     constructor(gameStatusService: GameStatusService,
         cameraService: CameraService,
-        lightingService: LightingService,
-        sceneryService: SceneryService) {
+        lightingService: LightingService) {
         console.log("here!");
         this._gameInfo = {
             gameStatus: gameStatusService,
@@ -67,7 +64,6 @@ export class RenderService {
             textureHandler: null
         };
         this._lightingService = lightingService;
-        this._sceneryService = sceneryService;
         Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "cameraService", { value: cameraService });
         this._gameInfo.gameStatus.randomFirstPlayer();
         this._animationStarted = false;
@@ -86,7 +82,7 @@ export class RenderService {
         this._currentCamera = this._gameInfo.cameraService.perspectiveCamera;
 
         //Part 2: Scenery
-        this._sceneryService.generateSkybox(this._gameInfo.scene);
+        this.generateSkybox();
         this._lightingService.setUpLighting(this._gameInfo.scene);
 
         //Part 3: Components
@@ -124,7 +120,25 @@ export class RenderService {
         this._gameInfo.scene.add(this._gameInfo.line.lineMesh);
     }
 
-
+    /**
+     * See : http://danni-three.blogspot.ca/2013/09/threejs-skybox.html
+     */
+    public generateSkybox() {
+        let imagePrefix = "../../assets/images/scenery_";
+        let directions = ["right", "left", "up", "down", "front", "back"];
+        let imageSuffix = ".jpg";
+        let materialArray = Array<MeshBasicMaterial>();
+        for (let i = 0; i < 6; i++) {
+            materialArray.push(new MeshBasicMaterial({
+                map: ImageUtils.loadTexture(imagePrefix + directions[i] + imageSuffix),
+                side: BackSide
+            }));
+        }
+        let geometry = new CubeGeometry(200, 200, 200);
+        let material = new MeshFaceMaterial(materialArray);
+        this._mesh = new Mesh(geometry, material);
+        this._gameInfo.scene.add(this._mesh);
+    }
 
     public linkRenderServerToCanvas(container: HTMLElement) {
         // Inser the canvas into the DOM
@@ -146,7 +160,7 @@ export class RenderService {
     }
     public loadBroom() {
         Broom.createBroom(this._objectLoader, new Vector3(0, 0, -11.4))
-            .then((broom : Broom) => {
+            .then((broom: Broom) => {
                 this._gameInfo.broom = broom;
                 this.onFinishedLoadingModel();
             });
@@ -154,14 +168,16 @@ export class RenderService {
 
     private loadRink() {
         Rink.createRink(this._objectLoader).then((rink: Rink) => {
-            this._sceneryService.mesh.add(rink);
+            //this._sceneryService.mesh.add(rink);
+            this._mesh.add(rink);
             this.loadStoneHandler(rink);
         });
     }
 
     private loadArena() {
         Arena.createArena(this._objectLoader).then((arena: Arena) => {
-            this._sceneryService.mesh.add(arena);
+            //this._sceneryService.mesh.add(arena);
+            this._mesh.add(arena);
             this.onFinishedLoadingModel();
         });
     }
