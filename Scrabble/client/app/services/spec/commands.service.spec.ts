@@ -134,7 +134,7 @@ describe("CommandService", function () {
 
     it("extractCommandParameters, reconize the input to open help menu", () => {
         let verification = commandsService.extractCommandParameters("!aide");
-        expect(verification.commandType).to.be.equal(CommandType.Guide);
+        expect(verification.commandType).to.be.equal(CommandType.GuideCmd);
     });
 
     it("extractCommandParameters, reconize an invalid command", () => {

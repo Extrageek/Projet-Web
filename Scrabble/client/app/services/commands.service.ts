@@ -7,7 +7,6 @@ import { ChatroomComponent } from "../components/chatroom.component";
 import { GameComponent } from "../components/game-room.component";
 
 import { EaselManagerService } from "./easel-manager.service";
-// import { LetterHelper } from "../commons/letter-helper";
 import { IScrabbleLetter } from "../models/scrabble-letter";
 
 import { CommandType } from "./commons/command-type";
@@ -19,6 +18,7 @@ import { MessageCommand } from './message-command';
 import { ChangeLettersCommand } from './change-letters-command';
 import { PlaceWordCommand } from './place-word-command';
 import { PassCommand } from './pass-command';
+import { GuideCommand } from './guide-command';
 
 const PARAM_INDEX = 1;
 
@@ -83,6 +83,17 @@ export class CommandsService {
         passCommand.execute();
     }
 
+    public invokeAndExecuteGuideCommand(
+        receiverChatRoom: ChatroomComponent) {
+
+        if (receiverChatRoom === null) {
+            throw new Error("Null argument error: the parameters cannot be null");
+        }
+
+        let guideCommand = new GuideCommand(receiverChatRoom);
+        guideCommand.execute();
+    }
+
     public extractCommandParameters(enteredValue: string): { commandType: CommandType, parameters: string } {
         this.throwsErrorIfParameterIsNull(enteredValue);
         let texte = enteredValue.trim();
@@ -101,7 +112,7 @@ export class CommandsService {
             request.parameters = texte.split(CommandsHelper.PASS_COMMAND)[PARAM_INDEX].trim();
 
         } else if (texte.startsWith(CommandsHelper.GUIDE)) {
-            request.commandType = CommandType.Guide;
+            request.commandType = CommandType.GuideCmd;
             request.parameters = texte.split(CommandsHelper.GUIDE)[PARAM_INDEX].trim();
 
         } else if (texte.startsWith('!') && !texte.startsWith(CommandsHelper.PLACE_COMMAND)) {
