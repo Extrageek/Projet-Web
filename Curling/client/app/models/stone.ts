@@ -69,6 +69,7 @@ export class Stone extends Group implements GameComponent {
         this._material = new MeshPhongMaterial(Stone.MATERIAL_PROPERTIES);
         this.position.set(initialPosition.x, initialPosition.y, initialPosition.z);
         this.scale.set(Stone.SCALE.x, Stone.SCALE.y, Stone.SCALE.z);
+        this.sweeping = false;
         this._stoneColor = stoneColor;
         this._speed = 0;
         this._direction = new Vector3(0, 0, 1);
