@@ -167,12 +167,12 @@ export class SocketConnectionHandler {
                 .createPlaceWordResponse(player.username, room, request._commandStatus, request._response);
 
             if (response._commandStatus === CommandStatus.Ok) {
-                if (room.placeWordInTheBoard(request._response, player)) {
-
+                if (room.placeWordInTheBoard(request._response, player.username)) {
                     // Place the word in the board and emit an update board to the room members
                     this._socket.to(room.roomId).emit(SocketEventType.updateBoard, room.board);
                     // Update easel for the player
-                    socket.emit(SocketEventType.updateEasel, player.easel.letters);
+                    let newEasel = room.letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
+                    socket.emit(SocketEventType.updateEasel, newEasel);
 
                     // Update the players queues for everyone in the room
                     let playersQueues = room.getAndUpdatePlayersQueue();

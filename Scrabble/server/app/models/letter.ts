@@ -10,7 +10,7 @@ export class Letter {
     public get imageSource(): string {
         return this._imageSource;
     }
-    
+
     public get alphabetLetter(): string {
         return this._alphabetLetter;
     }

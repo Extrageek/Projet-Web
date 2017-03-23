@@ -29,6 +29,13 @@ export class BoardManager {
         this._horizontalWordValidator = new HorizontalWordValidator();
     }
 
+    public get player(): Player {
+        return this._player;
+    }
+    public set player(v: Player) {
+        this._player = v;
+    }
+
     public placeWordInBoard(
         response: IPlaceWordResponse,
         board: Board,
@@ -79,9 +86,9 @@ export class BoardManager {
             return false;
         }
 
-        for (let index = 0; index < letters.length; ++index) {
-
+        for (let index = 0; index < letters.length; index++) {
             let nextColumnIndex = columnIndex + index;
+            console.log(nextColumnIndex);
 
             // Get the row number from the given letter
             let rowLetterToRowNumber = firstRowIndex.toUpperCase()
@@ -92,6 +99,7 @@ export class BoardManager {
                 this._board.squares[rowLetterToRowNumber][nextColumnIndex - 1].squareValue =
                     letters[index].alphabetLetter;
                 this._board.squares[rowLetterToRowNumber][nextColumnIndex - 1].isBusy = true;
+                this._player.easel.removeLetter(letters[index].alphabetLetter);
             }
         }
 
@@ -110,10 +118,8 @@ export class BoardManager {
             _letters: letters,
             _player: this._player
         };
-        let match = this._verticalWordValidator.matchVerticalPlacementRules(request, this._board);
-        console.log("MATCH RULES ---- ", match);
 
-        if (!match) {
+        if (!this._verticalWordValidator.matchVerticalPlacementRules(request, this._board)) {
             return false;
         }
 
@@ -130,6 +136,7 @@ export class BoardManager {
                 this._board.squares[nextSquareRow][columnIndex - 1].squareValue =
                     letters[index].alphabetLetter;
                 this._board.squares[nextSquareRow][columnIndex - 1].isBusy = true;
+                this._player.easel.removeLetter(letters[index].alphabetLetter);
             }
         }
 

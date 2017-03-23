@@ -164,7 +164,14 @@ export class Room {
         return lettersStr;
     }
 
-    public placeWordInTheBoard(response: IPlaceWordResponse, player: Player): boolean {
-        return this._boardManager.placeWordInBoard(response, this._board, player);
+    public placeWordInTheBoard(response: IPlaceWordResponse, username: string): boolean {
+        let hasBeenPlaced: boolean;
+        this._playersQueue.forEach((player: Player) => {
+            if (player.username === username) {
+                hasBeenPlaced = this._boardManager.placeWordInBoard(response, this._board, player);
+                player.easel.letters = this._boardManager.player.easel.letters;
+            }
+        });
+        return hasBeenPlaced;
     }
 }
