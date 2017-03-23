@@ -148,7 +148,7 @@ export class Stone extends Group implements GameComponent {
                 .multiplyScalar(this._speed * timePerFrame - Stone.SPEED_DIMINUTION_NUMBER
                 * Math.pow(timePerFrame, 2) / 2)
             ));
-            //this.position.y = 0;
+            this.position.y = 0;
             this.decrementSpeed(timePerFrame);
             this.calculateNewBoundingSphere();
         }
