@@ -72,7 +72,6 @@ export class RenderService {
     }
 
     public init(container: HTMLElement) {
-        console.log("init!");
         //Clock for the time per frame.
         this._clock = new Clock(false);
 
@@ -101,7 +100,7 @@ export class RenderService {
 
     public loadLine() {
         let geometry = new Geometry();
-        geometry.vertices.push(new Vector3(0, 0.1, -11.1)); // First HogLine
+        geometry.vertices.push(new Vector3(0, 0.1, -18)); // First HogLine
         geometry.vertices.push(new Vector3(0, 0.1, 22.4)); // EndPoint
         geometry.computeLineDistances();
 
@@ -118,6 +117,15 @@ export class RenderService {
         this._gameInfo.line.lineMesh = new Line(geometry, material);
         this._gameInfo.line.lineAnimationSlower = 0;
         this._gameInfo.scene.add(this._gameInfo.line.lineMesh);
+    }
+
+
+
+    public linkRenderServerToCanvas(container: HTMLElement) {
+        // Inser the canvas into the DOM
+        if (container.getElementsByTagName('canvas').length === 0) {
+            container.appendChild(this._renderer.domElement);
+        }
     }
 
     /**
@@ -138,13 +146,6 @@ export class RenderService {
         let material = new MeshFaceMaterial(materialArray);
         this._mesh = new Mesh(geometry, material);
         this._gameInfo.scene.add(this._mesh);
-    }
-
-    public linkRenderServerToCanvas(container: HTMLElement) {
-        // Inser the canvas into the DOM
-        if (container.getElementsByTagName('canvas').length === 0) {
-            container.appendChild(this._renderer.domElement);
-        }
     }
 
     private loadTextureHandler() {
@@ -168,7 +169,6 @@ export class RenderService {
 
     private loadRink() {
         Rink.createRink(this._objectLoader).then((rink: Rink) => {
-            //this._sceneryService.mesh.add(rink);
             this._mesh.add(rink);
             this.loadStoneHandler(rink);
         });

@@ -10,7 +10,7 @@ export class LoadingStone extends AbstractGameState {
 
     private static readonly STONE_POSITION_X = 0;
     private static readonly STONE_POSITION_Y = 0;
-    private static readonly STONE_POSITION_Z = -11.4;
+    private static readonly STONE_POSITION_Z = -18;
     private static _instance: AbstractGameState = null;
 
     /**
