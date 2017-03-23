@@ -14,7 +14,7 @@ my-gl {
     cursor: none;
     width: 100vw;
     min-height: 100vh;
-    z-index: 5; 
+    z-index: 5;
 }
 
 display-component {
@@ -34,7 +34,6 @@ display-component {
 
 #playerName {
     font-family: 'Bungee Inline';
-    /*font-family: Georgia;*/
     font-size: 45px;
     color: blue;
     text-align: left

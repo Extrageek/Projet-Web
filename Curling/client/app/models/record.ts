@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Difficulty } from './user-setting';
+import { Difficulty } from './../services/user.service';
 
 @Injectable()
 export class Record {

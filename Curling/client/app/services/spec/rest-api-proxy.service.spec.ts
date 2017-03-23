@@ -14,19 +14,19 @@ import {
 import { MockBackend, MockConnection } from '@angular/http/testing';
 import { expect } from 'chai';
 
-import { UserSetting } from './../../models/user-setting';
+import { Difficulty } from './../user.service';
 import { Record } from './../../models/record';
 import { RestApiProxyService } from './../rest-api-proxy.service';
 import { GameStatusService } from "./../game-status.service";
 
 
-let userSetting: UserSetting;
+let username = "Michel";
+let computerDifficulty = Difficulty.NORMAL;
 let gameStatus: GameStatusService;
 
 describe('RestApiProxyService - createGameRecord', () => {
 
     beforeEach(async () => {
-        userSetting = new UserSetting();
         gameStatus = new GameStatusService();
         TestBed.configureTestingModule({
             providers: [
@@ -49,7 +49,6 @@ describe('RestApiProxyService - createGameRecord', () => {
     it("createGameRecord, Should return true since the request has been completed successfully.",
         inject([RestApiProxyService, MockBackend],
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
-
                 mockBackend.connections.subscribe((connection: MockConnection) => {
 
                     //Check the expected Url to the server
@@ -64,7 +63,7 @@ describe('RestApiProxyService - createGameRecord', () => {
 
                 let response: boolean;
                 // Make the fake call to the server
-                restApiProxyService.createGameRecord(userSetting, gameStatus).then(data => {
+                restApiProxyService.createGameRecord(username, computerDifficulty, gameStatus).then(data => {
                     response = data;
                 });
 
@@ -91,7 +90,7 @@ describe('RestApiProxyService - createGameRecord', () => {
 
                 let response: boolean;
                 // Make the fake call to the server
-                restApiProxyService.createGameRecord(userSetting, gameStatus).then(data => {
+                restApiProxyService.createGameRecord(username, computerDifficulty, gameStatus).then(data => {
                     response = data;
                 });
 
@@ -114,7 +113,7 @@ describe('RestApiProxyService - createGameRecord', () => {
 
                 let response: boolean;
                 // Make the fake call to the server
-                restApiProxyService.createGameRecord(userSetting, gameStatus)
+                restApiProxyService.createGameRecord(username, computerDifficulty, gameStatus)
                     .then(data => {
                         response = data;
                     })
@@ -133,7 +132,6 @@ describe('RestApiProxyService - createGameRecord', () => {
 describe('RestApiProxyService - verifyUsername', () => {
 
     beforeEach(async () => {
-        userSetting = new UserSetting();
         gameStatus = new GameStatusService();
         TestBed.configureTestingModule({
             providers: [
@@ -171,7 +169,7 @@ describe('RestApiProxyService - verifyUsername', () => {
 
                 let response: boolean;
                 // Make the fake call to the server
-                restApiProxyService.verifyUsername(userSetting.name)
+                restApiProxyService.verifyUsername(username)
                     .then(data => {
                         response = data;
                     })
@@ -202,7 +200,7 @@ describe('RestApiProxyService - verifyUsername', () => {
 
                 let response: boolean;
                 // Make the fake call to the server
-                restApiProxyService.verifyUsername(userSetting.name)
+                restApiProxyService.verifyUsername(username)
                     .then(data => {
                         response = data;
                     })
@@ -229,7 +227,7 @@ describe('RestApiProxyService - verifyUsername', () => {
 
                 let response: boolean;
                 // Make the fake call to the server
-                restApiProxyService.verifyUsername(userSetting.name)
+                restApiProxyService.verifyUsername(username)
                     .then(data => {
                         response = data;
                     })

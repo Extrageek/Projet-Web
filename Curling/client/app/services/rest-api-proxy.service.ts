@@ -4,7 +4,7 @@ import { Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
 import { GameStatusService } from './game-status.service';
-import { UserSetting } from './../models/user-setting';
+import { Difficulty } from './user.service';
 import { Record } from './../models/record';
 
 
@@ -15,11 +15,13 @@ export class RestApiProxyService {
 
     constructor(private http: Http) { }
 
-    public async createGameRecord(userSetting: UserSetting, gameStatus: GameStatusService): Promise<boolean> {
+    public async createGameRecord(username: string,
+        computerDifficulty: Difficulty,
+        gameStatus: GameStatusService): Promise<boolean> {
         return await this.http
             .post(this._urlApi + "game-over", JSON.stringify({
-                username: userSetting.name,
-                difficulty: userSetting.difficulty,
+                username: username,
+                difficulty: computerDifficulty,
                 scorePlayer: gameStatus.scorePlayer,
                 scoreComputer: gameStatus.scoreComputer,
                 set: gameStatus.currentSet,

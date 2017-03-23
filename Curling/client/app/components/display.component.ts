@@ -1,8 +1,6 @@
 import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { UserSetting } from '../models/user-setting';
-
 import { RestApiProxyService } from './../services/rest-api-proxy.service';
 import { UserService } from './../services/user.service';
 import { GameStatusService } from './../services/game-status.service';
@@ -15,7 +13,7 @@ import { GameStatusService } from './../services/game-status.service';
     styleUrls: ['../../assets/stylesheets/display-component.css', '../../assets/stylesheets/menu-hamburger.css']
 })
 export class DisplayComponent implements OnInit {
-    _userSetting: UserSetting;
+    _userSetting: UserService;
     _gameStatus: GameStatusService;
     _computerName: string;
 
@@ -25,7 +23,7 @@ export class DisplayComponent implements OnInit {
     @HostListener('window:beforeunload')
     public async saveAndLogout() {
         await this.api.removeUsername(this._userSetting.name);
-        await this.api.createGameRecord(this._userSetting, this._gameStatus);
+        await this.api.createGameRecord(this._userSetting.name, this._userSetting.difficulty, this._gameStatus);
     }
 
     constructor(
@@ -35,7 +33,7 @@ export class DisplayComponent implements OnInit {
         private gameStatusService: GameStatusService) { }
 
     ngOnInit() {
-        this._userSetting = this.userService.userSetting;
+        this._userSetting = this.userService;
         if (this._userSetting.name === "") {
             this.router.navigate(['/']);
         }
@@ -53,7 +51,7 @@ export class DisplayComponent implements OnInit {
     }
 
     public gameOver() {
-        this.api.createGameRecord(this._userSetting, this._gameStatus);
+        this.api.createGameRecord(this._userSetting.name, this._userSetting.difficulty, this._gameStatus);
         this.api.removeUsername(this._userSetting.name);
         this.router.navigate(['/']);
     }

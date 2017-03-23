@@ -128,8 +128,8 @@ export class RenderService {
      * See : http://danni-three.blogspot.ca/2013/09/threejs-skybox.html
      */
     private generateSkybox() {
-        let imagePrefix = "../../assets/images/frozen_";
-        let directions = ["rt", "lf", "up", "dn", "ft", "bk"];
+        let imagePrefix = "../../assets/images/scenery_";
+        let directions = ["right", "left", "up", "down", "front", "back"];
         let imageSuffix = ".jpg";
         let materialArray = Array<MeshBasicMaterial>();
         for (let i = 0; i < 6; i++) {
