@@ -174,15 +174,15 @@ describe("Room", () => {
         let fakeLettersReceived: Array<string>;
 
         fakeLettersToChange = ['A', 'B', 'C'];
-        fakeLettersReceived = fakeRoom.exchangeThePlayerLetters(fakeLettersToChange);
-        expect(fakeLettersReceived).to.be.an.instanceOf(Array);
+        let hasChanged = fakeRoom.exchangeThePlayerLetters(fakeSocketId1, fakeLettersToChange);
+        expect(hasChanged).to.be.true;
         expect(fakeLettersToChange.length).to.be.equal(fakeLettersReceived.length);
     });
 
     it("should return initial 7 letters to initialize the player easel", () => {
         let roomCapacity = 2;
         let room = new Room(roomCapacity);
-        let initialLetters = room.getInitialsLetters();
+        let initialLetters = room.getInitialsLetters("mat");
 
         expect(initialLetters).to.be.an.instanceOf(Array);
         expect(initialLetters.length).to.be.equal(7);
@@ -191,7 +191,7 @@ describe("Room", () => {
     it("should return initial 7 letters to initialize the player easel", () => {
         let roomCapacity = 2;
         let room = new Room(roomCapacity);
-        let initialLetters = room.getInitialsLetters();
+        let initialLetters = room.getInitialsLetters("mat");
 
         expect(initialLetters).to.be.an.instanceOf(Array);
         expect(initialLetters.length).to.be.equal(7);

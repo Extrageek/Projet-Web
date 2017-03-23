@@ -36,6 +36,7 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.onUpdatePlayersQueueEvent();
         this.onUpdateScore();
+        this._lettersOnEasel = this.socketService.player.letters.length;
     }
 
     ngAfterViewInit() {

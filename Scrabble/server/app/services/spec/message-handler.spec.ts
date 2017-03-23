@@ -128,32 +128,32 @@ describe("MessageHandler", () => {
 
     it("createExchangeLettersResponse, Should throw Null argument exception if the username is null", () => {
         let wrapper = () => messageHandler
-            .createExchangeLettersResponse(null, fakeRoom, CommandStatus.NotAllowed, fakeLetters, fakeLettersToSend);
+            .createExchangeLettersResponse(null, fakeRoom, CommandStatus.NotAllowed, fakeLetters);
         expect(wrapper).throw(Error, "Null argument exception: the parameters cannot be null be null.");
     });
 
     it("createExchangeLettersResponse, Should throw Null argument exception if the room is null", () => {
         let wrapper = () => messageHandler
-        .createExchangeLettersResponse(fakeUsername, null, CommandStatus.NotAllowed, fakeLetters, fakeLettersToSend);
+        .createExchangeLettersResponse(fakeUsername, null, CommandStatus.NotAllowed, fakeLetters);
         expect(wrapper).throw(Error, "Null argument exception: the parameters cannot be null be null.");
     });
 
     it("createExchangeLettersResponse, Should throw Null argument exception if the CommandStatus is null", () => {
         let wrapper = () => messageHandler
-            .createExchangeLettersResponse(fakeUsername, fakeRoom, null, fakeLetters, fakeLettersToSend);
+            .createExchangeLettersResponse(fakeUsername, fakeRoom, null, fakeLetters);
         expect(wrapper).throw(Error, "Null argument exception: the parameters cannot be null be null.");
     });
 
     it("createExchangeLettersResponse, Should throw Null argument exception if the letters to change is null", () => {
         let wrapper = () => messageHandler
-            .createExchangeLettersResponse(fakeUsername, fakeRoom, CommandStatus.NotAllowed, null, fakeLettersToSend);
+            .createExchangeLettersResponse(fakeUsername, fakeRoom, CommandStatus.NotAllowed, null);
         expect(wrapper).throw(Error, "Null argument exception: the parameters cannot be null be null.");
     });
 
     it("createExchangeLettersResponse, " +
         "Should create valid message with NotAllowed response with the letters to exchange", () => {
             let response = messageHandler
-                .createExchangeLettersResponse(fakeUsername, fakeRoom, CommandStatus.NotAllowed, fakeLetters, null);
+                .createExchangeLettersResponse(fakeUsername, fakeRoom, CommandStatus.NotAllowed, fakeLetters);
             let expectedMessage = `$: ${CommandStatus[CommandStatus.NotAllowed]} `
                 + `<!changer> ` + ' '
                 + `${fakeLetters.toString()}`;
@@ -170,7 +170,7 @@ describe("MessageHandler", () => {
     it("createExchangeLettersResponse, " +
         "Should create valid message with Ok response with the letters to exchange", () => {
             let response = messageHandler
-            .createExchangeLettersResponse(fakeUsername, fakeRoom, CommandStatus.Ok, fakeLetters, fakeLettersToSend);
+            .createExchangeLettersResponse(fakeUsername, fakeRoom, CommandStatus.Ok, fakeLetters);
             let expectedMessage = `$: <!changer> ` + ' ' + `${fakeLetters.toString()}`;
 
             assert(response._username === fakeUsername);

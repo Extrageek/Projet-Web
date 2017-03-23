@@ -10,7 +10,7 @@ describe("BoardManager", () => {
     beforeEach(() => {
         boardManager = new BoardManager();
     });
-    
+
       it("should create a new MessageHandler", () => {
         boardManager = new BoardManager();
         expect(boardManager).not.to.be.undefined;

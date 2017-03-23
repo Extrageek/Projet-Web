@@ -40,6 +40,7 @@ export class SocketEventType {
 
     static updateBoard = "updateBoard";
     static updateScore = "updateScore";
+    static updateEasel = "updateEasel";
 
     static changeLettersRequest = "!changer";
     static placeWordCommandRequest = "!place";

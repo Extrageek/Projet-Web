@@ -161,7 +161,7 @@ export class RoomHandler {
         return (typeof (currentPlayer) !== "undefined") ? currentPlayer : null;
     }
 
-    public exchangeLetterOfCurrentPlayer(socketId: string, lettersToBeExchange: Array<string>): Array<string> {
+    public exchangeLetterOfCurrentPlayer(socketId: string, lettersToBeExchange: Array<string>): boolean {
         let letters = new Array<string>();
         if (socketId === null) {
             throw new Error("The socket value cannot be null.");
@@ -169,11 +169,11 @@ export class RoomHandler {
         if (lettersToBeExchange === null) {
             throw new Error("The list of letters to be exchanged cannot cannot be null.");
         }
-        let playerRoom = this.getRoomBySocketId(socketId);
+        let room = this.getRoomBySocketId(socketId);
 
-        if (playerRoom !== null) {
-            letters = playerRoom.exchangeThePlayerLetters(lettersToBeExchange);
+        if (room !== null) {
+            return room.exchangeThePlayerLetters(socketId, lettersToBeExchange);
         }
-        return letters;
+        return false;
     }
 }
