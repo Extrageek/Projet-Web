@@ -277,8 +277,8 @@ describe("Room Handler", () => {
         let fakeLettersToBeChanges: Array<string>;
         fakeLettersToBeChanges = ['A', 'B', 'C'];
         let fakeNewLetters: Array<String>;
-        fakeNewLetters = roomHandler.exchangeLetterOfCurrentPlayer(player1.socketId, fakeLettersToBeChanges);
-        expect(fakeNewLetters).to.be.an.instanceOf(Array);
+        let hasChanged = roomHandler.exchangeLetterOfCurrentPlayer(player1.socketId, fakeLettersToBeChanges);
+        expect(hasChanged).to.be.true;
         expect(fakeNewLetters.length).to.be.equal(fakeLettersToBeChanges.length);
     });
 

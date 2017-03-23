@@ -85,27 +85,19 @@ export class EaselComponent implements OnInit, OnDestroy {
                 initialsLetters.forEach((letter) => {
 
                     this.socketService.player.letters.push({ _alphabetLetter: letter, _imageSource: "" });
-                    console.log(this.socketService.player.letters);
                 });
                 this._letters = this.socketService.player.letters;
             });
     }
 
     private onExchangeLetterRequest(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.CHANGE_LETTERS_REQUEST)
-            .subscribe((response: any) => {
-
-                this.activatedRoute.params.subscribe(params => {
-
-                    if (params['id'] === response._username) {
-                        for (let index = 0; index < this._indexOflettersToExchange.length; ++index) {
-                            this.socketService.player.letters[this._indexOflettersToExchange[index]] =
-                                { _alphabetLetter: response._data[index], _imageSource: "" };
-                            console.log(this.socketService.player.letters);
-                        }
-                        this._letters = this.socketService.player.letters;
-                    }
+        return this.socketService.subscribeToChannelEvent(SocketEventType.UPDATE_EASEL)
+            .subscribe((response: Array<string>) => {
+                this.socketService.player.letters = new Array<IScrabbleLetter>();
+                response.forEach((letter: string) => {
+                    this.socketService.player.letters.push({ _alphabetLetter: letter, _imageSource: "" });
                 });
+                this._letters = this.socketService.player.letters;
             });
     }
 

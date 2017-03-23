@@ -6,7 +6,7 @@ export class ExceptionHelper {
         }
     }
 
-    public static  throwOutOfRangeException(minValue: number, maxValue: number, param: number) {
+    public static throwOutOfRangeException(minValue: number, maxValue: number, param: number) {
         if (param < minValue) {
             throw new RangeError("Out of range exception: the parameter cannot be less than" + " " + minValue);
         } else if (param > maxValue) {

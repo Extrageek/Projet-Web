@@ -78,8 +78,7 @@ export class MessageHandler {
         username: string,
         room: Room,
         commandStatus: CommandStatus,
-        lettersToChange: Array<string>,
-        newsLettersToSend: Array<string>
+        lettersToChange: Array<string>
     ): ICommandMessage<Array<string>> {
 
         this.throwNullArgumentException(username);
@@ -100,7 +99,7 @@ export class MessageHandler {
             _commandStatus: commandStatus,
             _username: username,
             _message: message,
-            _data: newsLettersToSend,
+            _data: [""],
             _room: room,
             _date: new Date()
         };

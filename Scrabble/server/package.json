@@ -9,7 +9,7 @@
     "tsc:w": "tsc -w",
     "clean": "rimraf out node_modules",
     "postinstall": "rimraf false",
-    "test": "tsc && mocha out/****/*.spec.js -- out/services/commands/*.js -R spec -c -u exports --harmony",
+    "test": "tsc && mocha out/****/****/*.spec.js -- out/services/commands/*.js -R spec -c -u exports --harmony",
     "coverage": "tsc && nyc --require ts-node/register _mocha -c -R spec -- out/****/*.js -- out/models/***/*.js -- out/services/*.js -- out/services/*/*.js",
     "nyan-coverage": "tsc && nyc --require ts-node/register _mocha -c -R nyan -- out/**/*.js"
   },

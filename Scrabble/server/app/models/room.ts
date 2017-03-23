@@ -124,8 +124,17 @@ export class Room {
     }
 
     // Use to exchange letters from the a player easel
-    public exchangeThePlayerLetters(letterToBeExchange: Array<string>): Array<string> {
-        return this.letterBankHandler.exchangeLetters(letterToBeExchange);
+    public exchangeThePlayerLetters(socketId: String, letterToBeExchanged: Array<string>): boolean {
+        let newLettersStr = this.letterBankHandler.exchangeLetters(letterToBeExchanged);
+        let hasChanged = false;
+        if (newLettersStr.length > 0) {
+            this.players.forEach((player: Player) => {
+                if (player.socketId === socketId && newLettersStr.length <= player.easel.letters.length) {
+                    hasChanged = player.easel.exchangeLetters(letterToBeExchanged, newLettersStr);
+                }
+            });
+        }
+        return hasChanged;
     }
 
     public getAndUpdatePlayersQueue(): Array<string> {
@@ -145,8 +154,14 @@ export class Room {
         }
     }
 
-    public getInitialsLetters(): Array<string> {
-        return this.letterBankHandler.initializeEasel();
+    public getInitialsLetters(username: String): Array<string> {
+        let lettersStr = this.letterBankHandler.initializeEasel();
+        this._playersQueue.forEach((player: Player) => {
+            if (player.username === username) {
+                player.easel.letters = this.letterBankHandler.parseFromListOfStringToListOfLetter(lettersStr);
+            }
+        });
+        return lettersStr;
     }
 
     public placeWordInTheBoard(response: IPlaceWordResponse, player: Player): boolean {
