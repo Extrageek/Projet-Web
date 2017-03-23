@@ -12,13 +12,13 @@ describe("Room Handler", () => {
     let roomHandler: RoomHandler;
     let player1: Player;
     let player2: Player;
-    const fakeName1 = "testname1";
+    const fakename1 = "testname1";
     const fakeName2 = "testname2";
     const numberOfPlayers = 2;
 
     beforeEach(() => {
         roomHandler = new RoomHandler();
-        player1 = new Player(fakeName1, numberOfPlayers, fakeSocketId1);
+        player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
         player2 = new Player(fakeName2, numberOfPlayers, fakeSocketId2);
     });
 
@@ -33,7 +33,7 @@ describe("Room Handler", () => {
 
         let currentPlayer = room.players.dequeue();
         // Check if the room contains the player
-        assert(currentPlayer.username === fakeName1);
+        assert(currentPlayer.username === fakename1);
         assert(currentPlayer.numberOfPlayers === numberOfPlayers);
     });
 
@@ -273,22 +273,27 @@ describe("Room Handler", () => {
     it("should exchange letters of a player when id and array are valid", () => {
         let roomCapacity = 1;
         let room = new Room(roomCapacity);
+        let numberOfPlayers = 1;
+        let player = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+        room.addPlayer(player1);
+
+        // initialize the players easels
+        let initialLettersOfPlayer1 = room.getInitialsLetters(player1.username);
+
+        // Change 2 letters of the player1
+        let lettersToChange = [initialLettersOfPlayer1[0], initialLettersOfPlayer1[1]];
         roomHandler.addPlayer(player1);
-        let fakeLettersToBeChanges: Array<string>;
-        fakeLettersToBeChanges = ['A', 'B', 'C'];
-        let fakeNewLetters: Array<String>;
-        let hasChanged = roomHandler.exchangeLetterOfCurrentPlayer(player1.socketId, fakeLettersToBeChanges);
+
+        let hasChanged = roomHandler.exchangeLetterOfCurrentPlayer(player1.socketId, lettersToChange);
         expect(hasChanged).to.be.true;
-        expect(fakeNewLetters.length).to.be.equal(fakeLettersToBeChanges.length);
     });
 
     it("should not allow to exchange letters of a player when it's id is invalid", () => {
-        let fakeLettersToBeChanges: Array<string>;
-        fakeLettersToBeChanges = ['A', 'B', 'C'];
-        let fakeNewLetters = () => roomHandler.exchangeLetterOfCurrentPlayer(null, fakeLettersToBeChanges);
+        let fakeLettersToBeChanged: Array<string>;
+        fakeLettersToBeChanged = ['A', 'B', 'C'];
+        let fakeNewLetters = () => roomHandler.exchangeLetterOfCurrentPlayer(null, fakeLettersToBeChanged);
         expect(fakeNewLetters).to.be.throw(Error);
     });
-
 
     it("should not exchange letters of a player when the array is invalid", () => {
         let roomCapacity = 1;
@@ -297,4 +302,17 @@ describe("Room Handler", () => {
         let fakeNewLetters = () => roomHandler.exchangeLetterOfCurrentPlayer(player1.socketId, null);
         expect(fakeNewLetters).to.be.throw(Error);
     });
+
+    it("should not exchange letters of a player when the array is invalid", () => {
+        let roomCapacity = 1;
+        let room = new Room(roomCapacity);
+        roomHandler.addPlayer(player1);
+
+        let fakeLettersToBeChanged = ['A', 'B', 'C'];
+        let notExistingPlayerSocketId = "@sfsffsf@fgsggs";
+
+        let isExchanged = roomHandler.exchangeLetterOfCurrentPlayer(notExistingPlayerSocketId, fakeLettersToBeChanged);
+        assert(isExchanged === false);
+    });
+
 });
