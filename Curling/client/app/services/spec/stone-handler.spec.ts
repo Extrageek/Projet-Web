@@ -1,12 +1,12 @@
-import { expect } from 'chai';
+import { expect } from "chai";
 import { ObjectLoader, Vector3, Scene } from "three";
-import { StoneHandler } from './../game-physics/stone-handler';
-import { Stone, StoneColor, StoneSpin } from './../../models/stone';
-import { CameraType } from './../game-physics/camera-type';
-import { RinkInfo } from './../../models/scenery/rink-info.interface';
+import { StoneHandler } from "./../game-physics/stone-handler";
+import { Stone, StoneColor, StoneSpin } from "./../../models/stone";
+import { CameraType } from "./../game-physics/camera-type";
+import { RinkInfo } from "./../../models/scenery/rink-info.interface";
 
 function do60Updates(stoneHandler: StoneHandler) {
-    for(let i = 0; i < 60; ++i) {
+    for (let i = 0; i < 60; ++i) {
         stoneHandler.update(1 / 60);
     }
 }
@@ -73,34 +73,6 @@ describe("StoneHandler tests should", () => {
     afterEach(() => {
         clearTimeout(timeoutId);
     });
-
-/*
-    it("clamp mouse position", () => {
-        let e: MouseEvent = new MouseEvent('onmousedown', {
-            clientX: window.innerWidth,
-            clientY: window.innerHeight,
-
-        });
-        stoneHandler.calculateMousePosition(e, CameraType.PERSPECTIVE_CAM);
-
-        expect(stoneHandler.mousePositionPlaneXZ.x).to.be.equal(StoneHandler.SHOT_ANGLE_MINIMUM);
-
-        stoneHandler.calculateMousePosition(e, CameraType.ORTHOGRAPHIC_CAM);
-
-        expect(stoneHandler.mousePositionPlaneXZ.x).to.be.equal(StoneHandler.SHOT_ANGLE_MINIMUM);
-
-        e = new MouseEvent('onmousedown', {
-            clientX: 0,
-            clientY: 0
-        });
-
-        stoneHandler.calculateMousePosition(e, undefined);
-
-        stoneHandler.calculateMousePosition(e, CameraType.PERSPECTIVE_CAM);
-
-        expect(stoneHandler.mousePositionPlaneXZ.x).to.be.equal(StoneHandler.SHOT_ANGLE_MAXIMUM);
-    });
-*/
 
     it("throw error due to no stone generated", () => {
         expect(() => { stoneHandler.performShot( new Vector3(0, 0, 1), 1); }).to.throw(Error);
@@ -179,7 +151,7 @@ describe("StoneHandler tests should", () => {
                 expect(stone2.position.x).to.not.equal(0, "stone 2 x should have moved.");
                 expect(stone2.position.y).to.equal(0, "stone 2 y should not have moved.");
                 expect(stone2.position.z).to.not.equal(1, "stone 2 z should have moved.");
-                expect(direction2.angleTo(stone2.direction)).to.be.greaterThan(Math.PI/12,
+                expect(direction2.angleTo(stone2.direction)).to.be.greaterThan(Math.PI / 12,
                     "direction should have changed.");
                 expect(stone1.speed).to.not.equal(0, "stone 1 should still be in movement.");
                 done();
@@ -196,7 +168,7 @@ describe("StoneHandler tests should", () => {
 
                 stoneHandler.generateNewStone().then((stone3) => {
                     stone3.position.set(0, 0, 17);
-                    let direction3 = new Vector3(0, 0, 1)
+                    let direction3 = new Vector3(0, 0, 1);
                     stoneHandler.performShot(new Vector3(0, 0, 1), 5);
 
                     do60Updates(stoneHandler);
