@@ -1,8 +1,7 @@
-import { Clock, ObjectLoader, Vector3, Box3, Scene } from 'three';
+import { ObjectLoader, Vector3, Box3, Scene } from 'three';
 import { RinkInfo } from './../../models/scenery/rink-info.interface';
 import { Stone, StoneSpin, StoneColor } from './../../models/stone';
 import { GameComponent } from './../../models/game-component.interface';
-import { CameraType } from './camera-type';
 
 export interface Points {
     player: number;
@@ -26,6 +25,7 @@ export class StoneHandler implements GameComponent {
     private _currentSpin: StoneSpin;
     private _callbackAfterShotFinished: Function;
     private _boundingRink: Box3;
+    private _outOfBoundsArea: Box3;
 
     constructor(objectLoader: ObjectLoader, rinkInfo: RinkInfo, firstPlayer: StoneColor) {
         this._rinkInfo = rinkInfo;
@@ -35,7 +35,9 @@ export class StoneHandler implements GameComponent {
         this._stonesToBeRemoved = new Array<Stone>();
         this._currentSpin = StoneSpin.Clockwise;
         this._callbackAfterShotFinished = null;
-        this._boundingRink = new Box3( new Vector3(-2.25, 0, -22.5), new Vector3(2.25, 0, 22.5));
+        this._boundingRink = new Box3( new Vector3(-2.15, 0, -22.5), new Vector3(2.15, 0, 22.5));
+        this._outOfBoundsArea = new Box3( new Vector3(-2.15, 0, -16.25), new Vector3(2.15, 0, 16.25));
+        this._outOfBoundsArea.translate( new Vector3(0,0,-12.25));
     }
 
     public get stoneOnTheGame(): Stone[] {
@@ -103,6 +105,8 @@ export class StoneHandler implements GameComponent {
                     stone.update(timePerFrame);
                     this.resolveCollisions(stone);
                     isCollision = true;
+                } else if (stone.speed == 0) {
+                    this.removeInvalidStonesFromRink(stone);
                 }
                 aStoneIsMoving = aStoneIsMoving || stone.speed !== 0;
             });
@@ -113,22 +117,31 @@ export class StoneHandler implements GameComponent {
             }
         }
     }
+    private removeStone(stone: Stone) {
+        let index = this._stoneOnTheGame.indexOf(stone);
+        if (index > -1) {
+            this._stoneOnTheGame.splice(index,1);
+        }
+    }
 
     private verifyOutOfBounds() {
         this._stoneOnTheGame.map((stone: Stone) => {
             if (!(this._boundingRink.intersectsSphere(stone.boundingSphere))) {
-                let opacity = stone.changeStoneOpacity();
-                if (opacity < 0.001) {
-                    this._stoneOnTheGame.splice(this._stoneOnTheGame.
-                    findIndex((elem : Stone) => {
-                        return stone === elem;
-                    }), 1);
+                this.removeStone(stone);
+                stone.changeStoneOpacity().subscribe((count) => {
                     this._stonesToBeRemoved.push(stone);
-                }
+                });
             }
         });
     }
-
+    private removeInvalidStonesFromRink(stone: Stone) {
+            if ((this._outOfBoundsArea.intersectsSphere(stone.boundingSphere))) {
+                this.removeStone(stone);
+                stone.changeStoneOpacity().subscribe((count) => {
+                    this._stonesToBeRemoved.push(stone);
+                });
+            }
+    }
     private resolveCollisions(stoneToVerify: Stone) {
         let stonesHit = new Array<Stone>();
         this._stoneOnTheGame.map((stone: Stone, stoneNumber: number, allTheStones: Stone[]) => {
