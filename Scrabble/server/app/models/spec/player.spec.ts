@@ -1,5 +1,8 @@
 import { expect, assert } from "chai";
 import { Player } from "../player";
+import { AlphabetPoint } from "../commons/alphabet-point";
+import { Letter } from "../letter";
+import { Easel } from "../easel";
 
 let username = "Martin";
 let fakeSocketId = "fakeId@33md401";
@@ -9,10 +12,22 @@ describe("Player", () => {
     it("should create a new player", () => {
         let numberOfPlayer = 2;
         let player = new Player(username, numberOfPlayer, fakeSocketId);
-
         expect(player).not.to.be.undefined;
-        expect(player.username).to.equals(username);
-        expect(player.numberOfPlayers).to.equals(numberOfPlayer);
+    });
+
+    it("should set a player's score correctly", () => {
+        let numberOfPlayer = 2;
+        let player = new Player(username, numberOfPlayer, fakeSocketId);
+        player.score = 6;
+        assert(player.score === 6);
+    });
+
+    it("should set a player's easel correctly", () => {
+        let numberOfPlayer = 2;
+        let player = new Player(username, numberOfPlayer, fakeSocketId);
+        let fakeLetter = new Letter("A", AlphabetPoint.letterA, 0);
+        player.easel = new Easel([fakeLetter]);
+        expect(player.easel).to.be.instanceof(Easel);
     });
 
     it("should throw a null argument error", () => {

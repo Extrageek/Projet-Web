@@ -162,7 +162,6 @@ describe("MessageHandler", () => {
             expect(response._room).to.be.deep.equals(fakeRoom);
             assert(response._commandStatus === CommandStatus.NotAllowed);
             assert(response._commandType === CommandType.ExchangeCmd);
-            expect(response._data).to.be.null;
             assert(response._message === expectedMessage);
             expect(response._date).to.be.instanceof(Date);
         });
@@ -177,7 +176,6 @@ describe("MessageHandler", () => {
             expect(response._room).to.be.deep.equals(fakeRoom);
             assert(response._commandStatus === CommandStatus.Ok);
             assert(response._commandType === CommandType.ExchangeCmd);
-            expect(response._data).to.be.deep.equals(fakeLettersToSend);
             assert(response._message === expectedMessage);
             expect(response._date).to.be.instanceof(Date);
         });

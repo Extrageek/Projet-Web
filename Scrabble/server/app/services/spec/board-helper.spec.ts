@@ -31,21 +31,21 @@ describe("BoardHelper", () => {
     });
 
     it("should detect the index -1 as an invalid row index", () => {
-            assert(BoardHelper.isValidRowPosition(-1) === false);
+        assert(BoardHelper.isValidRowPosition(-1) === false);
     });
 
     it("should detect the index 20 as an invalid row index", () => {
         assert(BoardHelper.isValidRowPosition(20) === false);
     });
 
-    it("should detect values between 0 and 14 as a valid column position", () => {
+    it("should detect values between 1 and 15 as a valid column position", () => {
         for (let column = CommandsHelper.MIN_BOARD_POSITION_INDEX - 1;
-            column <= CommandsHelper.MAX_BOARD_POSITION_INDEX - 1; ++column) {
+            column < CommandsHelper.MAX_BOARD_POSITION_INDEX; ++column) {
             assert(BoardHelper.isValidColumnPosition(column) === true);
         }
     });
 
-    it("should detect negativ values or greater than 14 as an valid column position", () => {
+    it("should detect negative value or greater than 14 as an valid column position", () => {
         assert(BoardHelper.isValidColumnPosition(-1) === false);
         assert(BoardHelper.isValidColumnPosition(15) === false);
     });
