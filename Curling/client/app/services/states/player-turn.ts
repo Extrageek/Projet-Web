@@ -5,11 +5,12 @@ import { CameraType } from "../game-physics/camera-type";
 import { GameComponent } from "../../models/game-component.interface";
 import { Shooting } from "./shooting";
 import { CurrentPlayer } from "../../models/current-player";
+import { calculateMousePosition } from "../game-physics/mouse-position-calculate";
 
 export class PlayerTurn extends AbstractGameState implements GameComponent {
 
-    private static readonly SHOT_ANGLE_MINIMUM = -2.25;
-    private static readonly SHOT_ANGLE_MAXIMUM = 2.25;
+    public static readonly SHOT_ANGLE_MINIMUM = -2.25;
+    public static readonly SHOT_ANGLE_MAXIMUM = 2.25;
     private static readonly SHOT_POWER_MINIMUM = 0.2;
     private static readonly SHOT_POWER_MAXIMUM = 4;
     private static readonly SHOT_POWER_OFFSET = 1;
@@ -69,7 +70,8 @@ export class PlayerTurn extends AbstractGameState implements GameComponent {
     }
 
     public performMouseMove(event: MouseEvent): AbstractGameState {
-
+        this._gameInfo.mousePositionPlaneXZ = calculateMousePosition(event, this._gameInfo.currentCamera);
+        /*
         if (this._gameInfo.currentCamera === CameraType.PERSPECTIVE_CAM) {
             this._gameInfo.mousePositionPlaneXZ.set(
                 -(event.clientX / window.innerWidth) / 0.02215 + 22.55, // Numbers to align with the rink model
@@ -87,6 +89,7 @@ export class PlayerTurn extends AbstractGameState implements GameComponent {
         } else {
             console.error("calculateMousePosition : camera unrecognized");
         }
+        */
         // Clamp to angle range
         // Under
         if (this._gameInfo.mousePositionPlaneXZ.x < PlayerTurn.SHOT_ANGLE_MINIMUM) {

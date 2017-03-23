@@ -8,7 +8,7 @@
     height: 0;
     width: 100%;
     position: fixed; 
-    z-index: 2; 
+    z-index: 3; 
     left: 0;
     top: 0;
     background-color: rgb(70,50,255); 
@@ -54,7 +54,7 @@
 * MENU HAMBURGER ICON
 */
 .hamburger {
-    z-index: 3;
+    z-index: 4;
     padding: 15px 15px;
     display: inline-block;
     cursor: pointer;
