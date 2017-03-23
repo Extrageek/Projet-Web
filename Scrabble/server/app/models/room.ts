@@ -183,4 +183,16 @@ export class Room {
         });
         return hasBeenPlaced;
     }
+
+    public removeLastLettersPlacedAndRefill(socketId: string): Array<string> {
+        let removedLetters = this._board.removeLastLettersAddedFromBoard();
+        let previousEasel: Array<string>;
+        this._playersQueue.forEach((player: Player) => {
+            if (player.socketId === socketId) {
+                player.easel.addLetters(removedLetters);
+                previousEasel = this._letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
+            }
+        });
+        return previousEasel;
+    }
 }

@@ -19,8 +19,7 @@ export class BoardHelper {
 
     public static isValidColumnPosition(index: number): boolean {
         ExceptionHelper.throwNullArgumentException(index);
-        return index !== 0 && !isNaN(Number(index))
-            && index >= CommandsHelper.MIN_BOARD_POSITION_INDEX - 1
+        return index >= CommandsHelper.MIN_BOARD_POSITION_INDEX - 1
             && index <= CommandsHelper.MAX_BOARD_POSITION_INDEX - 1;
     }
 

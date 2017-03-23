@@ -178,7 +178,6 @@ export class SocketConnectionHandler {
                     // Place the word in the board and emit an update board to the room members
                     this._socket.to(room.roomId).emit(SocketEventType.updateBoard, room.board);
                     // Update easel for the player
-                    room.refillPlayerEasel(player.socketId);
                     let newEasel = room.letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
                     socket.emit(SocketEventType.updateEasel, newEasel);
                     socket.emit(SocketEventType.updateLetterInEasel, newEasel.length);
@@ -189,12 +188,22 @@ export class SocketConnectionHandler {
                     // creer update score
                     // creer update n lettre chevalet
                     // creer update n lettre banque restante
-                    room.refillPlayerEasel(player.socketId);
-                    newEasel = room.letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
-                    socket.emit(SocketEventType.updateEasel, newEasel);
+                    let isVerified = true;
+                    if (isVerified) {
+                        room.refillPlayerEasel(player.socketId);
+                        newEasel = room.letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
+                        this._socket.to(room.roomId).emit(
+                            SocketEventType.updateLetterInBank,
+                            room.letterBankHandler.bank.numberOfLettersInBank
+                        );
+                    }
+                    // If the word doesn't respect scrabble rules, the word is removed and the board updated
+                    else {
+                        newEasel = room.removeLastLettersPlacedAndRefill(socket.id);
+                        this._socket.to(room.roomId).emit(SocketEventType.updateBoard, room.board);
+                    }
                     socket.emit(SocketEventType.updateLetterInEasel, newEasel.length);
-                    this._socket.to(room.roomId)
-                        .emit(SocketEventType.updateLetterInBank, room.letterBankHandler.bank.numberOfLettersInBank);
+                    socket.emit(SocketEventType.updateEasel, newEasel);
 
                     // si la verif nest pas bonne retirer les lettres du board et les replacer sur le easel
                     // mettre a jour le board et easel
