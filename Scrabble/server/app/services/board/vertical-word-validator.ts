@@ -26,11 +26,8 @@ export class VerticalWordValidator {
         this._player = request._player;
         let easel = new Easel(this._player.easel.letters);
         let isWordFit = true;
-        let firstRowIndex = request._firstRowNumber - LetterHelper.LETTER_A_KEY_CODE;
-        console.log(firstRowIndex);
-
-        let columnIndex = request._columnIndex - 1;
-        console.log(columnIndex);
+        let firstRowIndex = request._firstRowNumber;
+        let columnIndex = request._columnIndex;
 
         if (this._board.isEmpty
             && !this.isFirstVerticalWordCrossedMiddle(firstRowIndex, columnIndex, request._letters.length)) {
@@ -40,7 +37,7 @@ export class VerticalWordValidator {
 
         for (let index = 0; index < request._letters.length && isWordFit; index++) {
             let rowIndex = firstRowIndex + index;
-            if (!BoardHelper.isValidRowPosition(rowIndex + LetterHelper.LETTER_A_KEY_CODE)) {
+            if (!BoardHelper.isValidRowPosition(rowIndex)) {
                 console.log("position row not valid   ", rowIndex);
 
                 isWordFit = false;
@@ -79,7 +76,7 @@ export class VerticalWordValidator {
         let hasTouchedLetterInTheBoard = false;
         if (isWordFit && !this._board.isEmpty) {
             hasTouchedLetterInTheBoard = this.hasTouchedAletterVerticallyInTheBoard(
-                firstRowIndex, columnIndex, request._letters);
+                firstRowIndex, columnIndex, request._letters.length);
         }
 
         return (isWordFit && (this._board.isEmpty || hasTouchedLetterInTheBoard));
@@ -99,13 +96,13 @@ export class VerticalWordValidator {
     private hasTouchedAletterVerticallyInTheBoard(
         firstRowNumber: number,
         columnIndex: number,
-        letters: Array<Letter>): boolean {
+        wordLength: number): boolean {
 
-        let touchedLeftOrRightLetter = this.hasTouchedLetterOnLeftOrRightVertically(
-            firstRowNumber, columnIndex, letters);
+        let touchedLeftOrRightLetter =
+            this.hasTouchedLetterOnLeftOrRightVertically(firstRowNumber, columnIndex, wordLength);
 
-        let touchedBeforeOrAfterWord = this.hasTouchedALetterBeforeOrAfterWord(
-            firstRowNumber, columnIndex, letters.length);
+        let touchedBeforeOrAfterWord =
+            this.hasTouchedALetterBeforeOrAfterWord(firstRowNumber, columnIndex, wordLength);
 
         return touchedLeftOrRightLetter || touchedBeforeOrAfterWord;
     }
@@ -113,20 +110,17 @@ export class VerticalWordValidator {
     private hasTouchedLetterOnLeftOrRightVertically(
         firstRowNumber: number,
         columnIndex: number,
-        letters: Array<Letter>): boolean {
+        wordLength: number): boolean {
 
         let touchedLeftOrRightSquare = false;
-
-        for (let index = 0; index < letters.length && !touchedLeftOrRightSquare; index++) {
+        for (let index = 0; index < wordLength && !touchedLeftOrRightSquare; index++) {
             // Calculate and find the next values for the placement
             let nextRowIndex = firstRowNumber + index;
 
-            let nextSquareRow = nextRowIndex - LetterHelper.LETTER_A_KEY_CODE;
-
             let touchedLeftSquare = (BoardHelper.isValidColumnPosition(columnIndex - 1)) ?
-                this._board.squares[nextSquareRow][columnIndex - 1].isBusy : false;
+                this._board.squares[nextRowIndex][columnIndex - 1].isBusy : false;
             let touchedRightSquare = (BoardHelper.isValidColumnPosition(columnIndex + 1)) ?
-                this._board.squares[nextSquareRow][columnIndex + 1].isBusy : false;
+                this._board.squares[nextRowIndex][columnIndex + 1].isBusy : false;
 
             touchedLeftOrRightSquare = touchedLeftSquare || touchedRightSquare;
         }
@@ -140,23 +134,17 @@ export class VerticalWordValidator {
         wordLength: number): boolean {
 
         let touchedBeforeOrAfterWord = false;
-
-        // Calculate and find the next values for the placement
         let beforeWordRowIndex = firstRowNumber - 1;
-
         let afterWordRowIndex = firstRowNumber + wordLength;
 
         let touchedBeforeWord = (BoardHelper.isValidColumnPosition(columnIndex - 1)
             && BoardHelper.isValidRowPosition(beforeWordRowIndex)) ?
-            this._board.squares[beforeWordRowIndex - LetterHelper.LETTER_A_KEY_CODE][columnIndex - 1]
-                .isBusy : false;
+            this._board.squares[beforeWordRowIndex][columnIndex].isBusy : false;
 
         let touchedAfterWord = (BoardHelper.isValidColumnPosition(columnIndex - 1)
             && BoardHelper.isValidRowPosition(afterWordRowIndex)) ?
-            this._board.squares[afterWordRowIndex - LetterHelper.LETTER_A_KEY_CODE][columnIndex - 1]
-                .isBusy : false;
+            this._board.squares[afterWordRowIndex][columnIndex].isBusy : false;
 
-        touchedBeforeOrAfterWord = touchedBeforeWord || touchedAfterWord;
-        return touchedBeforeOrAfterWord;
+        return touchedBeforeWord || touchedAfterWord;
     }
 }

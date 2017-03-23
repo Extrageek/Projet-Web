@@ -44,8 +44,8 @@ export class BoardManager {
         this._board = board;
         this._player = player;
 
-        let firstRowIndex = response._squarePosition._row.toUpperCase();
-        let firstColumnIndex = response._squarePosition._column;
+        let firstRowIndex = BoardHelper.convertCharToIndex(response._squarePosition._row);
+        let firstColumnIndex = response._squarePosition._column - 1;
         let letters = response._letters;
         let scrabbleLetters = this._letterBankHandler.parseFromListOfStringToListOfLetter(letters);
 
@@ -71,12 +71,12 @@ export class BoardManager {
     }
 
     private placeWordInHorizontalOrientation(
-        firstRowIndex: string,
+        firstRowIndex: number,
         columnIndex: number,
         letters: Array<Letter>): boolean {
 
         let request: IValidationRequest = {
-            _firstRowNumber: firstRowIndex.toUpperCase().charCodeAt(0),
+            _firstRowNumber: firstRowIndex,
             _columnIndex: columnIndex,
             _letters: letters,
             _player: this._player
@@ -91,14 +91,12 @@ export class BoardManager {
             console.log(nextColumnIndex);
 
             // Get the row number from the given letter
-            let rowLetterToRowNumber = firstRowIndex.toUpperCase()
-                .charCodeAt(0) - LetterHelper.LETTER_A_KEY_CODE;
-            let currentSquare = this._board.squares[rowLetterToRowNumber][nextColumnIndex - 1];
+            let currentSquare = this._board.squares[firstRowIndex][nextColumnIndex];
 
             if (!currentSquare.isBusy) {
-                this._board.squares[rowLetterToRowNumber][nextColumnIndex - 1].squareValue =
+                this._board.squares[firstRowIndex][nextColumnIndex].squareValue =
                     letters[index].alphabetLetter;
-                this._board.squares[rowLetterToRowNumber][nextColumnIndex - 1].isBusy = true;
+                this._board.squares[firstRowIndex][nextColumnIndex].isBusy = true;
                 this._player.easel.removeLetter(letters[index].alphabetLetter);
             }
         }
@@ -107,13 +105,12 @@ export class BoardManager {
     }
 
     private placeWordInVerticalOrientation(
-        firstRowIndex: string,
+        firstRowIndex: number,
         columnIndex: number,
         letters: Array<Letter>): boolean {
 
-        let firstRowNumber = firstRowIndex.toUpperCase().charCodeAt(0);
         let request: IValidationRequest = {
-            _firstRowNumber: firstRowNumber,
+            _firstRowNumber: firstRowIndex,
             _columnIndex: columnIndex,
             _letters: letters,
             _player: this._player
@@ -123,23 +120,17 @@ export class BoardManager {
             return false;
         }
 
-        for (let index = 0; index < letters.length; ++index) {
-
-            let nextRowIndex = firstRowNumber + index;
-
-            // Get the row number from the given letter
-            let nextRowLetter = BoardHelper.parseFromNumberToCharacter(nextRowIndex);
-            let nextSquareRow = nextRowIndex - LetterHelper.LETTER_A_KEY_CODE;
-            let nextSquare = this._board.squares[nextSquareRow][columnIndex - 1];
+        for (let index = 0; index < letters.length; index++) {
+            let nextRowIndex = firstRowIndex + index;
+            let nextSquare = this._board.squares[nextRowIndex][columnIndex];
 
             if (!nextSquare.isBusy) {
-                this._board.squares[nextSquareRow][columnIndex - 1].squareValue =
+                this._board.squares[nextRowIndex][columnIndex].squareValue =
                     letters[index].alphabetLetter;
-                this._board.squares[nextSquareRow][columnIndex - 1].isBusy = true;
+                this._board.squares[nextRowIndex][columnIndex].isBusy = true;
                 this._player.easel.removeLetter(letters[index].alphabetLetter);
             }
         }
-
         return true;
     }
 }
