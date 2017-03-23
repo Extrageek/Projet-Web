@@ -3,7 +3,7 @@ import { Vector3 } from "three";
 import { AbstractGameState } from "./abstract-game-state";
 import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { CurrentPlayer } from "../../models/current-player";
-import { Shooting } from "./shooting";
+import { ComputerShooting } from "./computer-shooting";
 
 export class ComputerTurn extends AbstractGameState {
 
@@ -39,7 +39,7 @@ export class ComputerTurn extends AbstractGameState {
         this._gameInfo.speed = this._speed;
         //TODO : DIRECTION IS (0, 1, 1)
         this._gameInfo.direction = new Vector3(0, 0, 1);
-        this.leaveState(Shooting.getInstance());
+        this.leaveState(ComputerShooting.getInstance());
     }
 
     protected performLeavingState() {
