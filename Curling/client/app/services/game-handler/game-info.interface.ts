@@ -7,6 +7,7 @@ import { CameraType } from "../game-physics/camera-type";
 import { GameComponent } from "../../models/game-component.interface";
 import { GameStatusService } from "./../game-status.service";
 import { AbstractGameState } from "../states/abstract-game-state";
+import { Broom } from "../../models/broom";
 
 export interface IGameInfo {
     stoneHandler: StoneHandler;
@@ -19,6 +20,7 @@ export interface IGameInfo {
         lineMesh: Line,
         lineAnimationSlower: number
     };
+    broom: Broom;
     scene: Scene;
     mousePositionPlaneXZ: Vector3;
     gameStatus: GameStatusService;

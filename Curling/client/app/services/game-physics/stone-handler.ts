@@ -1,7 +1,7 @@
 import { ObjectLoader, Vector3, Box3, Scene } from 'three';
-import { RinkInfo } from './../../models/scenery/rink-info.interface';
-import { Stone, StoneSpin, StoneColor } from './../../models/stone';
-import { GameComponent } from './../../models/game-component.interface';
+import { RinkInfo } from '../../models/scenery/rink-info.interface';
+import { Stone, StoneSpin, StoneColor } from '../../models/stone';
+import { GameComponent } from '../../models/game-component.interface';
 
 export interface Points {
     player: number;
@@ -9,6 +9,7 @@ export interface Points {
 }
 
 export class StoneHandler implements GameComponent {
+
 
     public static readonly SHOT_POWER_MINIMUM = 0.2;
     public static readonly SHOT_POWER_MAXIMUM = 4;
@@ -37,7 +38,7 @@ export class StoneHandler implements GameComponent {
         this._callbackAfterShotFinished = null;
         this._boundingRink = new Box3(new Vector3(-2.15, 0, -22.5), new Vector3(2.15, 0, 22.5));
         this._outOfBoundsArea = new Box3(new Vector3(-2.15, 0, -16.25), new Vector3(2.15, 0, 16.25));
-        this._outOfBoundsArea.translate(new Vector3(0, 0, -12.25));
+        this._outOfBoundsArea.translate(new Vector3(0, 0, -6));
     }
 
     public get stoneOnTheGame(): Stone[] {
@@ -90,7 +91,7 @@ export class StoneHandler implements GameComponent {
     }
 
     public cleanAllStones(scene: Scene) {
-        this._stoneOnTheGame.forEach((stone: Stone, index: number, array: Stone[]) => {
+        this._stoneOnTheGame.forEach((stone: Stone) => {
             scene.remove(stone);
         });
         this._stoneOnTheGame.splice(0, this._stoneOnTheGame.length);
@@ -100,7 +101,7 @@ export class StoneHandler implements GameComponent {
         if (this._callbackAfterShotFinished !== null) {
             let aStoneIsMoving = false;
             let isCollision = false;
-            this._stoneOnTheGame.map((stone: Stone, stoneNumber: number, allTheStones: Stone[]) => {
+            this._stoneOnTheGame.map((stone: Stone) => {
                 if (stone.speed !== 0) {
                     stone.update(timePerFrame);
                     this.resolveCollisions(stone);
@@ -117,18 +118,27 @@ export class StoneHandler implements GameComponent {
             }
         }
     }
+
+    public checkPassHogLine() : Boolean {
+        let lastIndex = this._stoneOnTheGame.length - 1;
+        if (typeof this._stoneOnTheGame[lastIndex] === "undefined") {
+            return false;
+        } else{
+            return !(this._outOfBoundsArea.intersectsSphere(this._stoneOnTheGame[lastIndex].boundingSphere));
+        }
+    }
+
     private removeStone(stone: Stone) {
         let index = this._stoneOnTheGame.indexOf(stone);
         if (index > -1) {
             this._stoneOnTheGame.splice(index, 1);
         }
     }
-
     private verifyOutOfBounds() {
         this._stoneOnTheGame.map((stone: Stone) => {
             if (!(this._boundingRink.intersectsSphere(stone.boundingSphere))) {
                 this.removeStone(stone);
-                stone.changeStoneOpacity().subscribe((count) => {
+                stone.changeStoneOpacity().subscribe(() => {
                     this._stonesToBeRemoved.push(stone);
                 });
             }
@@ -137,14 +147,14 @@ export class StoneHandler implements GameComponent {
     private removeInvalidStonesFromRink(stone: Stone) {
         if ((this._outOfBoundsArea.intersectsSphere(stone.boundingSphere))) {
             this.removeStone(stone);
-            stone.changeStoneOpacity().subscribe((count) => {
+            stone.changeStoneOpacity().subscribe(() => {
                 this._stonesToBeRemoved.push(stone);
             });
         }
     }
     private resolveCollisions(stoneToVerify: Stone) {
         let stonesHit = new Array<Stone>();
-        this._stoneOnTheGame.map((stone: Stone, stoneNumber: number, allTheStones: Stone[]) => {
+        this._stoneOnTheGame.map((stone: Stone) => {
             if (stoneToVerify !== stone) {
                 if (stoneToVerify.boundingSphere.intersectsSphere(stone.boundingSphere)) {
                     stonesHit.push(stone);
@@ -157,7 +167,6 @@ export class StoneHandler implements GameComponent {
     }
 
     private changeSpeedAndDirectionOfStones(stonesHit: Array<Stone>, stoneHiting: Stone) {
-        // Collided with one stone
         if (stonesHit.length === 1) {
 
             let stoneToStoneVector: Vector3 = stonesHit[0].position.clone().sub(stoneHiting.position).normalize();
@@ -182,7 +191,7 @@ export class StoneHandler implements GameComponent {
 
             let symmetryAxisVector: Vector3 = new Vector3(0, 0, 0);
             let totalSpeed: number = stoneHiting.speed;
-            stonesHit.map((stone: Stone, stoneNumber: number, allTheStone: Stone[]) => {
+            stonesHit.map((stone: Stone) => {
                 symmetryAxisVector.add(stone.direction);
                 totalSpeed += stone.speed;
             });
@@ -192,7 +201,7 @@ export class StoneHandler implements GameComponent {
             stoneHiting.direction = symmetryAxisVector;
             stoneHiting.speed = totalSpeed * (1 - StoneHandler.COLLISION_SPEED_KEEP_PERCENT) / stonesHit.length;
 
-            stonesHit.map((stone: Stone, stoneNumber: number, allTheStone: Stone[]) => {
+            stonesHit.map((stone: Stone) => {
                 stone.speed = totalSpeed / (stonesHit.length) * StoneHandler.COLLISION_SPEED_TRANSFERED_PERCENT;
                 stone.direction = stone.position.clone().sub(stoneHiting.position).normalize();
             });

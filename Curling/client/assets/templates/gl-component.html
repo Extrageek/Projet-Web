@@ -1,5 +1,6 @@
 <modifier [container]="container" [webgltext]="webgltext"> </modifier>
-
+<audio id="broomIn" src="../../assets/sounds/broom-sweep-in.wav" autostart="false" ></audio>
+<audio id="broomOut" src="../../assets/sounds/broom-sweep-out.wav" autostart="false" ></audio>
 <md-progress-bar
     *ngIf="renderService._gameInfo.isSelectingPower
         && renderService._gameInfo.stoneHandler !== null"

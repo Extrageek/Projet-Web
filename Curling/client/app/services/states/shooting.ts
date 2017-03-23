@@ -1,12 +1,14 @@
 import { AbstractGameState } from "./abstract-game-state";
 import { IGameInfo } from "../game-handler/game-info.interface";
 import { LoadingStone } from "./loading-stone";
+import { CameraType } from "../game-physics/camera-type";
 import { EndSet } from "./end-set";
+import { GameComponent } from "../../models/game-component.interface";
 
-export class Shooting extends AbstractGameState {
+export class Shooting extends AbstractGameState implements GameComponent {
 
     private static _instance: AbstractGameState = null;
-
+    private static readonly UPDATE_NAME = "Shooting";
     /**
      * Initialize the unique Shooting state.
      * @param gameInfo The informations to use by the state.
@@ -31,6 +33,8 @@ export class Shooting extends AbstractGameState {
     }
 
     protected performEnteringState(): void {
+
+        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, Shooting.UPDATE_NAME, {value: this});
         this._gameInfo.stoneHandler.performShot(
             this._gameInfo.direction,
             this._gameInfo.speed,
@@ -49,22 +53,61 @@ export class Shooting extends AbstractGameState {
     }
 
     protected performLeavingState() {
+
+        this._gameInfo.broom.opacityOn();
+        this._gameInfo.broom.changeToRed();
         this._gameInfo.stoneHandler.removeOutOfBoundsStones(this._gameInfo.scene);
         this._gameInfo.gameStatus.nextPlayer();
         this._gameInfo.cameraService.replacePCameraToInitialPosition();
     }
 
-    //Nothing to do while in shooting state. We wait until the stoneHandler finishes the movement of the stones.
+    protected performMouseMove(event: MouseEvent): AbstractGameState {
 
-    protected performMouseMove(): AbstractGameState {
+        let currentCamera: THREE.Camera;
+        if (this._gameInfo.currentCamera === CameraType.PERSPECTIVE_CAM) {
+            currentCamera = this._gameInfo.cameraService.perspectiveCamera;
+        }
+        else if (this._gameInfo.currentCamera === CameraType.ORTHOGRAPHIC_CAM) {
+            currentCamera = this._gameInfo.cameraService.topViewCamera;
+        }
+        let x = (event.clientX / window.innerWidth) * 2 - 1;
+        let y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+        let mouseVector = new THREE.Vector3(x, y, 0.5);
+        mouseVector.unproject(currentCamera);
+        let direction = mouseVector.sub(currentCamera.position ).normalize();
+        let distance = - currentCamera.position.z / direction.z;
+        let position = currentCamera.position.clone().add( direction.multiplyScalar(distance));
+
+        this._gameInfo.broom.position.set(position.x, 0 , position.y + 8.5);
         return null;
     }
 
     protected performMouseButtonPress(): AbstractGameState {
+        if (!this._gameInfo.broom.isRed()) {
+            this._gameInfo.broom.position.add(new THREE.Vector3(0.2, 0, 0));
+            // TODO : A VOIR COMMENT ENLEVER GET ELEM
+            let sound = document.getElementById("broomIn");
+            (<HTMLAudioElement>sound).play();
+        }
         return null;
     }
 
     protected performMouseButtonReleased(): AbstractGameState {
+        if (!this._gameInfo.broom.isRed()) {
+            this._gameInfo.broom.translateZ(0.3);
+            console.log("in out");
+            // TODO : A VOIR COMMENT ENLEVER GET ELEM
+            let sound = document.getElementById("broomOut");
+            (<HTMLAudioElement>sound).play();
+        }
         return null;
     }
+
+    public update(timePerFrame: number) {
+        if (this._gameInfo.stoneHandler.checkPassHogLine()) {
+            this._gameInfo.broom.changeToRed();
+        }
+    }
+
 }

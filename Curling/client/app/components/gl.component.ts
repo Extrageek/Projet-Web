@@ -30,11 +30,11 @@ export class GlComponent implements OnInit {
     public spaceKeyPressed(event: KeyboardEvent) {
         this._renderService.switchCamera();
     }
-
-    @HostListener("window:visibilitychange", ["$event"])
-    public toggleClock(event: Event) {
-        this._renderService.toogleFocus(document.hasFocus());
-    }
+    //TODO : Check if this is really needed.
+    // @HostListener("window:visibilitychange", ["$event"])
+    // public toggleClock(event: Event) {
+    //     this._renderService.toogleFocus(document.hasFocus());
+    // }
 
     constructor(
         private _renderService: RenderService,
