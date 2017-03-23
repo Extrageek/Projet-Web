@@ -86,6 +86,7 @@ export class BoardManager {
             return false;
         }
 
+        this._board.resetLastLettersAdded();
         for (let index = 0; index < letters.length; index++) {
             let nextColumnIndex = columnIndex + index;
             console.log(nextColumnIndex);
@@ -98,6 +99,7 @@ export class BoardManager {
                     letters[index].alphabetLetter;
                 this._board.squares[firstRowIndex][nextColumnIndex].isBusy = true;
                 this._player.easel.removeLetter(letters[index].alphabetLetter);
+                this._board.addLastLetterAdded(firstRowIndex, columnIndex);
             }
         }
 
@@ -120,6 +122,7 @@ export class BoardManager {
             return false;
         }
 
+        this._board.resetLastLettersAdded();
         for (let index = 0; index < letters.length; index++) {
             let nextRowIndex = firstRowIndex + index;
             let nextSquare = this._board.squares[nextRowIndex][columnIndex];
@@ -129,6 +132,7 @@ export class BoardManager {
                     letters[index].alphabetLetter;
                 this._board.squares[nextRowIndex][columnIndex].isBusy = true;
                 this._player.easel.removeLetter(letters[index].alphabetLetter);
+                this._board.addLastLetterAdded(firstRowIndex, columnIndex);
             }
         }
         return true;

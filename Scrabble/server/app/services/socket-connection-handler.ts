@@ -174,20 +174,24 @@ export class SocketConnectionHandler {
                     let newEasel = room.letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
                     socket.emit(SocketEventType.updateEasel, newEasel);
 
+                    ////////////////// verification
+                    // creer update score
+                    // creer update n lettre chevalet
+                    // creer update n lettre banque restante
+
+                    // si la verif nest pas bonne retirer les lettres du board et les replacer sur le easel
+                    // mettre a jour le board et easel
+
+                    // this._socket.to(room.roomId).emit(SocketEventType.updateBoard, room.board);
+                    // socket.emit(SocketEventType.updateEasel, player.easel.letters);
+
+
                     // Update the players queues for everyone in the room
                     let playersQueues = room.getAndUpdatePlayersQueue();
                     this._socket.to(room.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
                 } else {
                     response._commandStatus = CommandStatus.NotAllowed;
                 }
-
-                // verification
-
-                // si la verif nest pas bonne retirer les lettres du board et les replacer sur le easel
-                // mettre a jour le board et easel
-
-                // this._socket.to(room.roomId).emit(SocketEventType.updateBoard, room.board);
-                // socket.emit(SocketEventType.updateEasel, player.easel.letters);
             }
 
             this._socket.to(response._room.roomId).emit(SocketEventType.commandRequest, response);

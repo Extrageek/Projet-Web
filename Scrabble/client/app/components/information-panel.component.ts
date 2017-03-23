@@ -36,7 +36,8 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.onUpdatePlayersQueueEvent();
         this.onUpdateScore();
-        this._lettersOnEasel = this.socketService.player.letters.length;
+        this.onUpdateEasel();
+        this.initializeEaselOnConnection();
     }
 
     ngAfterViewInit() {
@@ -50,6 +51,20 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
         return this.socketService.subscribeToChannelEvent(SocketEventType.UPDATE_SCORE)
             .subscribe((score: number) => {
                 this.socketService.player.score = score;
+            });
+    }
+
+    private initializeEaselOnConnection(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.INITIALIZE_EASEL)
+            .subscribe((response: Array<string>) => {
+                this._lettersOnEasel = response.length;
+            });
+    }
+
+    private onUpdateEasel(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.UPDATE_EASEL)
+            .subscribe((response: Array<string>) => {
+                this._lettersOnEasel = response.length;
             });
     }
 
@@ -105,11 +120,11 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
         return this.socketService.player.score;
     }
 
-    public getCurrentPlayer(){
+    public getCurrentPlayer() {
         return this.socketService.getCurrentPlayer();
     }
 
-    public getNextPlayer(){
+    public getNextPlayer() {
         return this.socketService.getNextPlayer();
     }
 }
