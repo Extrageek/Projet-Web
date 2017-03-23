@@ -15,8 +15,6 @@ export enum StoneColor {
 
 export class Stone extends Group implements GameComponent {
 
-
-
     private static readonly STONES_PATH =
     ["/assets/models/json/curling-stone-blue.json", "/assets/models/json/curling-stone-red.json"];
     private static readonly BOUNDING_SPHERE_RADIUS = 0.26;
@@ -25,6 +23,8 @@ export class Stone extends Group implements GameComponent {
     public static readonly SPEED_DIMINUTION_NUMBER = 0.2;
     public static readonly SPEED_DIMINUTION_NUMBER_WITH_SWEEP = 0.09;
     private static readonly MINIMUM_SPEED = 0.001;
+
+    private static readonly THETA = Math.PI * 1 / 128;
 
     public _material: MeshPhongMaterial;
     private _stoneColor: StoneColor;
@@ -66,10 +66,10 @@ export class Stone extends Group implements GameComponent {
         this._speed = 0;
         this._direction = new Vector3(0, 0, 1);
         this._spin = StoneSpin.Clockwise;
-        this.calculateCurlMatrix();
         this._boundingSphere = new Sphere(this.position, Stone.BOUNDING_SPHERE_RADIUS);
         this._lastBoundingSphere = this._boundingSphere;
         this._lastPosition = this.position;
+        this._curlMatrix = new Matrix3();
     }
 
     public get boundingSphere(): Sphere {
@@ -136,9 +136,10 @@ export class Stone extends Group implements GameComponent {
     public update(timePerFrame: number) {
         if (this._speed !== 0) {
             this.saveOldValues();
+            this.calculateCurlMatrix();
             //Applying MRUA equation. Xf = Xi + V0*t + a*t^2 / 2, where t = timePerFrame, V0 = speed,
             //Xf is the final position, Xi is the initial position and a = -SPEED_DIMINUTION_NUMBER.
-
+            //CurlMatrix is applied to the MRUA equaion to add a spin effect
             this.position.add(this._direction.clone().multiplyScalar(
                 this._speed * timePerFrame - Stone.SPEED_DIMINUTION_NUMBER * Math.pow(timePerFrame, 2) / 2)
                 .applyMatrix3(this._curlMatrix)
@@ -173,44 +174,44 @@ export class Stone extends Group implements GameComponent {
         this._boundingSphere.set(this.position, Stone.BOUNDING_SPHERE_RADIUS);
     }
 
-public changeStoneOpacity() {
-    for (let i = 0; i < this.children.length; i ++) {
-        (<THREE.Mesh>this.children[i]).material.transparent = true;
-        (<THREE.Mesh>this.children[i]).material.opacity = 1;
-    }
+    public changeStoneOpacity() {
+        for (let i = 0; i < this.children.length; i++) {
+            (<THREE.Mesh>this.children[i]).material.transparent = true;
+            (<THREE.Mesh>this.children[i]).material.opacity = 1;
+        }
 
-    let observable = new Observable((observer: any) => {
-        let millisecond = 0;
-        let id = setInterval(() => {
+        let observable = new Observable((observer: any) => {
+            let millisecond = 0;
+            let id = setInterval(() => {
 
-            for (let i = 0; i < this.children.length; i ++) {
-                if((<THREE.Mesh>this.children[i]).material.opacity > 0) {
-                    (<THREE.Mesh>this.children[i]).material.opacity -= 0.01;
+                for (let i = 0; i < this.children.length; i++) {
+                    if ((<THREE.Mesh>this.children[i]).material.opacity > 0) {
+                        (<THREE.Mesh>this.children[i]).material.opacity -= 0.01;
+                    }
                 }
-            }
-            millisecond += 10;
-            if(millisecond == 1000) {
-                observer.next();
-                clearTimeout(id);
-            }
-        }, 10);
-    });
+                millisecond += 10;
+                if (millisecond === 1000) {
+                    observer.next();
+                    clearTimeout(id);
+                }
+            }, 10);
+        });
 
-    return observable;
+        return observable;
     }
 
     private calculateCurlMatrix() {
-        this._curlMatrix = new Matrix3();
         let theta: number;
         if (this._spin === StoneSpin.Clockwise) {
-            theta = Math.PI * -1 / 64;
+            theta = -Stone.THETA;
         } else {
-            theta = Math.PI * 1 / 64;
+            theta = Stone.THETA;
         }
-        console.log("theta is :", theta);
-        this._curlMatrix.set(
-            Math.cos(theta), 0, Math.sin(theta),
-            0, 1, 0,
-            -Math.sin(theta), 0, Math.cos(theta));
+        if (this._curlMatrix !== null || this._curlMatrix !== undefined) {
+            this._curlMatrix.set(
+                Math.cos(theta), 0, Math.sin(theta),
+                0, 1, 0,
+                -Math.sin(theta), 0, Math.cos(theta));
+        }
     }
 }
