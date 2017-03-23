@@ -20,8 +20,10 @@ export class SocketEventType {
 
     // A joined room event.
     static joinRoom = "joinedRoom";
+
     // A joined room event.
     static leaveRoom = "leaveRoom";
+
     // A ready state event for a room.
     static roomReady = "roomReady";
     static message = "message";
@@ -44,8 +46,8 @@ export class SocketEventType {
     static updateLetterInBank = "updateLetterInBank";
     static updateLetterInEasel = "updateLetterInEasel";
 
-    static changeLettersRequest = "!changer";
-    static placeWordCommandRequest = "!place";
-    static passCommandRequest = "!passer";
+    static changeLettersRequest = "changer";
+    static placeWordCommandRequest = "placer";
+    static passCommandRequest = "passer";
 
 }
