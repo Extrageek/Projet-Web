@@ -9,10 +9,10 @@ import { IPlaceWordResponse } from "../services/commons/command/place-word-respo
 
 let uuid = require('node-uuid');
 
-//TODO: To change to 5 minutes 
+//TODO: To change to 5 minutes
 const TIMER_DEFAULT_MINUTE = 0;
 
-//TODO: To change to 0 secondes 
+//TODO: To change to 0 secondes
 const TIMER_DEFAULT_SECOND = 30;
 
 export class Room {
