@@ -34,7 +34,7 @@ export class PlayerShooting extends AbstractGameState implements GameComponent {
     }
 
     protected performEnteringState(): void {
-        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, PlayerShooting.UPDATE_NAME, {value: this});
+        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, PlayerShooting.UPDATE_NAME, { value: this });
         this._gameInfo.scene.add(this._gameInfo.broom);
         //TODO : CHANGE GREEN ONCE YOU PASS THE FIRST LINE
         this._gameInfo.broom.changeToGreen();
@@ -46,7 +46,7 @@ export class PlayerShooting extends AbstractGameState implements GameComponent {
                 let newState: AbstractGameState;
                 if (this._gameInfo.gameStatus.currentStonesPlayer === 0
                     && this._gameInfo.gameStatus.currentStonesComputer === 0) {
-                        newState = EndSet.getInstance();
+                    newState = EndSet.getInstance();
                 }
                 else {
                     newState = LoadingStone.getInstance();
@@ -81,8 +81,8 @@ export class PlayerShooting extends AbstractGameState implements GameComponent {
         mouseVector.unproject(currentCamera);
         let direction = mouseVector.sub(currentCamera.position).normalize();
         let distance = - currentCamera.position.z / direction.z;
-        let position = currentCamera.position.clone().add( direction.multiplyScalar(distance));
-        this._gameInfo.broom.position.set(position.x, 0 , position.y + 8.5);
+        let position = currentCamera.position.clone().add(direction.multiplyScalar(distance));
+        this._gameInfo.broom.position.set(position.x, 0, position.y + 8.5);
         return null;
     }
 
@@ -92,7 +92,7 @@ export class PlayerShooting extends AbstractGameState implements GameComponent {
             // TODO : A VOIR COMMENT ENLEVER GET ELEM
             let sound = document.getElementById("broomIn");
             (<HTMLAudioElement>sound).play();
-            if(!this.isHoldingMouseButton) {
+            if (!this.isHoldingMouseButton) {
                 this.isHoldingMouseButton = true;
                 this._gameInfo.broom.verifyBroomCollision(this._gameInfo.stoneHandler.stoneOnTheGame);
             }
@@ -113,8 +113,8 @@ export class PlayerShooting extends AbstractGameState implements GameComponent {
     }
 
     public update(timePerFrame: number) {
-         if (this._gameInfo.stoneHandler.checkPassHogLine()) {
-             this._gameInfo.broom.changeToRed();
+        if (this._gameInfo.stoneHandler.checkPassHogLine()) {
+            this._gameInfo.broom.changeToRed();
         }
     }
 }

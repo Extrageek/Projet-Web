@@ -5,7 +5,7 @@ import { CameraType } from "./../../services/game-physics/camera-type";
 import { GameComponent } from "../../models/game-component.interface";
 import { PlayerShooting } from "./player-shooting";
 import { CurrentPlayer } from "../../models/current-player";
-import { calculateMousePosition } from "./../../services/game-physics/mouse-position-calculate";
+import { calculateMousePosition } from "./../../services/game-physics/mouse.service";
 
 export class PlayerTurn extends AbstractGameState implements GameComponent {
 
@@ -54,7 +54,7 @@ export class PlayerTurn extends AbstractGameState implements GameComponent {
 
     public performEnteringState(): void {
         //Add player turn state to update loop to be able to update the progress bar.
-        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, PlayerTurn.UPDATE_NAME, {value: this});
+        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, PlayerTurn.UPDATE_NAME, { value: this });
 
         this._gameInfo.isSelectingPower = true;
         this._gameInfo.power = 0;
