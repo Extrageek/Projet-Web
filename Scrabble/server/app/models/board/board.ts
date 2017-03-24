@@ -5,7 +5,9 @@ import { Letter } from "../letter";
 import { SquarePosition } from "../square/square-position";
 import { SquareType } from "../square/square-type";
 import { LetterHelper } from "../commons/letter-helper";
-import { BoardHelper } from '../../services/board/board-helper';
+import { BoardHelper } from "../../services/board/board-helper";
+import { DictionnaryManager } from "../dictionnary-manager";
+import { VerificationService } from "../../services/verification.service";
 
 const BOARD_SIZE = 15;
 
@@ -13,13 +15,19 @@ export class Board {
     private _squares: Array<Array<Square>>;
     private _isEmpty: boolean;
     private _lastLettersAdded: Array<SquarePosition>;
+    private _verificationService: VerificationService;
 
     constructor() {
         this._squares = new Array<Array<Square>>();
+        this._verificationService = new VerificationService();
         this.generateBoard();
         this.assignTypesToSquares();
         this._isEmpty = true;
         this._lastLettersAdded = new Array<SquarePosition>();
+    }
+
+    public get verificationService(): VerificationService {
+        return this._verificationService;
     }
 
     public get lastLettersAdded(): Array<SquarePosition> {
@@ -49,7 +57,6 @@ export class Board {
         this.resetLastLettersAdded();
         return removedLetters;
     }
-
 
     public addLastLetterAdded(rowIndex: number, columnIndex: number) {
         this._lastLettersAdded.push(

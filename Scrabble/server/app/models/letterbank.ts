@@ -1,6 +1,5 @@
 import { Letter } from "./letter";
 import { Alphabet } from "./commons/alphabet";
-import { AlphabetPoint } from "./commons/alphabet-point";
 import { AlphabetQuantity } from "./commons/alphabet-quantity";
 
 const INCREMENT_QUANTITY = 1;
@@ -27,33 +26,33 @@ export class LetterBank {
     }
 
     private initializeLetterBank() {
-        this._bank.push(new Letter(Alphabet.blank, AlphabetPoint.blank, AlphabetQuantity.blank));
-        this._bank.push(new Letter(Alphabet.letterA, AlphabetPoint.letterA, AlphabetQuantity.letterA));
-        this._bank.push(new Letter(Alphabet.letterB, AlphabetPoint.letterB, AlphabetQuantity.letterB));
-        this._bank.push(new Letter(Alphabet.letterC, AlphabetPoint.letterC, AlphabetQuantity.letterC));
-        this._bank.push(new Letter(Alphabet.letterD, AlphabetPoint.letterD, AlphabetQuantity.letterD));
-        this._bank.push(new Letter(Alphabet.letterE, AlphabetPoint.letterE, AlphabetQuantity.letterE));
-        this._bank.push(new Letter(Alphabet.letterF, AlphabetPoint.letterF, AlphabetQuantity.letterF));
-        this._bank.push(new Letter(Alphabet.letterG, AlphabetPoint.letterG, AlphabetQuantity.letterG));
-        this._bank.push(new Letter(Alphabet.letterH, AlphabetPoint.letterH, AlphabetQuantity.letterH));
-        this._bank.push(new Letter(Alphabet.letterI, AlphabetPoint.letterI, AlphabetQuantity.letterI));
-        this._bank.push(new Letter(Alphabet.letterJ, AlphabetPoint.letterJ, AlphabetQuantity.letterJ));
-        this._bank.push(new Letter(Alphabet.letterK, AlphabetPoint.letterK, AlphabetQuantity.letterK));
-        this._bank.push(new Letter(Alphabet.letterL, AlphabetPoint.letterL, AlphabetQuantity.letterL));
-        this._bank.push(new Letter(Alphabet.letterM, AlphabetPoint.letterM, AlphabetQuantity.letterM));
-        this._bank.push(new Letter(Alphabet.letterN, AlphabetPoint.letterN, AlphabetQuantity.letterN));
-        this._bank.push(new Letter(Alphabet.letterO, AlphabetPoint.letterO, AlphabetQuantity.letterO));
-        this._bank.push(new Letter(Alphabet.letterP, AlphabetPoint.letterP, AlphabetQuantity.letterP));
-        this._bank.push(new Letter(Alphabet.letterQ, AlphabetPoint.letterQ, AlphabetQuantity.letterQ));
-        this._bank.push(new Letter(Alphabet.letterR, AlphabetPoint.letterR, AlphabetQuantity.letterR));
-        this._bank.push(new Letter(Alphabet.letterS, AlphabetPoint.letterS, AlphabetQuantity.letterS));
-        this._bank.push(new Letter(Alphabet.letterT, AlphabetPoint.letterT, AlphabetQuantity.letterT));
-        this._bank.push(new Letter(Alphabet.letterU, AlphabetPoint.letterU, AlphabetQuantity.letterU));
-        this._bank.push(new Letter(Alphabet.letterV, AlphabetPoint.letterV, AlphabetQuantity.letterV));
-        this._bank.push(new Letter(Alphabet.letterW, AlphabetPoint.letterW, AlphabetQuantity.letterW));
-        this._bank.push(new Letter(Alphabet.letterX, AlphabetPoint.letterX, AlphabetQuantity.letterX));
-        this._bank.push(new Letter(Alphabet.letterY, AlphabetPoint.letterY, AlphabetQuantity.letterY));
-        this._bank.push(new Letter(Alphabet.letterZ, AlphabetPoint.letterZ, AlphabetQuantity.letterZ));
+        this._bank.push(new Letter(Alphabet.blank.letter, Alphabet.blank.point, AlphabetQuantity.blank));
+        this._bank.push(new Letter(Alphabet.letterA.letter, Alphabet.letterA.point, AlphabetQuantity.letterA));
+        this._bank.push(new Letter(Alphabet.letterB.letter, Alphabet.letterB.point, AlphabetQuantity.letterB));
+        this._bank.push(new Letter(Alphabet.letterC.letter, Alphabet.letterC.point, AlphabetQuantity.letterC));
+        this._bank.push(new Letter(Alphabet.letterD.letter, Alphabet.letterD.point, AlphabetQuantity.letterD));
+        this._bank.push(new Letter(Alphabet.letterE.letter, Alphabet.letterE.point, AlphabetQuantity.letterE));
+        this._bank.push(new Letter(Alphabet.letterF.letter, Alphabet.letterF.point, AlphabetQuantity.letterF));
+        this._bank.push(new Letter(Alphabet.letterG.letter, Alphabet.letterG.point, AlphabetQuantity.letterG));
+        this._bank.push(new Letter(Alphabet.letterH.letter, Alphabet.letterH.point, AlphabetQuantity.letterH));
+        this._bank.push(new Letter(Alphabet.letterI.letter, Alphabet.letterI.point, AlphabetQuantity.letterI));
+        this._bank.push(new Letter(Alphabet.letterJ.letter, Alphabet.letterJ.point, AlphabetQuantity.letterJ));
+        this._bank.push(new Letter(Alphabet.letterK.letter, Alphabet.letterK.point, AlphabetQuantity.letterK));
+        this._bank.push(new Letter(Alphabet.letterL.letter, Alphabet.letterL.point, AlphabetQuantity.letterL));
+        this._bank.push(new Letter(Alphabet.letterM.letter, Alphabet.letterM.point, AlphabetQuantity.letterM));
+        this._bank.push(new Letter(Alphabet.letterN.letter, Alphabet.letterN.point, AlphabetQuantity.letterN));
+        this._bank.push(new Letter(Alphabet.letterO.letter, Alphabet.letterO.point, AlphabetQuantity.letterO));
+        this._bank.push(new Letter(Alphabet.letterP.letter, Alphabet.letterP.point, AlphabetQuantity.letterP));
+        this._bank.push(new Letter(Alphabet.letterQ.letter, Alphabet.letterQ.point, AlphabetQuantity.letterQ));
+        this._bank.push(new Letter(Alphabet.letterR.letter, Alphabet.letterR.point, AlphabetQuantity.letterR));
+        this._bank.push(new Letter(Alphabet.letterS.letter, Alphabet.letterS.point, AlphabetQuantity.letterS));
+        this._bank.push(new Letter(Alphabet.letterT.letter, Alphabet.letterT.point, AlphabetQuantity.letterT));
+        this._bank.push(new Letter(Alphabet.letterU.letter, Alphabet.letterU.point, AlphabetQuantity.letterU));
+        this._bank.push(new Letter(Alphabet.letterV.letter, Alphabet.letterV.point, AlphabetQuantity.letterV));
+        this._bank.push(new Letter(Alphabet.letterW.letter, Alphabet.letterW.point, AlphabetQuantity.letterW));
+        this._bank.push(new Letter(Alphabet.letterX.letter, Alphabet.letterX.point, AlphabetQuantity.letterX));
+        this._bank.push(new Letter(Alphabet.letterY.letter, Alphabet.letterY.point, AlphabetQuantity.letterY));
+        this._bank.push(new Letter(Alphabet.letterZ.letter, Alphabet.letterZ.point, AlphabetQuantity.letterZ));
     }
 
     public letterIsAvailable(chosenLetter: Letter): boolean {

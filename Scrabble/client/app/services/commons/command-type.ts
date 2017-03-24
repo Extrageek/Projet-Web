@@ -3,7 +3,7 @@ export enum CommandType {
     ExchangeCmd = 1,
     PlaceCmd = 2,
     PassCmd = 3,
-    Guide = 4,
+    GuideCmd = 4,
     InvalidCmd = 5,
     Unknown
 }

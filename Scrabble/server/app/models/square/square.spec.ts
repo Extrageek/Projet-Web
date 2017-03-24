@@ -4,7 +4,6 @@ import { BoardColumn } from "../board/board-column";
 import { SquareType } from "./square-type";
 import { Letter } from "../letter";
 import { Alphabet } from "../commons/alphabet";
-import { AlphabetPoint } from "../commons/alphabet-point";
 import { AlphabetQuantity } from "../commons/alphabet-quantity";
 import { Square } from "./square";
 import { expect } from "chai";
@@ -32,7 +31,7 @@ describe("Square object should", () => {
     });
 
     it("set the alphabet letter corectly", () => {
-        _letter = new Letter(Alphabet.letterD, AlphabetPoint.letterD, AlphabetQuantity.letterD);
+        _letter = new Letter(Alphabet.letterD.letter, Alphabet.letterD.point, AlphabetQuantity.letterD);
         _square.letter = _letter;
         expect(_square.letter).to.be.equal(_letter);
     });

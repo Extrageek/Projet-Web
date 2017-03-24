@@ -17,6 +17,8 @@ import { ICommandMessage } from "./commons/message/command-message.interface";
 import { IRoomMessage } from "./commons/message/room-message.interface";
 import { MessageHandler } from "./message-handler";
 
+const THREE_SECONDS = 3000;
+
 export class SocketConnectionHandler {
 
     private _roomHandler: RoomHandler;
@@ -184,11 +186,9 @@ export class SocketConnectionHandler {
                     this._socket.to(room.roomId)
                         .emit(SocketEventType.updateLetterInBank, room.letterBankHandler.bank.numberOfLettersInBank);
 
-                    ////////////////// verification
-                    // creer update score
-                    // creer update n lettre chevalet
-                    // creer update n lettre banque restante
+                    // verification
                     let isVerified = true;
+                    // room.verifyWordsCreated(request._response, socket.id 
                     if (isVerified) {
                         room.refillPlayerEasel(player.socketId);
                         newEasel = room.letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
@@ -199,7 +199,9 @@ export class SocketConnectionHandler {
                     }
                     // If the word doesn't respect scrabble rules, the word is removed and the board updated
                     else {
-                        newEasel = room.removeLastLettersPlacedAndRefill(socket.id);
+                        // setTimeout(function() {
+                            newEasel = room.removeLastLettersPlacedAndRefill(socket.id);
+                        // }, THREE_SECONDS);
                         this._socket.to(room.roomId).emit(SocketEventType.updateBoard, room.board);
                     }
                     socket.emit(SocketEventType.updateLetterInEasel, newEasel.length);

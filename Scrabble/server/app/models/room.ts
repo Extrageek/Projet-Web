@@ -9,6 +9,12 @@ import { IPlaceWordResponse } from "../services/commons/command/place-word-respo
 
 let uuid = require('node-uuid');
 
+//TODO: To change to 5 minutes 
+const TIMER_DEFAULT_MINUTE = 0;
+
+//TODO: To change to 0 secondes 
+const TIMER_DEFAULT_SECOND = 30;
+
 export class Room {
 
     static roomMinCapacity = 1;
@@ -37,7 +43,7 @@ export class Room {
         this._playersQueue = new QueueCollection<Player>();
         this._letterBankHandler = new LetterBankHandler();
         this._boardManager = new BoardManager();
-        this._timerService = new TimerService();
+        this._timerService = new TimerService(TIMER_DEFAULT_MINUTE, TIMER_DEFAULT_SECOND);
         this._roomId = uuid.v1(); // Generate a v1 (time-based) id
         this._board = new Board();
     }
@@ -182,6 +188,16 @@ export class Room {
             }
         });
         return hasBeenPlaced;
+    }
+
+    public verifyWordsCreated(response: IPlaceWordResponse, socketId: string): boolean {
+        let areValidWords = false;
+        this._playersQueue.forEach((player: Player) => {
+            if (player.socketId === socketId) {
+                areValidWords = this._board.verificationService.verifyWordsCreated(response, this._board);
+            }
+        });
+        return areValidWords;
     }
 
     public removeLastLettersPlacedAndRefill(socketId: string): Array<string> {

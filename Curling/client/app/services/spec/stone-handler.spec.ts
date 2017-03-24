@@ -75,13 +75,13 @@ describe("StoneHandler tests should", () => {
     });
 
     it("throw error due to no stone generated", () => {
-        expect(() => { stoneHandler.performShot( new Vector3(0, 0, 1), 1); }).to.throw(Error);
+        expect(() => { stoneHandler.performShot(new Vector3(0, 0, 1), 1); }).to.throw(Error);
     });
 
     it("clean all stones generated", done => {
         stoneHandler.generateNewStone().then((stone: Stone) => {
             stoneHandler.cleanAllStones(new Scene());
-            expect(() => { stoneHandler.performShot( new Vector3(0, 0, 1), 1); }).to.throw(Error);
+            expect(() => { stoneHandler.performShot(new Vector3(0, 0, 1), 1); }).to.throw(Error);
             done();
         });
     });
@@ -90,7 +90,7 @@ describe("StoneHandler tests should", () => {
         stoneHandler.generateNewStone().then((stone: Stone) => {
             stone.position.set(-2.15, 0, 0);
             stoneHandler.performShot(new Vector3(-1, 0, 0), 0.001, () => {
-                expect(() => { stoneHandler.performShot( new Vector3(0, 0, 1), 1); }).to.throw(Error);
+                expect(() => { stoneHandler.performShot(new Vector3(0, 0, 1), 1); }).to.throw(Error);
                 done();
             });
             do60Updates(stoneHandler);
@@ -101,7 +101,7 @@ describe("StoneHandler tests should", () => {
         stoneHandler.generateNewStone().then((stone: Stone) => {
             stone.position.set(2.15, 0, 0);
             stoneHandler.performShot(new Vector3(1, 0, 0), 0.001, () => {
-                expect(() => { stoneHandler.performShot( new Vector3(0, 0, 1), 1); }).to.throw(Error);
+                expect(() => { stoneHandler.performShot(new Vector3(0, 0, 1), 1); }).to.throw(Error);
                 done();
             });
             do60Updates(stoneHandler);
@@ -112,7 +112,7 @@ describe("StoneHandler tests should", () => {
         stoneHandler.generateNewStone().then((stone: Stone) => {
             stone.position.set(0, 0, 40);
             stoneHandler.performShot(new Vector3(0, 0, 1), 0.001, () => {
-                expect(() => { stoneHandler.performShot( new Vector3(0, 0, 1), 1); }).to.throw(Error);
+                expect(() => { stoneHandler.performShot(new Vector3(0, 0, 1), 1); }).to.throw(Error);
                 done();
             });
             do60Updates(stoneHandler);
@@ -123,7 +123,7 @@ describe("StoneHandler tests should", () => {
         stoneHandler.generateNewStone().then((stone: Stone) => {
             stone.position.set(0, 0, 1);
             stoneHandler.performShot(new Vector3(0, 0, -1), 0.001, () => {
-                expect(() => { stoneHandler.performShot( new Vector3(0, 0, 1), 1); }).to.throw(Error);
+                expect(() => { stoneHandler.performShot(new Vector3(0, 0, 1), 1); }).to.throw(Error);
                 done();
             });
             do60Updates(stoneHandler);
@@ -153,7 +153,6 @@ describe("StoneHandler tests should", () => {
                 expect(stone2.position.z).to.not.equal(1, "stone 2 z should have moved.");
                 expect(direction2.angleTo(stone2.direction)).to.be.greaterThan(Math.PI / 12,
                     "direction should have changed.");
-                expect(stone1.speed).to.not.equal(0, "stone 1 should still be in movement.");
                 done();
             });
         });
