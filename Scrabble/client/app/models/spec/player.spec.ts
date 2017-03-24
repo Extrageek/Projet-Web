@@ -9,13 +9,13 @@ describe("Player model should", () => {
     let _score = 0;
     let _letters: Array<IScrabbleLetter>;
 
-    beforeEach(() => {
-        
-    });
+    // beforeEach(() => {
 
-    it("construct a board correctly", () => {
+    // });
 
-    });
+    // it("construct a board correctly", () => {
+
+    // });
 
 
 });

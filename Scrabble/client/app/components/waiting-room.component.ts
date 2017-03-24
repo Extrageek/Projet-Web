@@ -1,21 +1,26 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, HostListener, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 import { SocketService } from "../services/socket-service";
 import { SocketEventType } from "../commons/socket-eventType";
 import { IRoomMessage } from "../commons/messages/room-message.interface";
 
+
 @Component({
     moduleId: module.id,
     selector: "waiting-room-selector",
     templateUrl: "../../assets/templates/waiting-room.html"
 })
-
 export class WaitingRoomComponent implements OnInit, OnDestroy {
+
 
     private _username = "";
     private _numberOfPlayerMissing: number;
     private _onJoinedRoomSubscription: Subscription;
+
+    public get numberOfPlayerMissing(): number {
+        return this._numberOfPlayerMissing;
+    }
 
     constructor(private router: Router, private socketService: SocketService) {
         // Default constructor
@@ -45,4 +50,23 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
                 }
             });
     }
+
+    // A callback when the player join a room
+    private onLeavedRoom(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.LEAVE_ROOM)
+            .subscribe((roomMessage: IRoomMessage) => {
+                console.log("Leaved the room", roomMessage);
+                if (!roomMessage._roomIsReady) {
+                    this._numberOfPlayerMissing = roomMessage._numberOfMissingPlayers;
+                }
+            });
+    }
+
+    // @HostListener("document:keypress", ['$event'])
+    // keyboardEventHandler(event: KeyboardEvent) {
+    //     console.log(event.keyCode);
+    //     this.socketService.emitMessage(SocketEventType.DISCONNECT, this._username);
+    //     this.router.navigate(["/"]);
+    // }
 }
+

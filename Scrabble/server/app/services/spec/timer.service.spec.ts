@@ -45,7 +45,7 @@ describe("TimerService", () => {
     });
 
     it("should decrement one time the second in the clock", () => {
-        let timerService = new TimerService(5, 3);
+        let timerServiceLocal = new TimerService(5, 3);
         timerService.updateClock();
 
         assert(timerService.minutes === 5);
@@ -53,7 +53,7 @@ describe("TimerService", () => {
     });
 
     it("should decrement one time the minute in the clock", () => {
-        let timerService = new TimerService(5, 2);
+        let timerServiceLocal = new TimerService(5, 2);
         timerService.updateClock();
         timerService.updateClock();
         timerService.updateClock();
@@ -63,10 +63,10 @@ describe("TimerService", () => {
     });
 
     it("should reset the timer to it initials values after 0:00", () => {
-        let timerService = new TimerService(5, 59);
+        let timerServiceLocal = new TimerService(5, 59);
 
-        for (var index = 0; index < 5; index++) {
-            for (var index = 0; index <= 59; index++) {
+        for (let index = 0; index < 5; index++) {
+            for (let i = 0; i <= 59; i++) {
                 timerService.updateClock();
             }
         }
@@ -76,10 +76,10 @@ describe("TimerService", () => {
     });
 
     it("should reset the minutes to it's max value", () => {
-        let timerService = new TimerService(5, 59);
+        let timerServiceLocal = new TimerService(5, 59);
 
-        for (var index = 0; index < 5; index++) {
-            for (var index = 0; index <= 59; index++) {
+        for (let index = 0; index < 5; index++) {
+            for (let i = 0; i <= 59; i++) {
                 timerService.updateClock();
             }
         }

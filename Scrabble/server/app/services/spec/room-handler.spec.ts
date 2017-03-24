@@ -273,8 +273,8 @@ describe("Room Handler", () => {
     it("should exchange letters of a player when id and array are valid", () => {
         let roomCapacity = 1;
         let room = new Room(roomCapacity);
-        let numberOfPlayers = 1;
-        let player = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+        let numberOfPlayersLoc = 1;
+        let player = new Player(fakename1, numberOfPlayersLoc, fakeSocketId1);
         room.addPlayer(player1);
 
         // initialize the players easels
