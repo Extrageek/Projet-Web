@@ -50,6 +50,7 @@ export class RenderService {
             gameStatus: gameStatusService,
             cameraService: cameraService,
             broom: null,
+            rink: null,
             scene: new Scene(),
             currentCamera: CameraType.PERSPECTIVE_CAM,
             gameComponentsToUpdate: new Object(),
@@ -170,6 +171,7 @@ export class RenderService {
     private loadRink() {
         Rink.createRink(this._objectLoader).then((rink: Rink) => {
             this._mesh.add(rink);
+            this._gameInfo.rink = rink;
             this.loadStoneHandler(rink);
         });
     }

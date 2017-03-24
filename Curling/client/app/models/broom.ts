@@ -3,7 +3,7 @@ import { Stone } from "./stone";
 export class Broom extends Group {
 
     private static readonly BROOM_PATH = "/assets/models/json/broom.json";
-    private static readonly SCALE = { x: 0.4, y: 0.4, z: 0.4};
+    private static readonly SCALE = { x: 0.4, y: 0.4, z: 0.4 };
     private static readonly MATERIAL_PROPERTIES = { wireframe: false, shininess: 0.7 };
     private static readonly BOUNDING_SPHERE_RADIUS = 1;
     private _material: MeshPhongMaterial;
@@ -51,9 +51,10 @@ export class Broom extends Group {
     public isRed(): Boolean {
         return this._redBroom;
     }
+
     public verifyBroomCollision(stones: Stone[]) {
         stones.map((stone: Stone) => {
-            if(this._boundingSphere.intersectsSphere(stone.boundingSphere)) {
+            if (this._boundingSphere.intersectsSphere(stone.boundingSphere)) {
                 stone.sweeping = true;
             }
         });

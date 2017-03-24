@@ -8,6 +8,7 @@ import { GameComponent } from "../../models/game-component.interface";
 import { GameStatusService } from "./../game-status.service";
 import { AbstractGameState } from "./../../models/states/abstract-game-state";
 import { Broom } from "../../models/broom";
+import { Rink } from "../../models/scenery/rink";
 
 export interface IGameInfo {
     stoneHandler: StoneHandler;
@@ -21,6 +22,7 @@ export interface IGameInfo {
         lineAnimationSlower: number
     };
     broom: Broom;
+    rink: Rink;
     scene: Scene;
     mousePositionPlaneXZ: Vector3;
     gameStatus: GameStatusService;

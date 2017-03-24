@@ -25,8 +25,9 @@ export class StoneHandler implements GameComponent {
     private _stonesToBeRemoved: Stone[];
     private _currentSpin: StoneSpin;
     private _callbackAfterShotFinished: Function;
-    private _boundingRink: Box3;
-    private _outOfBoundsArea: Box3;
+    private _outOfBoundsRink: Box3;
+    private _boxBetweenLines: Box3;
+    private _invalidAreaForStonesToBeIn : Box3;
 
     constructor(objectLoader: ObjectLoader, rinkInfo: RinkInfo, firstPlayer: StoneColor) {
         this._rinkInfo = rinkInfo;
@@ -36,9 +37,14 @@ export class StoneHandler implements GameComponent {
         this._stonesToBeRemoved = new Array<Stone>();
         this._currentSpin = StoneSpin.Clockwise;
         this._callbackAfterShotFinished = null;
-        this._boundingRink = new Box3(new Vector3(-2.15, 0, -22.5), new Vector3(2.15, 0, 22.5));
-        this._outOfBoundsArea = new Box3(new Vector3(-2.15, 0, -16.25), new Vector3(2.15, 0, 16.25));
-        this._outOfBoundsArea.translate(new Vector3(0, 0, -6));
+        this._outOfBoundsRink = new Box3(new Vector3(-2.15, 0, -22.5), new Vector3(2.15, 0, 22.5));
+
+        this._boxBetweenLines = new Box3(new Vector3(-2.15, 0, -14.75), new Vector3(2.15, 0, 14.75));
+        this._boxBetweenLines.translate(new Vector3(0, 0, 2.95));
+
+        this._invalidAreaForStonesToBeIn = new Box3(new Vector3(-2.15, 0, -17.75), new Vector3(2.15, 0, 17.75));
+        this._invalidAreaForStonesToBeIn.translate(new Vector3(0, 0, -7.15));
+
     }
 
     public get stoneOnTheGame(): Stone[] {
@@ -55,7 +61,6 @@ export class StoneHandler implements GameComponent {
     }
 
     public removeOutOfBoundsStones(scene: Scene) {
-        console.log(this._stonesToBeRemoved.length);
         for (let stone of this._stonesToBeRemoved) {
             scene.remove(stone);
         }
@@ -124,7 +129,7 @@ export class StoneHandler implements GameComponent {
         if (typeof this._stoneOnTheGame[lastIndex] === "undefined") {
             return false;
         } else{
-            return !(this._outOfBoundsArea.intersectsSphere(this._stoneOnTheGame[lastIndex].boundingSphere));
+            return !(this._boxBetweenLines.intersectsSphere(this._stoneOnTheGame[lastIndex].boundingSphere));
         }
     }
 
@@ -137,7 +142,7 @@ export class StoneHandler implements GameComponent {
 
     private verifyOutOfBounds() {
         this._stoneOnTheGame.map((stone: Stone) => {
-            if (!(this._boundingRink.intersectsSphere(stone.boundingSphere))) {
+            if (!(this._outOfBoundsRink.intersectsSphere(stone.boundingSphere))) {
                 this.removeStone(stone);
                 stone.changeStoneOpacity().subscribe(() => {
                     this._stonesToBeRemoved.push(stone);
@@ -146,7 +151,7 @@ export class StoneHandler implements GameComponent {
         });
     }
     private removeInvalidStonesFromRink(stone: Stone) {
-        if ((this._outOfBoundsArea.intersectsSphere(stone.boundingSphere))) {
+        if ((this._invalidAreaForStonesToBeIn.intersectsSphere(stone.boundingSphere))) {
             this.removeStone(stone);
             stone.changeStoneOpacity().subscribe(() => {
                 this._stonesToBeRemoved.push(stone);
