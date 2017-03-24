@@ -107,6 +107,7 @@ export class StoneHandler implements GameComponent {
             let aStoneIsMoving = false;
             let isCollision = false;
             this._stoneOnTheGame.map((stone: Stone) => {
+                console.log(stone.position);
                 if (stone.speed !== 0) {
                     stone.update(timePerFrame);
                     this.resolveCollisions(stone);

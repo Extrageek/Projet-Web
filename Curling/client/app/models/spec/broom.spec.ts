@@ -39,7 +39,7 @@ describe("Broom class should", () => {
         );
         Broom.createBroom(objectLoader, new Vector3(0, 0, 0)).then((broom: Broom) => {
             broom.verifyBroomCollision(stones);
-            expect(stones[1].sweeping).to.be.true;
+            expect(stones[0].sweeping).to.be.true;
         });
     });
 
@@ -51,7 +51,7 @@ describe("Broom class should", () => {
         );
         Broom.createBroom(objectLoader, new Vector3(0, 0, 20)).then((broom: Broom) => {
             broom.verifyBroomCollision(stones);
-            expect(stones[1].sweeping).to.be.false;
+            expect(stones[0].sweeping).to.be.false;
         });
     });
 });
