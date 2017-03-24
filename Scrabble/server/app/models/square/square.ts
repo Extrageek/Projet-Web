@@ -49,7 +49,7 @@ export class Square {
         this._isBusy = v;
     }
 
-    constructor(position: SquarePosition, type: SquareType) {
+    constructor(position: SquarePosition, type: string) {
         this.squareValue = type.toString();
         this.letter = new Letter("", 0, 0);
         this.position = position;

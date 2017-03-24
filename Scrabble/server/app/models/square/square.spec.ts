@@ -11,7 +11,7 @@ import { expect } from "chai";
 let _square: Square;
 let _letter: Letter;
 let _position: SquarePosition;
-let _type: SquareType;
+let _type: string;
 
 describe("Square object should", () => {
     beforeEach(() => {
