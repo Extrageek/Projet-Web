@@ -53,7 +53,7 @@ export class Broom extends Group {
     }
     public verifyBroomCollision(stones: Stone[]) {
         stones.map((stone: Stone) => {
-            if(this._boundingSphere.intersectsSphere(stone.boundingSphere)) {
+            if (this._boundingSphere.intersectsSphere(stone.boundingSphere)) {
                 stone.sweeping = true;
             }
         });

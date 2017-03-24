@@ -19,7 +19,6 @@ export class PlayerTurn extends AbstractGameState implements GameComponent {
     private static readonly UPDATE_NAME = "PlayerTurn";
 
     private static _instance: AbstractGameState = null;
-
     private _powerTimer: Clock;
 
     //Variable added to be sure to pass in the performMouseButtonPress() first than in the
@@ -55,7 +54,6 @@ export class PlayerTurn extends AbstractGameState implements GameComponent {
     public performEnteringState(): void {
         //Add player turn state to update loop to be able to update the progress bar.
         Object.defineProperty(this._gameInfo.gameComponentsToUpdate, PlayerTurn.UPDATE_NAME, {value: this});
-
         this._gameInfo.isSelectingPower = true;
         this._gameInfo.power = 0;
         this._gameInfo.line.lineDashedMaterial.visible = true;

@@ -20,10 +20,10 @@ export class Stone extends Group implements GameComponent {
     private static readonly BOUNDING_SPHERE_RADIUS = 0.26;
     private static readonly SCALE = { x: 1, y: 1, z: 1 };
     private static readonly MATERIAL_PROPERTIES = { wireframe: false, shininess: 0.7 };
-    public static readonly SPEED_DIMINUTION_NUMBER = 0.2;
+    public static readonly SPEED_DIMINUTION_NUMBER = 0.25;
     public static readonly SPEED_DIMINUTION_NUMBER_WITH_SWEEP = 0.09;
     private static readonly MINIMUM_SPEED = 0.001;
-    private static readonly SWEEPING_CURL_COEFF = 0.01;
+    private static readonly SWEEPING_CURL_COEFF = 0.0001;
 
     private _theta: number;
     public get theta(): number {
@@ -76,7 +76,7 @@ export class Stone extends Group implements GameComponent {
         this._boundingSphere = new Sphere(this.position, Stone.BOUNDING_SPHERE_RADIUS);
         this._lastBoundingSphere = this._boundingSphere;
         this._lastPosition = this.position;
-        this.theta = Math.PI / 8000;
+        this.theta = Math.PI / 25000;
         this._curlMatrix = new Matrix3();
     }
 
@@ -208,16 +208,16 @@ export class Stone extends Group implements GameComponent {
 
     private calculateRotationAngle() {
         let oldTheta = this.theta;
-        // decrease curl effect with sweeping for clockwise spin
-        if (this._spin === StoneSpin.Clockwise && this.isSweeping) {
-            this.theta = this.theta - Stone.SWEEPING_CURL_COEFF;
-        }
-        // decrease curl effect with sweeping for counterclockwise spin
-        else if (this._spin === StoneSpin.CounterClockwise && this.isSweeping) {
-            this.theta = this.theta + Stone.SWEEPING_CURL_COEFF;
-        }
+        // // decrease curl effect with sweeping for clockwise spin
+        // if (this._spin === StoneSpin.Clockwise && this.isSweeping) {
+        //     this.theta = this.theta - Stone.SWEEPING_CURL_COEFF;
+        // }
+        // // decrease curl effect with sweeping for counterclockwise spin
+        // else if (this._spin === StoneSpin.CounterClockwise && this.isSweeping) {
+        //     this.theta = this.theta + Stone.SWEEPING_CURL_COEFF;
+        // }
         // invert spin from counterclockwise to clockwise
-        else if (this._spin === StoneSpin.Clockwise && !this.isSweeping && oldTheta > 0) {
+        if (this._spin === StoneSpin.Clockwise && !this.isSweeping && oldTheta > 0) {
             this.theta = -this.theta;
         }
         // invert spin from clockwise to counterclockwise
@@ -228,7 +228,6 @@ export class Stone extends Group implements GameComponent {
 
     private calculateCurlMatrix() {
         if (this._curlMatrix !== null || this._curlMatrix !== undefined) {
-            // Rotation matrix Y axis
             this._curlMatrix.set(
                 Math.cos(this.theta), 0, Math.sin(this.theta),
                 0, 1, 0,
