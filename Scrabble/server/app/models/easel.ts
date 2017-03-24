@@ -50,16 +50,9 @@ export class Easel {
     }
 
     public containsLetter(letter: Letter): boolean {
-        console.log("TAILLE EASEL ----", this.letters.length);
-
-        this._letters.forEach((elem: Letter) => {
-            console.log("lettre     ", elem.alphabetLetter);
-        });
-        let contains = this._letters.some((letterEasel: Letter) => {
+        return this._letters.some((letterEasel: Letter) => {
             return letterEasel.alphabetLetter === letter.alphabetLetter;
         });
-        console.log("--------- ", contains);
-        return true;
     }
 
     public exchangeLetters(lettersToBeExchanged: Array<string>, newLettersStr: Array<string>): boolean {

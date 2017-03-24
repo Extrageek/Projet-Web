@@ -3,6 +3,7 @@ import { CommandsHelper } from "./commons/command/command-helper";
 import { BoardHelper } from "./board/board-helper";
 import { Board } from "../models/board/board";
 import { SquareType } from "../models/square/square-type";
+import { SquarePosition } from "../models/square/square-position";
 import { Square } from "../models/square/square";
 import { IPlaceWordResponse } from "./commons/command/place-word-response.interface";
 
@@ -31,46 +32,57 @@ export class VerificationService {
 
         let wordOrientation = response._wordOrientation;
 
+        let firstRowIndex = BoardHelper.convertCharToIndex(response._squarePosition._row);
+        let firstColumnIndex = response._squarePosition._column - 1;
+        let initialWord = this.createStringFromArrayString(response._letters);
         let scoreWord = 0;
 
 
         if (wordOrientation === CommandsHelper.HORIZONTAL_ORIENTATION) {
             // verify the initial word
-            areValidWords = this.verifyWordHorizontal(board, response);
+            areValidWords = this.verifyWordHorizontal(board, firstRowIndex, firstColumnIndex, initialWord);
+            console.log("IS VALID WORD INITIAL --- ", areValidWords);
+
+            console.log("LAST LETTERS ADDED LENGTH ------- ", board.lastLettersAdded.length);
+            board.lastLettersAdded.forEach((squarePosition: SquarePosition) => {
+                let word = "";
+                let rowIndex = BoardHelper.convertCharToIndex(squarePosition.row);
+                let columnIndex = squarePosition.column - 1;
+                let square = board.squares[rowIndex][columnIndex];
+                let topPartOfWord = this.discoverTopPartOfWord(board, square);
+                let downPartOfWord = this.discoverDownPartOfWord(board, square);
+                word = topPartOfWord + square.letter.alphabetLetter + downPartOfWord;
+                rowIndex -= topPartOfWord.length;
+                areValidWords = areValidWords
+                    && this.verifyWordVertical(board, rowIndex, columnIndex, word.toUpperCase());
+                console.log("ARE VALID WORD --- ", areValidWords);
+            });
 
         } else if (wordOrientation === CommandsHelper.VERTICAL_ORIENTATION) {
             // verify the initial word
-            areValidWords = this.verifyWordVertical(board, response);
+            areValidWords = this.verifyWordVertical(board, firstRowIndex, firstColumnIndex, initialWord);
+            console.log("IS VALID WORD INITIAL --- ", areValidWords);
+            console.log("LAST LETTERS ADDED LENGTH ------- ", board.lastLettersAdded.length);
+
+            board.lastLettersAdded.forEach((squarePosition: SquarePosition) => {
+                let word = "";
+                let rowIndex = BoardHelper.convertCharToIndex(squarePosition.row);
+                let columnIndex = squarePosition.column - 1;
+                let square = board.squares[rowIndex][columnIndex];
+                let leftPartOfWord = this.discoverTopPartOfWord(board, square);
+                let rightPartOfWord = this.discoverDownPartOfWord(board, square);
+                word = leftPartOfWord + square.letter.alphabetLetter + rightPartOfWord;
+                columnIndex -= leftPartOfWord.length;
+                areValidWords = areValidWords
+                    && this.verifyWordHorizontal(board, rowIndex, columnIndex, word.toUpperCase());
+                console.log("aRE VALID WORD  --- ", areValidWords);
+            });
         }
-
-        // verify every other words created with lastLettersAdded
-
-
-        // BONUS +50 si les 7 lettres placees
-
-        // pour chaque lettre ajoutee verifier
-        // en haut
-        // en bas
-        // a gauche
-        // a droite
-        // si ca touche une lettre deja presente
-        // si oui continuer dans ce sens
-        // comptabiliser les points au fur et a mesure
-        // ajouter la lettre au debut mot pour conserver le mot 
-        // une fois la fin dans ce sens, repartir de la lettre de base et partir dans lautre sens
-        // comptabiliser
-        // ajouter lettre a la fin du mot
-        // verifier le mot forme (2 lettres min) dans le dictionnaire
-        // ajouter le mot forme si ok
-        // ajouter le score
         return areValidWords;
     }
 
-    public verifyWordHorizontal(board: Board, response: IPlaceWordResponse) {
-        let rowIndex = BoardHelper.convertCharToIndex(response._squarePosition._row);
-        let firstColumnIndex = response._squarePosition._column - 1;
+    public verifyWordHorizontal(board: Board, rowIndex: number, firstColumnIndex: number, word: string): boolean {
         let indexLastLettersAdded = 0;
-        let word = this.createStringFromArrayString(response._letters);
         let scoreWord = 0;
         let isWordDouble = false;
         let isWordTriple = false;
@@ -93,15 +105,12 @@ export class VerificationService {
             }
         }
         scoreWord = this.applyBonusDoubleOrTripleWord(scoreWord, isWordDouble, isWordTriple);
-        this._score += this.applyBonus7LettersWord(scoreWord, word);
-        return DictionnaryManager.contains(word);
+        scoreWord += this.applyBonus7LettersWord(scoreWord, word);
+        return this.verifyIfWordExistAndSetScore(word, scoreWord);
     }
 
-    public verifyWordVertical(board: Board, response: IPlaceWordResponse) {
-        let firstRowIndex = BoardHelper.convertCharToIndex(response._squarePosition._row);
-        let columnIndex = response._squarePosition._column - 1;
+    public verifyWordVertical(board: Board, firstRowIndex: number, columnIndex: number, word: string): boolean {
         let indexLastLettersAdded = 0;
-        let word = this.createStringFromArrayString(response._letters);
         let scoreWord = 0;
         let isWordDouble = false;
         let isWordTriple = false;
@@ -124,12 +133,85 @@ export class VerificationService {
             }
         }
         scoreWord = this.applyBonusDoubleOrTripleWord(scoreWord, isWordDouble, isWordTriple);
-        this._score += this.applyBonus7LettersWord(scoreWord, word);
-        return DictionnaryManager.contains(word);
+        scoreWord += this.applyBonus7LettersWord(scoreWord, word);
+        return this.verifyIfWordExistAndSetScore(word, scoreWord);
     }
 
-    public discoverWordPartGoingUp(board: Board, square: Square){
-        
+    public verifyIfWordExistAndSetScore(word: string, score: number): boolean {
+        console.log("WORD TO VERIFY  -- ", word);
+
+        if (word.length >= 2) {
+            if (!DictionnaryManager.contains(word)) {
+                return false;
+            }
+            else {
+                console.log("---------------score to be added =", score);
+                this._score += score;
+                console.log("---------------score after =", this._score);
+                return true;
+            }
+        }
+        return true;
+    }
+
+    public discoverTopPartOfWord(board: Board, square: Square): string {
+        let topPartOfWord = "";
+        let nextRowIndex = BoardHelper.convertCharToIndex(square.position.row);
+        let columnIndex = square.position.column - 1;
+        let touchedTopSquare = true;
+        while (touchedTopSquare) {
+            touchedTopSquare = (BoardHelper.isValidRowPosition(--nextRowIndex)) ?
+                board.squares[nextRowIndex][columnIndex].isBusy : false;
+            if (touchedTopSquare) {
+                topPartOfWord = board.squares[nextRowIndex][columnIndex].letter.alphabetLetter + topPartOfWord;
+            }
+        }
+        return topPartOfWord;
+    }
+
+    public discoverDownPartOfWord(board: Board, square: Square): string {
+        let downPartOfWord = "";
+        let nextRowIndex = BoardHelper.convertCharToIndex(square.position.row);
+        let columnIndex = square.position.column - 1;
+        let touchedDownSquare = true;
+        while (touchedDownSquare) {
+            touchedDownSquare = (BoardHelper.isValidRowPosition(++nextRowIndex)) ?
+                board.squares[nextRowIndex][columnIndex].isBusy : false;
+            if (touchedDownSquare) {
+                downPartOfWord = downPartOfWord + board.squares[nextRowIndex][columnIndex].letter.alphabetLetter;
+            }
+        }
+        return downPartOfWord;
+    }
+
+    public discoverLeftPartOfWord(board: Board, square: Square): string {
+        let leftPartOfWord = "";
+        let rowIndex = BoardHelper.convertCharToIndex(square.position.row);
+        let nextColumnIndex = square.position.column - 1;
+        let touchedLeftSquare = true;
+        while (touchedLeftSquare) {
+            touchedLeftSquare = (BoardHelper.isValidColumnPosition(--nextColumnIndex)) ?
+                board.squares[rowIndex][nextColumnIndex].isBusy : false;
+            if (touchedLeftSquare) {
+                leftPartOfWord = board.squares[rowIndex][nextColumnIndex].letter.alphabetLetter + leftPartOfWord;
+            }
+        }
+        return leftPartOfWord;
+    }
+
+    public discoverRightPartOfWord(board: Board, square: Square): string {
+        let rightPartOfWord = "";
+        let rowIndex = BoardHelper.convertCharToIndex(square.position.row);
+        let nextColumnIndex = square.position.column - 1;
+        let touchedLeftSquare = true;
+        while (touchedLeftSquare) {
+            touchedLeftSquare = (BoardHelper.isValidColumnPosition(++nextColumnIndex)) ?
+                board.squares[rowIndex][nextColumnIndex].isBusy : false;
+            if (touchedLeftSquare) {
+                rightPartOfWord = rightPartOfWord + board.squares[rowIndex][nextColumnIndex].letter.alphabetLetter;
+            }
+        }
+        return rightPartOfWord;
     }
 
     public calculateScoreLetterInSquare(square: Square, isSquareNewLetter: boolean): number {
