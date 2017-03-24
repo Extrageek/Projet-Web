@@ -170,9 +170,9 @@ describe("Room", () => {
     it("handle the letter bank to change a player's letters", () => {
         let roomCapacity = 2;
         let room = new Room(roomCapacity);
-        let numberOfPlayers = 2;
-        let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
-        let player2 = new Player(fakename2, numberOfPlayers, fakeSocketId2);
+        let numberOfPlayersLoc = 2;
+        let player1 = new Player(fakename1, numberOfPlayersLoc, fakeSocketId1);
+        let player2 = new Player(fakename2, numberOfPlayersLoc, fakeSocketId2);
 
         room.addPlayer(player1);
         room.addPlayer(player2);
