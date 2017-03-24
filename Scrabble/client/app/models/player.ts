@@ -54,7 +54,7 @@ export class Player {
     public get score(): number {
         return this._score;
     }
-    public set score(v: number) {
-        this._score = v;
+    public set score(score: number) {
+        this._score = score;
     }
 }

@@ -75,7 +75,7 @@ export class RenderService {
     }
 
     public init(container: HTMLElement) {
-        if(this._gameInfo.scene.children.length > 0) {
+        if (this._gameInfo.scene.children.length > 0) {
             this.linkRenderServerToCanvas(container);
             window.addEventListener('resize', _ => this.onResize());
             return;

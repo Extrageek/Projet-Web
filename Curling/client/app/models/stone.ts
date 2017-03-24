@@ -23,7 +23,7 @@ export class Stone extends Group implements GameComponent {
     public static readonly SPEED_DIMINUTION_NUMBER = 0.25;
     public static readonly SPEED_DIMINUTION_NUMBER_WITH_SWEEP = 0.09;
     private static readonly MINIMUM_SPEED = 0.001;
-    private static readonly SWEEPING_CURL_COEFF = 0.0001;
+    //private static readonly SWEEPING_CURL_COEFF = 0.0001;
 
     private _theta: number;
     public get theta(): number {
@@ -209,20 +209,12 @@ export class Stone extends Group implements GameComponent {
 
     private calculateRotationAngle() {
         let oldTheta = this.theta;
-        // // decrease curl effect with sweeping for clockwise spin
-        // if (this._spin === StoneSpin.Clockwise && this.isSweeping) {
-        //     this.theta = this.theta - Stone.SWEEPING_CURL_COEFF;
-        // }
-        // // decrease curl effect with sweeping for counterclockwise spin
-        // else if (this._spin === StoneSpin.CounterClockwise && this.isSweeping) {
-        //     this.theta = this.theta + Stone.SWEEPING_CURL_COEFF;
-        // }
         // invert spin from counterclockwise to clockwise
-        if (this._spin === StoneSpin.Clockwise && !this.isSweeping && oldTheta > 0) {
+        if (this._spin === StoneSpin.Clockwise && oldTheta > 0) {
             this.theta = -this.theta;
         }
         // invert spin from clockwise to counterclockwise
-        else if (this._spin === StoneSpin.CounterClockwise && !this.isSweeping && oldTheta < 0) {
+        else if (this._spin === StoneSpin.CounterClockwise && oldTheta < 0) {
             this.theta = -this.theta;
         }
     }
