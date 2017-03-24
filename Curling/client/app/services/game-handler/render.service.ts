@@ -4,6 +4,7 @@ import {
     ObjectLoader, Geometry, CubeGeometry, MeshBasicMaterial, MeshFaceMaterial, Mesh, Line,
     LineDashedMaterial, ImageUtils, BackSide, Vector3, Clock
 } from "three";
+
 import { GameStatusService } from './../game-status.service';
 import { CameraService } from './../views/cameras.service';
 import { Arena } from './../../models/scenery/arena';
@@ -29,6 +30,7 @@ import { EndGame } from "./../../models/states/end-game";
 @Injectable()
 export class RenderService {
 
+
     private static readonly NUMBER_OF_MODELS_TO_LOAD = 4;
 
     private _numberOfModelsLoaded: number;
@@ -40,12 +42,11 @@ export class RenderService {
     private _renderer: Renderer;
     private _animationStarted: boolean;
 
-    _gameInfo: IGameInfo;
+    private _gameInfo: IGameInfo;
 
     constructor(gameStatusService: GameStatusService,
         cameraService: CameraService,
         lightingService: LightingService) {
-        console.log("here!");
         this._gameInfo = {
             gameStatus: gameStatusService,
             cameraService: cameraService,
@@ -73,6 +74,11 @@ export class RenderService {
     }
 
     public init(container: HTMLElement) {
+        if(this._gameInfo.scene.children.length > 0) {
+            this.linkRenderServerToCanvas(container);
+            window.addEventListener('resize', _ => this.onResize());
+            return;
+        }
         //Clock for the time per frame.
         this._clock = new Clock(false);
 
@@ -97,6 +103,10 @@ export class RenderService {
         //Part 5: Events
         // bind to window resizes
         window.addEventListener('resize', _ => this.onResize());
+    }
+
+    get gameInfo(): IGameInfo {
+        return this._gameInfo;
     }
 
     public loadLine() {
