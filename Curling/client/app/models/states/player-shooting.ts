@@ -47,7 +47,7 @@ export class PlayerShooting extends AbstractGameState {
                 let newState: AbstractGameState;
                 if (this._gameInfo.gameStatus.currentStonesPlayer === 0
                     && this._gameInfo.gameStatus.currentStonesComputer === 0) {
-                        newState = EndSet.getInstance();
+                    newState = EndSet.getInstance();
                 }
                 else {
                     newState = LoadingStone.getInstance();
@@ -107,7 +107,6 @@ export class PlayerShooting extends AbstractGameState {
     protected performMouseButtonReleased(): AbstractGameState {
         if (!this._gameInfo.broom.isRed()) {
             this._gameInfo.broom.translateZ(0.3);
-            console.log("in out");
             this.isHoldingMouseButton = false;
             // TODO : A VOIR COMMENT ENLEVER GET ELEM
             let sound = document.getElementById("broomOut");
@@ -117,7 +116,6 @@ export class PlayerShooting extends AbstractGameState {
     }
 
     public update(timePerFrame: number) {
-        console.log(this._gameInfo.stoneHandler.checkPassHogLine());
         if (this._gameInfo.stoneHandler.checkPassHogLine()) {
              this._gameInfo.broom.changeToRed();
         }

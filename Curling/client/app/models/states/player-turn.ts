@@ -5,7 +5,7 @@ import { CameraType } from "./../../services/game-physics/camera-type";
 import { GameComponent } from "../../models/game-component.interface";
 import { PlayerShooting } from "./player-shooting";
 import { CurrentPlayer } from "../../models/current-player";
-import { calculateMousePosition } from "./../../services/game-physics/mouse-position-calculate";
+import { calculateMousePosition } from "./../../services/game-physics/mouse.service";
 
 export class PlayerTurn extends AbstractGameState {
 

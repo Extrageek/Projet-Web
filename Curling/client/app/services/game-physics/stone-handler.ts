@@ -163,6 +163,8 @@ export class StoneHandler implements GameComponent {
         this._stoneOnTheGame.map((stone: Stone) => {
             if (stoneToVerify !== stone) {
                 if (stoneToVerify.boundingSphere.intersectsSphere(stone.boundingSphere)) {
+                    let sound = document.getElementById("collisions");
+                    (<HTMLAudioElement>sound).play();
                     stonesHit.push(stone);
                 }
             }

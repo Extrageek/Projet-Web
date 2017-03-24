@@ -47,7 +47,6 @@ export class RenderService {
     constructor(gameStatusService: GameStatusService,
         cameraService: CameraService,
         lightingService: LightingService) {
-        console.log("here!");
         this._gameInfo = {
             gameStatus: gameStatusService,
             cameraService: cameraService,
