@@ -5,7 +5,7 @@ import { CameraType } from "./../../services/game-physics/camera-type";
 import { EndSet } from "./end-set";
 import { GameComponent } from "../../models/game-component.interface";
 
-export class PlayerShooting extends AbstractGameState implements GameComponent {
+export class PlayerShooting extends AbstractGameState {
 
     private static _instance: AbstractGameState = null;
     private static readonly UPDATE_NAME = "PlayerShooting";
@@ -36,7 +36,6 @@ export class PlayerShooting extends AbstractGameState implements GameComponent {
     }
 
     protected performEnteringState(): void {
-        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, PlayerShooting.UPDATE_NAME, {value: this});
         this._gameInfo.scene.add(this._gameInfo.broom);
         //TODO : CHANGE GREEN ONCE YOU PASS THE FIRST LINE
         this._gameInfo.broom.changeToGreen();
@@ -58,7 +57,6 @@ export class PlayerShooting extends AbstractGameState implements GameComponent {
     }
 
     protected performLeavingState() {
-        delete this._gameInfo.gameComponentsToUpdate[PlayerShooting.UPDATE_NAME];
         this._gameInfo.scene.remove(this._gameInfo.broom);
         this._gameInfo.stoneHandler.removeOutOfBoundsStones(this._gameInfo.scene);
         this._gameInfo.gameStatus.nextPlayer();

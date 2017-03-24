@@ -75,7 +75,7 @@ export class RenderService {
     }
 
     public init(container: HTMLElement) {
-        if(this._gameInfo.scene.children.length > 0) {
+        if (this._gameInfo.scene.children.length > 0) {
             this.linkRenderServerToCanvas(container);
             window.addEventListener('resize', _ => this.onResize());
             return;
@@ -244,6 +244,9 @@ export class RenderService {
 
         if (this._clock.running === true) {
             let timePerFrame = this._clock.getDelta();
+            //Execute the update action in the state
+            this._gameInfo.gameState.update(timePerFrame);
+            //Update the other components
             let keys = Object.getOwnPropertyNames(this._gameInfo.gameComponentsToUpdate);
             keys.forEach((key: string) => {
                 this._gameInfo.gameComponentsToUpdate[key].update(timePerFrame);

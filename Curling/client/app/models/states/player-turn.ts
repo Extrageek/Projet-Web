@@ -7,7 +7,7 @@ import { PlayerShooting } from "./player-shooting";
 import { CurrentPlayer } from "../../models/current-player";
 import { calculateMousePosition } from "./../../services/game-physics/mouse-position-calculate";
 
-export class PlayerTurn extends AbstractGameState implements GameComponent {
+export class PlayerTurn extends AbstractGameState {
 
     public static readonly SHOT_ANGLE_MINIMUM = -2.25;
     public static readonly SHOT_ANGLE_MAXIMUM = 2.25;
@@ -52,8 +52,6 @@ export class PlayerTurn extends AbstractGameState implements GameComponent {
     }
 
     public performEnteringState(): void {
-        //Add player turn state to update loop to be able to update the progress bar.
-        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, PlayerTurn.UPDATE_NAME, {value: this});
         this._gameInfo.isSelectingPower = true;
         this._gameInfo.power = 0;
         this._gameInfo.line.lineDashedMaterial.visible = true;
@@ -61,9 +59,6 @@ export class PlayerTurn extends AbstractGameState implements GameComponent {
     }
 
     public performLeavingState() {
-        //Remove player turn state from update loop.
-        delete this._gameInfo.gameComponentsToUpdate[PlayerTurn.UPDATE_NAME];
-
         this._gameInfo.line.lineDashedMaterial.visible = false;
     }
 
