@@ -198,27 +198,20 @@ export class SocketConnectionHandler {
                             room.letterBankHandler.bank.numberOfLettersInBank
                         );
                         socket.emit(SocketEventType.updateScore, player.score);
+                        socket.emit(SocketEventType.updateLetterInEasel, newEasel.length);
+                        socket.emit(SocketEventType.updateEasel, newEasel);
+                        let playersQueues = room.getAndUpdatePlayersQueue();
+                        this._socket.to(room.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
                     }
                     // If the word doesn't respect scrabble rules, the word is removed and the board updated
                     else {
-                        // setTimeout(function() {
-                        newEasel = room.removeLastLettersPlacedAndRefill(socket.id);
-                        // }, THREE_SECONDS);
-                        this._socket.to(room.roomId).emit(SocketEventType.updateBoard, room.board);
+                        setTimeout(() => {
+                            newEasel = room.removeLastLettersPlacedAndRefill(socket.id);
+                            this._socket.to(room.roomId).emit(SocketEventType.updateBoard, room.board);
+                            socket.emit(SocketEventType.updateLetterInEasel, newEasel.length);
+                            socket.emit(SocketEventType.updateEasel, newEasel);
+                        }, THREE_SECONDS);
                     }
-                    socket.emit(SocketEventType.updateLetterInEasel, newEasel.length);
-                    socket.emit(SocketEventType.updateEasel, newEasel);
-
-                    // si la verif nest pas bonne retirer les lettres du board et les replacer sur le easel
-                    // mettre a jour le board et easel
-
-                    // this._socket.to(room.roomId).emit(SocketEventType.updateBoard, room.board);
-                    // socket.emit(SocketEventType.updateEasel, player.easel.letters);
-
-
-                    // Update the players queues for everyone in the room
-                    let playersQueues = room.getAndUpdatePlayersQueue();
-                    this._socket.to(room.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
                 } else {
                     response._commandStatus = CommandStatus.NotAllowed;
                 }
