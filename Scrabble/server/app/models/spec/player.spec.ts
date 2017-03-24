@@ -1,6 +1,6 @@
 import { expect, assert } from "chai";
 import { Player } from "../player";
-import { AlphabetPoint } from "../commons/alphabet-point";
+import { Alphabet } from "../commons/alphabet";
 import { Letter } from "../letter";
 import { Easel } from "../easel";
 
@@ -25,7 +25,7 @@ describe("Player", () => {
     it("should set a player's easel correctly", () => {
         let numberOfPlayer = 2;
         let player = new Player(username, numberOfPlayer, fakeSocketId);
-        let fakeLetter = new Letter("A", AlphabetPoint.letterA, 0);
+        let fakeLetter = new Letter(Alphabet.letterA.letter, Alphabet.letterA.point, 0);
         player.easel = new Easel([fakeLetter]);
         expect(player.easel).to.be.instanceof(Easel);
     });

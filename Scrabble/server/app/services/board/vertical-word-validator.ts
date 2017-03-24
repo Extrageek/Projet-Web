@@ -75,7 +75,7 @@ export class VerticalWordValidator {
         // Check if we have touched at least one existing letter in the board
         let hasTouchedLetterInTheBoard = false;
         if (isWordFit && !this._board.isEmpty) {
-            hasTouchedLetterInTheBoard = this.hasTouchedAletterVerticallyInTheBoard(
+            hasTouchedLetterInTheBoard = this.hasTouchedLetterOnBoard(
                 firstRowIndex, columnIndex, request._letters.length);
         }
 
@@ -93,58 +93,33 @@ export class VerticalWordValidator {
         }
     }
 
-    private hasTouchedAletterVerticallyInTheBoard(
-        firstRowNumber: number,
-        columnIndex: number,
-        wordLength: number): boolean {
-
-        let touchedLeftOrRightLetter =
-            this.hasTouchedLetterOnLeftOrRightVertically(firstRowNumber, columnIndex, wordLength);
-
-        let touchedBeforeOrAfterWord =
-            this.hasTouchedALetterBeforeOrAfterWord(firstRowNumber, columnIndex, wordLength);
-
-        return touchedLeftOrRightLetter || touchedBeforeOrAfterWord;
-    }
-
-    private hasTouchedLetterOnLeftOrRightVertically(
-        firstRowNumber: number,
-        columnIndex: number,
-        wordLength: number): boolean {
-
-        let touchedLeftOrRightSquare = false;
-        for (let index = 0; index < wordLength && !touchedLeftOrRightSquare; index++) {
-            // Calculate and find the next values for the placement
-            let nextRowIndex = firstRowNumber + index;
-
-            let touchedLeftSquare = (BoardHelper.isValidColumnPosition(columnIndex - 1)) ?
-                this._board.squares[nextRowIndex][columnIndex - 1].isBusy : false;
-            let touchedRightSquare = (BoardHelper.isValidColumnPosition(columnIndex + 1)) ?
-                this._board.squares[nextRowIndex][columnIndex + 1].isBusy : false;
-
-            touchedLeftOrRightSquare = touchedLeftSquare || touchedRightSquare;
+     private hasTouchedLetterOnBoard(firstRowIndex: number, columnIndex: number, wordLength: number): boolean {
+        let leftSquareIndex = columnIndex - 1;
+        let rightSquareIndex = columnIndex + 1;
+        let hasTouchedFirstSquareAbove = (BoardHelper.isValidRowPosition(firstRowIndex - 1)) ?
+            this._board.squares[firstRowIndex - 1][columnIndex].isBusy : false;
+        if (hasTouchedFirstSquareAbove) {
+            return true;
         }
 
-        return touchedLeftOrRightSquare;
-    }
+        for (let index = 0; index < wordLength; index++) {
+            // Calculate and find the next values for the placement
+            let rowIndex = firstRowIndex + index;
 
-    private hasTouchedALetterBeforeOrAfterWord(
-        firstRowNumber: number,
-        columnIndex: number,
-        wordLength: number): boolean {
+            let touchedLeftSquare = (BoardHelper.isValidColumnPosition(leftSquareIndex)) ?
+                this._board.squares[rowIndex][leftSquareIndex].isBusy : false;
+            let touchedRightSquare = (BoardHelper.isValidColumnPosition(rightSquareIndex)) ?
+                this._board.squares[rowIndex][rightSquareIndex].isBusy : false;
+            let touchedNextSquareBelow = (BoardHelper.isValidColumnPosition(rowIndex + 1)) ?
+                this._board.squares[rowIndex + 1][columnIndex].isBusy : false;
+            console.log("touched left ", touchedLeftSquare);
+            console.log("touched right ", touchedRightSquare);
+            console.log("touched below ", touchedNextSquareBelow);
+            if (touchedLeftSquare || touchedRightSquare || touchedNextSquareBelow) {
+                return true;
+            }
+        }
 
-        let touchedBeforeOrAfterWord = false;
-        let beforeWordRowIndex = firstRowNumber - 1;
-        let afterWordRowIndex = firstRowNumber + wordLength;
-
-        let touchedBeforeWord = (BoardHelper.isValidColumnPosition(columnIndex - 1)
-            && BoardHelper.isValidRowPosition(beforeWordRowIndex)) ?
-            this._board.squares[beforeWordRowIndex][columnIndex].isBusy : false;
-
-        let touchedAfterWord = (BoardHelper.isValidColumnPosition(columnIndex - 1)
-            && BoardHelper.isValidRowPosition(afterWordRowIndex)) ?
-            this._board.squares[afterWordRowIndex][columnIndex].isBusy : false;
-
-        return touchedBeforeWord || touchedAfterWord;
+        return false;
     }
 }

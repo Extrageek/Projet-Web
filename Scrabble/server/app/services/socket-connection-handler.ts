@@ -187,8 +187,9 @@ export class SocketConnectionHandler {
                         .emit(SocketEventType.updateLetterInBank, room.letterBankHandler.bank.numberOfLettersInBank);
 
                     // verification
-                    let isVerified = true;
-                    // room.verifyWordsCreated(request._response, socket.id 
+                    let isVerified = room.verifyWordsCreated(request._response, socket.id);
+                    console.log("ARE WORDS VALID ---- ", isVerified);
+
                     if (isVerified) {
                         room.refillPlayerEasel(player.socketId);
                         newEasel = room.letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
@@ -196,11 +197,12 @@ export class SocketConnectionHandler {
                             SocketEventType.updateLetterInBank,
                             room.letterBankHandler.bank.numberOfLettersInBank
                         );
+                        socket.emit(SocketEventType.updateScore, player.score);
                     }
                     // If the word doesn't respect scrabble rules, the word is removed and the board updated
                     else {
                         // setTimeout(function() {
-                            newEasel = room.removeLastLettersPlacedAndRefill(socket.id);
+                        newEasel = room.removeLastLettersPlacedAndRefill(socket.id);
                         // }, THREE_SECONDS);
                         this._socket.to(room.roomId).emit(SocketEventType.updateBoard, room.board);
                     }
