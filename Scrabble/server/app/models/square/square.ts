@@ -7,7 +7,7 @@ export class Square {
     private _squareValue: string;
     private _letter: Letter;
     private _position: SquarePosition;
-    private _type: SquareType;
+    private _type: string;
     private _isBusy: boolean;
 
     public get squareValue(): string {
@@ -33,11 +33,11 @@ export class Square {
         this._position = position;
     }
 
-    public get type(): SquareType {
+    public get type(): string {
         return this._type;
     }
 
-    public set type(type: SquareType) {
+    public set type(type: string) {
         this._type = type;
     }
 
@@ -49,7 +49,7 @@ export class Square {
         this._isBusy = v;
     }
 
-    constructor(position: SquarePosition, type: SquareType) {
+    constructor(position: SquarePosition, type: string) {
         this.squareValue = type.toString();
         this.letter = new Letter("", 0, 0);
         this.position = position;

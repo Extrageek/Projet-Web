@@ -76,4 +76,25 @@ describe("GameStatusService should", () => {
         expect(_gameStatus.isLaunched).to.be.equal(true);
     });
 
+    it("generate a random first player correctly", () => {
+        for (let i = 0; i < 10; i++) {
+            if (_gameStatus.randomFirstPlayer()) {
+                expect(_gameStatus.currentPlayer).to.be.equal(CurrentPlayer.BLUE);
+            } else {
+                expect(_gameStatus.currentPlayer).to.be.equal(CurrentPlayer.RED);
+            }
+        }
+    });
+
+    it("change a BluePlayer to a RedPlayer correctly", () => {
+        _gameStatus.currentPlayer = CurrentPlayer.BLUE;
+        _gameStatus.nextPlayer();
+        expect(_gameStatus.currentPlayer).to.be.equal(CurrentPlayer.RED);
+    });
+
+    it("change a RedPlayer to a BluePlayer correctly", () => {
+        _gameStatus.currentPlayer = CurrentPlayer.RED;
+        _gameStatus.nextPlayer();
+        expect(_gameStatus.currentPlayer).to.be.equal(CurrentPlayer.BLUE);
+    });
 });

@@ -28,8 +28,6 @@ describe("StoneHandler tests should", () => {
     it("create a StoneHandler and generate a red stone", done => {
         let stoneHandler = new StoneHandler(objectLoader, rinkInfo, StoneColor.Red);
         stoneHandler.generateNewStone().then((stone: Stone) => {
-            //expect(stoneHandler.power).to.equals(0);
-            //expect(stoneHandler.mousePositionPlaneXZ.y).to.equals(0);
             expect(stone.stoneColor).to.equals(StoneColor.Red);
             done();
         });
@@ -39,10 +37,8 @@ describe("StoneHandler tests should", () => {
         let stoneHandler = new StoneHandler(objectLoader, rinkInfo, StoneColor.Blue);
         stoneHandler.generateNewStone().then((stone: Stone) => {
 
-            //stoneHandler.mouseIsPressed = false;
             stoneHandler.invertSpin();
 
-            //expect(stoneHandler.mouseIsPressed).to.equals(false);
             expect(stoneHandler.currentSpin).to.equals(StoneSpin.CounterClockwise);
             expect(stone.stoneColor).to.equals(StoneColor.Blue);
             done();

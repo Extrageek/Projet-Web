@@ -76,6 +76,8 @@ export class HorizontalWordValidator {
 
         // Check if we have touched at least one existing letter in the board
         let hasTouchedLetterInTheBoard = false;
+        console.log("BOARD EMPTY ------------------------- ", this._board.isEmpty);
+
         if (isWordFit && !this._board.isEmpty) {
             hasTouchedLetterInTheBoard = this.hasTouchedLetterOnBoard(
                 rowIndex, columnIndex, request._letters.length);
