@@ -1,9 +1,11 @@
 import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { forEach } from "@angular/router/src/utils/collection";
+import { GameComponent } from "../game-component.interface";
 
-export abstract class AbstractGameState {
+export abstract class AbstractGameState implements GameComponent {
 
     private static hasDoneInitialization = false;
+    private static objectNumber = 0;
 
     private _isActive: boolean;
     protected _gameInfo: IGameInfo;
@@ -96,6 +98,10 @@ export abstract class AbstractGameState {
      */
     public onMouseButtonReleased() {
         this.performAction(this.performMouseButtonReleased);
+    }
+
+    public update(timePerFrame: number) {
+        //Do nothing by default. The child classes can override this method.
     }
 
     protected abstract performEnteringState(): void;

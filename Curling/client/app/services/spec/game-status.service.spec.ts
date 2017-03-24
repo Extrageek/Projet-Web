@@ -79,7 +79,7 @@ describe("GameStatusService should", () => {
     it("generate a random first player correctly", () => {
         for (let i = 0; i < 10; i++) {
             if (_gameStatus.randomFirstPlayer()) {
-                expect(_gameStatus.currentPlayer).to.be.equal(CurrentPlayer.BLUE)
+                expect(_gameStatus.currentPlayer).to.be.equal(CurrentPlayer.BLUE);
             } else {
                 expect(_gameStatus.currentPlayer).to.be.equal(CurrentPlayer.RED);
             }
