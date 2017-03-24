@@ -11,7 +11,7 @@ my-gl {
 
 .hide-cursor {
     position: absolute;
-    /*cursor: none;*/
+    cursor: none;
     width: 100vw;
     min-height: 100vh;
     z-index: 2;

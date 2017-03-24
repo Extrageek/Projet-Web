@@ -109,7 +109,6 @@ export class PlayerShooting extends AbstractGameState implements GameComponent {
     protected performMouseButtonReleased(): AbstractGameState {
         if (!this._gameInfo.broom.isRed()) {
             this._gameInfo.broom.translateZ(0.3);
-            console.log("in out");
             this.isHoldingMouseButton = false;
             // TODO : A VOIR COMMENT ENLEVER GET ELEM
             let sound = document.getElementById("broomOut");
@@ -119,7 +118,6 @@ export class PlayerShooting extends AbstractGameState implements GameComponent {
     }
 
     public update(timePerFrame: number) {
-        console.log(this._gameInfo.stoneHandler.checkPassHogLine());
         if (this._gameInfo.stoneHandler.checkPassHogLine()) {
              this._gameInfo.broom.changeToRed();
         }
