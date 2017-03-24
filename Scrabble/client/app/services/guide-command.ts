@@ -17,7 +17,7 @@ export class GuideCommand implements ICommand {
         "\t⌬ v: pour placer le mot verticalement\n\n" +
         "• Pour échanger des lettres avec la banque de lettres\n" +
         "⇨ !changer <lettre>...\n\n" +
-        "\t⌬ lettre: les lettres en minuscules à changer du chevalet (pour une lettre blanche entrez '*'\n\n" +
+        "\t⌬ lettre: les lettres en minuscules à changer du chevalet (pour une lettre blanche entrez '*')\n\n" +
         "• Pour passer son tour\n" +
         "⇨ !passer\n\n" +
         "• Pour afficher ce guide\n" +

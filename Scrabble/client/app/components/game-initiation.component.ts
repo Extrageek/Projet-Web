@@ -4,6 +4,7 @@ import { Subscription } from "rxjs/Subscription";
 import { SocketService } from "../services/socket-service";
 import { SocketEventType } from "../commons/socket-eventType";
 import { IRoomMessage } from "../commons/messages/room-message.interface";
+import { Player } from "../models/player";
 
 @Component({
     moduleId: module.id,
@@ -57,7 +58,10 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
                     this.socketService.emitMessage(SocketEventType.INITIALIZE_EASEL, this._username);
                     this.router.navigate(["/game-room", this._username]);
                 } else {
-                    alert("waiting for a missing member before starting the game");
+                    this.socketService.player = new Player(this._username);
+                    this.socketService.player.numberOfPlayers = roomMessage._numberOfMissingPlayers;
+                    console.log(this.socketService.player.numberOfPlayers);
+                    this.router.navigate(["/waiting-room", this._username]);
                 }
             });
     }

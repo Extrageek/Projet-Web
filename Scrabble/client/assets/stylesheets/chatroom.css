@@ -15,7 +15,8 @@
 .chatMessageBox {
     height: 412px;
     border: 1px solid #ddd;
-    overflow: scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
     background-color: #fff;
     box-shadow: 0 1px 5px rgba(0,0,0,0.16);
 }
@@ -38,7 +39,12 @@
     height: 36px;
     border-radius: 50%;
 }
-.self-message p.msg,
+.self-message p.msg{
+    word-wrap: break-word;
+    border-radius: 12px;
+    padding: 6px;
+}
+
 .other-message p.msg{
     /*margin: 0 0 0.2rem 0;*/
     word-wrap: break-word;
