@@ -71,4 +71,8 @@ export class Player {
     public set socketId(value: string) {
         this._socketId = value;
     }
+
+    public updateScore(scoreToAdd: number){
+        this._score += scoreToAdd;
+    }
 }
