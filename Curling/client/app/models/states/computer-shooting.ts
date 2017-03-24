@@ -5,7 +5,7 @@ import { CameraType } from "./../../services/game-physics/camera-type";
 import { EndSet } from "./end-set";
 import { GameComponent } from "../../models/game-component.interface";
 
-export class ComputerShooting extends AbstractGameState implements GameComponent {
+export class ComputerShooting extends AbstractGameState {
 
     private static _instance: AbstractGameState = null;
     private static readonly UPDATE_NAME = "ComputerShooting";
@@ -33,7 +33,6 @@ export class ComputerShooting extends AbstractGameState implements GameComponent
     }
 
     protected performEnteringState(): void {
-        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, ComputerShooting.UPDATE_NAME, {value: this});
         this._gameInfo.stoneHandler.performShot(
             this._gameInfo.direction,
             this._gameInfo.speed,
@@ -52,7 +51,6 @@ export class ComputerShooting extends AbstractGameState implements GameComponent
     }
 
     protected performLeavingState() {
-        delete this._gameInfo.gameComponentsToUpdate[ComputerShooting.UPDATE_NAME];
         this._gameInfo.stoneHandler.removeOutOfBoundsStones(this._gameInfo.scene);
         this._gameInfo.gameStatus.nextPlayer();
         this._gameInfo.cameraService.replacePCameraToInitialPosition();

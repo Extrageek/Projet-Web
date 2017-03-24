@@ -47,7 +47,6 @@ export class RenderService {
     constructor(gameStatusService: GameStatusService,
         cameraService: CameraService,
         lightingService: LightingService) {
-        console.log("here!");
         this._gameInfo = {
             gameStatus: gameStatusService,
             cameraService: cameraService,
@@ -244,6 +243,9 @@ export class RenderService {
 
         if (this._clock.running === true) {
             let timePerFrame = this._clock.getDelta();
+            //Execute the update action in the state
+            this._gameInfo.gameState.update(timePerFrame);
+            //Update the other components
             let keys = Object.getOwnPropertyNames(this._gameInfo.gameComponentsToUpdate);
             keys.forEach((key: string) => {
                 this._gameInfo.gameComponentsToUpdate[key].update(timePerFrame);
