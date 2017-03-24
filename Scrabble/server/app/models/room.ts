@@ -195,6 +195,9 @@ export class Room {
         this._playersQueue.forEach((player: Player) => {
             if (player.socketId === socketId) {
                 areValidWords = this._board.verificationService.verifyWordsCreated(response, this._board);
+                if (areValidWords) {
+                    player.updateScore(this._board.verificationService.score);
+                }
             }
         });
         return areValidWords;

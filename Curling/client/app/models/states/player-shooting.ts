@@ -10,6 +10,8 @@ export class PlayerShooting extends AbstractGameState implements GameComponent {
     private static _instance: AbstractGameState = null;
     private static readonly UPDATE_NAME = "PlayerShooting";
     private isHoldingMouseButton = false;
+
+    private raycaster = new THREE.Raycaster();
     /**
      * Initialize the unique PlayerShooting state.
      * @param gameInfo The informations to use by the state.
@@ -73,16 +75,20 @@ export class PlayerShooting extends AbstractGameState implements GameComponent {
             currentCamera = this._gameInfo.cameraService.topViewCamera;
         }
 
-        this._gameInfo.mousePositionPlaneXZ.x = (event.clientX / window.innerWidth) * 2 - 1;
-        this._gameInfo.mousePositionPlaneXZ.y = - (event.clientY / window.innerHeight) * 2 + 1;
+        let x = (event.clientX / window.innerWidth) * 2 - 1;
+        let y = - (event.clientY / window.innerHeight) * 2 + 1;
 
-        let mouseVector = new THREE.Vector3(this._gameInfo.mousePositionPlaneXZ.x,
-            this._gameInfo.mousePositionPlaneXZ.y, 0.5);
-        mouseVector.unproject(currentCamera);
-        let direction = mouseVector.sub(currentCamera.position).normalize();
-        let distance = - currentCamera.position.z / direction.z;
-        let position = currentCamera.position.clone().add(direction.multiplyScalar(distance));
-        this._gameInfo.broom.position.set(position.x, 0, position.y + 8.5);
+        this.raycaster.setFromCamera({x, y}, currentCamera);
+
+        for (let i = 0; i < this._gameInfo.rink.children.length; i++) {
+            let child = this._gameInfo.rink.children[i];
+            let intersects = this.raycaster.intersectObject( child );
+            // Toggle rotation bool for meshes that we clicked
+            if ( intersects.length > 0 ) {
+                this._gameInfo.broom.position.set( 0, 0, 0 );
+                this._gameInfo.broom.position.copy( intersects[ 0 ].point );
+            }
+        }
         return null;
     }
 
@@ -113,8 +119,12 @@ export class PlayerShooting extends AbstractGameState implements GameComponent {
     }
 
     public update(timePerFrame: number) {
+        console.log(this._gameInfo.stoneHandler.checkPassHogLine());
         if (this._gameInfo.stoneHandler.checkPassHogLine()) {
-            this._gameInfo.broom.changeToRed();
+             this._gameInfo.broom.changeToRed();
+        }
+        else {
+            this._gameInfo.broom.changeToGreen();
         }
     }
 }

@@ -55,7 +55,6 @@ export class Broom extends Group {
     public verifyBroomCollision(stones: Stone[]) {
         stones.map((stone: Stone) => {
             if (this._boundingSphere.intersectsSphere(stone.boundingSphere)) {
-                console.log("intersection detected yo");
                 stone.sweeping = true;
             }
         });

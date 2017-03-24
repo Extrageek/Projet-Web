@@ -19,7 +19,6 @@ export class PlayerTurn extends AbstractGameState implements GameComponent {
     private static readonly UPDATE_NAME = "PlayerTurn";
 
     private static _instance: AbstractGameState = null;
-
     private _powerTimer: Clock;
 
     //Variable added to be sure to pass in the performMouseButtonPress() first than in the

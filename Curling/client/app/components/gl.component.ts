@@ -42,4 +42,5 @@ export class GlComponent implements OnInit {
     public get renderService(): RenderService {
         return this._renderService;
     }
+
 }
