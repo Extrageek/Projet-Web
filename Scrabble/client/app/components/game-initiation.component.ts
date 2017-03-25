@@ -18,7 +18,6 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
     private _onConnectedSubscription: Subscription;
     private _onJoinedRoomSubscription: Subscription;
     private _onLeaveRoomSubscription: Subscription;
-    private _onReceivedMessageSubscription: Subscription;
     private _onUsernameAlreadyExistSubscription: Subscription;
     private _onInvalidRequestEventSubscription: Subscription;
     private _onConnectionErrorSubscription: Subscription;
@@ -28,10 +27,10 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        // Subscribe to event by calling the related method and save them for unsubsciption OnDestroy
+        // Subscribe to event by calling the related method and save them for unsubscription OnDestroy
         this._onConnectedSubscription = this.onConnected();
         this._onJoinedRoomSubscription = this.onJoinedRoom();
-        this._onLeaveRoomSubscription = this.onleaveRoom();
+        this._onLeaveRoomSubscription = this.onLeaveRoom();
         this._onUsernameAlreadyExistSubscription = this.onUsernameAlreadyExists();
         this._onInvalidRequestEventSubscription = this.onInvalidRequest();
         this._onConnectionErrorSubscription = this.onConnectionError();
@@ -67,7 +66,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
     }
 
     // A callback when the player join a room
-    private onleaveRoom(): Subscription {
+    private onLeaveRoom(): Subscription {
         return this.socketService.subscribeToChannelEvent(SocketEventType.LEAVE_ROOM)
             .subscribe((roomMessage: IRoomMessage) => {
                 console.log("Left the room", roomMessage);
