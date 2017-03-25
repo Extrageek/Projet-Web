@@ -1,15 +1,15 @@
-
 import { fakeAsync, tick, inject, TestBed } from "@angular/core/testing";
 import { Http, ResponseOptions, Response, BaseRequestOptions, ConnectionBackend } from "@angular/http";
 import { MockBackend, MockConnection } from "@angular/http/testing";
+
 import { expect, assert } from "chai";
 
-import { UserSetting } from "../models/user-setting";
-import { Record } from "../models/record";
-import { Time } from "../models/time";
-import { Puzzle } from "../models/puzzle";
-import { RestApiProxyService } from "../services/rest-api-proxy.service";
+import { Puzzle } from "./../models/puzzle";
 import { PUZZLE_ITEMS_DATA, FAKE_PUZZLE_FEED } from "./mock-data";
+import { Record } from "./../models/record";
+import { RestApiProxyService } from "./../services/rest-api-proxy.service";
+import { Time } from "./../models/time";
+import { UserSetting } from "./../models/user-setting";
 
 let userSetting: UserSetting;
 let time: Time;
@@ -26,18 +26,18 @@ describe("RestApiProxyService - getNewPuzzle", () => {
                     useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
                         return new Http(backend, defaultOptions);
                     },
-                    deps: [MockBackend, BaseRequestOptions]
+                    deps: [ MockBackend, BaseRequestOptions ]
                 },
+                BaseRequestOptions,
                 RestApiProxyService,
-                MockBackend,
-                BaseRequestOptions
+                MockBackend
             ]
         });
     });
 
     // Test the REST API Service for getting a valid grid
     it("getNewPuzzle, Should return a valid sudoku grid from the server",
-        inject([RestApiProxyService, MockBackend],
+        inject([ RestApiProxyService, MockBackend ],
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
 
                 let response: Puzzle;
@@ -88,17 +88,17 @@ describe("RestApiProxyService - createGameRecord", () => {
                     useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
                         return new Http(backend, defaultOptions);
                     },
-                    deps: [MockBackend, BaseRequestOptions]
+                    deps: [ MockBackend, BaseRequestOptions ]
                 },
+                BaseRequestOptions,
                 RestApiProxyService,
-                MockBackend,
-                BaseRequestOptions
+                MockBackend
             ]
         });
     });
 
     it("createGameRecord, Should return true since the request has been completed successfully.",
-        inject([RestApiProxyService, MockBackend],
+        inject([ RestApiProxyService, MockBackend ],
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
 
                 mockBackend.connections.subscribe((connection: MockConnection) => {
@@ -127,7 +127,7 @@ describe("RestApiProxyService - createGameRecord", () => {
     );
 
     it("createGameRecord, Should return false because of a bad request (code 400).",
-        inject([RestApiProxyService, MockBackend],
+        inject([ RestApiProxyService, MockBackend ],
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
                     //Check the expected Url to the server
@@ -154,7 +154,7 @@ describe("RestApiProxyService - createGameRecord", () => {
     );
 
     it("createGameRecord, Should return false because of an internal error",
-        inject([RestApiProxyService, MockBackend],
+        inject([ RestApiProxyService, MockBackend ],
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
                     expect(connection.request.url).to.deep.equal("http://localhost:3002/api/game-over");
@@ -181,17 +181,17 @@ describe("RestApiProxyService - verifyUsername", () => {
                     useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
                         return new Http(backend, defaultOptions);
                     },
-                    deps: [MockBackend, BaseRequestOptions]
+                    deps: [ MockBackend, BaseRequestOptions ]
                 },
-                RestApiProxyService,
+                BaseRequestOptions,
                 MockBackend,
-                BaseRequestOptions
+                RestApiProxyService
             ]
         });
     });
 
     it("verifyUsername, Should return true since the request has been completed successfully.",
-        inject([RestApiProxyService, MockBackend],
+        inject([ RestApiProxyService, MockBackend ],
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
 
                 mockBackend.connections.subscribe((connection: MockConnection) => {
@@ -224,7 +224,7 @@ describe("RestApiProxyService - verifyUsername", () => {
     );
 
     it("verifyUsername, Should return false because of a bad request (code 400).",
-        inject([RestApiProxyService, MockBackend],
+        inject([ RestApiProxyService, MockBackend ],
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
                     //Check the expected Url to the server
@@ -255,7 +255,7 @@ describe("RestApiProxyService - verifyUsername", () => {
     );
 
     it("verifyUsername, Should return false because of an internal error",
-        inject([RestApiProxyService, MockBackend],
+        inject([ RestApiProxyService, MockBackend ],
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
                     //Check the expected Url to the server
@@ -282,7 +282,6 @@ describe("RestApiProxyService - verifyUsername", () => {
     );
 });
 
-
 describe("RestApiProxyService - removeUsername", () => {
 
     beforeEach(async () => {
@@ -296,17 +295,17 @@ describe("RestApiProxyService - removeUsername", () => {
                     useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
                         return new Http(backend, defaultOptions);
                     },
-                    deps: [MockBackend, BaseRequestOptions]
+                    deps: [ MockBackend, BaseRequestOptions ]
                 },
-                RestApiProxyService,
+                BaseRequestOptions,
                 MockBackend,
-                BaseRequestOptions
+                RestApiProxyService
             ]
         });
     });
 
     it("removeUsername, Should return true since the request has been completed successfully.",
-        inject([RestApiProxyService, MockBackend],
+        inject([ RestApiProxyService, MockBackend ],
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
 
                 mockBackend.connections.subscribe((connection: MockConnection) => {
@@ -339,7 +338,7 @@ describe("RestApiProxyService - removeUsername", () => {
     );
 
     it("removeUsername, Should return false because of a bad request (code 400).",
-        inject([RestApiProxyService, MockBackend],
+        inject([ RestApiProxyService, MockBackend ],
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
                     //Check the expected Url to the server
@@ -370,7 +369,7 @@ describe("RestApiProxyService - removeUsername", () => {
     );
 
     it("removeUsername, Should return false because of an internal error",
-        inject([RestApiProxyService, MockBackend],
+        inject([ RestApiProxyService, MockBackend ],
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
                 mockBackend.connections.subscribe((connection: MockConnection) => {
                     //Check the expected Url to the server
@@ -397,7 +396,6 @@ describe("RestApiProxyService - removeUsername", () => {
     );
 });
 
-
 describe("RestApiProxyService - getTopRecords", () => {
 
     beforeEach(async () => {
@@ -412,9 +410,9 @@ describe("RestApiProxyService - getTopRecords", () => {
                     },
                     deps: [MockBackend, BaseRequestOptions]
                 },
-                RestApiProxyService,
+                BaseRequestOptions,
                 MockBackend,
-                BaseRequestOptions
+                RestApiProxyService
             ]
         });
     });
@@ -464,7 +462,7 @@ describe("RestApiProxyService - getTopRecords", () => {
     );
 
     it("getTopRecords, Should return an empty array of Record from the server",
-        inject([RestApiProxyService, MockBackend],
+        inject([ RestApiProxyService, MockBackend ],
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
 
                 let records: Array<Array<Record>> = new Array<Array<Record>>();
@@ -501,7 +499,7 @@ describe("RestApiProxyService - getTopRecords", () => {
     );
 
     it("getTopRecords, Should throw an error because of an internal server error",
-        inject([RestApiProxyService, MockBackend],
+        inject([ RestApiProxyService, MockBackend ],
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
 
                 let records: Array<Array<Record>> = new Array<Array<Record>>();
@@ -542,15 +540,15 @@ describe("RestApiProxyService - verifyGrid", () => {
                     },
                     deps: [MockBackend, BaseRequestOptions]
                 },
-                RestApiProxyService,
+                BaseRequestOptions,
                 MockBackend,
-                BaseRequestOptions
+                RestApiProxyService
             ]
         });
     });
 
     it("verifyGrid, Should return true for a valid sudoku grid.",
-        inject([RestApiProxyService, MockBackend],
+        inject([ RestApiProxyService, MockBackend ],
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
                 let fakePuzzle = new Puzzle(FAKE_PUZZLE_FEED);
                 mockBackend.connections.subscribe((connection: MockConnection) => {
@@ -577,7 +575,7 @@ describe("RestApiProxyService - verifyGrid", () => {
     );
 
     it("verifyGrid, Should return false for an invalid sudoku grid.",
-        inject([RestApiProxyService, MockBackend],
+        inject([ RestApiProxyService, MockBackend ],
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
                 let fakePuzzle = new Puzzle(FAKE_PUZZLE_FEED);
                 mockBackend.connections.subscribe((connection: MockConnection) => {
@@ -604,7 +602,7 @@ describe("RestApiProxyService - verifyGrid", () => {
     );
 
     it("verifyGrid, Should return false when an error has been returned from the server",
-        inject([RestApiProxyService, MockBackend],
+        inject([ RestApiProxyService, MockBackend ],
             fakeAsync((restApiProxyService: RestApiProxyService, mockBackend: MockBackend) => {
 
                 let fakeHttpErrorFromTheServer = "An error occured when trying to join the server";

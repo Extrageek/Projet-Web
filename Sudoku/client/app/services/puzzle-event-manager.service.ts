@@ -6,8 +6,8 @@
  */
 
 import { Injectable } from "@angular/core";
-import { PuzzleCommon } from "../commons/puzzle-common";
 import { GridManagerService } from "./grid-manager.service";
+import { PuzzleCommon } from "./../commons/puzzle-common";
 
 declare var jQuery: any;
 
@@ -19,7 +19,6 @@ export enum ArrayDirection {
     UP = 2,
     DOWN = 3
 }
-
 
 @Injectable()
 export class PuzzleEventManagerService {

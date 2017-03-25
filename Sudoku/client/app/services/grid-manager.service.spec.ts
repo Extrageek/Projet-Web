@@ -1,15 +1,9 @@
-
-import {
-    fakeAsync,
-    inject,
-    TestBed
-} from "@angular/core/testing";
-
+import { fakeAsync, inject, TestBed } from "@angular/core/testing";
 
 import { expect, assert } from "chai";
 
-import { Puzzle, PuzzleItem } from "../models/puzzle";
-import { GridManagerService } from "../services/grid-manager.service";
+import { GridManagerService } from "./../services/grid-manager.service";
+import { Puzzle, PuzzleItem } from "./../models/puzzle";
 
 describe("GridManagerService", () => {
 
@@ -22,7 +16,7 @@ describe("GridManagerService", () => {
     });
 
     it("isDuplicatedNumberInCurrentRow, Should return false with a duplicated number error in the current row",
-        inject([GridManagerService],
+        inject([ GridManagerService ],
             fakeAsync((gridManagerService: GridManagerService) => {
 
                 // Create a ready puzzle for the grid.
@@ -43,7 +37,7 @@ describe("GridManagerService", () => {
     );
 
     it("isDuplicatedNumberInCurrentRow, Should return false for a valid row",
-        inject([GridManagerService],
+        inject([ GridManagerService ],
             fakeAsync((gridManagerService: GridManagerService) => {
 
                 // Create a ready puzzle for the grid.
@@ -63,7 +57,7 @@ describe("GridManagerService", () => {
     );
 
     it("isDuplicatedNumberInCurrentColumn, Should return true with a duplicated number error in the current column",
-        inject([GridManagerService],
+        inject([ GridManagerService ],
             fakeAsync((gridManagerService: GridManagerService) => {
 
                 /* []
@@ -86,7 +80,7 @@ describe("GridManagerService", () => {
     );
 
     it("isDuplicatedNumberInCurrentColumn, Should return false for a valid column",
-        inject([GridManagerService],
+        inject([ GridManagerService ],
             fakeAsync((gridManagerService: GridManagerService) => {
 
                 /* []
@@ -109,7 +103,7 @@ describe("GridManagerService", () => {
     );
 
     it("isDuplicatedNumberInCurrentSquare, Should return true with a duplicated number error in the first square",
-        inject([GridManagerService],
+        inject([ GridManagerService ],
             fakeAsync((gridManagerService: GridManagerService) => {
 
                 /*  [][]
@@ -143,7 +137,7 @@ describe("GridManagerService", () => {
     );
 
     it("isDuplicatedNumberInCurrentSquare, Should return false for a valid square",
-        inject([GridManagerService],
+        inject([ GridManagerService ],
             fakeAsync((gridManagerService: GridManagerService) => {
 
                 /*  [][]
@@ -177,7 +171,7 @@ describe("GridManagerService", () => {
     );
 
     it("validateEnteredNumber, Should return false with a duplicated number error in the first row/column and square",
-        inject([GridManagerService],
+        inject([ GridManagerService ],
             fakeAsync((gridManagerService: GridManagerService) => {
 
                 // Create a ready puzzle for the grid.
@@ -208,7 +202,7 @@ describe("GridManagerService", () => {
     );
 
     it("validateEnteredNumber, Should return false with a duplicated number in the first row",
-        inject([GridManagerService],
+        inject([ GridManagerService ],
             fakeAsync((gridManagerService: GridManagerService) => {
 
                 // Create a ready puzzle for the grid.
@@ -239,7 +233,7 @@ describe("GridManagerService", () => {
     );
 
     it("validateEnteredNumber, Should return false with a duplicated number in the first column",
-        inject([GridManagerService],
+        inject([ GridManagerService ],
             fakeAsync((gridManagerService: GridManagerService) => {
 
                 // Create a ready puzzle for the grid.
@@ -270,7 +264,7 @@ describe("GridManagerService", () => {
     );
 
     it("validateEnteredNumber, Should return false with a duplicated number in the 1st column, 2nd row",
-        inject([GridManagerService],
+        inject([ GridManagerService ],
             fakeAsync((gridManagerService: GridManagerService) => {
 
                 // Create a ready puzzle for the grid.
@@ -301,7 +295,7 @@ describe("GridManagerService", () => {
     );
 
     it("validateEnteredNumber, Should return true with a valid grid",
-        inject([GridManagerService],
+        inject([ GridManagerService ],
             fakeAsync((gridManagerService: GridManagerService) => {
 
                 // Create a ready puzzle for the grid.
@@ -332,15 +326,15 @@ describe("GridManagerService", () => {
     );
 
     it("initializeGrid should throw a null argument error",
-        inject([GridManagerService],
+        inject([ GridManagerService ],
             fakeAsync((gridManagerService: GridManagerService) => {
-
                 assert.throws(() => gridManagerService.initializeGrid(null), Error, "The initial grid cannot be null");
-            })));
+            }))
+    );
 
 
     it("initializeGrid should reset the current given",
-        inject([GridManagerService], fakeAsync((gridManagerService: GridManagerService) => {
+        inject([ GridManagerService ], fakeAsync((gridManagerService: GridManagerService) => {
 
             // Create a fake valid puzzle.
             let fakePuzzle = new Puzzle([
@@ -379,10 +373,11 @@ describe("GridManagerService", () => {
 
             // Check the expected result
             expect(fakePuzzle).to.deep.equal(expectedPuzzle);
-        })));
+        }))
+    );
 
     it("countFilledCell, Should set the number of cell to be completed to 1.",
-        inject([GridManagerService],
+        inject([ GridManagerService ],
             fakeAsync((gridManagerService: GridManagerService) => {
 
                 // Create a ready puzzle for the grid.
@@ -408,7 +403,7 @@ describe("GridManagerService", () => {
     );
 
     it("decrementCellsToBeCompleted, Should return 1 for a puzzle with only 2 remaining cells to be completed.",
-        inject([GridManagerService],
+        inject([ GridManagerService ],
             fakeAsync((gridManagerService: GridManagerService) => {
 
                 // Create a ready puzzle for the grid.
@@ -437,7 +432,7 @@ describe("GridManagerService", () => {
 
     it("deleteCurrentValue, Should delete value of PuzzleItem located at row 0, column 0 "
         + "and increment cellsToBeCompleted",
-        inject([GridManagerService],
+        inject([ GridManagerService ],
             fakeAsync((gridManagerService: GridManagerService) => {
 
                 // Create a ready puzzle for the grid.
@@ -466,7 +461,7 @@ describe("GridManagerService", () => {
     );
 
     it("deleteCurrentValue, Should throw an error because the row index is out of bound.",
-        inject([GridManagerService],
+        inject([ GridManagerService ],
             fakeAsync((gridManagerService: GridManagerService) => {
 
                 // Create a ready puzzle for the grid.
@@ -496,7 +491,7 @@ describe("GridManagerService", () => {
     );
 
     it("updateGridAfterDelete, Should not do any modification on the grid except css ones.",
-        inject([GridManagerService],
+        inject([ GridManagerService ],
             fakeAsync((gridManagerService: GridManagerService) => {
 
                 // Create a ready puzzle for the grid.

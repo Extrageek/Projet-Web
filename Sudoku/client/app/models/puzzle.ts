@@ -12,8 +12,8 @@ export interface IPuzzleItemData {
 
 export class Puzzle {
 
-    private static readonly MIN_ROW_INDEX = 0;
-    private static readonly MAX_ROW_INDEX = 8;
+    public static readonly MIN_ROW_INDEX = 0;
+    public static readonly MAX_ROW_INDEX = 8;
     public static readonly MIN_COLUMN_INDEX = 0;
     public static readonly MAX_COLUMN_INDEX = 8;
 

@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 
-import { UserSetting, Difficulty } from "../models/user-setting";
+import { Difficulty, UserSetting } from "./../models/user-setting";
 
-import { RestApiProxyService } from "../services/rest-api-proxy.service";
+import { RestApiProxyService } from "./../services/rest-api-proxy.service";
 
 @Injectable()
 export class UserSettingService {

@@ -34,6 +34,7 @@ export class Record {
     public get time() : Time {
         return this._time;
     }
+
     public set time(time : Time) {
         this._time = time;
     }

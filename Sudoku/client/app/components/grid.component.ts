@@ -8,30 +8,30 @@
 import { Component, OnInit, HostListener } from "@angular/core";
 import { Router } from "@angular/router";
 
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/catch";
-import "rxjs/add/observable/timer";
 import { Observable } from "rxjs/Observable";
+import "rxjs/add/operator/catch";
+import "rxjs/add/operator/map";
+import "rxjs/add/observable/timer";
 
-import { RestApiProxyService } from "../services/rest-api-proxy.service";
-import { GridManagerService } from "../services/grid-manager.service";
-import { UserSettingService } from "../services/user-setting.service";
-import { PuzzleEventManagerService } from "../services/puzzle-event-manager.service";
-import { StopwatchService } from "../services/stopwatch.service";
+import { GridManagerService } from "./../services/grid-manager.service";
+import { PuzzleEventManagerService } from "./../services/puzzle-event-manager.service";
+import { RestApiProxyService } from "./../services/rest-api-proxy.service";
+import { StopwatchService } from "./../services/stopwatch.service";
+import { UserSettingService } from "./../services/user-setting.service";
 
+import { Difficulty, UserSetting } from "../models/user-setting";
 import { PuzzleCommon } from "../commons/puzzle-common";
 import { Puzzle, PuzzleItem } from "../models/puzzle";
 import { Record } from "../models/record";
-import { UserSetting, Difficulty } from "../models/user-setting";
 import { Time } from "../models/time";
 
 
 @Component({
     moduleId: module.id,
     selector: "sudoku-grid",
-    templateUrl: "/assets/templates/grid.component.html",
-    styleUrls: ["../../assets/stylesheets/grid.component.css"],
-    providers: [GridManagerService, PuzzleEventManagerService, StopwatchService]
+    templateUrl: "./../../assets/templates/grid.component.html",
+    styleUrls: [ "./../../assets/stylesheets/grid.component.css" ],
+    providers: [ GridManagerService, PuzzleEventManagerService, StopwatchService ]
 })
 
 export class GridComponent implements OnInit {
@@ -45,6 +45,12 @@ export class GridComponent implements OnInit {
     _hiddenClock: boolean;
     _easyRecords: Array<Record>;
     _hardRecords: Array<Record>;
+
+    @HostListener("window:beforeunload")
+    public async logout() {
+        await this.api.removeUsername(this._userSetting.name);
+        return "are you sure";
+    }
 
     constructor(
         private gridManagerService: GridManagerService,
@@ -79,12 +85,6 @@ export class GridComponent implements OnInit {
         this._hardRecords = new Array<Record>();
     }
 
-    @HostListener("window:beforeunload")
-    public async logout() {
-        await this.api.removeUsername(this._userSetting.name);
-        return "are you sure";
-    }
-
     public getNewPuzzle(difficulty: Difficulty) {
         this._isLoading = true;
         this._time.resetTime();
@@ -100,7 +100,7 @@ export class GridComponent implements OnInit {
                 this._puzzle = puzzle;
                 this._userSetting.difficulty = difficulty;
                 this.gridManagerService.countFilledCell(puzzle);
-            });
+        });
     }
 
     // Handle the directions key event by using the EventManager
@@ -171,7 +171,7 @@ export class GridComponent implements OnInit {
         this._isCongratulationMessageHidden = true;
     }
 
-    public hideClock() {
+    public toggleClock() {
         this._hiddenClock = !this._hiddenClock;
     }
 
