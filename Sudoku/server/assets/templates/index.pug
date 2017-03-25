@@ -1,0 +1,83 @@
+doctype html
+html
+    head
+        link(rel='stylesheet', href='https://fonts.googleapis.com/icon?family=Material+Icons')
+        link(rel='stylesheet', href='https://code.getmdl.io/1.3.0/material.indigo-pink.min.css')
+        script(defer, src='https://code.getmdl.io/1.3.0/material.min.js')
+
+        link(rel='shortcut icon', href='data:image/x-icon;,', type='image/x-icon')
+        style
+            include ../stylesheets/styles.css
+        title
+        body
+
+        -
+            var rows = 9;
+            var columns = 9;
+            var numberOfActivities = activities.length;
+
+
+        mixin createPuzzle(puzzle)
+            table.table
+                tbody
+                    -for (var x = 0; x < rows; x ++)
+                        tr.grid
+                            -for (var j = 0; j < columns; j ++)
+                                if(puzzle[x][j].isHidden)
+                                    td.readOnlyCell 0
+                                else
+                                    td.readOnlyCell #{puzzle[x][j].value}
+
+        mixin createActivity(activity)
+            -
+                var date = activity.date.getUTCMonth() + "/" + activity.date.getUTCDay() + "/" + activity.date.getUTCFullYear();
+                var time = activity.date.getHours() + ":" + activity.date.getMinutes() + ":" + activity.date.getSeconds();
+            tr
+                td #{date} | #{time}
+                if (activity.type == 0)
+                    td Génération
+                else
+                    td Demande
+                td #{activity.description}
+
+        .mdl-layout.mdl-js-layout.mdl-layout--fixed-header
+            header.mdl-layout__header
+                .mdl-layout__header-row
+                    span.mdl-layout-title Équipe 23 - Coté serveur
+                .mdl-layout__tab-bar.mdl-js-ripple-effect
+                    a.mdl-layout__tab.is-active(href='#scroll-tab-1') Puzzle facile
+                    |
+                    a.mdl-layout__tab(href='#scroll-tab-2') Puzzle difficle
+                    |
+                    a.mdl-layout__tab(href='#scroll-tab-3') Journal d'activités
+            .mdl-layout__drawer
+                span.mdl-layout-title Title
+            main.mdl-layout__content
+                section#scroll-tab-1.mdl-layout__tab-panel.is-active
+                    .page-content
+                        h2 Puzzle Facile 1
+                        +createPuzzle(puzzleEasy1)
+                        h2 Puzzle Facile 2
+                        +createPuzzle(puzzleEasy2)
+                        h2 Puzzle Facile 3
+                        +createPuzzle(puzzleEasy3)
+                section#scroll-tab-2.mdl-layout__tab-panel
+                    .page-content
+                        h2 Puzzle Difficle 1
+                        +createPuzzle(puzzleHard1)
+                        h2 Puzzle Difficle  2
+                        +createPuzzle(puzzleHard2)
+                        h2 Puzzle Difficle  3
+                        +createPuzzle(puzzleHard3)
+                section#scroll-tab-3.mdl-layout__tab-panel
+                    .page-content
+                        center
+                            table.activities.mdl-data-table.mdl-js-data-table.mdl-shadow--2dp
+                                thead
+                                    tr
+                                        th.mdl-data-table__cell--non-numeric Date | Temps
+                                        th.mdl-data-table__cell--non-numeric Type
+                                        th.mdl-data-table__cell--non-numeric Description
+                                tbody
+                                    -for (var x = 0; x < numberOfActivities; x ++)
+                                        +createActivity(activities[x])
