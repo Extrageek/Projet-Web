@@ -51,8 +51,13 @@ html
                     a.mdl-layout__tab(href='#scroll-tab-2') Puzzle difficle
                     |
                     a.mdl-layout__tab(href='#scroll-tab-3') Journal d'activités
-            .mdl-layout__drawer
-                span.mdl-layout-title Title
+                    button#show-toast.mdl-button.mdl-js-button.mdl-button--icon(type='button')
+                        i.material-icons help
+                    |
+                    #toast.mdl-js-snackbar.mdl-snackbar
+                        .mdl-snackbar__text
+                        |
+                        button.mdl-snackbar__action(type='button')
             main.mdl-layout__content
                 section#scroll-tab-1.mdl-layout__tab-panel.is-active
                     .page-content
