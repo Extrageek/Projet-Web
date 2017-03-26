@@ -1,19 +1,19 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, ViewChild, ElementRef } from "@angular/core";
+import { Router } from "@angular/router";
 
-import { RestApiProxyService } from './../services/rest-api-proxy.service';
-import { UserService } from './../services/user.service';
+import { RestApiProxyService } from "./../services/rest-api-proxy.service";
+import { UserService } from "./../services/user.service";
 
 @Component({
     moduleId: module.id,
     providers: [RestApiProxyService],
-    selector: 'username-component',
-    templateUrl: '../../assets/templates/username-component.html',
-    styleUrls: ['../../assets/stylesheets/username-component.css']
+    selector: "username-component",
+    templateUrl: "../../assets/templates/username-component.html",
+    styleUrls: ["../../assets/stylesheets/username-component.css"]
 })
 export class UsernameComponent {
-    _isLoginNextActivated = false;
-    username: string;
+    public _isLoginNextActivated = false;
+    public _username: string;
 
     @ViewChild("alertBox") alertBox: ElementRef;
 
@@ -24,24 +24,16 @@ export class UsernameComponent {
     }
 
     public async verifyUsername(username: string) {
-        let isValid: boolean;
         await this.restApiProxyService.verifyUsername(username)
         .then(result => {
-            isValid = result;
-        })
-        .catch(error => {
-            console.log(error);
-            isValid = false;
-        });
-        if (isValid) {
             this.alertBox.nativeElement.classList.add("fade");
             this.userSettingService.name = username;
             this.router.navigate(["/difficulty"]);
-        }
-        else {
+        })
+        .catch(error => {
+            console.log(error);
             this.alertBox.nativeElement.classList.remove("fade");
-        }
-
+        });
     }
 
     public activateLoginNext(username: string) {
@@ -49,7 +41,7 @@ export class UsernameComponent {
     }
 
     public goToLeaderBoard() {
-        this.router.navigate(['/leaderboard']);
+        this.router.navigate(["/leaderboard"]);
     }
 
     public closeAlert() {

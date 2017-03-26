@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+
 const FIVE_SECOND_DELAY = 5000;
 @Injectable()
 export class StopwatchService {

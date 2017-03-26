@@ -27,7 +27,6 @@ export class CameraService implements GameComponent {
     private _cameras: PerspectiveCamera[];
     private _camerasToUpdate: FollowUpdate[];
     private _lastCameraUsedIndex: number;
-
     private _perspectiveCameraMoving: boolean;
 
     get perspectiveCamera() {
@@ -71,7 +70,7 @@ export class CameraService implements GameComponent {
         return this._cameras[this._lastCameraUsedIndex];
     }
 
-    public movePerspectiveCameraToFollowObjectOnZ(objectToFollow: Object3D): void {
+    public movePerspectiveCameraToFollowObjectOnZ(objectToFollow: Object3D) {
         if (!this._perspectiveCameraMoving) {
             this._perspectiveCameraMoving = true;
             let camera = this._cameras[CameraService.PERSPECTIVE_CAMERA_INDEX];

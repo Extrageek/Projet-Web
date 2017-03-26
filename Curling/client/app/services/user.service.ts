@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { RestApiProxyService } from './rest-api-proxy.service';
-import { Difficulty } from './../models/difficulty';
+import { Injectable } from "@angular/core";
+import { RestApiProxyService } from "./rest-api-proxy.service";
+import { Difficulty } from "./../models/difficulty";
 
 @Injectable()
 export class UserService {
@@ -24,7 +24,7 @@ export class UserService {
     }
 
     constructor(private api: RestApiProxyService) {
-        this._name = '';
+        this._name = "";
         this._difficulty = Difficulty.NORMAL;
     }
 
@@ -37,31 +37,20 @@ export class UserService {
     }
 
     public activateButtonNextLogin(username: string): boolean {
-        if (username !== "") {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return (username !== "") ? true : false;
     }
 
     public async verifyUsername(username: string): Promise<boolean> {
-        if (username !== '') {
-            let isValid: boolean;
-            await this.api.verifyUsername(username)
-                .then(result => {
-                    isValid = result;
+        if (username !== "") {
+            return await this.api.verifyUsername(username)
+                .then(isValid => {
+                    this.name = isValid ? username : "";
+                    return isValid;
                 })
                 .catch(error => {
                     console.log(error);
                     throw error;
                 });
-            if (isValid) {
-                this.name = username;
-                return true;
-            } else {
-                return false;
-            }
         }
         else {
             return false;

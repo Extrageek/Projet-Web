@@ -28,10 +28,11 @@
     <div class="col-md-4 col-sm-5">
         <md-card>
             <md-card-content>
-                <h2 *ngIf="!_hiddenClock">
-                    <span [ngClass]="{hidden: _hiddenClock}" class="glyphicon glyphicon-time" aria-hidden="true"> </span> {{_time.printHours()}} : {{_time.printMinutes()}}
-                    : {{_time.printSeconds()}}
-                    <span (click)="hideClock()" class="glyphicon glyphicon-eye-close" aria-hidden="true"> </span>
+                <h2>
+                    <span [ngClass]="{hidden: _hiddenClock}" class="glyphicon glyphicon-time" aria-hidden="true"> </span> 
+                    <span *ngIf="!_hiddenClock">{{_time.printHours()}} : {{_time.printMinutes()}} : {{_time.printSeconds()}}</span>
+                    <span *ngIf="!_hiddenClock" (click)="toggleClock()" class="glyphicon glyphicon-eye-close" aria-hidden="true"> </span>
+                    <span *ngIf="_hiddenClock" (click)="toggleClock()" class="glyphicon glyphicon-eye-open" aria-hidden="true"> </span>
                 </h2>
             </md-card-content>
             <md-card-content>
@@ -109,6 +110,5 @@
                 </md-tab>
             </md-tab-group>
         </div>
-
     </div>
 </div>

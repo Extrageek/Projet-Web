@@ -1,19 +1,19 @@
 import { assert, expect } from "chai";
 
-import { IPuzzleItemData, Puzzle, PuzzleItem } from "../models/puzzle";
+import { IPuzzleItemData, Puzzle, PuzzleItem } from "./../models/puzzle";
 
-import { INITIAL_PUZZLE_SEED, PUZZLE_ITEMS_DATA, INVALID_PUZZLE_ITEMS_DATA_1,
-    INVALID_PUZZLE_ITEMS_DATA_2 } from "../services/mock-data";
+import { INVALID_PUZZLE_ITEMS_DATA_1, INVALID_PUZZLE_ITEMS_DATA_2,
+         INITIAL_PUZZLE_SEED, PUZZLE_ITEMS_DATA } from "../services/mock-data";
 
 describe("Puzzle", () => {
 
     it("should transform object to Puzzle", () => {
-        expect(() => {Puzzle.convertObjectToPuzzle(PUZZLE_ITEMS_DATA); }).to.not.throw(Error);
+        expect(() => { Puzzle.convertObjectToPuzzle(PUZZLE_ITEMS_DATA); }).to.not.throw(Error);
     });
 
     it("should not transform object to Puzzle", () => {
-        expect(() => {Puzzle.convertObjectToPuzzle(INVALID_PUZZLE_ITEMS_DATA_1); }).to.throw(TypeError);
-        expect(() => {Puzzle.convertObjectToPuzzle(INVALID_PUZZLE_ITEMS_DATA_2); }).to.throw(TypeError);
+        expect(() => { Puzzle.convertObjectToPuzzle(INVALID_PUZZLE_ITEMS_DATA_1); }).to.throw(TypeError);
+        expect(() => { Puzzle.convertObjectToPuzzle(INVALID_PUZZLE_ITEMS_DATA_2); }).to.throw(TypeError);
     });
 
    // Testing puzzle constructor

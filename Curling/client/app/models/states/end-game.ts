@@ -1,3 +1,4 @@
+import { Vector3 } from "three";
 import { AbstractGameState } from "./abstract-game-state";
 import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 
@@ -12,7 +13,7 @@ export class EndGame extends AbstractGameState {
      *  Only one game state could be constructed with this value at true, because only one game state
      *  must be active at a time.
      */
-    public static createInstance(gameInfo: IGameInfo, doInitialization = false): void {
+    public static createInstance(gameInfo: IGameInfo, doInitialization = false) {
         EndGame._instance = new EndGame(gameInfo, doInitialization);
     }
 
@@ -28,17 +29,17 @@ export class EndGame extends AbstractGameState {
         super(gameInfo, doInitialization);
     }
 
-    protected performEnteringState(): void {
+    protected performEnteringState() {
         if (this._gameInfo.gameStatus.scorePlayer > this._gameInfo.gameStatus.scoreComputer) {
-            this._gameInfo.textureHandler.addText(0, 5, -10, "Vous avez gagné!");
+            this._gameInfo.textureHandler.addText(new Vector3(0, 5, -10), "Vous avez gagné!");
             //this._textureHandler.setText("Vous avez gagné!", this._scene);
         }
         else if (this._gameInfo.gameStatus.scorePlayer < this._gameInfo.gameStatus.scoreComputer) {
-            this._gameInfo.textureHandler.addText(0, 5, -10, "Vous avez perdu!");
+            this._gameInfo.textureHandler.addText(new Vector3(0, 5, -10), "Vous avez perdu!");
             //this._textureHandler.setText("Vous avez perdu!", this._scene);
         }
         else {
-            this._gameInfo.textureHandler.addText(7, 3.5, -18, "C'est une partie nulle.");
+            this._gameInfo.textureHandler.addText(new Vector3(7, 3.5, -18), "C'est une partie nulle.");
             //this._textureHandler.setText("C'est une partie nulle.", this._scene);
         }
     }

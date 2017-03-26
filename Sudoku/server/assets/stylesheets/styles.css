@@ -1,0 +1,54 @@
+body {
+    font-size: 16px;
+    font-family: WeblySleek UI,Segoe UI,Helvetica Neue,Arial,sans-serif;
+    line-height: normal;
+    background-image: url('https://go.americasmart.com/hubfs/_books/market-magazine-2016/files/extfile/backGroundImgURL.jpg');
+    margin: 0px;
+    /*overflow: hidden;*/
+}
+
+.demo-layout-transparent .mdl-layout__header,
+.demo-layout-transparent .mdl-layout__drawer-button {
+    /* This background is dark, so we set text to white. Use 87% black instead if
+       your background is light. */
+    color: white;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table>tbody>tr>td {
+    border: 1px solid #616161;
+    padding: 2px 1px 2px 2px;
+    vertical-align: top;
+    color: black;
+}
+
+tr {
+    border: 3px solid #212121;
+    text-align: center;
+}
+
+.readOnlyCell {
+    font-size: 17px;
+    padding: 0;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    border: 0px solid #ddd;
+    color:#fff;
+    background-color: whitesmoke;
+}
+
+.activities {
+    margin-top: 15px;
+}
+
+.mdl-button--icon {
+    margin-top: 9px;
+}
+
+#toast {
+    margin-bottom: 50px;
+}

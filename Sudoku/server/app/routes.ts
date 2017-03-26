@@ -1,8 +1,15 @@
 import * as express from "express";
+
 import { GridGenerationManager } from "./services/grid-generation.service";
 import { GridValidationManager } from "./services/grid-validation.service";
+
 import { Puzzle, Difficulty } from "./models/puzzle";
 import { DatabaseManager } from "./database-management";
+import { Dashboard } from "./models/Dashboard";
+import { Activity, Type } from "./models/Activity";
+
+let Address6 = require('ip-address').Address6;
+let Address4 = require('ip-address').Address4;
 
 module Route {
 
@@ -24,8 +31,12 @@ module Route {
          * @return Server side main page
          */
         public index(request: express.Request, res: express.Response, next: express.NextFunction) {
-            //res.sendFile(path.join(__dirname, '../dist/index.html'));
-            res.send("Server Side Control Panel");
+            res.render("index", {
+                puzzleEasy: this._gridGenerationManager.sudokusGenerated[Difficulty.NORMAL],
+                puzzleHard: this._gridGenerationManager.sudokusGenerated[Difficulty.HARD],
+                activities: Dashboard.getInstance().activities,
+            });
+            res.end();
         }
 
         /**
@@ -36,8 +47,12 @@ module Route {
          * @return newPuzzle
          */
         public getNewPuzzle(request: express.Request, res: express.Response, next: express.NextFunction) {
-            // Get a new puzzle from the PuzzleManger service.
             let difficulty = request.params.difficulty;
+            let address = new Address6(request.ip);
+            let ip = address.isLoopback() ? "localhost" : address.to4();
+
+            Dashboard.getInstance().addActivity(new Activity(new Date, Type.GRID_DEMAND, "ip: " + ip));
+
             if (!GridGenerationManager.isValidDifficulty(difficulty)) {
                 difficulty = Difficulty.NORMAL;
             }
@@ -46,6 +61,7 @@ module Route {
                     res.send(newPuzzle.generateJSONFormat());
                 });
         }
+        // Get a new puzzle from the PuzzleManger service.
 
         public async addUser(request: express.Request, response: express.Response, next: express.NextFunction) {
             try {

@@ -1,10 +1,9 @@
 export class LetterHelper {
-    // movement
+
     static readonly LEFT_ARROW_KEY_CODE = 37;
     static readonly RIGHT_ARROW_KEY_CODE = 39;
     static readonly TAB_KEY_CODE = 9;
 
-    // Letters keycode
     static readonly LETTER_A_KEY_CODE = 65;
     static readonly LETTER_B_KEY_CODE = 66;
     static readonly LETTER_C_KEY_CODE = 67;

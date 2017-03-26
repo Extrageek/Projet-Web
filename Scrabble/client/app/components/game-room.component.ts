@@ -1,23 +1,20 @@
 import { Component, OnInit, OnDestroy, Output, ViewChild, EventEmitter } from "@angular/core";
-import { Route, ActivatedRoute } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 
 import { SocketService } from "../services/socket-service";
 import { EaselManagerService } from "../services/easel-manager.service";
 import { GameRoomManagerService } from "../services/game-room-manager.service";
 import { CommandsService } from "../services/commands.service";
-import { CommandsHelper } from "../services/commons/commands-helper";
 import { CommandStatus } from "../services/commons/command-status";
 import { CommandType } from "../services/commons/command-type";
 
 import { IRoomMessage } from "../commons/messages/room-message.interface";
-import { LetterHelper } from "../commons/letter-helper";
 import { SocketEventType } from "../commons/socket-eventType";
 import { Player } from "../models/player";
 
 import { EaselComponent } from "./easel.component";
 import { ChatroomComponent } from "./chatroom.component";
 import { BoardComponent } from "./board.component";
-import { IScrabbleLetter } from "../models/scrabble-letter";
 
 
 declare var jQuery: any;
@@ -50,7 +47,6 @@ export class GameComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private socketService: SocketService,
         private gameRoomEventManagerService: GameRoomManagerService,
-        private easelManagerService: EaselManagerService,
         private commandsService: CommandsService) {
 
         this._inputMessage = '';
@@ -90,7 +86,6 @@ export class GameComponent implements OnInit, OnDestroy {
 
     // A callback fonction for the chat message submit button
     public submitMessage() {
-        let commandRequest = this._inputMessage.trim();
         let commandParameters = this.commandsService.extractCommandParameters(this._inputMessage);
 
         // If the player try a command and it's not his turn to play, let him know

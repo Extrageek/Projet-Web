@@ -14,7 +14,7 @@ export class Record {
         this._difficulty = difficulty;
         this._scorePlayer = scorePlayer;
         this._scoreComputer = scoreComputer;
-        this._date = new Date();
+        this._date = (date) ? date : new Date();
     }
 
     public get username(): string {

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 
-import { Puzzle, PuzzleItem } from "../models/puzzle";
+import { Puzzle, PuzzleItem } from "./../models/puzzle";
 
 const SUDOKU_LENGTH = 9;
 @Injectable()
@@ -85,7 +85,7 @@ export class GridManagerService {
 
         if (puzzle === null
             || puzzle._puzzle === null) {
-            throw new Error("The initial grid cannot be null");
+                throw new Error("The initial grid cannot be null");
         }
         this._cellsToBeCompleted = 0;
 
@@ -166,6 +166,6 @@ export class GridManagerService {
     }
 
     public decrementCellsToBeCompleted() {
-        this._cellsToBeCompleted--;
+        --this._cellsToBeCompleted;
     }
 }

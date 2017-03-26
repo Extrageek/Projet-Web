@@ -3,15 +3,15 @@ import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { LoadingStone } from "./loading-stone";
 import { CameraType } from "./../../services/game-physics/camera-type";
 import { EndSet } from "./end-set";
-import { GameComponent } from "../../models/game-component.interface";
+import { Broom } from "../broom";
 
 export class PlayerShooting extends AbstractGameState {
 
     private static _instance: AbstractGameState = null;
     private static readonly UPDATE_NAME = "PlayerShooting";
-    private isHoldingMouseButton = false;
+    private _isHoldingMouseButton = false;
+    private _raycaster = new THREE.Raycaster();
 
-    private raycaster = new THREE.Raycaster();
     /**
      * Initialize the unique PlayerShooting state.
      * @param gameInfo The informations to use by the state.
@@ -19,7 +19,7 @@ export class PlayerShooting extends AbstractGameState {
      *  Only one game state could be constructed with this value at true, because only one game state
      *  must be active at a time.
      */
-    public static createInstance(gameInfo: IGameInfo, doInitialization = false): void {
+    public static createInstance(gameInfo: IGameInfo, doInitialization = false) {
         PlayerShooting._instance = new PlayerShooting(gameInfo, doInitialization);
     }
 
@@ -35,10 +35,10 @@ export class PlayerShooting extends AbstractGameState {
         super(gameInfo, doInitialization);
     }
 
-    protected performEnteringState(): void {
+    protected performEnteringState() {
         this._gameInfo.scene.add(this._gameInfo.broom);
         //TODO : CHANGE GREEN ONCE YOU PASS THE FIRST LINE
-        this._gameInfo.broom.changeToGreen();
+        this._gameInfo.broom.changeColourTo(THREE.ColorKeywords.green);
         this._gameInfo.stoneHandler.performShot(
             this._gameInfo.direction,
             this._gameInfo.speed,
@@ -76,11 +76,11 @@ export class PlayerShooting extends AbstractGameState {
         let x = (event.clientX / window.innerWidth) * 2 - 1;
         let y = - (event.clientY / window.innerHeight) * 2 + 1;
 
-        this.raycaster.setFromCamera({x, y}, currentCamera);
+        this._raycaster.setFromCamera({x, y}, currentCamera);
 
         for (let i = 0; i < this._gameInfo.rink.children.length; i++) {
             let child = this._gameInfo.rink.children[i];
-            let intersects = this.raycaster.intersectObject( child );
+            let intersects = this._raycaster.intersectObject( child );
             // Toggle rotation bool for meshes that we clicked
             if ( intersects.length > 0 ) {
                 this._gameInfo.broom.position.set( 0, 0, 0 );
@@ -96,8 +96,8 @@ export class PlayerShooting extends AbstractGameState {
             // TODO : A VOIR COMMENT ENLEVER GET ELEM
             let sound = document.getElementById("broomIn");
             (<HTMLAudioElement>sound).play();
-            if (!this.isHoldingMouseButton) {
-                this.isHoldingMouseButton = true;
+            if (!this._isHoldingMouseButton) {
+                this._isHoldingMouseButton = true;
                 this._gameInfo.broom.verifyBroomCollision(this._gameInfo.stoneHandler.stoneOnTheGame);
             }
         }
@@ -107,7 +107,7 @@ export class PlayerShooting extends AbstractGameState {
     protected performMouseButtonReleased(): AbstractGameState {
         if (!this._gameInfo.broom.isRed()) {
             this._gameInfo.broom.translateZ(0.3);
-            this.isHoldingMouseButton = false;
+            this._isHoldingMouseButton = false;
             // TODO : A VOIR COMMENT ENLEVER GET ELEM
             let sound = document.getElementById("broomOut");
             (<HTMLAudioElement>sound).play();
@@ -117,10 +117,10 @@ export class PlayerShooting extends AbstractGameState {
 
     public update(timePerFrame: number) {
         if (this._gameInfo.stoneHandler.checkPassHogLine()) {
-             this._gameInfo.broom.changeToRed();
+             this._gameInfo.broom.changeColourTo(THREE.ColorKeywords.red);
         }
         else {
-            this._gameInfo.broom.changeToGreen();
+            this._gameInfo.broom.changeColourTo(THREE.ColorKeywords.green);
         }
     }
 }

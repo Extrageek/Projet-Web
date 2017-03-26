@@ -1,14 +1,10 @@
-
-import {
-    fakeAsync,
-    inject,
-    TestBed, async
-} from "@angular/core/testing";
+import { async, fakeAsync, inject, TestBed } from "@angular/core/testing";
 
 import { assert } from "chai";
+
 import { PuzzleEventManagerService } from "./puzzle-event-manager.service";
 import { GridManagerService } from "./grid-manager.service";
-import { PuzzleCommon } from "../commons/puzzle-common";
+import { PuzzleCommon } from "./../commons/puzzle-common";
 
 describe("PuzzleEventManagerService", () => {
 
@@ -22,7 +18,7 @@ describe("PuzzleEventManagerService", () => {
     }));
 
     it("isDeleteKey, Should return false",
-        inject([PuzzleEventManagerService],
+        inject([ PuzzleEventManagerService ],
             fakeAsync((eventManagerService: PuzzleEventManagerService) => {
 
                 let randomKey = "George";
@@ -32,7 +28,7 @@ describe("PuzzleEventManagerService", () => {
     );
 
     it("isDeleteKey, Should return true because we give a delete keyCode",
-        inject([PuzzleEventManagerService],
+        inject([ PuzzleEventManagerService ],
             fakeAsync((eventManagerService: PuzzleEventManagerService) => {
 
                 let sudokuKeyCode = PuzzleCommon.deleteKeyCode;
@@ -42,7 +38,7 @@ describe("PuzzleEventManagerService", () => {
     );
 
     it("isSudokuNumber, Should return true, it's a sudoku number",
-        inject([PuzzleEventManagerService],
+        inject([ PuzzleEventManagerService ],
             fakeAsync((eventManagerService: PuzzleEventManagerService) => {
 
                 let sudokuKeyCode = PuzzleCommon.oneKey;
@@ -52,7 +48,7 @@ describe("PuzzleEventManagerService", () => {
     );
 
     it("isSudokuNumber, Should return false , it's not a sudoku number",
-        inject([PuzzleEventManagerService],
+        inject([ PuzzleEventManagerService ],
             fakeAsync((eventManagerService: PuzzleEventManagerService) => {
 
                 let fakeKeyCode = "number";
@@ -62,7 +58,7 @@ describe("PuzzleEventManagerService", () => {
     );
 
     it("isDirectionKey, Should return true, it's a direction key",
-        inject([PuzzleEventManagerService],
+        inject([ PuzzleEventManagerService ],
             fakeAsync((eventManagerService: PuzzleEventManagerService) => {
 
                 let fakeDirectionKeyCode = PuzzleCommon.leftArrowKeyCode;
@@ -72,7 +68,7 @@ describe("PuzzleEventManagerService", () => {
     );
 
     it("isDirectionKey, Should return false , it's not a direction number",
-        inject([PuzzleEventManagerService],
+        inject([ PuzzleEventManagerService ],
             fakeAsync((eventManagerService: PuzzleEventManagerService) => {
 
                 let fakeNumberKeyCode = "Up";
@@ -81,9 +77,8 @@ describe("PuzzleEventManagerService", () => {
             }))
     );
 
-
     it("onKeyEventUpdateCurrentCursor, Should return false , it's not a cursor event",
-        inject([PuzzleEventManagerService],
+        inject([ PuzzleEventManagerService ],
             fakeAsync((eventManagerService: PuzzleEventManagerService) => {
 
                 let fakeEvent = document.createEvent("KeyboardEvent");
@@ -93,7 +88,7 @@ describe("PuzzleEventManagerService", () => {
     );
 
     it("updateFocus, correctly change focus",
-        inject([PuzzleEventManagerService],
+        inject([ PuzzleEventManagerService ],
             fakeAsync((eventManagerService: PuzzleEventManagerService) => {
                 let currentPosition = ["1", "1"];
                 eventManagerService.updateFocus(currentPosition, "ArrowLeft");

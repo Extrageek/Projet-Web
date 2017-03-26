@@ -11,7 +11,7 @@ export function calculateMousePosition(event: MouseEvent, cameraType: CameraType
         );
     } else if (cameraType === CameraType.ORTHOGRAPHIC_CAM) {
         mousePosition = new Vector3(
-            -(event.clientY / window.innerHeight) / 0.038 + 13.2 ,
+            -(event.clientY / window.innerHeight) / 0.038 + 13.2,
             0,
             (event.clientX / window.innerWidth) / 0.0268 - 18.6
         );

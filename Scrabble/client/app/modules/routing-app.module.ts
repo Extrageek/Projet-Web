@@ -5,8 +5,6 @@ import { GameInitiationComponent } from "./../components/game-initiation.compone
 import { GameComponent } from "./../components/game-room.component";
 import { WaitingRoomComponent } from "./../components/waiting-room.component";
 
-import { SocketService } from "./../services/socket-service";
-
 const appRoutes: Routes = [
   { path: "", redirectTo: "/game-start", pathMatch: "full" },
   { path: "game-start", component: GameInitiationComponent },

@@ -5,6 +5,11 @@ export class UserSetting {
     private _name: string;
     private _difficulty: Difficulty;
 
+    constructor() {
+        this._name = "";
+        this._difficulty = Difficulty.NORMAL;
+    }
+
     public get name(): string {
         return this._name;
     }
@@ -19,14 +24,6 @@ export class UserSetting {
 
     public set difficulty(value: Difficulty) {
         this._difficulty = value;
-    }
-
-    /**
-     *
-     */
-    constructor() {
-        this._name = "";
-        this._difficulty = Difficulty.NORMAL;
     }
 }
 

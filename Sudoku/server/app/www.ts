@@ -38,6 +38,8 @@ DatabaseManager.createDatabaseManager()
 
         // Configuration du port d'écoute
         application.app.set("port", appPort);
+        application.app.set('views', +__dirname + '/../assets/templates');
+        application.app.set('view engine', 'pug');
 
         // Création du serveur HTTP.
         let server = http.createServer(application.app);

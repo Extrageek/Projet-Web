@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { CurrentPlayer } from "./../models/current-player";
 
 @Injectable()
@@ -14,16 +14,6 @@ export class GameStatusService {
     private _currentStonesComputer: number;
     private _isLaunched: boolean;
     private _currentPlayer: CurrentPlayer;
-
-    constructor() {
-        this._scorePlayer = GameStatusService.DEFAULT_SCORE;
-        this._scoreComputer = GameStatusService.DEFAULT_SCORE;
-        this._currentSet = GameStatusService.DEFAULT_SET;
-        this._currentStonesPlayer = GameStatusService.INITIAL_NUMBER_OF_STONES;
-        this._currentStonesComputer = GameStatusService.INITIAL_NUMBER_OF_STONES;
-        this._isLaunched = false;
-        this._currentPlayer = CurrentPlayer.INVALID;
-    }
 
     public get scorePlayer(): number {
         return this._scorePlayer;
@@ -78,6 +68,16 @@ export class GameStatusService {
     }
     public set currentPlayer(value: number) {
         this._currentPlayer = value;
+    }
+
+    constructor() {
+        this._scorePlayer = GameStatusService.DEFAULT_SCORE;
+        this._scoreComputer = GameStatusService.DEFAULT_SCORE;
+        this._currentSet = GameStatusService.DEFAULT_SET;
+        this._currentStonesPlayer = GameStatusService.INITIAL_NUMBER_OF_STONES;
+        this._currentStonesComputer = GameStatusService.INITIAL_NUMBER_OF_STONES;
+        this._isLaunched = false;
+        this._currentPlayer = CurrentPlayer.INVALID;
     }
 
     public nextPlayer() {

@@ -1,10 +1,9 @@
-import { Directive, Input } from '@angular/core';
-import { RenderService } from '../services/game-handler/render.service';
+import { Directive, Input } from "@angular/core";
+import { RenderService } from "../services/game-handler/render.service";
 
 @Directive({
-    selector: 'modifier'
+    selector: "modifier"
 })
-
 export class ModifierDirective {
     constructor(private _renderService: RenderService) {
     }
@@ -14,13 +13,5 @@ export class ModifierDirective {
         if (value) {
             this._renderService.init(value);
         }
-    }
-
-    @Input()
-    public set webgltext(value: string){
-        if (!value) {
-            value = '';
-        }
-        this._renderService.updateText(value);
     }
 }

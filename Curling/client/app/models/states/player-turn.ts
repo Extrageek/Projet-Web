@@ -2,7 +2,6 @@ import { Clock, Vector3 } from "three";
 import { AbstractGameState } from "./abstract-game-state";
 import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { CameraType } from "./../../services/game-physics/camera-type";
-import { GameComponent } from "../../models/game-component.interface";
 import { PlayerShooting } from "./player-shooting";
 import { CurrentPlayer } from "../../models/current-player";
 import { calculateMousePosition } from "./../../services/game-physics/mouse.service";
@@ -15,6 +14,7 @@ export class PlayerTurn extends AbstractGameState {
     private static readonly SHOT_POWER_MAXIMUM = 4;
     private static readonly SHOT_POWER_OFFSET = 1;
     private static readonly MAX_PROGRESS_BAR_PERCENT = 100;
+    private static readonly ONE_SECOND = 1000;
     private static readonly LINE_WAIT = 2;
     private static readonly UPDATE_NAME = "PlayerTurn";
 
@@ -33,7 +33,7 @@ export class PlayerTurn extends AbstractGameState {
      *  Only one game state could be constructed with this value at true, because only one game state
      *  must be active at a time.
      */
-    public static createInstance(gameInfo: IGameInfo, doInitialization = false): void {
+    public static createInstance(gameInfo: IGameInfo, doInitialization = false) {
         PlayerTurn._instance = new PlayerTurn(gameInfo, doInitialization);
     }
 
@@ -51,7 +51,7 @@ export class PlayerTurn extends AbstractGameState {
         this._mouseIsPressed = false;
     }
 
-    public performEnteringState(): void {
+    public performEnteringState() {
         this._gameInfo.isSelectingPower = true;
         this._gameInfo.power = 0;
         this._gameInfo.line.lineDashedMaterial.visible = true;
@@ -95,7 +95,7 @@ export class PlayerTurn extends AbstractGameState {
             this._gameInfo.isSelectingPower = false;
             this._powerTimer.stop();
 
-            let timeDelta = (this._powerTimer.oldTime - this._powerTimer.startTime) / 1000;
+            let timeDelta = (this._powerTimer.oldTime - this._powerTimer.startTime) / PlayerTurn.ONE_SECOND;
             if (timeDelta > PlayerTurn.SHOT_POWER_MINIMUM) {
                 this._gameInfo.speed = PlayerTurn.SHOT_POWER_OFFSET;
                 this._gameInfo.speed += (timeDelta > PlayerTurn.SHOT_POWER_MAXIMUM) ?
@@ -110,7 +110,8 @@ export class PlayerTurn extends AbstractGameState {
     public update(timePerFrame: number) {
         if (this._mouseIsPressed) {
             this._powerTimer.getDelta();
-            this._gameInfo.power = Math.min((this._powerTimer.oldTime - this._powerTimer.startTime) / 1000 /
+            this._gameInfo.power = Math.min(
+                (this._powerTimer.oldTime - this._powerTimer.startTime) / PlayerTurn.ONE_SECOND /
                 PlayerTurn.SHOT_POWER_MAXIMUM * PlayerTurn.MAX_PROGRESS_BAR_PERCENT,
                 PlayerTurn.MAX_PROGRESS_BAR_PERCENT
             );

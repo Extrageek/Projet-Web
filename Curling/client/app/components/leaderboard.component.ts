@@ -1,13 +1,15 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
+import { Router } from "@angular/router";
 
-import { RestApiProxyService } from './../services/rest-api-proxy.service';
-import { Record } from '../models/record';
+import { RestApiProxyService } from "./../services/rest-api-proxy.service";
+import { Record } from "../models/record";
+
+const RATIO_80_POURCENT = 0.8;
 
 @Component({
-    selector: 'leaderboard-component',
-    templateUrl: '../../assets/templates/leaderboard-component.html',
-    styleUrls: ['../../assets/stylesheets/leaderboard-component.css']
+    selector: "leaderboard-component",
+    templateUrl: "../../assets/templates/leaderboard-component.html",
+    styleUrls: ["../../assets/stylesheets/leaderboard-component.css"]
 })
 export class LeaderboardComponent implements OnInit {
     private _records: Array<Record>;
@@ -46,10 +48,10 @@ export class LeaderboardComponent implements OnInit {
 
     public makeTableScroll() {
         let height = window.innerHeight;
-        this.leaderboard.nativeElement.style.height = (Math.round(height * 0.8)) + "px";
+        this.leaderboard.nativeElement.style.height = (Math.round(height * RATIO_80_POURCENT)) + "px";
     }
 
     public returnMainPage(): void {
-        this.router.navigate(['/']);
+        this.router.navigate(["/"]);
     }
 }

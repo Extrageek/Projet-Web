@@ -1,4 +1,3 @@
-
 export class PuzzleCommon {
 
     static leftArrowKeyCode = "ArrowLeft";

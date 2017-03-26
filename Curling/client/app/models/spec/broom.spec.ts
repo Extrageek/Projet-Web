@@ -19,14 +19,14 @@ describe("Broom class should", () => {
 
     it("change a broom to red correctly", () => {
         Broom.createBroom(objectLoader, new Vector3(0, 0, -11.4)).then((broom: Broom) => {
-            broom.changeToRed();
+            broom.changeColourTo(THREE.ColorKeywords.red);
             expect(broom.isRed()).to.be.true;
         });
     });
 
     it("change a broom to red correctly", () => {
         Broom.createBroom(objectLoader, new Vector3(0, 0, -11.4)).then((broom: Broom) => {
-            broom.changeToGreen();
+            broom.changeColourTo(THREE.ColorKeywords.green);
             expect(broom.isRed()).to.be.false;
         });
     });
@@ -47,8 +47,7 @@ describe("Broom class should", () => {
         let stones = new Array<Stone>();
         Stone.createStone(objectLoader, StoneColor.Red, new Vector3(0, 0, 0)).then((stone) => {
             stones.push(stone);
-        }
-        );
+        });
         Broom.createBroom(objectLoader, new Vector3(0, 0, 20)).then((broom: Broom) => {
             broom.verifyBroomCollision(stones);
             expect(stones[0].sweeping).to.be.false;
