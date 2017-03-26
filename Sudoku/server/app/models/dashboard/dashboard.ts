@@ -7,11 +7,9 @@ export class Dashboard {
     private _activities: Activity[];
 
     public static getInstance(): Dashboard {
-
         if (Dashboard._instance === null || Dashboard._instance === undefined) {
             Dashboard._instance = new Dashboard();
         }
-
         return Dashboard._instance;
     }
 

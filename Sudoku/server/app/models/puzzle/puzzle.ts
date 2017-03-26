@@ -187,19 +187,4 @@ export class Puzzle {
     public generateJSONFormat(): string {
         return JSON.stringify(this._puzzle);
     }
-
-    public printToConsole() {
-        this._puzzle.forEach((row: PuzzleItem[], rowIndex: number, array: PuzzleItem[][]) => {
-            let toWrite = "";
-            row.forEach((item: PuzzleItem, columnIndex: number, items: PuzzleItem[]) => {
-                if (!item.isHidden) {
-                    toWrite += item.value + " ";
-                }
-                else {
-                    toWrite += "  ";
-                }
-            });
-            console.log(toWrite);
-        });
-    }
 }

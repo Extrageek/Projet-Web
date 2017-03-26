@@ -23,8 +23,8 @@ export class Activity {
     }
 
     constructor(date: Date, type: Type, description: String) {
-        this._date = date;
-        this._type = type;
+        this.date = date;
+        this.type = type;
         if (description === "0") {
             this._description = "Facile";
         }

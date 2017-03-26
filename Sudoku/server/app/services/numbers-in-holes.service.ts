@@ -194,9 +194,4 @@ export class NumbersInHoles {
             this._nextHole.column = column;
         }
     }
-
-    private getSquareNumber(rowIndex: number, columnIndex: number) {
-        return Math.trunc(rowIndex / Puzzle.SQUARE_LENGTH) * Puzzle.SQUARE_LENGTH
-            + Math.trunc(columnIndex / Puzzle.SQUARE_LENGTH);
-    }
 }
