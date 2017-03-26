@@ -31,7 +31,6 @@ module Route {
          * @return Server side main page
          */
         public index(request: express.Request, res: express.Response, next: express.NextFunction) {
-            console.log(Dashboard.getInstance().activities[0].description);
             res.render("index", {
                 puzzleEasy: this._gridGenerationManager.sudokusGenerated[Difficulty.NORMAL],
                 puzzleHard: this._gridGenerationManager.sudokusGenerated[Difficulty.HARD],
