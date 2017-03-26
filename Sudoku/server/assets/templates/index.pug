@@ -31,7 +31,7 @@ html
 
         mixin createActivity(activity)
             -
-                var date = activity.date.getMonth()  + "/" + activity.date.getDay() + "/" + activity.date.getUTCFullYear();
+                var date = activity.date.getMonth()  + "/" + activity.date.getDate() + "/" + activity.date.getUTCFullYear();
                 var time = activity.date.getHours() + ":" + activity.date.getMinutes() + ":" + activity.date.getSeconds();
             tr
                 td #{date} | #{time}
@@ -51,13 +51,8 @@ html
                     a.mdl-layout__tab(href='#scroll-tab-2') Puzzle difficle
                     |
                     a.mdl-layout__tab(href='#scroll-tab-3') Journal d'activités
-                    button#show-toast.mdl-button.mdl-js-button.mdl-button--icon(type='button')
-                        i.material-icons help
-                    |
-                    #toast.mdl-js-snackbar.mdl-snackbar
-                        .mdl-snackbar__text
-                        |
-                        button.mdl-snackbar__action(type='button')
+            .mdl-layout__drawer
+                span.mdl-layout-title Title
             main.mdl-layout__content
                 section#scroll-tab-1.mdl-layout__tab-panel.is-active
                     .page-content
