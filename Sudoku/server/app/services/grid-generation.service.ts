@@ -35,7 +35,7 @@ export class GridGenerationManager {
     }
 
     private fillArrayWithSudokus(arrayIndex: number) {
-        for (let i = 0; i < GridGenerationManager.NUMBER_OF_SUDOKUS_TO_GENERATE; ++i) {
+        for (let row = 0; row < GridGenerationManager.NUMBER_OF_SUDOKUS_TO_GENERATE; ++row) {
             this.getNewPuzzle(arrayIndex).then((puzzle: Puzzle) => {
                 this._sudokusGenerated[arrayIndex].push(puzzle);
 
@@ -79,17 +79,11 @@ export class GridGenerationManager {
         });
     }
 
-    /**
-     * The getNewPuzzle function, return a new puzzle.
-     *
-     * @class PuzzleManager
-     * @method getNewPuzzle
-     * @return newPuzzle
-     */
     private generateNewPuzzle(difficulty?: Difficulty) {
-        let newPuzzle: Puzzle = new Puzzle();
-        let nbIterations: number = getRandomNumberInRange(
-            GridGenerationManager.NOMBRE_ITERATIONS_MIN, GridGenerationManager.NOMBRE_ITERATIONS_MAX);
+        let newPuzzle = new Puzzle();
+        let nbIterations = getRandomNumberInRange(
+            GridGenerationManager.NOMBRE_ITERATIONS_MIN,
+            GridGenerationManager.NOMBRE_ITERATIONS_MAX);
 
         let operations = [
             (puzzle: Puzzle) => {
@@ -133,7 +127,6 @@ export class GridGenerationManager {
     //Between 3 and 5 and cannot be equals.
     //Between 6 and 8 and cannot be equals.
     //They specifie the columns or rows of the same square to be changed.
-
     private numberGeneratorForSwaping(): Array<number> {
         let rowNumbers = [-1, -1];
         let squareNumber: number;
@@ -178,6 +171,5 @@ export class GridGenerationManager {
             }
             validIndexesColumn[rowIndex].splice(columnValidIndex, 1);
         }
-        console.log("numbers removed : " + numberOfRemovedNumbers.toString());
     }
 }

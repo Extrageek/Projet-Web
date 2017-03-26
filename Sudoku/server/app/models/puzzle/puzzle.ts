@@ -136,6 +136,7 @@ export class Puzzle {
         }
     }
 
+    //TODO : Change Name
     public diagonal1Symmetry() {
         for (let row = Puzzle.MIN_ROW_INDEX; row <= Puzzle.MAX_ROW_INDEX; ++row) {
             for (let column = row; column <= Puzzle.MAX_COLUMN_INDEX; ++column) {
@@ -144,6 +145,7 @@ export class Puzzle {
         }
     }
 
+    //TODO : Change Name
     public diagonal2Symmetry() {
         for (let row = Puzzle.MIN_ROW_INDEX; row <= Puzzle.MAX_ROW_INDEX; ++row) {
             for (let column = Puzzle.MIN_COLUMN_INDEX; column <= Puzzle.MAX_COLUMN_INDEX - row; ++column) {
