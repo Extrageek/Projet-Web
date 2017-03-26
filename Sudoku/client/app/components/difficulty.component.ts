@@ -1,21 +1,28 @@
 import { Component, OnInit, HostListener } from "@angular/core";
 import { Router } from "@angular/router";
 
-import { UserSettingService } from "../services/user-setting.service";
-import { RestApiProxyService } from "../services/rest-api-proxy.service";
+import { UserSettingService } from "./../services/user-setting.service";
+import { RestApiProxyService } from "./../services/rest-api-proxy.service";
 
 @Component({
     moduleId: module.id,
     selector: "difficulty-component",
-    templateUrl: "/assets/templates/difficulty.component.html",
-    styleUrls: ["../../assets/stylesheets/username.component.css"],
+    templateUrl: "./../assets/templates/difficulty.component.html",
+    styleUrls: [ "./../../assets/stylesheets/username.component.css" ],
     providers: [RestApiProxyService]
 })
 export class DifficultyComponent implements OnInit {
     _username: string;
     _difficulty: string;
 
-    constructor(private router: Router,
+    @HostListener("window:beforeunload")
+    public async logout() {
+        await this.api.removeUsername(this._username);
+        return "are you sure";
+    }
+
+    constructor(
+        private router: Router,
         private userSettingService: UserSettingService,
         private api: RestApiProxyService) { }
 
@@ -25,12 +32,6 @@ export class DifficultyComponent implements OnInit {
             this.router.navigate(["/"]);
         }
         this._difficulty = "0";
-    }
-
-    @HostListener("window:beforeunload")
-    public async logout() {
-        await this.api.removeUsername(this._username);
-        return "are you sure";
     }
 
     public launchGame() {

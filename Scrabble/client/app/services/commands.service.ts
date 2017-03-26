@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { SocketService } from './socket-service';
 
 import { EaselComponent } from "../components/easel.component";
 import { BoardComponent } from "../components/board.component";
@@ -7,11 +6,8 @@ import { ChatroomComponent } from "../components/chatroom.component";
 import { GameComponent } from "../components/game-room.component";
 
 import { EaselManagerService } from "./easel-manager.service";
-import { IScrabbleLetter } from "../models/scrabble-letter";
 
 import { CommandType } from "./commons/command-type";
-import { CommandStatus } from "./commons/command-status";
-import { ICommandRequest } from "./commons/command-request.interface";
 import { CommandsHelper } from "./commons/commands-helper";
 
 import { MessageCommand } from './message-command';
@@ -54,18 +50,18 @@ export class CommandsService {
     }
 
     public invokeAndExecutePlaceCommand(
-        receiverEaselCompoment: EaselComponent,
+        receiverEaselComponent: EaselComponent,
         receiverBoardComponent: BoardComponent,
         params: string) {
 
 
-        if (receiverEaselCompoment === null
+        if (receiverEaselComponent === null
             || receiverBoardComponent === null) {
             throw new Error("Null argument error: the parameters cannot be null");
         }
 
         let placeWordCommand = new PlaceWordCommand(
-            receiverEaselCompoment,
+            receiverEaselComponent,
             receiverBoardComponent,
             params);
 

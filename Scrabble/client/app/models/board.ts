@@ -1,5 +1,4 @@
 import { ISquare } from "./square";
-import { ISquarePosition } from "./square-position";
 
 export class Board {
     private _squares: Array<Array<ISquare>>;

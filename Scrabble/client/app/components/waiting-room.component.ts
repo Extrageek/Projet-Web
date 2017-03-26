@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 import { SocketService } from "../services/socket-service";
@@ -12,8 +12,6 @@ import { IRoomMessage } from "../commons/messages/room-message.interface";
     templateUrl: "../../assets/templates/waiting-room.html"
 })
 export class WaitingRoomComponent implements OnInit, OnDestroy {
-
-
     private _username = "";
     private _numberOfPlayerMissing: number;
     private _onJoinedRoomSubscription: Subscription;
@@ -26,7 +24,6 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
         // Default constructor
             console.log(this.socketService.player.numberOfPlayers);
             this._numberOfPlayerMissing = this.socketService.player.numberOfPlayers;
-
     }
 
     ngOnInit() {

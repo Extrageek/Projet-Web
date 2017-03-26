@@ -71,9 +71,11 @@ input:focus {
 .readWriteCell {
     background-color: antiquewhite;
 }
+
 .errorCell {
     background-color : #E57373;
 }
+
 .table {
     margin-bottom: 0;
 }

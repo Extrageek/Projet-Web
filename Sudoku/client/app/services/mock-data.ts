@@ -1,4 +1,3 @@
-
 import { IPuzzleItemData, PuzzleItem } from "../models/puzzle";
 
 export const PUZZLE_ITEMS_DATA: Array<Array<IPuzzleItemData>> = [

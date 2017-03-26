@@ -1,42 +1,25 @@
-import { Injectable, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
-
-import {
-    fakeAsync,
-    inject,
-    ComponentFixture,
-    TestBed,
-    async,
-} from "@angular/core/testing";
-import {
-    HttpModule, Http, ResponseOptions,
-    Response,
-    BaseRequestOptions,
-    ConnectionBackend
-} from "@angular/http";
-
-
+import { CUSTOM_ELEMENTS_SCHEMA, Injectable } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { BaseRequestOptions, ConnectionBackend, HttpModule, Http, ResponseOptions, Response } from "@angular/http";
+import { Router } from "@angular/router";
+import { async, ComponentFixture, fakeAsync, inject, TestBed } from "@angular/core/testing";
+import { MockBackend, MockConnection } from "@angular/http/testing";
 import { RouterTestingModule } from "@angular/router/testing";
 
-import { MockBackend, MockConnection } from "@angular/http/testing";
 import { assert, expect } from "chai";
 
-import { FormsModule } from "@angular/forms";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/of";
 
-declare var jQuery: any;
-
 import { GridComponent } from "./grid.component";
-import { Puzzle } from "../models/puzzle";
+import { Puzzle } from "./../models/puzzle";
 
-import { RestApiProxyService } from "../services/rest-api-proxy.service";
-import { GridManagerService } from "../services/grid-manager.service";
-import { FAKE_PUZZLE_FEED, INITIAL_PUZZLE_SEED } from "../services/mock-data";
-import { PuzzleEventManagerService } from "../services/puzzle-event-manager.service";
-
-import { StopwatchService } from "../services/stopwatch.service";
-import { UserSettingService } from "../services/user-setting.service";
-import { Router } from "@angular/router";
+import { GridManagerService } from "./../services/grid-manager.service";
+import { RestApiProxyService } from "./../services/rest-api-proxy.service";
+import { FAKE_PUZZLE_FEED, INITIAL_PUZZLE_SEED } from "./../services/mock-data";
+import { PuzzleEventManagerService } from "./../services/puzzle-event-manager.service";
+import { StopwatchService } from "./../services/stopwatch.service";
+import { UserSettingService } from "./../services/user-setting.service";
 
 // Mock the REST API Service to give a fake result after a request.
 @Injectable()
@@ -58,17 +41,17 @@ describe("GridComponent", () => {
 
     beforeEach(async (() => {
         TestBed.configureTestingModule({
-            declarations: [GridComponent], // declare the test component
+            declarations: [ GridComponent ], // declare the test component
             schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-            imports: [FormsModule, HttpModule, RouterTestingModule],
+            imports: [ FormsModule, HttpModule, RouterTestingModule ],
             providers: [
                 {   // Import the necessary providers
-                provide: Http, Router,
-                // Add a factory for the backend
-                useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
-                    return new Http(backend, defaultOptions);
-                },
-                deps: [MockBackend, BaseRequestOptions]
+                    provide: Http, Router,
+                    // Add a factory for the backend
+                    useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
+                        return new Http(backend, defaultOptions);
+                    },
+                    deps: [ MockBackend, BaseRequestOptions ]
                 },
                 { provide: RestApiProxyService, useClass: MockRestApiService },
                 { provide: GridManagerService, PuzzleEventManagerService },
@@ -91,7 +74,8 @@ describe("GridComponent", () => {
             });
             fixture = TestBed.createComponent(GridComponent);
             comp = fixture.componentInstance;
-        })));
+        }))
+    );
 
     // //Testing the method InitializeCurrentGrid by giving an empty grid.
     it("initializeCurrentGrid should throw a null argument error", () => {
@@ -101,7 +85,7 @@ describe("GridComponent", () => {
 
     // Testing the method InitializeCurrentGrid by using a valid grid.
     it("initializeCurrentGrid should reset the current grid",
-        inject([GridManagerService], (gridManagerService: GridManagerService) => {
+        inject([ GridManagerService ], (gridManagerService: GridManagerService) => {
 
             // Must be completed
             comp._puzzle = FAKE_PUZZLE;
@@ -109,7 +93,8 @@ describe("GridComponent", () => {
 
             // Check the expected result
             expect(comp._puzzle).to.deep.equal(FAKE_INITIAL_PUZZLE);
-        }));
+        })
+    );
 
     it("validateInputValue, should throw a null argument error", () => {
         assert.throws(() => comp.validateInputValue(null), Error, "No event source is provided.");

@@ -1,16 +1,10 @@
 import { Component, OnInit, AfterViewInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 
 import { SocketService } from "../services/socket-service";
 import { CommandType } from "../services/commons/command-type";
 import { CommandStatus } from "../services/commons/command-status";
 import { SocketEventType } from "../commons/socket-eventType";
-import { IGameMessage } from "../commons/messages/game-message.interface";
-import { IRoomMessage } from "../commons/messages/room-message.interface";
-import { ICommandMessage } from "../commons/messages/command-message.interface";
-
-//const MAX_NUMBER_OF_LETTERS = 7;
 
 @Component({
     moduleId: module.id,
@@ -26,8 +20,7 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
     public _minutes: number;
 
     constructor(
-        private socketService: SocketService,
-        private activatedRoute: ActivatedRoute) {
+        private socketService: SocketService) {
         this._lettersOnEasel = 7;
         // TODO : get it from letterbank service
         this._lettersInBank = 102;
@@ -41,9 +34,6 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        // this.activatedRoute.params.subscribe(params => {
-        //     this._username = params['id'];
-        // });
         this.onTimerEvent();
     }
 
@@ -97,16 +87,6 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
                 }
             });
     }
-
-    // TODO: Should be handle with the command service in a upcomming refactoring
-    // private onExchangeLetterResponse(): Subscription {
-    //     return this.socketService.subscribeToChannelEvent(SocketEventType.changeLettersRequest)
-    //         .subscribe((response: ICommandMessage<any>) => {
-    //             if (response !== undefined && response._message !== null) {
-    //                 this.player = response._data[1][0];
-    //             }
-    //         });
-    // }
 
     public printMinutes(): string {
         return ("0" + this._minutes).slice(-2);

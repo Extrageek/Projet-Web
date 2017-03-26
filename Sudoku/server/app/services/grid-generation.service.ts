@@ -7,6 +7,8 @@
 
 import { Puzzle, Difficulty } from "./../models/puzzle";
 import { GridSolver } from "./grid-solver.service";
+import {Dashboard} from "../models/Dashboard";
+import {Type, Activity} from "../models/Activity";
 
 // Used to generate the type of transformation and to give a number of holes to dig in sudoku
 function getRandomNumberInRange(min: number, max: number): number {
@@ -14,13 +16,12 @@ function getRandomNumberInRange(min: number, max: number): number {
 }
 
 export class GridGenerationManager {
-
     private static readonly MILLISECONDS_TO_WAIT = 5000;
+
     private static readonly NUMBER_OF_SUDOKUS_TO_GENERATE = 3;
     private static readonly NOMBRE_ITERATIONS_MIN = 1;
     private static readonly NOMBRE_ITERATIONS_MAX = 200;
     private static readonly NUMBERS_TO_REMOVE = [45, 60];
-
     private _sudokusGenerated: Array<Array<Puzzle>>;
 
     public static isValidDifficulty(difficulty: Difficulty): boolean {
@@ -35,19 +36,26 @@ export class GridGenerationManager {
         }
     }
 
+    get sudokusGenerated(): Array<Array<Puzzle>> {
+        return this._sudokusGenerated;
+    }
+
     private fillArrayWithSudokus(arrayIndex: number) {
         for (let i = 0; i < GridGenerationManager.NUMBER_OF_SUDOKUS_TO_GENERATE; ++i) {
             this.getNewPuzzle(arrayIndex).then((puzzle: Puzzle) => {
                 this._sudokusGenerated[arrayIndex].push(puzzle);
+
             });
         }
     }
 
     public getNewPuzzle(difficulty: Difficulty): Promise<Puzzle> {
         return new Promise((resolve, reject) => {
+            Dashboard.getInstance().addActivity(new Activity(new Date, Type.GRID_GENERATION, difficulty.toString()));
             if (this._sudokusGenerated[difficulty].length !== 0) {
                 //Launch a new sudoku generation after the existing sudoku is returned.
                 let sudokuGenerated = this._sudokusGenerated[difficulty].pop();
+
                 resolve(sudokuGenerated);
 
                 setTimeout(() => {
@@ -131,6 +139,7 @@ export class GridGenerationManager {
     //Between 3 and 5 and cannot be equals.
     //Between 6 and 8 and cannot be equals.
     //They specifie the columns or rows of the same square to be changed.
+
     private numberGeneratorForSwaping(): Array<number> {
         let rowNumbers = [-1, -1];
         let squareNumber: number;

@@ -36,7 +36,7 @@ export class ComputerTurn extends AbstractGameState {
 
     protected performEnteringState() {
         this._gameInfo.speed = this._speed;
-        this._gameInfo.direction = new Vector3(0, 0, 1);
+        this._gameInfo.direction = new Vector3(-7, 0, 1);
         this.leaveState(ComputerShooting.getInstance());
     }
 

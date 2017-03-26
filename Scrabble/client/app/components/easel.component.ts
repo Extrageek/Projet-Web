@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, EventEmitter, Input, Output } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 
 import { IScrabbleLetter } from "../models/scrabble-letter";
@@ -9,14 +8,9 @@ import { SocketService } from "../services/socket-service";
 import { LetterHelper } from "../commons/letter-helper";
 import { CommandType } from "../services/commons/command-type";
 import { SocketEventType } from "../commons/socket-eventType";
-import { IGameMessage } from "../commons/messages/game-message.interface";
-import { ICommandMessage } from "../commons/messages/command-message.interface";
 import { ICommandRequest } from "../services/commons/command-request.interface";
-import { CommandStatus } from "../services/commons/command-status";
 
 declare var jQuery: any;
-
-import { Alphabet } from "../models/commons/alphabet";
 
 @Component({
     moduleId: module.id,
@@ -33,9 +27,9 @@ export class EaselComponent implements OnInit, OnDestroy {
     @Input() keyEventValue: any;
 
     private _letters: Array<IScrabbleLetter>;
-    private _indexOflettersToExchange: Array<number>;
+    private _indexOfLettersToExchange: Array<number>;
     private _keyEventKeyCode: string;
-    private _exchangeLetterSubcription: Subscription;
+    private _exchangeLetterSubscription: Subscription;
     private _initializeEaselSubscription: Subscription;
 
     public get letters(): Array<IScrabbleLetter> {
@@ -43,11 +37,11 @@ export class EaselComponent implements OnInit, OnDestroy {
     }
 
     public get indexOfLettersToChange(): Array<number> {
-        return this._indexOflettersToExchange;
+        return this._indexOfLettersToExchange;
     }
 
     public set indexOfLettersToChange(v: Array<number>) {
-        this._indexOflettersToExchange = v;
+        this._indexOfLettersToExchange = v;
     }
 
     public get keyEvent(): string {
@@ -59,17 +53,14 @@ export class EaselComponent implements OnInit, OnDestroy {
         this._keyEventKeyCode = v;
     }
 
-    private fakeLettersFromServer: Array<IScrabbleLetter>;
-
     constructor(
         private easelEventManagerService: EaselManagerService,
-        private socketService: SocketService,
-        private activatedRoute: ActivatedRoute) {
-        this._indexOflettersToExchange = new Array<number>();
+        private socketService: SocketService) {
+        this._indexOfLettersToExchange = new Array<number>();
     }
 
     ngOnInit() {
-        this._exchangeLetterSubcription = this.onExchangeLetterRequest();
+        this._exchangeLetterSubscription = this.onExchangeLetterRequest();
         this._initializeEaselSubscription = this.initializeEaselOnConnection();
         this._letters = new Array<IScrabbleLetter>();
     }
@@ -106,7 +97,6 @@ export class EaselComponent implements OnInit, OnDestroy {
         id: string,
         letter: IScrabbleLetter) {
 
-        let easelMaxIndex = this.socketService.player.letters.length - 1;
         let keyCode = event.which;
         let currentInputIndex = Number(id.split('_')[1]);
 

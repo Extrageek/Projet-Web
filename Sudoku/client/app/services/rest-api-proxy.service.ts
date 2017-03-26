@@ -9,15 +9,14 @@ import { Injectable } from "@angular/core";
 import { Response, Http, Headers } from "@angular/http";
 
 import { Observable } from "rxjs/Observable";
-
 import "rxjs/add/operator/toPromise";
 import "rxjs/add/operator/catch";
 import "rxjs/add/observable/throw";
 
-import { Puzzle } from "../models/puzzle";
-import { UserSetting, Difficulty } from "../models/user-setting";
-import { Time } from "../models/time";
-import { Record } from "../models/record";
+import { Difficulty, UserSetting } from "./../models/user-setting";
+import { Puzzle } from "./../models/puzzle";
+import { Record } from "./../models/record";
+import { Time } from "./../models/time";
 
 @Injectable()
 export class RestApiProxyService {
@@ -26,7 +25,6 @@ export class RestApiProxyService {
     // Check how to manage cookies after
     protected _urlApi = "http://localhost:3002/api/";
     protected _headers = new Headers({ "Content-Type": "application/json" });
-
 
     /**
      * constructor.

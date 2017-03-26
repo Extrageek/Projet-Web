@@ -1,8 +1,12 @@
 import * as express from "express";
+
 import { GridGenerationManager } from "./services/grid-generation.service";
 import { GridValidationManager } from "./services/grid-validation.service";
+
 import { Puzzle, Difficulty } from "./models/puzzle";
 import { DatabaseManager } from "./database-management";
+import { Dashboard } from "./models/Dashboard";
+import { Activity, Type } from "./models/Activity";
 
 module Route {
 
@@ -24,8 +28,39 @@ module Route {
          * @return Server side main page
          */
         public index(request: express.Request, res: express.Response, next: express.NextFunction) {
-            //res.sendFile(path.join(__dirname, '../dist/index.html'));
-            res.send("Server Side Control Panel");
+            let validPuzzles = true;
+            let numberOfDifficulty = 2;
+            let numberOfPuzzles = 3;
+
+            for(let i = 0; i < numberOfDifficulty; i ++) {
+                for(let j = 0; j < numberOfPuzzles; j ++) {
+                    console.log(this._gridGenerationManager.sudokusGenerated[i].length);
+                    console.log(this._gridGenerationManager.sudokusGenerated[i] === null);
+                    console.log(this._gridGenerationManager.sudokusGenerated[i] === undefined);
+                    if( this._gridGenerationManager.sudokusGenerated[i].length === 0
+                        || this._gridGenerationManager.sudokusGenerated[i] === null
+                        || this._gridGenerationManager.sudokusGenerated[i] === undefined) {
+                       validPuzzles = false;
+                    }
+                }
+            }
+            console.log(validPuzzles);
+            if(validPuzzles) {
+                console.log(Dashboard.getInstance().activities[0].description);
+                res.render("index", {
+                    puzzleEasy1: this._gridGenerationManager.sudokusGenerated[0][0]._puzzle,
+                    puzzleEasy2: this._gridGenerationManager.sudokusGenerated[0][1]._puzzle,
+                    puzzleEasy3: this._gridGenerationManager.sudokusGenerated[0][2]._puzzle,
+                    puzzleHard1: this._gridGenerationManager.sudokusGenerated[1][0]._puzzle,
+                    puzzleHard2: this._gridGenerationManager.sudokusGenerated[1][1]._puzzle,
+                    puzzleHard3: this._gridGenerationManager.sudokusGenerated[1][2]._puzzle,
+                    activities: Dashboard.getInstance().activities,
+                });
+            }
+            else {
+                res.send("Please refresh page");
+            }
+                res.end();
         }
 
         /**
@@ -36,8 +71,10 @@ module Route {
          * @return newPuzzle
          */
         public getNewPuzzle(request: express.Request, res: express.Response, next: express.NextFunction) {
-            // Get a new puzzle from the PuzzleManger service.
             let difficulty = request.params.difficulty;
+
+            Dashboard.getInstance().addActivity(new Activity(new Date, Type.GRID_DEMAND, "IP ADDRESS"));
+
             if (!GridGenerationManager.isValidDifficulty(difficulty)) {
                 difficulty = Difficulty.NORMAL;
             }
@@ -46,6 +83,7 @@ module Route {
                     res.send(newPuzzle.generateJSONFormat());
                 });
         }
+        // Get a new puzzle from the PuzzleManger service.
 
         public async addUser(request: express.Request, response: express.Response, next: express.NextFunction) {
             try {
