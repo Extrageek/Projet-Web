@@ -1,19 +1,18 @@
 export class Activity {
 
     private _date: Date;
-    private _type : Type;
+    private _type: Type;
     private _description: String;
 
     constructor(date: Date, type: Type, description: String) {
         this._date = date;
         this._type = type;
-        if(description == "0") {
+        if (description === "0") {
             this._description = "Facile";
         }
-        else if (description == "1")
-            {
-                this._description = "Difficile";
-            }
+        else if (description === "1") {
+            this._description = "Difficile";
+        }
         else {
             this._description = description;
         }
@@ -43,4 +42,4 @@ export class Activity {
     }
 }
 
-export enum Type  {GRID_GENERATION, GRID_DEMAND }
+export enum Type { GRID_GENERATION, GRID_DEMAND }

@@ -8,6 +8,9 @@ import { DatabaseManager } from "./database-management";
 import { Dashboard } from "./models/Dashboard";
 import { Activity, Type } from "./models/Activity";
 
+let Address6 = require('ip-address').Address6;
+let Address4 = require('ip-address').Address4;
+
 module Route {
 
     export class RouteManager {
@@ -28,39 +31,13 @@ module Route {
          * @return Server side main page
          */
         public index(request: express.Request, res: express.Response, next: express.NextFunction) {
-            let validPuzzles = true;
-            let numberOfDifficulty = 2;
-            let numberOfPuzzles = 3;
-
-            for(let i = 0; i < numberOfDifficulty; i ++) {
-                for(let j = 0; j < numberOfPuzzles; j ++) {
-                    console.log(this._gridGenerationManager.sudokusGenerated[i].length);
-                    console.log(this._gridGenerationManager.sudokusGenerated[i] === null);
-                    console.log(this._gridGenerationManager.sudokusGenerated[i] === undefined);
-                    if( this._gridGenerationManager.sudokusGenerated[i].length === 0
-                        || this._gridGenerationManager.sudokusGenerated[i] === null
-                        || this._gridGenerationManager.sudokusGenerated[i] === undefined) {
-                       validPuzzles = false;
-                    }
-                }
-            }
-            console.log(validPuzzles);
-            if(validPuzzles) {
-                console.log(Dashboard.getInstance().activities[0].description);
-                res.render("index", {
-                    puzzleEasy1: this._gridGenerationManager.sudokusGenerated[0][0]._puzzle,
-                    puzzleEasy2: this._gridGenerationManager.sudokusGenerated[0][1]._puzzle,
-                    puzzleEasy3: this._gridGenerationManager.sudokusGenerated[0][2]._puzzle,
-                    puzzleHard1: this._gridGenerationManager.sudokusGenerated[1][0]._puzzle,
-                    puzzleHard2: this._gridGenerationManager.sudokusGenerated[1][1]._puzzle,
-                    puzzleHard3: this._gridGenerationManager.sudokusGenerated[1][2]._puzzle,
-                    activities: Dashboard.getInstance().activities,
-                });
-            }
-            else {
-                res.send("Please refresh page");
-            }
-                res.end();
+            console.log(Dashboard.getInstance().activities[0].description);
+            res.render("index", {
+                puzzleEasy: this._gridGenerationManager.sudokusGenerated[Difficulty.NORMAL],
+                puzzleHard: this._gridGenerationManager.sudokusGenerated[Difficulty.HARD],
+                activities: Dashboard.getInstance().activities,
+            });
+            res.end();
         }
 
         /**
@@ -72,8 +49,10 @@ module Route {
          */
         public getNewPuzzle(request: express.Request, res: express.Response, next: express.NextFunction) {
             let difficulty = request.params.difficulty;
+            let address = new Address6(request.ip);
+            let ip = address.isLoopback() ? "localhost" : address.to4();
 
-            Dashboard.getInstance().addActivity(new Activity(new Date, Type.GRID_DEMAND, "IP ADDRESS"));
+            Dashboard.getInstance().addActivity(new Activity(new Date, Type.GRID_DEMAND, "ip: " + ip));
 
             if (!GridGenerationManager.isValidDifficulty(difficulty)) {
                 difficulty = Difficulty.NORMAL;
