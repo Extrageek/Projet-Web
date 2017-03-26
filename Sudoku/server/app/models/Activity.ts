@@ -37,9 +37,6 @@ export class Activity {
         return this._description;
     }
 
-    set description(value: String) {
-        this._description = value;
-    }
 }
 
 export enum Type { GRID_GENERATION, GRID_DEMAND }
