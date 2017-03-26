@@ -1,7 +1,7 @@
 //import * as express from 'express';
 
 import { MongoClient, InsertOneWriteOpResult, DeleteWriteOpResultObject, Db } from "mongodb";
-import { Difficulty } from "./models/puzzle";
+import { Difficulty } from "./models/puzzle/difficulty";
 
 export class DatabaseManager {
 

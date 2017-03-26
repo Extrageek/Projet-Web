@@ -1,4 +1,5 @@
-import { IPuzzleItemData, PuzzleItem, Puzzle } from "./../models/puzzle";
+import { Puzzle } from "./../models/puzzle/puzzle";
+import { IPuzzleItemData, PuzzleItem } from "./../models/puzzle/puzzle-item";
 
 export class GridValidationManager {
 

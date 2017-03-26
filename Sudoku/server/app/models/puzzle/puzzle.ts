@@ -1,53 +1,4 @@
-/**
- * puzzle.ts - Represent a Sudoku puzzle/grids
- *
- * @authors ...
- * @date 2017/01/22
- */
-
-export interface IPuzzleItemData {
-    _value: number;
-    _hide: boolean;
-}
-
-export class PuzzleItem {
-    private _value: number;
-    private _hide: boolean;
-    //private _isRed: boolean;
-
-    /**
-     * Extract from an any object the properties _value and _hide to create an object of type PuzzleItem.
-     * A typeError is thrown if the object doesn't contain the properties of the IPuzzleItemData interface.
-     */
-    public static convertObjectToPuzzleItem(object: IPuzzleItemData): PuzzleItem {
-        if (object._value === undefined || object._hide === undefined) {
-            throw new TypeError("The object doesn't have the property _value or _hide.");
-        }
-        return new PuzzleItem(Number(object._value), object._hide);
-    }
-
-    constructor(value: number, hide: boolean) {
-        this._value = value;
-        this._hide = hide;
-        //this._isRed = false;
-    }
-
-    get isHidden(): boolean {
-        return this._hide;
-    }
-
-    set isHidden(hidden: boolean) {
-        this._hide = hidden;
-    }
-
-    get value(): number {
-        return this._value;
-    }
-
-    set value(value: number) {
-        this._value = value;
-    }
-}
+import { IPuzzleItemData, PuzzleItem } from "./puzzle-item";
 
 export class Puzzle {
 
@@ -64,24 +15,6 @@ export class Puzzle {
 
     public _puzzle: Array<Array<PuzzleItem>>;
     private _numberOfHoles: number;
-
-    /*
-    public static convertObjectToPuzzle(object: Array<Array<IPuzzleItemData>>): Puzzle {
-        let puzzle = new Puzzle();
-        for (let row = Puzzle.MIN_ROW_INDEX; row <= Puzzle.MAX_ROW_INDEX; ++row) {
-            if (puzzle[row] === undefined || puzzle[row] === null) {
-                throw new TypeError("The puzzle is not a valid double array of 9 x 9.");
-            }
-            for (let column = Puzzle.MIN_COLUMN_INDEX; row <= Puzzle.MAX_COLUMN_INDEX; ++column) {
-                if (puzzle[row][column] === undefined || puzzle[row][column] === null) {
-                    throw new TypeError("The puzzle is not a valid double array of 9 x 9.");
-                }
-                puzzle.
-            }
-        }
-        return puzzle;
-    }
-    */
 
     private static validateRowColumnIndex(row: number, column: number): boolean {
         return row >= Puzzle.MIN_ROW_INDEX && row <= Puzzle.MAX_ROW_INDEX
@@ -269,10 +202,4 @@ export class Puzzle {
             console.log(toWrite);
         });
     }
-}
-
-export enum Difficulty {
-    NORMAL = 0,
-    HARD = 1,
-    NUMBER_OF_DIFFICULTIES = 2
 }

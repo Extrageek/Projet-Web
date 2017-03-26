@@ -3,10 +3,11 @@ import * as express from "express";
 import { GridGenerationManager } from "./services/grid-generation.service";
 import { GridValidationManager } from "./services/grid-validation.service";
 
-import { Puzzle, Difficulty } from "./models/puzzle";
+import { Puzzle } from "./models/puzzle/puzzle";
+import { Difficulty } from "./models/puzzle/difficulty";
 import { DatabaseManager } from "./database-management";
-import { Dashboard } from "./models/Dashboard";
-import { Activity, Type } from "./models/Activity";
+import { Dashboard } from "./models/dashboard/dashboard";
+import { Activity, Type } from "./models/dashboard/activity";
 
 let Address6 = require('ip-address').Address6;
 let Address4 = require('ip-address').Address4;

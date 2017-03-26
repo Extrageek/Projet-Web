@@ -1,7 +1,8 @@
 import { expect } from 'chai';
 
 import { GridValidationManager } from './../grid-validation.service';
-import { IPuzzleItemData, Puzzle, PuzzleItem } from './../../models/puzzle';
+import { Puzzle } from './../../models/puzzle/puzzle';
+import { IPuzzleItemData, PuzzleItem } from './../../models/puzzle/puzzle-item';
 
 const BAD_GRID_1 = [
     [{ _value: 1, _hide: true }, { _value: 2, _hide: true }, { _value: 3, _hide: true }]

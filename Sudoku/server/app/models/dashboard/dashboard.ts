@@ -1,4 +1,5 @@
-import { Activity } from './Activity';
+import { Activity } from "./activity";
+
 const MAX_NUMBER_OF_ACTIVITIES = 100;
 
 export class Dashboard {
@@ -29,4 +30,3 @@ export class Dashboard {
         }
     }
 }
-

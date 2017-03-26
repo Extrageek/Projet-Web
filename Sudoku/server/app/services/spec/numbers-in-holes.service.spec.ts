@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { NumbersInHoles, FittingNumbers } from "./../numbers-in-holes.service";
-import { Puzzle } from "./../../models/puzzle";
+import { Puzzle } from "./../../models/puzzle/puzzle";
 
 
 function setNoSolutionsConfiguration(puzzle: Puzzle) {

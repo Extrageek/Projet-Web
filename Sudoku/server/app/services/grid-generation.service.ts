@@ -1,14 +1,8 @@
-/**
- * puzzle-manager.service.ts - Manage the puzzles generation
- *
- * @authors ...
- * @date 2017/01/22
- */
-
-import { Puzzle, Difficulty } from "./../models/puzzle";
+import { Puzzle } from "./../models/puzzle/puzzle";
+import { Difficulty } from "./../models/puzzle/difficulty";
 import { GridSolver } from "./grid-solver.service";
-import {Dashboard} from "../models/Dashboard";
-import {Type, Activity} from "../models/Activity";
+import {Dashboard} from "../models/dashboard/dashboard";
+import {Type, Activity} from "../models/dashboard/activity";
 
 // Used to generate the type of transformation and to give a number of holes to dig in sudoku
 function getRandomNumberInRange(min: number, max: number): number {
