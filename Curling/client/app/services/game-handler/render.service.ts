@@ -5,20 +5,18 @@ import {
     LineDashedMaterial, ImageUtils, BackSide, Vector3, Clock
 } from "three";
 
-import { GameStatusService } from './../game-status.service';
-import { CameraService } from './../views/cameras.service';
-import { Arena } from './../../models/scenery/arena';
-import { Rink } from './../../models/scenery/rink';
-import { StoneColor } from './../../models/stone';
-import { RinkInfo } from './../../models/scenery/rink-info.interface';
-import { StoneHandler } from '../game-physics/stone-handler';
-import { CameraType } from '../game-physics/camera-type';
+import { GameStatusService } from "./../game-status.service";
+import { CameraService } from "./../views/cameras.service";
+import { LightingService } from "./../views/ligthing.service";
 
-import { Broom } from './../../models/broom';
+import { StoneHandler } from "../game-physics/stone-handler";
+import { TextureHandler } from "../views/texture-handler";
+import { CameraType } from "../game-physics/camera-type";
 
-import { LightingService } from './../views/ligthing.service';
-import { TextureHandler } from '../views/texture-handler';
-import { IGameInfo } from "./game-info.interface";
+import { Rink } from "./../../models/scenery/rink";
+import { StoneColor } from "./../../models/stone";
+import { Arena } from "./../../models/scenery/arena";
+import { Broom } from "./../../models/broom";
 import { LoadingStone } from "./../../models/states/loading-stone";
 import { PlayerTurn } from "./../../models/states/player-turn";
 import { ComputerTurn } from "./../../models/states/computer-turn";
@@ -26,6 +24,9 @@ import { PlayerShooting } from "./../../models/states/player-shooting";
 import { ComputerShooting } from "./../../models/states/computer-shooting";
 import { EndSet } from "./../../models/states/end-set";
 import { EndGame } from "./../../models/states/end-game";
+
+import { RinkInfo } from "./../../models/scenery/rink-info.interface";
+import { IGameInfo } from "./game-info.interface";
 
 @Injectable()
 export class RenderService {
@@ -37,7 +38,7 @@ export class RenderService {
     private _currentCamera: PerspectiveCamera;
     private _lightingService: LightingService;
     private _objectLoader: ObjectLoader;
-    private _mesh : Mesh;
+    private _mesh: Mesh;
     private _clock: Clock;
     private _renderer: Renderer;
     private _animationStarted: boolean;
@@ -76,7 +77,7 @@ export class RenderService {
     public init(container: HTMLElement) {
         if (this._gameInfo.scene.children.length > 0) {
             this.linkRenderServerToCanvas(container);
-            window.addEventListener('resize', _ => this.onResize());
+            window.addEventListener("resize", _ => this.onResize());
             return;
         }
         //Clock for the time per frame.
@@ -92,21 +93,26 @@ export class RenderService {
         this._lightingService.setUpLighting(this._gameInfo.scene);
 
         //Part 3: Components
-        this.loadTextureHandler();
-        this.loadRink();
-        this.loadArena();
-        this.loadLine();
-        this.loadBroom();
+        this.loadComponents();
+
         //Part 4: Service
         this.linkRenderServerToCanvas(container);
 
         //Part 5: Events
         // bind to window resizes
-        window.addEventListener('resize', _ => this.onResize());
+        window.addEventListener("resize", _ => this.onResize());
     }
 
     get gameInfo(): IGameInfo {
         return this._gameInfo;
+    }
+
+    public loadComponents() {
+        this.loadTextureHandler();
+        this.loadRink();
+        this.loadArena();
+        this.loadLine();
+        this.loadBroom();
     }
 
     public loadLine() {
@@ -134,7 +140,7 @@ export class RenderService {
 
     public linkRenderServerToCanvas(container: HTMLElement) {
         // Inser the canvas into the DOM
-        if (container.getElementsByTagName('canvas').length === 0) {
+        if (container.getElementsByTagName("canvas").length === 0) {
             container.appendChild(this._renderer.domElement);
         }
     }
@@ -229,11 +235,11 @@ export class RenderService {
             if (document.hasFocus()) {
                 this._clock.start();
             }
-            // Add events here to be sure they won't encounter undefined property
-            window.addEventListener('mousemove', (event: MouseEvent) => this.onMouseMove(event));
-            window.addEventListener('keydown', (event: KeyboardEvent) => this.switchSpin(event));
-            window.addEventListener('mousedown', _ => this.onMousePressed());
-            window.addEventListener('mouseup', _ => this.onMouseReleased());
+            // Add events here to be sure they won"t encounter undefined property
+            window.addEventListener("mousemove", (event: MouseEvent) => this.onMouseMove(event));
+            window.addEventListener("keydown", (event: KeyboardEvent) => this.switchSpin(event));
+            window.addEventListener("mousedown", _ => this.onMousePressed());
+            window.addEventListener("mouseup", _ => this.onMouseReleased());
             this.animate();
         }
     }

@@ -7,7 +7,6 @@ import { ComputerTurn } from "./computer-turn";
 
 export class LoadingStone extends AbstractGameState {
 
-
     private static readonly STONE_POSITION_X = 0;
     private static readonly STONE_POSITION_Y = 0;
     private static readonly STONE_POSITION_Z = -18;
@@ -20,7 +19,7 @@ export class LoadingStone extends AbstractGameState {
      *  Only one game state could be constructed with this value at true, because only one game state
      *  must be active at a time.
      */
-    public static createInstance(gameInfo: IGameInfo, doInitialization = false): void {
+    public static createInstance(gameInfo: IGameInfo, doInitialization = false) {
         LoadingStone._instance = new LoadingStone(gameInfo, doInitialization);
     }
 
@@ -41,7 +40,7 @@ export class LoadingStone extends AbstractGameState {
      * @param paramFromLastState Change to the playerTurn after the stone finish loading if 0,
      * change to computerTurn otherwise.
      */
-    protected performEnteringState(): void {
+    protected performEnteringState() {
         this._gameInfo.stoneHandler.generateNewStone()
         .then((stone: Stone) => {
             stone.position.set(
@@ -66,8 +65,6 @@ export class LoadingStone extends AbstractGameState {
     protected performLeavingState() {
         //Nothing to do
     }
-
-    //Nothing to do while loading stone. We wait until the stone finishes to load.
 
     protected performMouseMove(): AbstractGameState {
         return null;

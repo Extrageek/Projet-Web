@@ -1,14 +1,14 @@
-import { UserService } from './../user.service';
-import { Difficulty } from './../../models/difficulty';
-import { RestApiProxyService } from './../rest-api-proxy.service';
+import { UserService } from "./../user.service";
+import { Difficulty } from "./../../models/difficulty";
+import { RestApiProxyService } from "./../rest-api-proxy.service";
 import {
     Http, ResponseOptions,
     Response,
     BaseRequestOptions,
     ConnectionBackend
-} from '@angular/http';
+} from "@angular/http";
 
-import { MockBackend, MockConnection } from '@angular/http/testing';
+import { MockBackend, MockConnection } from "@angular/http/testing";
 import { expect } from "chai";
 import { TestBed, tick, inject, fakeAsync } from "@angular/core/testing";
 

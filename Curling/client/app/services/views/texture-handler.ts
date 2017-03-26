@@ -1,14 +1,13 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, Renderer, ObjectLoader, FontLoader, Geometry, CubeGeometry,
-    TextGeometry, MeshBasicMaterial, MeshFaceMaterial, MeshPhongMaterial, MultiMaterial, Mesh, SpotLight, Group,
-    TextGeometryParameters, Font, ImageUtils, BackSide, FlatShading, SmoothShading, Vector3, Clock } from "three";
+import { Scene, FontLoader, TextGeometry, MeshPhongMaterial, MultiMaterial, Mesh, Group, TextGeometryParameters, Font,
+     Vector3 } from "three";
 
 export class TextureHandler {
 
     private static readonly FONT_LOADER = new FontLoader();
     private static readonly HELVETIKER_FONT = "/assets/fonts/helvetiker_regular.typeface.json";
     private static readonly BEST_FONT = "/assets/fonts/best_font.typeface.json";
-    private _defaultParameters: TextGeometryParameters;
 
+    private _defaultParameters: TextGeometryParameters;
     private _scene: Scene;
     private _allTexts: Object;
     private _textNumber: number;
@@ -51,15 +50,14 @@ export class TextureHandler {
         };
     }
 
-    public addText(positionX: number, positionY: number, positionZ: number,
-        texte: string, textGeometryParameters = this._defaultParameters): number {
+    public addText(position: Vector3, texte: string, textGeometryParameters = this._defaultParameters): number {
             //Create the text.
             let textGeometry = new TextGeometry(texte, textGeometryParameters);
             textGeometry.computeBoundingBox();
-            let textMaterial = new MeshPhongMaterial({color: 0xff0000});
+            let textMaterial = new MeshPhongMaterial({color: THREE.ColorKeywords.red});
             let textMesh = new Mesh(textGeometry, textMaterial);
             textMesh.rotation.set(0, Math.PI, 0);
-            textMesh.position.set(positionX, positionY, positionZ);
+            textMesh.position = position;
             this._scene.add(textMesh);
 
             //Store the informations for future modifications.

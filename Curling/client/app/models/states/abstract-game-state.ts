@@ -1,5 +1,4 @@
 import { IGameInfo } from "./../../services/game-handler/game-info.interface";
-import { forEach } from "@angular/router/src/utils/collection";
 import { GameComponent } from "../game-component.interface";
 
 export abstract class AbstractGameState implements GameComponent {

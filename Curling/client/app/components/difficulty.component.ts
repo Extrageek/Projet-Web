@@ -1,44 +1,45 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, HostListener } from "@angular/core";
+import { Router } from "@angular/router";
 
-import { UserService } from './../services/user.service';
-import { Difficulty } from './../models/difficulty';
-import { RestApiProxyService } from './../services/rest-api-proxy.service';
+import { UserService } from "./../services/user.service";
+import { Difficulty } from "./../models/difficulty";
+import { RestApiProxyService } from "./../services/rest-api-proxy.service";
 
 @Component({
     moduleId: module.id,
-    selector: 'difficulty-component',
-    templateUrl: '/assets/templates/difficulty-component.html',
-    styleUrls: ['../../assets/stylesheets/username-component.css']
+    selector: "difficulty-component",
+    templateUrl: "/assets/templates/difficulty-component.html",
+    styleUrls: ["../../assets/stylesheets/username-component.css"]
 })
 export class DifficultyComponent implements OnInit {
-    _username: string;
-    _difficulty: string;
+    public _username: string;
+    public _difficulty: string;
 
-    constructor(private router: Router,
+    constructor(
+        private router: Router,
         private userSettingService: UserService,
         private api: RestApiProxyService) { }
 
     ngOnInit() {
         this._username = this.userSettingService.name;
         if (this._username === "") {
-            this.router.navigate(['/']);
+            this.router.navigate(["/"]);
         }
         this._difficulty = "0";
     }
 
-    @HostListener('window:beforeunload')
+    @HostListener("window:beforeunload")
     public async logout() {
         await this.api.removeUsername(this._username);
     }
 
     public launchGame() {
-        let RADIX = 10;
+        const RADIX = 10;
         if (parseInt(this._difficulty, RADIX) === 0) {
             this.userSettingService.difficulty = Difficulty.NORMAL;
         } else {
             this.userSettingService.difficulty = Difficulty.HARD;
         }
-        this.router.navigate(['/game']);
+        this.router.navigate(["/game"]);
     }
 }

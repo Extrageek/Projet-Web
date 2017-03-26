@@ -176,45 +176,50 @@ export class StoneHandler implements GameComponent {
 
     private changeSpeedAndDirectionOfStones(stonesHit: Array<Stone>, stoneHiting: Stone) {
         if (stonesHit.length === 1) {
-
-            let stoneToStoneVector: Vector3 = stonesHit[0].position.clone().sub(stoneHiting.position).normalize();
-
-            let newDirection: Vector3 = stonesHit[0].direction.clone().multiplyScalar(stonesHit[0].speed)
-                .add(stoneHiting.direction.clone().multiplyScalar(stoneHiting.speed)
-                    .add(stoneToStoneVector))
-                .normalize();
-
-            let totalSpeed = stonesHit[0].speed + stoneHiting.speed;
-
-            stonesHit[0].speed = totalSpeed * StoneHandler.COLLISION_SPEED_TRANSFERED_PERCENT
-                * (newDirection.clone().dot(stoneToStoneVector) / newDirection.length());
-            stonesHit[0].direction = newDirection;
-
-            stoneHiting.speed = totalSpeed * StoneHandler.COLLISION_SPEED_KEEP_PERCENT
-                * (1 - newDirection.clone().dot(stoneToStoneVector) / newDirection.length());
-            stoneHiting.direction = newDirection.clone()
-                .applyAxisAngle(stoneToStoneVector.cross(new Vector3(0, 1, 0)), -Math.PI);
-
+            this.changeSpeedAndDirectionOfStonesOneCollision(stonesHit[0], stoneHiting);
         } else if (stonesHit.length > 1) { // Collided with more than one stone
-
-            let symmetryAxisVector: Vector3 = new Vector3(0, 0, 0);
-            let totalSpeed: number = stoneHiting.speed;
-            stonesHit.map((stone: Stone) => {
-                symmetryAxisVector.add(stone.direction);
-                totalSpeed += stone.speed;
-            });
-            symmetryAxisVector.normalize();
-
-            stoneHiting.revertToLastPosition(); // Revert position to prevent the stone to be stucked
-            stoneHiting.direction = symmetryAxisVector;
-            stoneHiting.speed = totalSpeed * (1 - StoneHandler.COLLISION_SPEED_KEEP_PERCENT) / stonesHit.length;
-
-            stonesHit.map((stone: Stone) => {
-                stone.speed = totalSpeed / (stonesHit.length) * StoneHandler.COLLISION_SPEED_TRANSFERED_PERCENT;
-                stone.direction = stone.position.clone().sub(stoneHiting.position).normalize();
-            });
+            this.changeSpeedAndDirectionOfStonesMultipleCollisions(stonesHit, stoneHiting);
         } else {
             console.error("changeSpeedAndDirectionOfStones : stonesHit array empty or invalid...");
         }
+    }
+
+    private changeSpeedAndDirectionOfStonesOneCollision(stoneHit: Stone, stoneHiting: Stone) {
+        let stoneToStoneVector: Vector3 = stoneHit.position.clone().sub(stoneHiting.position).normalize();
+
+        let newDirection: Vector3 = stoneHit.direction.clone().multiplyScalar(stoneHit.speed)
+            .add(stoneHiting.direction.clone().multiplyScalar(stoneHiting.speed)
+                .add(stoneToStoneVector))
+            .normalize();
+
+        let totalSpeed = stoneHit.speed + stoneHiting.speed;
+
+        stoneHit.speed = totalSpeed * StoneHandler.COLLISION_SPEED_TRANSFERED_PERCENT
+            * (newDirection.clone().dot(stoneToStoneVector) / newDirection.length());
+        stoneHit.direction = newDirection;
+
+        stoneHiting.speed = totalSpeed * StoneHandler.COLLISION_SPEED_KEEP_PERCENT
+            * (1 - newDirection.clone().dot(stoneToStoneVector) / newDirection.length());
+        stoneHiting.direction = newDirection.clone()
+            .applyAxisAngle(stoneToStoneVector.cross(new Vector3(0, 1, 0)), -Math.PI);
+    }
+
+    private changeSpeedAndDirectionOfStonesMultipleCollisions(stonesHit: Array<Stone>, stoneHiting: Stone) {
+        let symmetryAxisVector: Vector3 = new Vector3(0, 0, 0);
+        let totalSpeed: number = stoneHiting.speed;
+        stonesHit.map((stone: Stone) => {
+            symmetryAxisVector.add(stone.direction);
+            totalSpeed += stone.speed;
+        });
+        symmetryAxisVector.normalize();
+
+        stoneHiting.revertToLastPosition(); // Revert position to prevent the stone to be stucked
+        stoneHiting.direction = symmetryAxisVector;
+        stoneHiting.speed = totalSpeed * (1 - StoneHandler.COLLISION_SPEED_KEEP_PERCENT) / stonesHit.length;
+
+        stonesHit.map((stone: Stone) => {
+            stone.speed = totalSpeed / (stonesHit.length) * StoneHandler.COLLISION_SPEED_TRANSFERED_PERCENT;
+            stone.direction = stone.position.clone().sub(stoneHiting.position).normalize();
+        });
     }
 }

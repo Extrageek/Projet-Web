@@ -1,5 +1,6 @@
 import { ObjectLoader, Group, MeshPhongMaterial, Object3D, BoxGeometry, Vector3 } from "three";
 import { Stone } from "./stone";
+
 export class Broom extends Group {
 
     private static readonly BROOM_PATH = "/assets/models/json/broom.json";
@@ -32,20 +33,12 @@ export class Broom extends Group {
         this._boundingSphere = new THREE.Sphere(this.position, Broom.BOUNDING_SPHERE_RADIUS);
     }
 
-    public changeToGreen() {
+    public changeColourTo(newColour: number) {
         for (let i = 0; i < this.children.length; i++) {
             let child = this.children[i];
-            (<THREE.MeshStandardMaterial>(<THREE.Mesh>child).material).emissive.setHex(0x00ff00);
+            (<THREE.MeshStandardMaterial>(<THREE.Mesh>child).material).emissive.setHex(newColour);
         }
         this._redBroom = false;
-    }
-
-    public changeToRed() {
-        for (let i = 0; i < this.children.length; i++) {
-            let child = this.children[i];
-            (<THREE.MeshStandardMaterial>(<THREE.Mesh>child).material).emissive.setHex(0xff0000);
-        }
-        this._redBroom = true;
     }
 
     public isRed(): Boolean {

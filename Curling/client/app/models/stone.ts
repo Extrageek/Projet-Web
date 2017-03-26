@@ -18,21 +18,18 @@ export class Stone extends Group implements GameComponent {
     private static readonly STONES_PATH =
     ["/assets/models/json/curling-stone-blue.json", "/assets/models/json/curling-stone-red.json"];
     private static readonly BOUNDING_SPHERE_RADIUS = 0.26;
+    private static readonly THETA = Math.PI / 25000;
+    private static readonly ONE_SECOND = 1000;
+    private static readonly TEN_MILLISECONDS = 10;
     private static readonly SCALE = { x: 1, y: 1, z: 1 };
     private static readonly MATERIAL_PROPERTIES = { wireframe: false, shininess: 0.7 };
     public static readonly SPEED_DIMINUTION_NUMBER = 0.25;
     public static readonly SPEED_DIMINUTION_NUMBER_WITH_SWEEP = 0.09;
     private static readonly MINIMUM_SPEED = 0.001;
+    private static readonly SECONDS_PER_FULL_ROTATION = 4;
     //private static readonly SWEEPING_CURL_COEFF = 0.0001;
 
     private _theta: number;
-    public get theta(): number {
-        return this._theta;
-    }
-    public set theta(angle: number) {
-        this._theta = angle;
-    }
-
     public _material: MeshPhongMaterial;
     private _stoneColor: StoneColor;
     //Speed orientation and quantity in meters per second
@@ -46,8 +43,66 @@ export class Stone extends Group implements GameComponent {
     private _lastPosition: Vector3;
     private _curlMatrix: Matrix3;
 
-    public static createStone(objectLoader: ObjectLoader, stoneColor: StoneColor,
-        initialPosition: Vector3): Promise<Stone> {
+    public get theta(): number {
+        return this._theta;
+    }
+    public set theta(angle: number) {
+        this._theta = angle;
+    }
+
+    public get boundingSphere(): Sphere {
+        return this._boundingSphere;
+    }
+
+    //Used by the renderer to get the material of the group.
+    public get material() {
+        return this._material;
+    }
+
+    public get stoneColor() {
+        return this._stoneColor;
+    }
+
+    public get isSweeping(): boolean {
+        return this._sweeping;
+    }
+
+    public set sweeping(sweep: boolean) {
+        this._sweeping = sweep;
+    }
+
+    public get speed(): number {
+        return this._speed;
+    }
+
+    public set speed(speed: number) {
+        if (speed == null || speed === undefined || speed < 0) {
+            throw new Error("The speed cannot be null or less than 0.");
+        }
+        this._speed = speed;
+    }
+
+    public get direction(): Vector3 {
+        return this._direction;
+    }
+
+    public set direction(direction: Vector3) {
+        if (direction === null || direction === undefined) {
+            throw new Error("The direction is not a valid vector.");
+        }
+        this._direction = direction.normalize();
+    }
+
+    public get spin(): StoneSpin {
+        return this._spin;
+    }
+
+    public set spin(s: StoneSpin) {
+        this._spin = s;
+    }
+
+    public static createStone(objectLoader: ObjectLoader, stoneColor: StoneColor, initialPosition: Vector3)
+        : Promise<Stone> {
         return new Promise<Stone>((resolve, reject) => {
             objectLoader.load(
                 Stone.STONES_PATH[stoneColor],
@@ -77,59 +132,8 @@ export class Stone extends Group implements GameComponent {
         this._boundingSphere = new Sphere(this.position, Stone.BOUNDING_SPHERE_RADIUS);
         this._lastBoundingSphere = this._boundingSphere;
         this._lastPosition = this.position;
-        this.theta = Math.PI / 25000;
+        this.theta = Stone.THETA;
         this._curlMatrix = new Matrix3();
-    }
-
-    public get boundingSphere(): Sphere {
-        return this._boundingSphere;
-    }
-
-    //Used by the renderer to get the material of the group.
-    public get material() {
-        return this._material;
-    }
-
-    public get stoneColor() {
-        return this._stoneColor;
-    }
-
-    public get isSweeping(): boolean {
-        return this._sweeping;
-    }
-
-    public set sweeping(sweep: boolean) {
-        this._sweeping = sweep;
-    }
-
-    public get speed(): number {
-        return this._speed;
-    }
-
-    public set speed(speed: number) {
-        if (speed === null || speed === undefined || speed < 0) {
-            throw new Error("The speed cannot be null or less than 0.");
-        }
-        this._speed = speed;
-    }
-
-    public get direction(): Vector3 {
-        return this._direction;
-    }
-
-    public set direction(direction: Vector3) {
-        if (direction === null || direction === undefined) {
-            throw new Error("The direction is not a valid vector.");
-        }
-        this._direction = direction.normalize();
-    }
-
-    public get spin(): StoneSpin {
-        return this._spin;
-    }
-
-    public set spin(s: StoneSpin) {
-        this._spin = s;
     }
 
     public revertToLastPosition() {
@@ -150,8 +154,19 @@ export class Stone extends Group implements GameComponent {
                 * Math.pow(timePerFrame, 2) / 2)
             ));
             this.position.y = 0;
+            this.stoneSpinning(timePerFrame);
             this.decrementSpeed(timePerFrame);
             this.calculateNewBoundingSphere();
+        }
+    }
+
+    private stoneSpinning(timePerFrame: number) {
+        let rotationAngle = 2 * Math.PI * timePerFrame / Stone.SECONDS_PER_FULL_ROTATION;
+        if (this.spin === StoneSpin.Clockwise) {
+            this.rotateY(-rotationAngle);
+        }
+        else {
+            this.rotateY(rotationAngle);
         }
     }
 
@@ -196,12 +211,12 @@ export class Stone extends Group implements GameComponent {
                         (<THREE.Mesh>child).material.opacity -= 0.01;
                     }
                 });
-                millisecond += 10;
-                if (millisecond === 1000) {
+                millisecond += Stone.TEN_MILLISECONDS;
+                if (millisecond === Stone.ONE_SECOND) {
                     observer.next();
                     clearTimeout(id);
                 }
-            }, 10);
+            }, Stone.TEN_MILLISECONDS);
         });
         return observable;
     }

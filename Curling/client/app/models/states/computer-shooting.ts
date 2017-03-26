@@ -1,7 +1,6 @@
 import { AbstractGameState } from "./abstract-game-state";
 import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { LoadingStone } from "./loading-stone";
-import { CameraType } from "./../../services/game-physics/camera-type";
 import { EndSet } from "./end-set";
 import { GameComponent } from "../../models/game-component.interface";
 
@@ -16,7 +15,7 @@ export class ComputerShooting extends AbstractGameState {
      *  Only one game state could be constructed with this value at true, because only one game state
      *  must be active at a time.
      */
-    public static createInstance(gameInfo: IGameInfo, doInitialization = false): void {
+    public static createInstance(gameInfo: IGameInfo, doInitialization = false) {
         ComputerShooting._instance = new ComputerShooting(gameInfo, doInitialization);
     }
 
@@ -32,7 +31,7 @@ export class ComputerShooting extends AbstractGameState {
         super(gameInfo, doInitialization);
     }
 
-    protected performEnteringState(): void {
+    protected performEnteringState() {
         this._gameInfo.stoneHandler.performShot(
             this._gameInfo.direction,
             this._gameInfo.speed,

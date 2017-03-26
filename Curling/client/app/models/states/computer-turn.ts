@@ -2,7 +2,6 @@ import { Vector3 } from "three";
 
 import { AbstractGameState } from "./abstract-game-state";
 import { IGameInfo } from "./../../services/game-handler/game-info.interface";
-import { CurrentPlayer } from "../../models/current-player";
 import { ComputerShooting } from "./computer-shooting";
 
 export class ComputerTurn extends AbstractGameState {
@@ -19,7 +18,7 @@ export class ComputerTurn extends AbstractGameState {
      *  Only one game state could be constructed with this value at true, because only one game state
      *  must be active at a time.
      */
-    public static createInstance(gameInfo: IGameInfo, doInitialization = false): void {
+    public static createInstance(gameInfo: IGameInfo, doInitialization = false) {
         ComputerTurn._instance = new ComputerTurn(gameInfo, doInitialization);
     }
 
@@ -35,7 +34,7 @@ export class ComputerTurn extends AbstractGameState {
         super(gameInfo, doInitialization);
     }
 
-    protected performEnteringState(): void {
+    protected performEnteringState() {
         this._gameInfo.speed = this._speed;
         this._gameInfo.direction = new Vector3(0, 0, 1);
         this.leaveState(ComputerShooting.getInstance());

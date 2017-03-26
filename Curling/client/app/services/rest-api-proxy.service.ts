@@ -1,17 +1,17 @@
-import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Injectable } from "@angular/core";
+import { Headers, Http, Response } from "@angular/http";
 
-import 'rxjs/add/operator/toPromise';
+import "rxjs/add/operator/toPromise";
 
-import { GameStatusService } from './game-status.service';
-import { Difficulty } from './../models/difficulty';
-import { Record } from './../models/record';
+import { GameStatusService } from "./game-status.service";
+import { Difficulty } from "./../models/difficulty";
+import { Record } from "./../models/record";
 
 
 @Injectable()
 export class RestApiProxyService {
     private _urlApi = "http://localhost:3003/api/";
-    private _headers = new Headers({ 'Content-Type': "application/json" });
+    private _headers = new Headers({ "Content-Type": "application/json" });
 
     constructor(private http: Http) { }
 
@@ -95,7 +95,10 @@ export class RestApiProxyService {
                 console.error("ERROR - Rest api getAllRecords - Une erreur est survenue - ", error);
                 throw error;
             });
-        //console.log(records);
         return records;
+    }
+
+    public isResponseValid(response: Response) {
+        return response.status === 200 ? true : false;
     }
 }
