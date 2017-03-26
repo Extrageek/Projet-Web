@@ -159,7 +159,7 @@ describe("PuzzleItem should", () => {
     });
 
     it("be created from an object", () => {
-        let puzzleItemData: IPuzzleItemData = {_value: 3, _hide: true};
+        let puzzleItemData: IPuzzleItemData = { _value: 3, _hide: true };
         let puzzleItem = PuzzleItem.convertObjectToPuzzleItem(puzzleItemData);
         expect(puzzleItem.isHidden, "should be hidden").to.equals(true);
         expect(puzzleItem.value, "should contain 3").to.equals(3);

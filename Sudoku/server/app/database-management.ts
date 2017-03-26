@@ -103,21 +103,21 @@ export class DatabaseManager {
 
     public async saveGameRecord(body: any): Promise<boolean> {
         let isInserted = false;
-            console.log("-- DatabaseManager saveGameRecord --");
-            let collection = this._dbConnection.collection('leaderboard');
-            await collection.insertOne(body)
-                .then((result: InsertOneWriteOpResult) => {
-                    if (result.insertedCount === 1) {
-                        isInserted = true;
-                        console.log("-- game record inserted --");
-                    }
-                    else {
-                        console.log("-- game record not inserted --");
-                    }
-                })
-                .catch((reason) => {
-                    console.log("An exception occur while removing user : " + reason);
-                });
+        console.log("-- DatabaseManager saveGameRecord --");
+        let collection = this._dbConnection.collection('leaderboard');
+        await collection.insertOne(body)
+            .then((result: InsertOneWriteOpResult) => {
+                if (result.insertedCount === 1) {
+                    isInserted = true;
+                    console.log("-- game record inserted --");
+                }
+                else {
+                    console.log("-- game record not inserted --");
+                }
+            })
+            .catch((reason) => {
+                console.log("An exception occur while removing user : " + reason);
+            });
         return isInserted;
     }
 }

@@ -16,17 +16,17 @@ import * as http from "http";
  * @param val Valeur du port d"écoute.
  * @returns Le port normalisé.
  */
-function normalizePort(val: number|string): number|string|boolean {
-  let port: number = (typeof val === "string") ? parseInt(val, 10) : val;
-  if (isNaN(port)) {
-    return val;
-  }
-  else if (port >= 0) {
-    return port;
-  }
-  else {
-    return false;
-  }
+function normalizePort(val: number | string): number | string | boolean {
+    let port: number = (typeof val === "string") ? parseInt(val, 10) : val;
+    if (isNaN(port)) {
+        return val;
+    }
+    else if (port >= 0) {
+        return port;
+    }
+    else {
+        return false;
+    }
 }
 
 const appPort = normalizePort(process.env.PORT || "3002");
@@ -58,16 +58,16 @@ DatabaseManager.createDatabaseManager()
             }
             let bind = (typeof appPort === "string") ? "Pipe " + appPort : "Port " + appPort;
             switch (error.code) {
-            case "EACCES":
-                console.error(`${bind} requires elevated privileges`);
-                process.exit(1);
-                break;
-            case "EADDRINUSE":
-                console.error(`${bind} is already in use`);
-                process.exit(1);
-                break;
-            default:
-                throw error;
+                case "EACCES":
+                    console.error(`${bind} requires elevated privileges`);
+                    process.exit(1);
+                    break;
+                case "EADDRINUSE":
+                    console.error(`${bind} is already in use`);
+                    process.exit(1);
+                    break;
+                default:
+                    throw error;
             }
         });
 

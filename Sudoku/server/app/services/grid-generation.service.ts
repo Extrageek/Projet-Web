@@ -52,9 +52,9 @@ export class GridGenerationManager {
 
                 setTimeout(() => {
                     this.performGenerationWithDelay(difficulty)
-                    .then((puzzle: Puzzle) => {
-                        this._sudokusGenerated[difficulty].push(puzzle);
-                    });
+                        .then((puzzle: Puzzle) => {
+                            this._sudokusGenerated[difficulty].push(puzzle);
+                        });
                 }, 0);
             }
             else {
@@ -69,11 +69,11 @@ export class GridGenerationManager {
     //Generate a new puzzle and wait until 5 seconds is elapsed to return the sudoku generated.
     private performGenerationWithDelay(difficulty: Difficulty): Promise<Puzzle> {
         return new Promise<Puzzle>((resolve, reject) => {
-                let time = Date.now();
-                let sudokuGenerated = this.generateNewPuzzle(difficulty);
-                let intervalOfTimeForGeneration = Date.now() - time;
-                let waitTime = (GridGenerationManager.MILLISECONDS_TO_WAIT - intervalOfTimeForGeneration);
-                setTimeout(resolve.bind(resolve, sudokuGenerated), waitTime > 0 ? waitTime : 0);
+            let time = Date.now();
+            let sudokuGenerated = this.generateNewPuzzle(difficulty);
+            let intervalOfTimeForGeneration = Date.now() - time;
+            let waitTime = (GridGenerationManager.MILLISECONDS_TO_WAIT - intervalOfTimeForGeneration);
+            setTimeout(resolve.bind(resolve, sudokuGenerated), waitTime > 0 ? waitTime : 0);
         });
     }
 
@@ -146,16 +146,16 @@ export class GridGenerationManager {
 
     private hideNumbers(newPuzzle: Puzzle, numbersToRemove: number) {
         let gridSolver = new GridSolver(newPuzzle);
-        let validIndexesRow = [0, 1, 2, 3 , 4, 5, 6, 7, 8];
-        let validIndexesColumn = [[0, 1, 2, 3 , 4, 5, 6, 7, 8],
-                            [0, 1, 2, 3 , 4, 5, 6, 7, 8],
-                            [0, 1, 2, 3 , 4, 5, 6, 7, 8],
-                            [0, 1, 2, 3 , 4, 5, 6, 7, 8],
-                            [0, 1, 2, 3 , 4, 5, 6, 7, 8],
-                            [0, 1, 2, 3 , 4, 5, 6, 7, 8],
-                            [0, 1, 2, 3 , 4, 5, 6, 7, 8],
-                            [0, 1, 2, 3 , 4, 5, 6, 7, 8],
-                            [0, 1, 2, 3 , 4, 5, 6, 7, 8]];
+        let validIndexesRow = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+        let validIndexesColumn = [[0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3, 4, 5, 6, 7, 8]];
         let numberOfRemovedNumbers = 0;
         while (validIndexesRow.length > 0 && numberOfRemovedNumbers < numbersToRemove) {
             let rowValidIndex = getRandomNumberInRange(0, validIndexesRow.length - 1);

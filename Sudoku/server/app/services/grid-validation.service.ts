@@ -77,8 +77,8 @@ export class GridValidationManager {
     public hasNoRepeatedNumbersInRange(minRow: number, maxRow: number, minColumn: number, maxColumn: number): boolean {
         if (minRow < Puzzle.MIN_ROW_INDEX || maxRow > Puzzle.MAX_ROW_INDEX || minColumn < Puzzle.MIN_COLUMN_INDEX
             || maxColumn > Puzzle.MAX_COLUMN_INDEX || minRow > maxRow || minColumn > maxColumn) {
-                throw new RangeError("One parameter is invalid. The min must be smaller or equals than the max"
-                    + " and they must be in the range of the sudoku index.");
+            throw new RangeError("One parameter is invalid. The min must be smaller or equals than the max"
+                + " and they must be in the range of the sudoku index.");
         }
 
         let noRepetitions = true;

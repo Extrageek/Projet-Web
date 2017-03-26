@@ -1,7 +1,7 @@
 import { expect } from "chai";
 
-import { GridGenerationManager } from "./grid-generation.service";
-import { Puzzle, PuzzleItem, Difficulty } from "./../models/puzzle";
+import { GridGenerationManager } from "./../grid-generation.service";
+import { Puzzle, PuzzleItem, Difficulty } from "./../../models/puzzle";
 
 let gridGenerationManager = new GridGenerationManager();
 

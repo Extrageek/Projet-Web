@@ -1,20 +1,20 @@
 import { expect } from 'chai';
 
-import { GridValidationManager } from './grid-validation.service';
-import { IPuzzleItemData, Puzzle, PuzzleItem } from './../models/puzzle';
+import { GridValidationManager } from './../grid-validation.service';
+import { IPuzzleItemData, Puzzle, PuzzleItem } from './../../models/puzzle';
 
 const BAD_GRID_1 = [
-    [{_value: 1, _hide: true}, {_value: 2, _hide: true}, {_value: 3, _hide: true}]
+    [{ _value: 1, _hide: true }, { _value: 2, _hide: true }, { _value: 3, _hide: true }]
 ];
 
 const BAD_GRID_2 = [
-    [{_value: 1, _hide: true}, {_value: 2, _hide: true}, {_value: 3, _hide: true},
-    {_value: 4, _hide: true}, {_value: 5, _hide: true}, {_value: 6, _hide: true},
-    {_value: 7, _hide: true}, {_value: 8, _hide: true}, {_value: 9, _hide: true}]
+    [{ _value: 1, _hide: true }, { _value: 2, _hide: true }, { _value: 3, _hide: true },
+    { _value: 4, _hide: true }, { _value: 5, _hide: true }, { _value: 6, _hide: true },
+    { _value: 7, _hide: true }, { _value: 8, _hide: true }, { _value: 9, _hide: true }]
 ];
 
 const BAD_GRID_3 = [
-    [{_value: 1, _hide: true}, {_value: 2, _hide: true}, null]
+    [{ _value: 1, _hide: true }, { _value: 2, _hide: true }, null]
 ];
 
 
@@ -120,20 +120,20 @@ const GRID_NOT_VALID = [
 describe("Grid validation manager - constructions", () => {
 
     it("should throw exceptions because of invalid data structure", () => {
-        expect(() => {new GridValidationManager(null); }, "should not accept null value.").to.throw(Error);
-        expect(() => {GridValidationManager.convertObjectToAnArrayOfPuzzleItem(BAD_GRID_1); },
+        expect(() => { new GridValidationManager(null); }, "should not accept null value.").to.throw(Error);
+        expect(() => { GridValidationManager.convertObjectToAnArrayOfPuzzleItem(BAD_GRID_1); },
             "should not accept BAD_GRID_1.").to.throw(TypeError);
-        expect(() => {GridValidationManager.convertObjectToAnArrayOfPuzzleItem(BAD_GRID_2); },
+        expect(() => { GridValidationManager.convertObjectToAnArrayOfPuzzleItem(BAD_GRID_2); },
             "should not accept BAD_GRID_2.").to.throw(TypeError);
-        expect(() => {GridValidationManager.convertObjectToAnArrayOfPuzzleItem(BAD_GRID_3); },
+        expect(() => { GridValidationManager.convertObjectToAnArrayOfPuzzleItem(BAD_GRID_3); },
             "should not accept BAD_GRID_3.").to.throw(TypeError);
     });
 
     it("should not construct a double array of PuzzleItem from a doubleArray of IPuzzleItemData", () => {
         let badObject1: Array<Array<IPuzzleItemData>> = [null];
-        let badObject2: Array<Array<IPuzzleItemData>> = [[{_value: 1, _hide: true}]];
-        expect(() => {GridValidationManager.convertObjectToAnArrayOfPuzzleItem(badObject1); }).to.throw(TypeError);
-        expect(() => {GridValidationManager.convertObjectToAnArrayOfPuzzleItem(badObject2); }).to.throw(TypeError);
+        let badObject2: Array<Array<IPuzzleItemData>> = [[{ _value: 1, _hide: true }]];
+        expect(() => { GridValidationManager.convertObjectToAnArrayOfPuzzleItem(badObject1); }).to.throw(TypeError);
+        expect(() => { GridValidationManager.convertObjectToAnArrayOfPuzzleItem(badObject2); }).to.throw(TypeError);
     });
 
     it("should construct a double array of PuzzleItem from a doubleArray of IPuzzleItemData", () => {
@@ -141,10 +141,10 @@ describe("Grid validation manager - constructions", () => {
         for (let row = Puzzle.MIN_ROW_INDEX; row <= Puzzle.MAX_ROW_INDEX; ++row) {
             arrayOfIPuzzleData.push(new Array<IPuzzleItemData>());
             for (let column = Puzzle.MIN_COLUMN_INDEX; column <= Puzzle.MAX_COLUMN_INDEX; ++column) {
-                arrayOfIPuzzleData[row].push({_value: 1, _hide: false});
+                arrayOfIPuzzleData[row].push({ _value: 1, _hide: false });
             }
         }
-        expect(() => {GridValidationManager.convertObjectToAnArrayOfPuzzleItem(arrayOfIPuzzleData); })
+        expect(() => { GridValidationManager.convertObjectToAnArrayOfPuzzleItem(arrayOfIPuzzleData); })
             .to.not.throw(TypeError);
     });
 });
@@ -158,22 +158,22 @@ describe("Grid validation manager - Invalid grid", () => {
     });
 
     it("should return false with a duplicated number error in the current row", () => {
-            expect(gridValidationManager.hasNoRepeatedNumbersInRange(0, 0,
-                Puzzle.MIN_COLUMN_INDEX, Puzzle.MAX_COLUMN_INDEX)).to.be.false;
+        expect(gridValidationManager.hasNoRepeatedNumbersInRange(0, 0,
+            Puzzle.MIN_COLUMN_INDEX, Puzzle.MAX_COLUMN_INDEX)).to.be.false;
     });
 
     it("should return false with a duplicated number error in the current column", () => {
-            expect(gridValidationManager.hasNoRepeatedNumbersInRange(Puzzle.MIN_ROW_INDEX, Puzzle.MAX_ROW_INDEX,
-                0, 0)).to.be.false;
+        expect(gridValidationManager.hasNoRepeatedNumbersInRange(Puzzle.MIN_ROW_INDEX, Puzzle.MAX_ROW_INDEX,
+            0, 0)).to.be.false;
     });
 
     it("should return false with a duplicated number error in the first square", () => {
-            expect(gridValidationManager.hasNoRepeatedNumbersInRange(Puzzle.MIN_ROW_INDEX, Puzzle.SQUARE_LENGTH - 1,
-                Puzzle.MIN_COLUMN_INDEX, Puzzle.SQUARE_LENGTH - 1)).to.be.false;
+        expect(gridValidationManager.hasNoRepeatedNumbersInRange(Puzzle.MIN_ROW_INDEX, Puzzle.SQUARE_LENGTH - 1,
+            Puzzle.MIN_COLUMN_INDEX, Puzzle.SQUARE_LENGTH - 1)).to.be.false;
     });
 
     it("should return false for a grid with at least an invalid row", () => {
-            expect(gridValidationManager.validateRows()).to.be.false;
+        expect(gridValidationManager.validateRows()).to.be.false;
     });
 
     it("should return false for a grid with at least an invalid column",
@@ -187,7 +187,7 @@ describe("Grid validation manager - Invalid grid", () => {
     });
 
     it("should return false for an invalid grid.", () => {
-            expect(gridValidationManager.validateGrid()).to.be.false;
+        expect(gridValidationManager.validateGrid()).to.be.false;
     });
 });
 
@@ -201,33 +201,33 @@ describe("Grid Validation Manager - valid grid", () => {
     });
 
     it("should return true for a valid row", () => {
-            expect(gridValidationManager.hasNoRepeatedNumbersInRange(0, 0,
-                Puzzle.MIN_COLUMN_INDEX, Puzzle.MAX_COLUMN_INDEX)).to.be.true;
+        expect(gridValidationManager.hasNoRepeatedNumbersInRange(0, 0,
+            Puzzle.MIN_COLUMN_INDEX, Puzzle.MAX_COLUMN_INDEX)).to.be.true;
     });
 
     it("should return true for a valid column", () => {
-            expect(gridValidationManager.hasNoRepeatedNumbersInRange(Puzzle.MIN_ROW_INDEX, Puzzle.MAX_ROW_INDEX,
-                0, 0)).to.be.true;
+        expect(gridValidationManager.hasNoRepeatedNumbersInRange(Puzzle.MIN_ROW_INDEX, Puzzle.MAX_ROW_INDEX,
+            0, 0)).to.be.true;
     });
 
     it("should return true for a valid square", () => {
-            expect(gridValidationManager.hasNoRepeatedNumbersInRange(Puzzle.MIN_ROW_INDEX, Puzzle.SQUARE_LENGTH - 1,
-                Puzzle.MIN_COLUMN_INDEX, Puzzle.SQUARE_LENGTH - 1)).to.be.true;
+        expect(gridValidationManager.hasNoRepeatedNumbersInRange(Puzzle.MIN_ROW_INDEX, Puzzle.SQUARE_LENGTH - 1,
+            Puzzle.MIN_COLUMN_INDEX, Puzzle.SQUARE_LENGTH - 1)).to.be.true;
     });
 
     it("should return true for a grid with valid rows", () => {
-            expect(gridValidationManager.validateRows()).to.be.true;
+        expect(gridValidationManager.validateRows()).to.be.true;
     });
 
     it("should return true for a grid with valid columns", () => {
-            expect(gridValidationManager.validateColumns()).to.be.true;
+        expect(gridValidationManager.validateColumns()).to.be.true;
     });
 
     it("should return true for a grid with valid squares", () => {
-            expect(gridValidationManager.validateSquares()).to.be.true;
+        expect(gridValidationManager.validateSquares()).to.be.true;
     });
 
     it("should return true for a valid grid", () => {
-            expect(gridValidationManager.validateGrid()).to.be.true;
+        expect(gridValidationManager.validateGrid()).to.be.true;
     });
 });
