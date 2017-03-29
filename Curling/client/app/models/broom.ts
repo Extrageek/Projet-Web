@@ -38,7 +38,11 @@ export class Broom extends Group {
             let child = this.children[i];
             (<THREE.MeshStandardMaterial>(<THREE.Mesh>child).material).emissive.setHex(newColour);
         }
-        this._redBroom = false;
+        if (THREE.ColorKeywords.green === newColour) {
+            this._redBroom = false;
+        } else if (THREE.ColorKeywords.red === newColour) {
+            this._redBroom = true;
+        }
     }
 
     public isRed(): Boolean {
