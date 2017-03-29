@@ -1,4 +1,5 @@
-import { Activity } from './Activity';
+import { Activity } from "./activity";
+
 const MAX_NUMBER_OF_ACTIVITIES = 100;
 
 export class Dashboard {
@@ -6,11 +7,9 @@ export class Dashboard {
     private _activities: Activity[];
 
     public static getInstance(): Dashboard {
-
         if (Dashboard._instance === null || Dashboard._instance === undefined) {
             Dashboard._instance = new Dashboard();
         }
-
         return Dashboard._instance;
     }
 
@@ -29,4 +28,3 @@ export class Dashboard {
         }
     }
 }
-

@@ -1,6 +1,6 @@
 import { expect } from "chai";
-import { GridSolver } from "./grid-solver.service";
-import { Puzzle } from "../models/Puzzle";
+import { GridSolver } from "./../grid-solver.service";
+import { Puzzle } from "./../../models/puzzle/puzzle";
 
 /*
 Generate that sudoku.
@@ -104,7 +104,7 @@ describe("GridSolver should", () => {
         expect(gridSolver.getNumberOfSolutionsAfterRemovingNumber(2, 2)).to.be.equal(1);
     });
 
-    it("say that the number of solutions is zero.", function() {
+    it("say that the number of solutions is zero.", function () {
         puzzleUsed.hideAllItemsInRange(Puzzle.MIN_ROW_INDEX, Puzzle.MAX_ROW_INDEX
             , Puzzle.MIN_COLUMN_INDEX, Puzzle.MAX_COLUMN_INDEX);
         puzzleUsed.setPuzzleTileVisibility(3, 2, false);

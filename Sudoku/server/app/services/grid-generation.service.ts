@@ -1,14 +1,8 @@
-/**
- * puzzle-manager.service.ts - Manage the puzzles generation
- *
- * @authors ...
- * @date 2017/01/22
- */
-
-import { Puzzle, Difficulty } from "./../models/puzzle";
+import { Puzzle } from "./../models/puzzle/puzzle";
+import { Difficulty } from "./../models/puzzle/difficulty";
 import { GridSolver } from "./grid-solver.service";
-import {Dashboard} from "../models/Dashboard";
-import {Type, Activity} from "../models/Activity";
+import {Dashboard} from "../models/dashboard/dashboard";
+import {Type, Activity} from "../models/dashboard/activity";
 
 // Used to generate the type of transformation and to give a number of holes to dig in sudoku
 function getRandomNumberInRange(min: number, max: number): number {
@@ -41,7 +35,7 @@ export class GridGenerationManager {
     }
 
     private fillArrayWithSudokus(arrayIndex: number) {
-        for (let i = 0; i < GridGenerationManager.NUMBER_OF_SUDOKUS_TO_GENERATE; ++i) {
+        for (let row = 0; row < GridGenerationManager.NUMBER_OF_SUDOKUS_TO_GENERATE; ++row) {
             this.getNewPuzzle(arrayIndex).then((puzzle: Puzzle) => {
                 this._sudokusGenerated[arrayIndex].push(puzzle);
 
@@ -60,9 +54,9 @@ export class GridGenerationManager {
 
                 setTimeout(() => {
                     this.performGenerationWithDelay(difficulty)
-                    .then((puzzle: Puzzle) => {
-                        this._sudokusGenerated[difficulty].push(puzzle);
-                    });
+                        .then((puzzle: Puzzle) => {
+                            this._sudokusGenerated[difficulty].push(puzzle);
+                        });
                 }, 0);
             }
             else {
@@ -77,25 +71,19 @@ export class GridGenerationManager {
     //Generate a new puzzle and wait until 5 seconds is elapsed to return the sudoku generated.
     private performGenerationWithDelay(difficulty: Difficulty): Promise<Puzzle> {
         return new Promise<Puzzle>((resolve, reject) => {
-                let time = Date.now();
-                let sudokuGenerated = this.generateNewPuzzle(difficulty);
-                let intervalOfTimeForGeneration = Date.now() - time;
-                let waitTime = (GridGenerationManager.MILLISECONDS_TO_WAIT - intervalOfTimeForGeneration);
-                setTimeout(resolve.bind(resolve, sudokuGenerated), waitTime > 0 ? waitTime : 0);
+            let time = Date.now();
+            let sudokuGenerated = this.generateNewPuzzle(difficulty);
+            let intervalOfTimeForGeneration = Date.now() - time;
+            let waitTime = (GridGenerationManager.MILLISECONDS_TO_WAIT - intervalOfTimeForGeneration);
+            setTimeout(resolve.bind(resolve, sudokuGenerated), waitTime > 0 ? waitTime : 0);
         });
     }
 
-    /**
-     * The getNewPuzzle function, return a new puzzle.
-     *
-     * @class PuzzleManager
-     * @method getNewPuzzle
-     * @return newPuzzle
-     */
     private generateNewPuzzle(difficulty?: Difficulty) {
-        let newPuzzle: Puzzle = new Puzzle();
-        let nbIterations: number = getRandomNumberInRange(
-            GridGenerationManager.NOMBRE_ITERATIONS_MIN, GridGenerationManager.NOMBRE_ITERATIONS_MAX);
+        let newPuzzle = new Puzzle();
+        let nbIterations = getRandomNumberInRange(
+            GridGenerationManager.NOMBRE_ITERATIONS_MIN,
+            GridGenerationManager.NOMBRE_ITERATIONS_MAX);
 
         let operations = [
             (puzzle: Puzzle) => {
@@ -139,7 +127,6 @@ export class GridGenerationManager {
     //Between 3 and 5 and cannot be equals.
     //Between 6 and 8 and cannot be equals.
     //They specifie the columns or rows of the same square to be changed.
-
     private numberGeneratorForSwaping(): Array<number> {
         let rowNumbers = [-1, -1];
         let squareNumber: number;
@@ -155,16 +142,16 @@ export class GridGenerationManager {
 
     private hideNumbers(newPuzzle: Puzzle, numbersToRemove: number) {
         let gridSolver = new GridSolver(newPuzzle);
-        let validIndexesRow = [0, 1, 2, 3 , 4, 5, 6, 7, 8];
-        let validIndexesColumn = [[0, 1, 2, 3 , 4, 5, 6, 7, 8],
-                            [0, 1, 2, 3 , 4, 5, 6, 7, 8],
-                            [0, 1, 2, 3 , 4, 5, 6, 7, 8],
-                            [0, 1, 2, 3 , 4, 5, 6, 7, 8],
-                            [0, 1, 2, 3 , 4, 5, 6, 7, 8],
-                            [0, 1, 2, 3 , 4, 5, 6, 7, 8],
-                            [0, 1, 2, 3 , 4, 5, 6, 7, 8],
-                            [0, 1, 2, 3 , 4, 5, 6, 7, 8],
-                            [0, 1, 2, 3 , 4, 5, 6, 7, 8]];
+        let validIndexesRow = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+        let validIndexesColumn = [[0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                [0, 1, 2, 3, 4, 5, 6, 7, 8]];
         let numberOfRemovedNumbers = 0;
         while (validIndexesRow.length > 0 && numberOfRemovedNumbers < numbersToRemove) {
             let rowValidIndex = getRandomNumberInRange(0, validIndexesRow.length - 1);
@@ -184,6 +171,5 @@ export class GridGenerationManager {
             }
             validIndexesColumn[rowIndex].splice(columnValidIndex, 1);
         }
-        console.log("numbers removed : " + numberOfRemovedNumbers.toString());
     }
 }

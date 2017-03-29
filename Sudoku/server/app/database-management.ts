@@ -1,7 +1,7 @@
 //import * as express from 'express';
 
 import { MongoClient, InsertOneWriteOpResult, DeleteWriteOpResultObject, Db } from "mongodb";
-import { Difficulty } from "./models/puzzle";
+import { Difficulty } from "./models/puzzle/difficulty";
 
 export class DatabaseManager {
 
@@ -47,16 +47,12 @@ export class DatabaseManager {
     public async addUser(body: any): Promise<boolean> {
         let isInserted = false;
         if (body.username !== "") {
-            console.log("-- DatabaseManager addUser --");
             let collection = this._dbConnection.collection("username");
             await collection.insertOne(body)
                 .then((result: InsertOneWriteOpResult) => {
                     if (result.insertedCount === 1) {
                         isInserted = true;
                         console.log("-- user inserted --");
-                    }
-                    else {
-                        console.log("-- user not inserted --");
                     }
                 })
                 .catch((reason) => {
@@ -68,16 +64,12 @@ export class DatabaseManager {
 
     public async removeUser(body: any): Promise<boolean> {
         let isRemoved = false;
-        console.log("-- DatabaseManager removeUser --");
         let collection = this._dbConnection.collection("username");
         await collection.deleteOne(body)
             .then((result: DeleteWriteOpResultObject) => {
                 if (result.deletedCount === 1) {
                     isRemoved = true;
                     console.log("-- user removed --");
-                }
-                else {
-                    console.log("-- user not removed --");
                 }
             })
             .catch((reason) => {
@@ -88,7 +80,6 @@ export class DatabaseManager {
 
     public async getTopRecords(): Promise<Array<Array<any>>> {
         try {
-            console.log("-- DatabaseManager getTopRecords --");
             let docs = new Array<any>();
             let collection = this._dbConnection.collection("leaderboard");
             docs.push(await collection.find({ difficulty: Difficulty.NORMAL }).sort({ time: 1 }).limit(3).toArray());
@@ -103,21 +94,17 @@ export class DatabaseManager {
 
     public async saveGameRecord(body: any): Promise<boolean> {
         let isInserted = false;
-            console.log("-- DatabaseManager saveGameRecord --");
-            let collection = this._dbConnection.collection('leaderboard');
-            await collection.insertOne(body)
-                .then((result: InsertOneWriteOpResult) => {
-                    if (result.insertedCount === 1) {
-                        isInserted = true;
-                        console.log("-- game record inserted --");
-                    }
-                    else {
-                        console.log("-- game record not inserted --");
-                    }
-                })
-                .catch((reason) => {
-                    console.log("An exception occur while removing user : " + reason);
-                });
+        let collection = this._dbConnection.collection('leaderboard');
+        await collection.insertOne(body)
+            .then((result: InsertOneWriteOpResult) => {
+                if (result.insertedCount === 1) {
+                    isInserted = true;
+                    console.log("-- game record inserted --");
+                }
+            })
+            .catch((reason) => {
+                console.log("An exception occur while removing user : " + reason);
+            });
         return isInserted;
     }
 }
