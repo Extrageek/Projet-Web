@@ -2,6 +2,7 @@ import { ObjectLoader, Vector3, Box3, Scene } from 'three';
 import { RinkInfo } from '../../models/scenery/rink-info.interface';
 import { Stone, StoneSpin, StoneColor } from '../../models/stone';
 import { GameComponent } from '../../models/game-component.interface';
+import { SoundManager, soundType } from "../sound-manager";
 
 export interface Points {
     player: number;
@@ -164,8 +165,9 @@ export class StoneHandler implements GameComponent {
         this._stoneOnTheGame.map((stone: Stone) => {
             if (stoneToVerify !== stone) {
                 if (stoneToVerify.boundingSphere.intersectsSphere(stone.boundingSphere)) {
-                    let sound = document.getElementById("collisions");
-                    (<HTMLAudioElement>sound).play();
+                    SoundManager.getInstance().collisionSound;
+                    // let sound = document.getElementById("collisions");
+                    // (<HTMLAudioElement>sound).play();
                     stonesHit.push(stone);
                 }
             }

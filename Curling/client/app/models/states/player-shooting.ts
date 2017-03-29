@@ -3,7 +3,7 @@ import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { LoadingStone } from "./loading-stone";
 import { CameraType } from "./../../services/game-physics/camera-type";
 import { EndSet } from "./end-set";
-import { Broom } from "../broom";
+import { SoundManager } from "../../services/sound-manager";
 
 export class PlayerShooting extends AbstractGameState {
 
@@ -94,8 +94,7 @@ export class PlayerShooting extends AbstractGameState {
         if (!this._gameInfo.broom.isRed()) {
             this._gameInfo.broom.position.add(new THREE.Vector3(0.2, 0, 0));
             // TODO : A VOIR COMMENT ENLEVER GET ELEM
-            let sound = document.getElementById("broomIn");
-            (<HTMLAudioElement>sound).play();
+            SoundManager.getInstance().broomInSound;
             if (!this._isHoldingMouseButton) {
                 this._isHoldingMouseButton = true;
                 this._gameInfo.broom.verifyBroomCollision(this._gameInfo.stoneHandler.stoneOnTheGame);
@@ -109,8 +108,9 @@ export class PlayerShooting extends AbstractGameState {
             this._gameInfo.broom.translateZ(0.3);
             this._isHoldingMouseButton = false;
             // TODO : A VOIR COMMENT ENLEVER GET ELEM
-            let sound = document.getElementById("broomOut");
-            (<HTMLAudioElement>sound).play();
+            SoundManager.getInstance().broomOutSound;
+            // let sound = document.getElementById("broomOut");
+            // (<HTMLAudioElement>sound).play();
         }
         return null;
     }
