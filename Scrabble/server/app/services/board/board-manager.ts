@@ -5,15 +5,15 @@ import { WordDirection } from "../commons/word-direction";
 import { LetterHelper } from "../../models/commons/letter-helper";
 
 import { Player } from "../../models/player";
-import { Board } from '../../models/board/board';
+import { Board } from "../../models/board/board";
 import { Letter } from "../../models/letter";
 import { SquareType } from "../../models/square/square-type";
 import { IPlaceWordResponse } from "../commons/command/place-word-response.interface";
-import { LetterBankHandler } from '../letterbank-handler';
-import { VerticalWordValidator } from './vertical-word-validator';
-import { HorizontalWordValidator } from './horizontal-word-validator';
+import { LetterBankHandler } from "../letterbank-handler";
+import { VerticalWordValidator } from "./vertical-word-validator";
+import { HorizontalWordValidator } from "./horizontal-word-validator";
 
-import { IValidationRequest } from './validation-request.interface';
+import { IValidationRequest } from "./validation-request.interface";
 
 export class BoardManager {
     private _letterBankHandler: LetterBankHandler;
@@ -89,7 +89,6 @@ export class BoardManager {
         this._board.resetLastLettersAdded();
         for (let index = 0; index < letters.length; index++) {
             let nextColumnIndex = columnIndex + index;
-            console.log(nextColumnIndex);
 
             // Get the row number from the given letter
             let currentSquare = this._board.squares[firstRowIndex][nextColumnIndex];

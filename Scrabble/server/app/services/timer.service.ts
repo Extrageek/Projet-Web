@@ -3,29 +3,31 @@ import { Observable } from "rxjs/Observable";
 const ONE_SECOND = 1000;
 
 export class TimerService {
-
     private _minutesMaxValue: number;
+    private _secondsMaxValue: number;
+    private _seconds: number;
+    private _minutes: number;
+
     public set minutesMaxValue(value: number) {
         this._minutesMaxValue = value;
     }
+
     public get minutesMaxValue(): number {
         return this._minutesMaxValue;
     }
 
-    private _secondsMaxValue: number;
     public get secondsMaxValue(): number {
         return this._secondsMaxValue;
     }
+
     public set secondsMaxValue(v: number) {
         this._secondsMaxValue = v;
     }
 
-    private _seconds: number;
     public get seconds(): number {
         return this._seconds;
     }
 
-    private _minutes: number;
     public get minutes(): number {
         return this._minutes;
     }

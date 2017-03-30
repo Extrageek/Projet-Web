@@ -41,48 +41,33 @@ export class VerificationService {
         if (wordOrientation === CommandsHelper.HORIZONTAL_ORIENTATION) {
             // verify the initial word
             areValidWords = this.verifyWordHorizontal(board, firstRowIndex, firstColumnIndex, initialWord);
-            console.log("IS VALID WORD INITIAL --- ", areValidWords);
-
-            console.log("LAST LETTERS ADDED  ------- ", board.lastLettersAdded);
             board.lastLettersAdded.forEach((squarePosition: SquarePosition) => {
                 let word = "";
                 let rowIndex = BoardHelper.convertCharToIndex(squarePosition.row);
                 let columnIndex = squarePosition.column - 1;
                 let square = board.squares[rowIndex][columnIndex];
                 let topPartOfWord = this.discoverTopPartOfWord(board, square);
-                console.log("TOP PART WORD = ", topPartOfWord);
                 let downPartOfWord = this.discoverDownPartOfWord(board, square);
-                console.log("DOWN PART WORD = ", downPartOfWord);
                 word = topPartOfWord + square.letter.alphabetLetter + downPartOfWord;
                 rowIndex -= topPartOfWord.length;
                 areValidWords = areValidWords
                     && this.verifyWordVertical(board, rowIndex, columnIndex, word.toUpperCase());
-                console.log("ARE VALID WORD --- ", areValidWords);
             });
 
         } else if (wordOrientation === CommandsHelper.VERTICAL_ORIENTATION) {
             // verify the initial word
             areValidWords = this.verifyWordVertical(board, firstRowIndex, firstColumnIndex, initialWord);
-            console.log("IS VALID WORD INITIAL --- ", areValidWords);
-            console.log("LAST LETTERS ADDED LENGTH ------- ", board.lastLettersAdded.length);
-
             board.lastLettersAdded.forEach((squarePosition: SquarePosition) => {
                 let word = "";
                 let rowIndex = BoardHelper.convertCharToIndex(squarePosition.row);
                 let columnIndex = squarePosition.column - 1;
                 let square = board.squares[rowIndex][columnIndex];
                 let leftPartOfWord = this.discoverLeftPartOfWord(board, square);
-
-                console.log("LEFT PART WORD = ", leftPartOfWord);
                 let rightPartOfWord = this.discoverRightPartOfWord(board, square);
-                console.log("RIGHT PART WORD = ", rightPartOfWord);
                 word = leftPartOfWord + square.letter.alphabetLetter + rightPartOfWord;
                 columnIndex -= leftPartOfWord.length;
                 areValidWords = areValidWords
                     && this.verifyWordHorizontal(board, rowIndex, columnIndex, word.toUpperCase());
-                console.log("aRE VALID WORD  --- ", areValidWords);
-                console.log("\n\n\n");
-
             });
         }
         return areValidWords;
@@ -101,8 +86,6 @@ export class VerificationService {
                 board.lastLettersAdded[indexLastLettersAdded].column - 1 === firstColumnIndex + indexOffset
                 && BoardHelper.convertCharToIndex(board.lastLettersAdded[indexLastLettersAdded].row)
                 === rowIndex;
-
-            console.log("SCORE DU MOT -- ", scoreWord);
             scoreWord += this.calculateScoreLetterInSquare(square, isSquareNewLetter);
 
             if (isSquareNewLetter && square.type === SquareType.DOUBLE_WORD_COUNT) {
@@ -112,10 +95,7 @@ export class VerificationService {
                 isWordTriple = true;
             }
         }
-
-        console.log("SCORE DU MOT -- ", scoreWord);
         scoreWord = this.applyBonusDoubleOrTripleWord(scoreWord, isWordDouble, isWordTriple);
-        console.log("SCORE DU MOT -- ", scoreWord);
         scoreWord = this.applyBonus7LettersWord(scoreWord, word);
         return this.verifyIfWordExistAndSetScore(word, scoreWord);
     }
@@ -133,8 +113,6 @@ export class VerificationService {
                 board.lastLettersAdded[indexLastLettersAdded].column - 1 === columnIndex
                 && BoardHelper.convertCharToIndex(board.lastLettersAdded[indexLastLettersAdded].row)
                 === firstRowIndex + indexOffset;
-            console.log("SCORE DU MOT avant letter add -- ", scoreWord);
-
             scoreWord += this.calculateScoreLetterInSquare(square, isSquareNewLetter);
 
             if (isSquareNewLetter && square.type === SquareType.DOUBLE_WORD_COUNT) {
@@ -144,25 +122,18 @@ export class VerificationService {
                 isWordTriple = true;
             }
         }
-        console.log("SCORE DU MOT avant bonus -- ", scoreWord);
         scoreWord = this.applyBonusDoubleOrTripleWord(scoreWord, isWordDouble, isWordTriple);
-        console.log("SCORE DU MOT avant big bonus-- ", scoreWord);
         scoreWord = this.applyBonus7LettersWord(scoreWord, word);
         return this.verifyIfWordExistAndSetScore(word, scoreWord);
     }
 
     public verifyIfWordExistAndSetScore(word: string, score: number): boolean {
-        console.log("WORD TO VERIFY  -- ", word);
-
         if (word.length >= 2) {
             if (!DictionnaryManager.contains(word)) {
                 return false;
             }
             else {
-                console.log("---------------score to be added =", score);
                 this._score += score;
-                console.log("---------------score after =", this._score);
-                return true;
             }
         }
         return true;
@@ -258,10 +229,7 @@ export class VerificationService {
         }
         return score;
     }
-    // comptabiliser
-    // lettre * case
-    // boolean pour mot double / triple
-    // BONUS que pour les lettres ajoutees
+
     public createStringFromArrayString(letters: Array<string>): string {
         let word = "";
         letters.forEach((letter: string) => {
