@@ -188,20 +188,26 @@ export class SocketConnectionHandler {
 
                     // verification
                     let isVerified = room.verifyWordsCreated(request._response, socket.id);
-                    console.log("ARE WORDS VALID ---- ", isVerified);
 
                     if (isVerified) {
                         room.refillPlayerEasel(player.socketId);
                         newEasel = room.letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
-                        this._socket.to(room.roomId).emit(
-                            SocketEventType.updateLetterInBank,
-                            room.letterBankHandler.bank.numberOfLettersInBank
-                        );
+                        if (room.isGameOver) {
+                            let winnerUsername = room.getWinnerUsername();
+                            this._socket.to(room.roomId).emit(SocketEventType.gameOver, winnerUsername);
+                        }
+                        else {
+
+                            this._socket.to(room.roomId).emit(
+                                SocketEventType.updateLetterInBank,
+                                room.letterBankHandler.bank.numberOfLettersInBank
+                            );
+                            let playersQueues = room.getAndUpdatePlayersQueue();
+                            this._socket.to(room.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
+                        }
                         socket.emit(SocketEventType.updateScore, player.score);
                         socket.emit(SocketEventType.updateLetterInEasel, newEasel.length);
                         socket.emit(SocketEventType.updateEasel, newEasel);
-                        let playersQueues = room.getAndUpdatePlayersQueue();
-                        this._socket.to(room.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
                     }
                     // If the word doesn't respect scrabble rules, the word is removed and the board updated
                     else {

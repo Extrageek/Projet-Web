@@ -18,6 +18,8 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
     public _lettersInBank: number;
     public _seconds: number;
     public _minutes: number;
+    public _winner: string;
+    public _isWinner: boolean;
 
     constructor(
         private socketService: SocketService) {
@@ -31,6 +33,9 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
         this.onUpdateScore();
         this.onUpdateLetterInBank();
         this.onUpdateLetterInEasel();
+        this.onGameOver();
+        this._isWinner = false;
+        this._winner = "";
     }
 
     ngAfterViewInit() {
@@ -55,6 +60,14 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
         return this.socketService.subscribeToChannelEvent(SocketEventType.UPDATE_LETTER_IN_BANK)
             .subscribe((response: number) => {
                 this._lettersInBank = response;
+            });
+    }
+
+    private onGameOver(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.GAME_OVER)
+            .subscribe((winner: string) => {
+                this._winner = winner;
+                this._isWinner = (winner === this.socketService.player.username) ? true : false;
             });
     }
 

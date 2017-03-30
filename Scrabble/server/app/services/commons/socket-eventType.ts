@@ -46,6 +46,8 @@ export class SocketEventType {
     static updateLetterInBank = "updateLetterInBank";
     static updateLetterInEasel = "updateLetterInEasel";
 
+    static gameOver = "gameOver";
+
     static changeLettersRequest = "changer";
     static placeWordCommandRequest = "placer";
     static passCommandRequest = "passer";

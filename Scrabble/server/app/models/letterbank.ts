@@ -21,7 +21,7 @@ export class LetterBank {
 
     constructor() {
         this._bank = new Array<Letter>();
-        this.numberOfLettersInBank = 102;
+        this.numberOfLettersInBank = 7;
         this.initializeLetterBank();
     }
 

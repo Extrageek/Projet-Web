@@ -45,6 +45,9 @@ export class SocketEventType {
     static UPDATE_LETTER_IN_BANK = "updateLetterInBank";
     static UPDATE_LETTER_IN_EASEL = "updateLetterInEasel";
 
+    static GAME_OVER = "gameOver";
+
+
     static COMMAND_REQUEST = "commandRequest";
     static INVALID_COMMAND_REQUEST = "invalidCommand";
 }

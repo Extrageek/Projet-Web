@@ -1,38 +1,42 @@
-<div class="col-md-12">
-    <p class="info-title">Information panel</p>
+<p class="info-title">
+    Information panel</p>
 
-    <table class="info-elements">
-        <tbody>
-            <tr>
-                <td>Temps restant <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                </td>
-                <td>{{ printMinutes() }}: {{ printSeconds() }}</td>
-            </tr>
-            <tr>
-                <td>Actif
-                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                </td>
-                <td>{{ getCurrentPlayer() }}</td>
-            </tr>
-            <tr>
-                <td>Score
-                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                </td>
-                <td>{{ getScore() }}</td>
-            </tr>
-            <tr *ngIf="_lettersOnEasel < 7">
-                <td>Chevalet
-                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                </td>
-                <td>{{ _lettersOnEasel }}</td>
-            </tr>
-            <tr>
-                <td>En banque
-                    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-                </td>
-                <td>{{ _lettersInBank }}</td>
-            </tr>
-
-        </tbody>
-    </table>
+<div class="info-elements">
+    <div>
+        <div>Temps restant <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+        </div>
+        <div>{{ printMinutes() }}: {{ printSeconds() }}</div>
+    </div>
+    <div>
+        <div>Actif
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+        </div>
+        <div>{{ getCurrentPlayer() }}</div>
+    </div>
+    <div>
+        <div>Score
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+        </div>
+        <div>{{ getScore() }}</div>
+    </div>
+    <div *ngIf="_lettersOnEasel < 7">
+        <div>Chevalet
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+        </div>
+        <div>{{ _lettersOnEasel }}</div>
+    </div>
+    <div>
+        <div>En banque
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+        </div>
+        <div>{{ _lettersInBank }}</div>
+    </div>
+    <div *ngIf="_winner !== ''">
+        <div *ngIf="_isWinner" class="alert alert-success" role="alert">
+            <strong>Félicitations !</strong> Vous avez gagné.
+        </div>
+        <div *ngIf="!_isWinner" class="alert alert-danger" role="alert">
+            <strong>Dommage !</strong> {{ _winner }} a gagné.
+        </div>
+    </div>
 </div>

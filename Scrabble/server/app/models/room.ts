@@ -17,41 +17,28 @@ const TIMER_DEFAULT_SECOND = 59;
 
 export class Room {
 
-    static roomMinCapacity = 1;
-    static roomMaxCapacity = 4;
+    static readonly roomMinCapacity = 1;
+    static readonly roomMaxCapacity = 4;
 
     private _playersQueue: QueueCollection<Player>;
     private _letterBankHandler: LetterBankHandler;
     private _boardManager: BoardManager;
     private _timerService: TimerService;
-
     private _roomCapacity: number;
     private _roomId: string;
     private _board: Board;
+    private _isGameOver: boolean;
 
     public get timerService() {
         this._timerService.initializeCounter();
         return this._timerService;
-    }
-    // The constructor of the room
-    constructor(roomCapacity: number) {
-        if (roomCapacity < Room.roomMinCapacity || roomCapacity > Room.roomMaxCapacity) {
-            throw new RangeError("Argument error: the number of players must be between 1 and 4.");
-        }
-
-        this._roomCapacity = roomCapacity;
-        this._playersQueue = new QueueCollection<Player>();
-        this._letterBankHandler = new LetterBankHandler();
-        this._boardManager = new BoardManager();
-        this._timerService = new TimerService(TIMER_DEFAULT_MINUTE, TIMER_DEFAULT_SECOND);
-        this._roomId = uuid.v1(); // Generate a v1 (time-based) id
-        this._board = new Board();
     }
 
     // The player of the room
     public get players(): QueueCollection<Player> {
         return this._playersQueue;
     }
+
     public set players(value: QueueCollection<Player>) {
         this._playersQueue = value;
     }
@@ -74,6 +61,27 @@ export class Room {
     public get roomCapacity(): number {
         return this._roomCapacity;
     }
+
+    public get isGameOver(): boolean {
+        return this._isGameOver;
+    }
+
+    // The constructor of the room
+    constructor(roomCapacity: number) {
+        if (roomCapacity < Room.roomMinCapacity || roomCapacity > Room.roomMaxCapacity) {
+            throw new RangeError("Argument error: the number of players must be between 1 and 4.");
+        }
+
+        this._roomCapacity = roomCapacity;
+        this._playersQueue = new QueueCollection<Player>();
+        this._letterBankHandler = new LetterBankHandler();
+        this._boardManager = new BoardManager();
+        this._timerService = new TimerService(TIMER_DEFAULT_MINUTE, TIMER_DEFAULT_SECOND);
+        this._roomId = uuid.v1(); // Generate a v1 (time-based) id
+        this._board = new Board();
+        this._isGameOver = false;
+    }
+
 
     // Check if the room is full or not
     public isFull(): boolean {
@@ -111,6 +119,7 @@ export class Room {
         }
 
         playerRemoved = this._playersQueue.remove(player);
+
         return playerRemoved;
     }
 
@@ -147,9 +156,39 @@ export class Room {
         this.players.forEach((player: Player) => {
             if (player.socketId === socketId) {
                 let newLetters = this._letterBankHandler.refillEasel(7 - player.easel.letters.length);
-                player.easel.addLetters(newLetters);
+                if (newLetters.length > 0) {
+                    player.easel.addLetters(newLetters);
+                }
+                // Game over - bank letter is empty
+                else {
+                    this._isGameOver = true;
+                    let pointToAddToWinner = this.countPointsOfLettersRemainingOnOtherPlayersEasels(socketId);
+                    player.score += pointToAddToWinner;
+                }
             }
         });
+    }
+
+    public getWinnerUsername(): string {
+        let winner: Player;
+        this.players.forEach((player: Player) => {
+            if (winner === undefined || winner.score < player.score) {
+                winner = player;
+            }
+        });
+        return winner.username;
+    }
+
+    public countPointsOfLettersRemainingOnOtherPlayersEasels(socketId: String): number {
+        let points = 0;
+        this.players.forEach((player: Player) => {
+            if (player.socketId !== socketId) {
+                let pointsRemaining = player.easel.countPointsOnEasel();
+                player.score -= pointsRemaining;
+                points += pointsRemaining;
+            }
+        });
+        return points;
     }
 
     public getAndUpdatePlayersQueue(): Array<string> {

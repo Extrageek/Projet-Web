@@ -50,11 +50,11 @@ export class LetterBankHandler {
             randomNumber = this.getRandomLetter();
             // console.log("final Number", randomNumber);
             randomLetter = this.bank.bank[randomNumber];
-            if (this._bank.letterIsAvailable(randomLetter)) {
+            if (this.bank.numberOfLettersInBank === 0) {
+                break;
+            } else if (this._bank.letterIsAvailable(randomLetter)) {
                 chosenLetter = this.bank.getLetterFromBank(randomLetter);
                 newEasel.push(chosenLetter);
-            } else if (this.bank.numberOfLettersInBank === 0) {
-                break;
             } else {
                 // Check of this is necessary, we can stay in an infinite loop here
                 --index;

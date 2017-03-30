@@ -55,6 +55,14 @@ export class Easel {
         });
     }
 
+    public countPointsOnEasel(): number {
+        let point = 0;
+        this._letters.forEach((letter: Letter) => {
+            point += letter.point;
+        });
+        return point;
+    }
+
     public exchangeLetters(lettersToBeExchanged: Array<string>, newLettersStr: Array<string>): boolean {
         let indexOfLettersToChange = new Array<number>();
 
