@@ -5,7 +5,6 @@ import { GameStatusService } from "./../game-status.service";
 import { StoneHandler } from "../game-physics/stone-handler";
 import { TextureHandler } from "../views/texture-handler";
 import { CameraType } from "../game-physics/camera-type";
-import { GameComponent } from "../../models/game-component.interface";
 import { AbstractGameState } from "./../../models/states/abstract-game-state";
 import { Broom } from "../../models/broom";
 import { Rink } from "../../models/scenery/rink";

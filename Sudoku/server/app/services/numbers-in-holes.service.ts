@@ -1,4 +1,4 @@
-import { Puzzle } from "../models/puzzle";
+import { Puzzle } from "./../models/puzzle/puzzle";
 
 export interface FittingNumbers {
     row: number;
@@ -11,7 +11,7 @@ export class NumbersInHoles {
     private _puzzleToAnalyze: Puzzle;
     private _numbersForHoles: Array<Array<Array<number>>>;
     private _haveASolution: boolean;
-    private _nextHole: {row: number, column: number};
+    private _nextHole: { row: number, column: number };
 
     constructor(puzzle: Puzzle) {
         if (puzzle === null) {
@@ -25,9 +25,9 @@ export class NumbersInHoles {
 
     private initializeArrays() {
         this._numbersForHoles = new Array<Array<Array<number>>>();
-        for (let row = 0; row <= Puzzle.MAX_ROW_INDEX; ++ row) {
+        for (let row = 0; row <= Puzzle.MAX_ROW_INDEX; ++row) {
             this._numbersForHoles.push(new Array<Array<number>>());
-            for (let column = 0; column <= Puzzle.MAX_COLUMN_INDEX; ++ column) {
+            for (let column = 0; column <= Puzzle.MAX_COLUMN_INDEX; ++column) {
                 this._numbersForHoles[row].push(null);
             }
         }
@@ -48,7 +48,7 @@ export class NumbersInHoles {
         });
         copy._puzzleToAnalyze = newPuzzle;
         copy._haveASolution = this._haveASolution;
-        copy._nextHole = this._nextHole !== null ? {row: this._nextHole.row, column: this._nextHole.column} : null;
+        copy._nextHole = this._nextHole !== null ? { row: this._nextHole.row, column: this._nextHole.column } : null;
         return copy;
     }
 
@@ -56,9 +56,11 @@ export class NumbersInHoles {
         if (this._nextHole === null) {
             throw new Error("The numbers fitting in holes have not been calculated.");
         }
-        return {row: this._nextHole.row
-                , column: this._nextHole.column
-                , numbersThatFit: this._numbersForHoles[this._nextHole.row][this._nextHole.column]};
+        return {
+            row: this._nextHole.row
+            , column: this._nextHole.column
+            , numbersThatFit: this._numbersForHoles[this._nextHole.row][this._nextHole.column]
+        };
     }
 
     public allHolesHaveSolutions() {
@@ -121,7 +123,7 @@ export class NumbersInHoles {
     private getPresentValuesInARange(minRow: number, maxRow: number, minColumn: number, maxColumn: number) {
         let presentValues = new Array<number>();
         for (let row = minRow; row <= maxRow; ++row) {
-            for (let column = minColumn; column <= maxColumn; ++ column) {
+            for (let column = minColumn; column <= maxColumn; ++column) {
                 if (!this._puzzleToAnalyze.getPuzzleTileVisibility(row, column)) {
                     presentValues.push(this._puzzleToAnalyze.getPuzzleTileValue(row, column));
                 }
@@ -152,12 +154,12 @@ export class NumbersInHoles {
                     for (let rowIndex = Puzzle.MIN_ROW_INDEX; rowIndex <= Puzzle.MAX_ROW_INDEX; ++rowIndex) {
                         for (let columnIndex = Puzzle.MIN_COLUMN_INDEX; columnIndex <= Puzzle.MAX_COLUMN_INDEX;
                             ++columnIndex) {
-                                if (this._numbersForHoles[rowIndex][columnIndex] !== null) {
-                                    this.updateHoleWithLessPossibilities(rowIndex, columnIndex
-                                        , this._numbersForHoles[rowIndex][columnIndex]);
-                                }
+                            if (this._numbersForHoles[rowIndex][columnIndex] !== null) {
+                                this.updateHoleWithLessPossibilities(rowIndex, columnIndex
+                                    , this._numbersForHoles[rowIndex][columnIndex]);
                             }
                         }
+                    }
                 }
             }
         }
@@ -165,36 +167,31 @@ export class NumbersInHoles {
 
     private recomputeNumbersInRange(minRow: number, maxRow: number, minColumn: number, maxColumn: number
         , numberToRemove: number) {
-            let row = minRow;
-            while (this._haveASolution && row <= maxRow) {
-                let column = minColumn;
-                while (this._haveASolution && column <= maxColumn) {
-                    if (this._numbersForHoles[row][column] !== null) {
-                        this._numbersForHoles[row][column] =
-                            this._numbersForHoles[row][column].filter(
-                                (possibleNumber: number, index: number, array: number[]) => {
-                                    return possibleNumber !== numberToRemove;
-                                });
-                        this._haveASolution = this._numbersForHoles[row][column].length !== 0;
-                    }
-                    ++column;
+        let row = minRow;
+        while (this._haveASolution && row <= maxRow) {
+            let column = minColumn;
+            while (this._haveASolution && column <= maxColumn) {
+                if (this._numbersForHoles[row][column] !== null) {
+                    this._numbersForHoles[row][column] =
+                        this._numbersForHoles[row][column].filter(
+                            (possibleNumber: number, index: number, array: number[]) => {
+                                return possibleNumber !== numberToRemove;
+                            });
+                    this._haveASolution = this._numbersForHoles[row][column].length !== 0;
                 }
-                ++row;
+                ++column;
             }
+            ++row;
+        }
     }
 
     private updateHoleWithLessPossibilities(row: number, column: number, possibleValues: Array<number>) {
         if (this._nextHole === null) {
-            this._nextHole = {row: row, column: column};
+            this._nextHole = { row: row, column: column };
         }
         else if (possibleValues.length < this._numbersForHoles[this._nextHole.row][this._nextHole.column].length) {
-                this._nextHole.row = row;
-                this._nextHole.column = column;
+            this._nextHole.row = row;
+            this._nextHole.column = column;
         }
-    }
-
-    private getSquareNumber(rowIndex: number, columnIndex: number) {
-        return Math.trunc(rowIndex / Puzzle.SQUARE_LENGTH) * Puzzle.SQUARE_LENGTH
-            + Math.trunc(columnIndex / Puzzle.SQUARE_LENGTH);
     }
 }

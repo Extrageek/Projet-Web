@@ -1,4 +1,4 @@
-# Exclusion des dépendences du projet. Elles peuvent être regénérées 
+﻿# Exclusion des dépendences du projet. Elles peuvent être regénérées 
 # automatiquement.
 node_modules/
 false/
@@ -25,3 +25,4 @@ coverage/
 !systemjs.config.extras.js
 !tslint.json
 !tsconfig.json
+!showHelpMessage.js

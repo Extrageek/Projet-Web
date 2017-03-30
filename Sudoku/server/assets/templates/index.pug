@@ -31,7 +31,7 @@ html
 
         mixin createActivity(activity)
             -
-                var date = activity.date.getUTCMonth() + "/" + activity.date.getUTCDay() + "/" + activity.date.getUTCFullYear();
+                var date = activity.date.getMonth()  + "/" + activity.date.getDate() + "/" + activity.date.getUTCFullYear();
                 var time = activity.date.getHours() + ":" + activity.date.getMinutes() + ":" + activity.date.getSeconds();
             tr
                 td #{date} | #{time}
@@ -51,25 +51,28 @@ html
                     a.mdl-layout__tab(href='#scroll-tab-2') Puzzle difficle
                     |
                     a.mdl-layout__tab(href='#scroll-tab-3') Journal d'activités
-            .mdl-layout__drawer
-                span.mdl-layout-title Title
+                    button#show-toast.mdl-button.mdl-js-button.mdl-button--icon(type='button')
+                        i.material-icons help
+                    |
+                    #toast.mdl-js-snackbar.mdl-snackbar
+                        .mdl-snackbar__text
+                        |
+                        button.mdl-snackbar__action(type='button')
             main.mdl-layout__content
                 section#scroll-tab-1.mdl-layout__tab-panel.is-active
                     .page-content
-                        -
-                            var nEasyPuzzle = puzzleEasy.length;
-                        -for (var i = 0; i < nEasyPuzzle; i ++)
+                        - var nEasyPuzzle = puzzleEasy.length;
+                        - for (var i = 0; i < nEasyPuzzle; i ++)
                             if(puzzleEasy[i] != null)
-                                div(class="col-sm-4")
+                                .col-sm-4
                                     h2 Puzzle Facile #{i + 1}
                                     +createPuzzle(puzzleEasy[i]._puzzle)
                 section#scroll-tab-2.mdl-layout__tab-panel
                     .page-content
-                        -
-                            var nHardPuzzle = puzzleHard.length;
-                        -for (var i = 0; i < nHardPuzzle; i ++)
+                        - var nHardPuzzle = puzzleHard.length;
+                        - for (var i = 0; i < nHardPuzzle; i ++)
                             if(puzzleHard[i] != null)
-                                div(class="col-sm-4")
+                                .col-sm-4
                                     h2 Puzzle Difficle #{i + 1}
                                     +createPuzzle(puzzleHard[i]._puzzle)
                 section#scroll-tab-3.mdl-layout__tab-panel
@@ -82,5 +85,7 @@ html
                                         th.mdl-data-table__cell--non-numeric Type
                                         th.mdl-data-table__cell--non-numeric Description
                                 tbody
-                                    -for (var x = 0; x < numberOfActivities; x ++)
+                                    -for (var x = numberOfActivities -1; x >= 0; --x)
                                         +createActivity(activities[x])
+                    script
+                        include ../scripts/showHelpMessage.js

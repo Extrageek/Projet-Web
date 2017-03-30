@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Object3D, PerspectiveCamera, Vector3 } from "three";
 import { GameComponent } from "../../models/game-component.interface";
+import { SoundManager } from "../sound-manager";
 
 interface FollowInformation {
     objectToFollow: Object3D;
@@ -62,7 +63,10 @@ export class CameraService implements GameComponent {
             camera.rotateY(rotation.y);
             camera.rotateZ(rotation.z);
         }
+        camera.add(SoundManager.getInstance().listener); // Ajout un ecouteur a la camera
+        var listiner = SoundManager.getInstance().listener;
         this._cameras.push(camera);
+
     }
 
     public nextCamera(): PerspectiveCamera {

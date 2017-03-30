@@ -41,7 +41,14 @@ tr {
     background-color: whitesmoke;
 }
 
-
 .activities {
     margin-top: 15px;
+}
+
+.mdl-button--icon {
+    margin-top: 9px;
+}
+
+#toast {
+    margin-bottom: 50px;
 }

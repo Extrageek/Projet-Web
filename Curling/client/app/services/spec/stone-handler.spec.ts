@@ -127,35 +127,35 @@ describe("StoneHandler tests should", () => {
     });
 
 
-    // it("handle a collision between two stones", done => {
-    //     stoneHandler.generateNewStone().then((stone1) => {
-    //         stone1.position.set(0.1, 0, 3);
-    //         stone1.calculateNewBoundingSphere();
-    //
-    //         stoneHandler.generateNewStone().then((stone2) => {
-    //             stone2.position.set(0, 0, 2);
-    //             stone2.calculateNewBoundingSphere();
-    //
-    //             let direction2 = new Vector3(0, 0, 1);
-    //
-    //             for (let i = 0; i < 30; ++i) {
-    //                 stoneHandler.performShot(new Vector3(0, 0, 1), 10, ()=> {});
-    //                 stoneHandler.update(1/60);
-    //             }
-    //
-    //
-    //             expect(stone1.position.x).to.not.equal(0.1, "stone 1 x should have moved.");
-    //             expect(stone1.position.y).to.equal(0, "stone 1 y should not have moved.");
-    //             expect(stone1.position.z).to.not.equal(0, "stone 1 z should have moved.");
-    //             expect(stone2.position.x).to.not.equal(0, "stone 2 x should have moved.");
-    //             expect(stone2.position.y).to.equal(0, "stone 2 y should not have moved.");
-    //             expect(stone2.position.z).to.not.equal(1, "stone 2 z should have moved.");
-    //             expect(direction2.angleTo(stone2.direction)).to.be.greaterThan(Math.PI / 12,
-    //                 "direction should have changed.");
-    //             done();
-    //         });
-    //     });
-    // });
+    it("handle a collision between two stones", done => {
+        stoneHandler.generateNewStone().then((stone1) => {
+            stone1.position.set(0.1, 0, 3);
+            stone1.calculateNewBoundingSphere();
+
+            stoneHandler.generateNewStone().then((stone2) => {
+                stone2.position.set(0, 0, 2);
+                stone2.calculateNewBoundingSphere();
+
+                let direction2 = new Vector3(0, 0, 1);
+
+                for (let i = 0; i < 30; ++i) {
+                    stoneHandler.performShot(new Vector3(0, 0, 1), 10, ()=> {});
+                    stoneHandler.update(1/60);
+                }
+
+
+                expect(stone1.position.x).to.not.equal(0.1, "stone 1 x should have moved.");
+                expect(stone1.position.y).to.equal(0, "stone 1 y should not have moved.");
+                expect(stone1.position.z).to.not.equal(0, "stone 1 z should have moved.");
+                expect(stone2.position.x).to.not.equal(0, "stone 2 x should have moved.");
+                expect(stone2.position.y).to.equal(0, "stone 2 y should not have moved.");
+                expect(stone2.position.z).to.not.equal(1, "stone 2 z should have moved.");
+                expect(direction2.angleTo(stone2.direction)).to.be.greaterThan(Math.PI / 12,
+                    "direction should have changed.");
+                done();
+            });
+        });
+    });
     //
     // it("handle a collision between three stones", done => {
     //     stoneHandler.generateNewStone().then((stone1) => {

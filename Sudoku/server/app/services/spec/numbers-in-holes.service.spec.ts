@@ -1,6 +1,6 @@
 import { expect } from "chai";
-import { NumbersInHoles, FittingNumbers } from "./numbers-in-holes.service";
-import { Puzzle } from "../models/puzzle";
+import { NumbersInHoles, FittingNumbers } from "./../numbers-in-holes.service";
+import { Puzzle } from "./../../models/puzzle/puzzle";
 
 
 function setNoSolutionsConfiguration(puzzle: Puzzle) {
@@ -99,7 +99,7 @@ describe("NumbersInHoles should", () => {
 
     it("verify the number that fit in a single hole.", () => {
         puzzle.setPuzzleTileVisibility(2, 2, true);
-        let numberFitting : FittingNumbers = {row: 2, column: 2, numbersThatFit: [9]};
+        let numberFitting: FittingNumbers = { row: 2, column: 2, numbersThatFit: [9] };
         numbersInHoles.computeNumbersFittingInHoles();
         expect(numbersInHoles.getHoleWithLessPossibility()).to.be.deep.equal(numberFitting);
     });
@@ -115,8 +115,8 @@ describe("NumbersInHoles should", () => {
         puzzle.setPuzzleTileVisibility(0, 1, true);
         puzzle.setPuzzleTileVisibility(3, 0, true);
         puzzle.setPuzzleTileVisibility(8, 1, true);
-        let numberFitting1 : FittingNumbers = {row: 3, column: 0, numbersThatFit: [2]};
-        let numberFitting2 : FittingNumbers = {row: 0, column: 0, numbersThatFit: [1]};
+        let numberFitting1: FittingNumbers = { row: 3, column: 0, numbersThatFit: [2] };
+        let numberFitting2: FittingNumbers = { row: 0, column: 0, numbersThatFit: [1] };
         numbersInHoles.computeNumbersFittingInHoles();
         expect(numbersInHoles.allHolesHaveSolutions(), "It should have a solution.").to.be.equal(true);
         expect(numbersInHoles.haveAHoleWithOnePossibility(), "It should have a hole with one possibility.")

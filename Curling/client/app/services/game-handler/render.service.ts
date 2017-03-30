@@ -27,6 +27,7 @@ import { EndGame } from "./../../models/states/end-game";
 
 import { RinkInfo } from "./../../models/scenery/rink-info.interface";
 import { IGameInfo } from "./game-info.interface";
+import { SoundManager } from "../sound-manager";
 
 @Injectable()
 export class RenderService {
@@ -64,7 +65,8 @@ export class RenderService {
             direction: null,
             speed: 0,
             stoneHandler: null,
-            textureHandler: null
+            textureHandler: null,
+
         };
         this._lightingService = lightingService;
         Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "cameraService", { value: cameraService });
