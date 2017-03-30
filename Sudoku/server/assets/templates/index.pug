@@ -85,7 +85,7 @@ html
                                         th.mdl-data-table__cell--non-numeric Type
                                         th.mdl-data-table__cell--non-numeric Description
                                 tbody
-                                    -for (var x = numberOfActivities -1; x > 0; --x)
+                                    -for (var x = numberOfActivities -1; x >= 0; --x)
                                         +createActivity(activities[x])
                     script
                         include ../scripts/showHelpMessage.js

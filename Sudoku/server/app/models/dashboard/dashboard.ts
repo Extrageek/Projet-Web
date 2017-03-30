@@ -1,6 +1,6 @@
 import { Activity } from "./activity";
 
-const MAX_NUMBER_OF_ACTIVITIES = 100;
+const MAX_NUMBER_OF_ACTIVITIES = 101;
 
 export class Dashboard {
     private static _instance: Dashboard;
@@ -23,7 +23,7 @@ export class Dashboard {
 
     public addActivity(activity: Activity) {
         this._activities.push(activity);
-        if (this._activities.length > MAX_NUMBER_OF_ACTIVITIES) {
+        if (this._activities.length === MAX_NUMBER_OF_ACTIVITIES) {
             this._activities.shift();
         }
     }

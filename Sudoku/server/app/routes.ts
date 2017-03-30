@@ -32,6 +32,7 @@ module Route {
          * @return Server side main page
          */
         public index(request: express.Request, res: express.Response, next: express.NextFunction) {
+
             res.render("index", {
                 puzzleEasy: this._gridGenerationManager.sudokusGenerated[Difficulty.NORMAL],
                 puzzleHard: this._gridGenerationManager.sudokusGenerated[Difficulty.HARD],
