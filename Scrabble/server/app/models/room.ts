@@ -152,44 +152,6 @@ export class Room {
         return hasChanged;
     }
 
-    public refillPlayerEasel(socketId: String) {
-        this.players.forEach((player: Player) => {
-            if (player.socketId === socketId) {
-                let newLetters = this._letterBankHandler.refillEasel(7 - player.easel.letters.length);
-                if (newLetters.length > 0) {
-                    player.easel.addLetters(newLetters);
-                }
-                // Game over - bank letter is empty
-                else {
-                    this._isGameOver = true;
-                    let pointToAddToWinner = this.countPointsOfLettersRemainingOnOtherPlayersEasels(socketId);
-                    player.score += pointToAddToWinner;
-                }
-            }
-        });
-    }
-
-    public getWinnerUsername(): string {
-        let winner: Player;
-        this.players.forEach((player: Player) => {
-            if (winner === undefined || winner.score < player.score) {
-                winner = player;
-            }
-        });
-        return winner.username;
-    }
-
-    public countPointsOfLettersRemainingOnOtherPlayersEasels(socketId: String): number {
-        let points = 0;
-        this.players.forEach((player: Player) => {
-            if (player.socketId !== socketId) {
-                let pointsRemaining = player.easel.countPointsOnEasel();
-                player.score -= pointsRemaining;
-                points += pointsRemaining;
-            }
-        });
-        return points;
-    }
 
     public getAndUpdatePlayersQueue(): Array<string> {
         let newPlayerOrder = new Array<string>();
@@ -252,5 +214,44 @@ export class Room {
             }
         });
         return previousEasel;
+    }
+
+    public refillPlayerEasel(socketId: String) {
+        this.players.forEach((player: Player) => {
+            if (player.socketId === socketId) {
+                let newLetters = this._letterBankHandler.refillEasel(7 - player.easel.letters.length);
+                if (newLetters.length > 0) {
+                    player.easel.addLetters(newLetters);
+                }
+                // Game over - bank letter is empty
+                else {
+                    this._isGameOver = true;
+                    let pointToAddToWinner = this.countPointsOfLettersRemainingOnOtherPlayersEasels(socketId);
+                    player.score += pointToAddToWinner;
+                }
+            }
+        });
+    }
+
+    public getWinnerUsername(): string {
+        let winner: Player;
+        this.players.forEach((player: Player) => {
+            if (winner === undefined || winner.score < player.score) {
+                winner = player;
+            }
+        });
+        return winner.username;
+    }
+
+    public countPointsOfLettersRemainingOnOtherPlayersEasels(socketId: String): number {
+        let points = 0;
+        this.players.forEach((player: Player) => {
+            if (player.socketId !== socketId) {
+                let pointsRemaining = player.easel.countPointsOnEasel();
+                player.score -= pointsRemaining;
+                points += pointsRemaining;
+            }
+        });
+        return points;
     }
 }

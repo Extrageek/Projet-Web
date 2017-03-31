@@ -1,8 +1,13 @@
 import { expect, assert } from "chai";
+
 import { Room } from "../room";
+import { Letter } from "../letter";
 import { Player } from "../player";
+import { SquarePosition } from "../square/square-position";
 import { QueueCollection } from "../queue-collection";
 import { LetterBankHandler } from "../../services/letterbank-handler";
+import { IPlaceWordResponse } from "../../services/commons/command/place-word-response.interface";
+import { CommandsHelper } from "../../services/commons/command/command-helper";
 
 let fakeSocketId1 = "fakeId@33md401";
 let fakeSocketId2 = "fakeId@3300001";
@@ -350,4 +355,138 @@ describe("Room", () => {
         expect(room.players.dequeue().username).to.deep.equals(player2.username);
         expect(room.players.dequeue().username).to.deep.equals(player1.username);
     });
+
+    it("should return the game status (over or not).", () => {
+        let roomCapacity = 1;
+        let room = new Room(roomCapacity);
+        let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+
+        room.addPlayer(player1);
+        expect(room.isGameOver).to.be.false;
+    });
+
+    it("should refill the player easel", () => {
+        let roomCapacity = 1;
+        let room = new Room(roomCapacity);
+        let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+        player1.easel.addLetters([new Letter("A", 1, 1)]);
+        room.addPlayer(player1);
+
+        expect(player1.easel.letters.length).to.be.equals(1);
+        room.refillPlayerEasel(player1.socketId);
+        expect(player1.easel.letters.length).to.be.equals(7);
+    });
+
+    it("should not refill the player easel because the socket id is not found", () => {
+        let roomCapacity = 1;
+        let room = new Room(roomCapacity);
+        let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+        player1.easel.addLetters([new Letter("A", 1, 1)]);
+        room.addPlayer(player1);
+
+        expect(player1.easel.letters.length).to.be.equals(1);
+        room.refillPlayerEasel(playerTwo.socketId);
+        expect(player1.easel.letters.length).to.be.equals(1);
+    });
+
+    it("should not refill the player easel because the bank of letters is empty.", () => {
+        let roomCapacity = 2;
+        let room = new Room(roomCapacity);
+        let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+        let player2 = new Player(fakename2, numberOfPlayers, fakeSocketId2);
+        player1.easel.addLetters([new Letter("A", 1, 1)]);
+        player2.easel.addLetters([new Letter("E", 1, 1)]);
+        player1.score = 0;
+        player2.score = 1;
+
+        room.addPlayer(player1);
+        room.addPlayer(player2);
+        room.letterBankHandler.bank.numberOfLettersInBank = 0;
+        expect(player1.easel.letters.length).to.be.equals(1);
+        expect(player1.score).to.be.equals(0);
+        expect(player2.score).to.be.equals(1);
+
+        room.refillPlayerEasel(player1.socketId);
+        expect(player1.easel.letters.length).to.be.equals(1);
+        expect(player1.score).to.be.equals(1);
+        expect(player2.score).to.be.equals(0);
+    });
+
+    it("should return the winner username.", () => {
+        let roomCapacity = 2;
+        let room = new Room(roomCapacity);
+        let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+        let player2 = new Player(fakename2, numberOfPlayers, fakeSocketId2);
+        player1.easel.addLetters([new Letter("A", 1, 1)]);
+        player2.easel.addLetters([new Letter("E", 1, 1)]);
+        player1.score = 14;
+        player2.score = 25;
+
+        room.addPlayer(player1);
+        room.addPlayer(player2);
+        expect(player1.score < player2.score).to.be.true;
+        expect(room.getWinnerUsername()).to.be.equals(player2.username);
+    });
+
+    it("should count the points of remaining letters on players easels but the targeted player.", () => {
+        let roomCapacity = 2;
+        let room = new Room(roomCapacity);
+        let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+        let player2 = new Player(fakename2, numberOfPlayers, fakeSocketId2);
+        player1.easel.addLetters([new Letter("A", 1, 1)]);
+        player2.easel.addLetters([new Letter("E", 1, 1), new Letter("J", 8, 1), new Letter("X", 10, 1)]);
+
+        room.addPlayer(player1);
+        room.addPlayer(player2);
+
+        expect(room.countPointsOfLettersRemainingOnOtherPlayersEasels(player1.socketId)).to.be.equals(19);
+    });
+
+    it("should count the points of remaining letters on players easels but the targeted player.", () => {
+        let roomCapacity = 1;
+        let room = new Room(roomCapacity);
+        let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+        player1.score = 10;
+        // !placer h8h bac.
+        room.board.squares[7][7].letter.alphabetLetter = "B";
+        room.board.squares[7][7].letter.point = 3;
+        room.board.squares[7][8].letter.alphabetLetter = "A";
+        room.board.squares[7][8].letter.point = 1;
+        room.board.squares[7][9].letter.alphabetLetter = "C";
+        room.board.squares[7][9].letter.point = 3;
+        room.board.lastLettersAdded =
+            [new SquarePosition("h", 8), new SquarePosition("h", 9), new SquarePosition("h", 10)];
+        room.addPlayer(player1);
+        let response: IPlaceWordResponse = {
+            _letters: ["B", "A", "C"],
+            _squarePosition: { _column: 7, _row: "h" },
+            _wordOrientation: CommandsHelper.HORIZONTAL_ORIENTATION
+        }
+        let isValid = room.verifyWordsCreated(response, player1.socketId);
+        expect(isValid).to.be.true;
+    });
 });
+    // public verifyWordsCreated(response: IPlaceWordResponse, socketId: string): boolean {
+    //     let areValidWords = false;
+    //     this._playersQueue.forEach((player: Player) => {
+    //         if (player.socketId === socketId) {
+    //             areValidWords = this._board.verificationService.verifyWordsCreated(response, this._board);
+    //             if (areValidWords) {
+    //                 player.updateScore(this._board.verificationService.score);
+    //             }
+    //         }
+    //     });
+    //     return areValidWords;
+    // }
+
+    // public removeLastLettersPlacedAndRefill(socketId: string): Array<string> {
+    //     let removedLetters = this._board.removeLastLettersAddedFromBoard();
+    //     let previousEasel: Array<string>;
+    //     this._playersQueue.forEach((player: Player) => {
+    //         if (player.socketId === socketId) {
+    //             player.easel.addLetters(removedLetters);
+    //             previousEasel = this._letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
+    //         }
+    //     });
+    //     return previousEasel;
+    // }
