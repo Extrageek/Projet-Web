@@ -40,8 +40,7 @@ export class PlayerShooting extends AbstractGameState {
         //TODO : CHANGE GREEN ONCE YOU PASS THE FIRST LINE
         this._gameInfo.broom.changeColourTo(THREE.ColorKeywords.green);
         this._gameInfo.stoneHandler.performShot(
-            this._gameInfo.direction,
-            this._gameInfo.speed,
+            this._gameInfo.shotParameters,
             () => {
                 this._gameInfo.gameStatus.usedStone();
                 let newState: AbstractGameState;
@@ -76,15 +75,15 @@ export class PlayerShooting extends AbstractGameState {
         let x = (event.clientX / window.innerWidth) * 2 - 1;
         let y = - (event.clientY / window.innerHeight) * 2 + 1;
 
-        this._raycaster.setFromCamera({x, y}, currentCamera);
+        this._raycaster.setFromCamera({ x, y }, currentCamera);
 
         for (let i = 0; i < this._gameInfo.rink.children.length; i++) {
             let child = this._gameInfo.rink.children[i];
-            let intersects = this._raycaster.intersectObject( child );
+            let intersects = this._raycaster.intersectObject(child);
             // Toggle rotation bool for meshes that we clicked
-            if ( intersects.length > 0 ) {
-                this._gameInfo.broom.position.set( 0, 0, 0 );
-                this._gameInfo.broom.position.copy( intersects[ 0 ].point );
+            if (intersects.length > 0) {
+                this._gameInfo.broom.position.set(0, 0, 0);
+                this._gameInfo.broom.position.copy(intersects[0].point);
             }
         }
         return null;
@@ -117,7 +116,7 @@ export class PlayerShooting extends AbstractGameState {
 
     public update(timePerFrame: number) {
         if (this._gameInfo.stoneHandler.checkPassHogLine()) {
-             this._gameInfo.broom.changeColourTo(THREE.ColorKeywords.red);
+            this._gameInfo.broom.changeColourTo(THREE.ColorKeywords.red);
         }
         else {
             this._gameInfo.broom.changeColourTo(THREE.ColorKeywords.green);

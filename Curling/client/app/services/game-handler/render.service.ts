@@ -8,6 +8,7 @@ import {
 import { GameStatusService } from "./../game-status.service";
 import { CameraService } from "./../views/cameras.service";
 import { LightingService } from "./../views/ligthing.service";
+import { ParticlesService } from "./../game-physics/particles.service";
 
 import { StoneHandler } from "../game-physics/stone-handler";
 import { TextureHandler } from "../views/texture-handler";
@@ -60,13 +61,12 @@ export class RenderService {
             isSelectingPower: false,
             line: { lineGeometry: null, lineDashedMaterial: null, lineMesh: null, lineAnimationSlower: null },
             mousePositionPlaneXZ: new Vector3(0, 0, 0),
-            power: 0,
+            powerBar: 0,
             gameState: null,
-            direction: null,
-            speed: 0,
+            shotParameters: { spin: 0, direction: null, power: null },
             stoneHandler: null,
             textureHandler: null,
-
+            particlesService: null
         };
         this._lightingService = lightingService;
         Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "cameraService", { value: cameraService });
@@ -295,7 +295,7 @@ export class RenderService {
     switchSpin(event: KeyboardEvent) {
         let sKeyCode = 83;
         if (event.keyCode === sKeyCode) {
-            this._gameInfo.stoneHandler.invertSpin();
+            this._gameInfo.shotParameters.spin = (this._gameInfo.shotParameters.spin + 1) % 2;
         }
     }
 

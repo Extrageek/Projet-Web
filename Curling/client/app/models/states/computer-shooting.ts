@@ -33,14 +33,13 @@ export class ComputerShooting extends AbstractGameState {
 
     protected performEnteringState() {
         this._gameInfo.stoneHandler.performShot(
-            this._gameInfo.direction,
-            this._gameInfo.speed,
+            this._gameInfo.shotParameters,
             () => {
                 this._gameInfo.gameStatus.usedStone();
                 let newState: AbstractGameState;
                 if (this._gameInfo.gameStatus.currentStonesPlayer === 0
                     && this._gameInfo.gameStatus.currentStonesComputer === 0) {
-                        newState = EndSet.getInstance();
+                    newState = EndSet.getInstance();
                 }
                 else {
                     newState = LoadingStone.getInstance();

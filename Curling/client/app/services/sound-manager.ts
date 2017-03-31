@@ -8,8 +8,14 @@ export class SoundManager {
     private _broomOutSound: Audio;
     private _collisionSound: Audio;
 
-
     private _audioLoader: AudioLoader;
+
+    public static getInstance(): SoundManager {
+        if (SoundManager._instance === null || SoundManager._instance === undefined) {
+            SoundManager._instance = new SoundManager();
+        }
+        return SoundManager._instance;
+    }
 
     constructor() {
         this._listener = new AudioListener();
@@ -20,32 +26,28 @@ export class SoundManager {
             this._collisionSound = retrievedSound;
         });
 
-        this.addSound("../assets/sounds/broom-sweep-in.wav").then((retrievedSound: Audio) => {
+        this.addSound("../assets/sounds/broomIn.wav").then((retrievedSound: Audio) => {
             this._broomInSound = retrievedSound;
         });
 
-        this.addSound("../assets/sounds/broom-sweep-out.wav").then((retrievedSound: Audio) => {
+        this.addSound("../assets/sounds/broomOut.wav").then((retrievedSound: Audio) => {
             this._broomOutSound = retrievedSound;
         });
     }
 
     get broomOutSound(): THREE.Audio {
+        this._broomOutSound.isPlaying = false;
         return this._broomOutSound.play();
     }
 
     get broomInSound(): THREE.Audio {
+        this._broomInSound.isPlaying = false;
         return this._broomInSound.play();
     }
 
     get collisionSound(): THREE.Audio {
+        this._collisionSound.isPlaying = false;
         return this._collisionSound.play();
-    }
-
-    public static getInstance(): SoundManager {
-        if (SoundManager._instance === null || SoundManager._instance === undefined) {
-            SoundManager._instance = new SoundManager();
-        }
-        return SoundManager._instance;
     }
 
     get listener(): THREE.AudioListener {
@@ -55,15 +57,16 @@ export class SoundManager {
     private addSound(soundPath: string): Promise<Audio> {
         return new Promise<Audio>((resolve, reject) => {
             this._audioLoader.load(soundPath, (buffer: AudioBuffer) => { // On load
-                    let newSound = new Audio(this._listener);
-                    newSound.setBuffer(buffer);
-                    newSound.setLoop(false);
-                    resolve(newSound);
-                }, () => {
-                }, // On progress
+                let newSound = new Audio(this._listener);
+                newSound.setBuffer(buffer);
+                newSound.setLoop(false);
+                resolve(newSound);
+            }, () => {
+                // On progress
+            },
                 () => { // On error
                     console.error("Sound not found, unable to load");
-                })
+                });
         });
 
     }

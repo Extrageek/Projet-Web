@@ -4,15 +4,18 @@ import { CameraService } from "../views/cameras.service";
 import { GameStatusService } from "./../game-status.service";
 import { StoneHandler } from "../game-physics/stone-handler";
 import { TextureHandler } from "../views/texture-handler";
+import { ParticlesService } from "./../game-physics/particles.service";
 import { CameraType } from "../game-physics/camera-type";
 import { AbstractGameState } from "./../../models/states/abstract-game-state";
 import { Broom } from "../../models/broom";
 import { Rink } from "../../models/scenery/rink";
+import { ShotParameters } from "../../models/shot-parameters.interface";
 
 export interface IGameInfo {
     stoneHandler: StoneHandler;
     textureHandler: TextureHandler;
     cameraService: CameraService;
+    particlesService: ParticlesService;
     gameStatus: GameStatusService;
     currentCamera: CameraType;
     line: {
@@ -31,9 +34,8 @@ export interface IGameInfo {
 
     //For Angular progress bar
     isSelectingPower: boolean;
-    power: number;
+    powerBar: number;
 
     //For shooting
-    speed: number;
-    direction: Vector3;
+    shotParameters: ShotParameters;
 }

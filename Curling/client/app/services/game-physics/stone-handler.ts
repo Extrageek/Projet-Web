@@ -1,8 +1,9 @@
 import { ObjectLoader, Vector3, Box3, Scene } from 'three';
 import { RinkInfo } from '../../models/scenery/rink-info.interface';
-import { Stone, StoneSpin, StoneColor } from '../../models/stone';
+import { Stone, StoneColor } from '../../models/stone';
 import { GameComponent } from '../../models/game-component.interface';
 import { SoundManager } from "../sound-manager";
+import { ShotParameters } from "../../models/shot-parameters.interface";
 
 export interface Points {
     player: number;
@@ -10,7 +11,6 @@ export interface Points {
 }
 
 export class StoneHandler implements GameComponent {
-
 
     public static readonly SHOT_POWER_MINIMUM = 0.2;
     public static readonly SHOT_POWER_MAXIMUM = 4;
@@ -24,7 +24,6 @@ export class StoneHandler implements GameComponent {
     private _objectLoader: ObjectLoader;
     private _stoneOnTheGame: Stone[];
     private _stonesToBeRemoved: Stone[];
-    private _currentSpin: StoneSpin;
     private _callbackAfterShotFinished: Function;
     private _outOfBoundsRink: Box3;
     private _boxBetweenLines: Box3;
@@ -36,7 +35,6 @@ export class StoneHandler implements GameComponent {
         this._objectLoader = objectLoader;
         this._stoneOnTheGame = new Array<Stone>();
         this._stonesToBeRemoved = new Array<Stone>();
-        this._currentSpin = StoneSpin.Clockwise;
         this._callbackAfterShotFinished = null;
         this._outOfBoundsRink = new Box3(new Vector3(-2.15, 0, -22.5), new Vector3(2.15, 0, 22.5));
 
@@ -52,15 +50,6 @@ export class StoneHandler implements GameComponent {
         return this._stoneOnTheGame;
     }
 
-    public get currentSpin(): StoneSpin {
-        return this._currentSpin;
-    }
-
-    public invertSpin() {
-        this._currentSpin = (this.currentSpin === StoneSpin.Clockwise)
-            ? StoneSpin.CounterClockwise : StoneSpin.Clockwise;
-    }
-
     public removeOutOfBoundsStones(scene: Scene) {
         for (let stone of this._stonesToBeRemoved) {
             scene.remove(stone);
@@ -68,17 +57,16 @@ export class StoneHandler implements GameComponent {
     }
 
     public performShot(
-        direction: Vector3,
-        speed: number,
+        shotParameters: ShotParameters,
         callbackWhenShotFinished: Function = () => {/*Do nothing by default*/ }
     ) {
         if (this._stoneOnTheGame.length === 0) {
             throw new RangeError("Cannot perform shot on a stone. No stones has been generated yet.");
         }
         let lastIndex = this._stoneOnTheGame.length - 1;
-        this._stoneOnTheGame[lastIndex].speed = speed;
-        this._stoneOnTheGame[lastIndex].direction = direction;
-        this._stoneOnTheGame[lastIndex].spin = this.currentSpin;
+        this._stoneOnTheGame[lastIndex].speed = shotParameters.power;
+        this._stoneOnTheGame[lastIndex].direction = shotParameters.direction.clone();
+        this._stoneOnTheGame[lastIndex].spin = shotParameters.spin;
         this._callbackAfterShotFinished = callbackWhenShotFinished;
     }
 
@@ -108,7 +96,6 @@ export class StoneHandler implements GameComponent {
             let aStoneIsMoving = false;
             let isCollision = false;
             this._stoneOnTheGame.map((stone: Stone) => {
-                console.log(stone.position);
                 if (stone.speed !== 0) {
                     stone.update(timePerFrame);
                     this.resolveCollisions(stone);
