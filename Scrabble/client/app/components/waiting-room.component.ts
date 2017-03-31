@@ -1,9 +1,11 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router} from "@angular/router";
+
 import { Subscription } from "rxjs/Subscription";
 import { SocketService } from "../services/socket-service";
 import { SocketEventType } from "../commons/socket-eventType";
 import { IRoomMessage } from "../commons/messages/room-message.interface";
+import { Player } from "../models/player";
 
 @Component({
     moduleId: module.id,
@@ -12,7 +14,6 @@ import { IRoomMessage } from "../commons/messages/room-message.interface";
     styleUrls: [ "./../../assets/stylesheets/waiting-room.css" ]
 })
 export class WaitingRoomComponent implements OnInit, OnDestroy {
-    private _username = "";
     private _numberOfPlayerMissing: number;
     private _onJoinedRoomSubscription: Subscription;
 
@@ -20,18 +21,37 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
         return this._numberOfPlayerMissing;
     }
 
-    constructor(private router: Router, private socketService: SocketService) {
-        // Default constructor
+    constructor(
+        private activatedRoute: ActivatedRoute,
+        private router: Router,
+        private socketService: SocketService) {
+            // Default constructor
             console.log(this.socketService.player.numberOfPlayers);
             this._numberOfPlayerMissing = this.socketService.player.numberOfPlayers;
     }
 
     ngOnInit() {
-            this._onJoinedRoomSubscription = this.onJoinedRoom();
-       }
+        console.log("OnInit");
+
+        this.activatedRoute.params.subscribe(params => {
+            console.log(params);
+
+            this.socketService.player = new Player(params['id']);
+            console.log(this.socketService.player);
+        });
+
+        this.socketService.subscribeToChannelEvent(SocketEventType.CONNECT_ERROR)
+            .subscribe(this.onConnectionError);
+        this._onJoinedRoomSubscription = this.onJoinedRoom();
+    }
 
     ngOnDestroy() {
         // unsubscribe to all the listening events
+    }
+
+    // A callback function when the server is not reachable.
+    public onConnectionError() {
+        console.log("Connection Error: The server is not reachable");
     }
 
     // A callback when the player join a room
@@ -40,8 +60,10 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
             .subscribe((roomMessage: IRoomMessage) => {
                 console.log("Joined the room", roomMessage);
                 if (roomMessage._roomIsReady) {
-                    this.socketService.emitMessage(SocketEventType.INITIALIZE_EASEL, this._username);
-                    this.router.navigate(["/game-room", this._username]);
+                    this.socketService
+                        .emitMessage(SocketEventType.INITIALIZE_EASEL, this.socketService.player.username);
+                    console.log(this.socketService.player.username);
+                    this.router.navigate(["/game-room", this.socketService.player.username]);
                 } else {
                     this._numberOfPlayerMissing = roomMessage._numberOfMissingPlayers;
                 }
