@@ -53,13 +53,14 @@ export class PlayerTurn extends AbstractGameState {
 
     public performEnteringState() {
         this._gameInfo.isSelectingPower = true;
-        this._gameInfo.power = 0;
+        this._gameInfo.powerBar = 0;
         this._gameInfo.line.lineDashedMaterial.visible = true;
         this._gameInfo.gameStatus.currentPlayer = CurrentPlayer.BLUE;
     }
 
     public performLeavingState() {
         this._gameInfo.line.lineDashedMaterial.visible = false;
+        this._gameInfo.isSelectingPower = false;
     }
 
     public performMouseMove(event: MouseEvent): AbstractGameState {
@@ -82,7 +83,7 @@ export class PlayerTurn extends AbstractGameState {
     public performMouseButtonPress(): AbstractGameState {
         if (!this._mouseIsPressed) {
             this._mouseIsPressed = true;
-            this._gameInfo.power = 0;
+            this._gameInfo.powerBar = 0;
             this._powerTimer.start();
         }
         return null;
@@ -92,15 +93,14 @@ export class PlayerTurn extends AbstractGameState {
         let newState: AbstractGameState = null;
         if (this._mouseIsPressed) {
             this._mouseIsPressed = false;
-            this._gameInfo.isSelectingPower = false;
             this._powerTimer.stop();
 
             let timeDelta = (this._powerTimer.oldTime - this._powerTimer.startTime) / PlayerTurn.ONE_SECOND;
             if (timeDelta > PlayerTurn.SHOT_POWER_MINIMUM) {
-                this._gameInfo.speed = PlayerTurn.SHOT_POWER_OFFSET;
-                this._gameInfo.speed += (timeDelta > PlayerTurn.SHOT_POWER_MAXIMUM) ?
+                this._gameInfo.shotParameters.power = PlayerTurn.SHOT_POWER_OFFSET;
+                this._gameInfo.shotParameters.power += (timeDelta > PlayerTurn.SHOT_POWER_MAXIMUM) ?
                     PlayerTurn.SHOT_POWER_MAXIMUM : timeDelta;
-                this._gameInfo.direction = this._gameInfo.line.lineGeometry.vertices[1].clone().normalize();
+                this._gameInfo.shotParameters.direction = this._gameInfo.line.lineGeometry.vertices[1].clone().normalize();
                 newState = PlayerShooting.getInstance();
             }
         }
@@ -110,7 +110,7 @@ export class PlayerTurn extends AbstractGameState {
     public update(timePerFrame: number) {
         if (this._mouseIsPressed) {
             this._powerTimer.getDelta();
-            this._gameInfo.power = Math.min(
+            this._gameInfo.powerBar = Math.min(
                 (this._powerTimer.oldTime - this._powerTimer.startTime) / PlayerTurn.ONE_SECOND /
                 PlayerTurn.SHOT_POWER_MAXIMUM * PlayerTurn.MAX_PROGRESS_BAR_PERCENT,
                 PlayerTurn.MAX_PROGRESS_BAR_PERCENT

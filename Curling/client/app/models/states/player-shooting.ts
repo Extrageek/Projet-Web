@@ -40,8 +40,7 @@ export class PlayerShooting extends AbstractGameState {
         //TODO : CHANGE GREEN ONCE YOU PASS THE FIRST LINE
         this._gameInfo.broom.changeColourTo(THREE.ColorKeywords.green);
         this._gameInfo.stoneHandler.performShot(
-            this._gameInfo.direction,
-            this._gameInfo.speed,
+            this._gameInfo.shotParameters,
             () => {
                 this._gameInfo.gameStatus.usedStone();
                 let newState: AbstractGameState;

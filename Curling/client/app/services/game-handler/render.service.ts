@@ -61,10 +61,9 @@ export class RenderService {
             isSelectingPower: false,
             line: { lineGeometry: null, lineDashedMaterial: null, lineMesh: null, lineAnimationSlower: null },
             mousePositionPlaneXZ: new Vector3(0, 0, 0),
-            power: 0,
+            powerBar: 0,
             gameState: null,
-            direction: null,
-            speed: 0,
+            shotParameters: {spin: 0, direction: null, power: null},
             stoneHandler: null,
             textureHandler: null,
             particlesService: null
@@ -296,7 +295,7 @@ export class RenderService {
     switchSpin(event: KeyboardEvent) {
         let sKeyCode = 83;
         if (event.keyCode === sKeyCode) {
-            this._gameInfo.stoneHandler.invertSpin();
+            this._gameInfo.shotParameters.spin = (this._gameInfo.shotParameters.spin + 1) % 2
         }
     }
 

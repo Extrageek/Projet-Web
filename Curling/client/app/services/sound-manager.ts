@@ -20,24 +20,27 @@ export class SoundManager {
             this._collisionSound = retrievedSound;
         });
 
-        this.addSound("../assets/sounds/broom-sweep-in.wav").then((retrievedSound: Audio) => {
+        this.addSound("../assets/sounds/broomIn.wav").then((retrievedSound: Audio) => {
             this._broomInSound = retrievedSound;
         });
 
-        this.addSound("../assets/sounds/broom-sweep-out.wav").then((retrievedSound: Audio) => {
+        this.addSound("../assets/sounds/broomOut.wav").then((retrievedSound: Audio) => {
             this._broomOutSound = retrievedSound;
         });
     }
 
     get broomOutSound(): THREE.Audio {
+        this._broomOutSound.isPlaying = false;
         return this._broomOutSound.play();
     }
 
     get broomInSound(): THREE.Audio {
+        this._broomInSound.isPlaying = false;
         return this._broomInSound.play();
     }
 
     get collisionSound(): THREE.Audio {
+        this._collisionSound.isPlaying = false;
         return this._collisionSound.play();
     }
 

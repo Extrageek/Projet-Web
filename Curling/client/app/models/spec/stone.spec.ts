@@ -2,8 +2,8 @@ import { expect } from "chai";
 import { ObjectLoader, Vector3 } from "three";
 import { Stone, StoneColor, StoneSpin } from "./../stone";
 
-describe("Stone tester should", () => {
-
+describe("Stone tester should", function() {
+    this.timeout(15000);
     let objectLoader: ObjectLoader;
 
     before(() => {
@@ -16,6 +16,9 @@ describe("Stone tester should", () => {
             expect(stone.material).exist;
             expect(stone.stoneColor).to.equals(StoneColor.Red);
             done();
+        }).catch(() => {
+            console.log("rip");
+            console.log("rip");
         });
     });
 
@@ -28,7 +31,10 @@ describe("Stone tester should", () => {
             expect(stone.isSweeping).to.equals(true);
             expect(stone.stoneColor).to.equals(StoneColor.Blue);
             done();
-        });
+        }).catch(() => {
+            console.log("rip");
+            console.log("rip");
+        });;
     });
 
     it("build stone with a clockwise spin then invert its spin", done => {

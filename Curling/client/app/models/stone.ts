@@ -17,10 +17,10 @@ export class Stone extends Group implements GameComponent {
 
     private static readonly STONES_PATH =
     ["/assets/models/json/curling-stone-blue.json", "/assets/models/json/curling-stone-red.json"];
-    private static readonly BOUNDING_SPHERE_RADIUS = 0.26;
-    private static readonly THETA = Math.PI / 25000;
+    public static readonly THETA = Math.PI * 3 / 1250;
     private static readonly ONE_SECOND = 1000;
     private static readonly TEN_MILLISECONDS = 10;
+    public static readonly BOUNDING_SPHERE_RADIUS = 0.26;
     private static readonly SCALE = { x: 1, y: 1, z: 1 };
     private static readonly MATERIAL_PROPERTIES = { wireframe: false, shininess: 0.7 };
     public static readonly SPEED_DIMINUTION_NUMBER = 0.25;
@@ -29,7 +29,6 @@ export class Stone extends Group implements GameComponent {
     private static readonly SECONDS_PER_FULL_ROTATION = 4;
     //private static readonly SWEEPING_CURL_COEFF = 0.0001;
 
-    private _theta: number;
     public _material: MeshPhongMaterial;
     private _stoneColor: StoneColor;
     //Speed orientation and quantity in meters per second
@@ -37,18 +36,12 @@ export class Stone extends Group implements GameComponent {
     private _direction: Vector3;
     private _sweeping: boolean;
     private _spin: StoneSpin;
+    private _thetaPerFrame: number;
     //Bounding sphere used for collisions. Only works if the stones are displaced on the XZ plane.
     private _boundingSphere: Sphere;
     private _lastBoundingSphere: Sphere;
     private _lastPosition: Vector3;
     private _curlMatrix: Matrix3;
-
-    public get theta(): number {
-        return this._theta;
-    }
-    public set theta(angle: number) {
-        this._theta = angle;
-    }
 
     public get boundingSphere(): Sphere {
         return this._boundingSphere;
@@ -99,6 +92,7 @@ export class Stone extends Group implements GameComponent {
 
     public set spin(s: StoneSpin) {
         this._spin = s;
+        this._thetaPerFrame = Stone.THETA * (this._spin === StoneSpin.Clockwise? -1 : 1);
     }
 
     public static createStone(objectLoader: ObjectLoader, stoneColor: StoneColor, initialPosition: Vector3)
@@ -132,7 +126,6 @@ export class Stone extends Group implements GameComponent {
         this._boundingSphere = new Sphere(this.position, Stone.BOUNDING_SPHERE_RADIUS);
         this._lastBoundingSphere = this._boundingSphere;
         this._lastPosition = this.position;
-        this.theta = Stone.THETA;
         this._curlMatrix = new Matrix3();
     }
 
@@ -144,8 +137,7 @@ export class Stone extends Group implements GameComponent {
     public update(timePerFrame: number) {
         if (this._speed !== 0) {
             this.saveOldValues();
-            this.calculateRotationAngle();
-            this.calculateCurlMatrix();
+            this.calculateCurlMatrix(this._thetaPerFrame * timePerFrame);
             //Applying MRUA equation. Xf = Xi + V0*t + a*t^2 / 2, where t = timePerFrame, V0 = speed,
             //Xf is the final position, Xi is the initial position and a = -SPEED_DIMINUTION_NUMBER.
             //CurlMatrix is applied to the MRUA equaion to add a spin effect
@@ -221,24 +213,10 @@ export class Stone extends Group implements GameComponent {
         return observable;
     }
 
-    private calculateRotationAngle() {
-        let oldTheta = this.theta;
-        // invert spin from counterclockwise to clockwise
-        if (this._spin === StoneSpin.Clockwise && oldTheta > 0) {
-            this.theta = -this.theta;
-        }
-        // invert spin from clockwise to counterclockwise
-        else if (this._spin === StoneSpin.CounterClockwise && oldTheta < 0) {
-            this.theta = -this.theta;
-        }
-    }
-
-    private calculateCurlMatrix() {
-        if (this._curlMatrix !== null || this._curlMatrix !== undefined) {
-            this._curlMatrix.set(
-                Math.cos(this.theta), 0, Math.sin(this.theta),
-                0, 1, 0,
-                -Math.sin(this.theta), 0, Math.cos(this.theta));
-        }
+    private calculateCurlMatrix(theta: number) {
+        this._curlMatrix.set(
+            Math.cos(theta), 0, Math.sin(theta),
+            0, 1, 0,
+            -Math.sin(theta), 0, Math.cos(theta));
     }
 }
