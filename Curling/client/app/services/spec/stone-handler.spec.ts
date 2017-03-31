@@ -209,4 +209,3 @@ describe("StoneHandler tests should", () => {
     });
     */
 });
-
