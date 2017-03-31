@@ -39,19 +39,19 @@ export class LoadingStone extends AbstractGameState {
      */
     protected performEnteringState() {
         this._gameInfo.stoneHandler.generateNewStone()
-        .then((stone: Stone) => {
-            this._gameInfo.scene.add(stone);
-            this._gameInfo.cameraService.movePerspectiveCameraToFollowObjectOnZ(stone);
+            .then((stone: Stone) => {
+                this._gameInfo.scene.add(stone);
+                this._gameInfo.cameraService.movePerspectiveCameraToFollowObjectOnZ(stone);
 
-            let newState: AbstractGameState;
-            if (this._gameInfo.gameStatus.currentPlayer === CurrentPlayer.BLUE) {
-                newState = PlayerTurn.getInstance();
-            }
-            else {
-                newState = ComputerTurn.getInstance();
-            }
-            this.leaveState(newState);
-        });
+                let newState: AbstractGameState;
+                if (this._gameInfo.gameStatus.currentPlayer === CurrentPlayer.BLUE) {
+                    newState = PlayerTurn.getInstance();
+                }
+                else {
+                    newState = ComputerTurn.getInstance();
+                }
+                this.leaveState(newState);
+            });
     }
 
     protected performLeavingState() {

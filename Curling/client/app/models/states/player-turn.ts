@@ -100,7 +100,9 @@ export class PlayerTurn extends AbstractGameState {
                 this._gameInfo.shotParameters.power = PlayerTurn.SHOT_POWER_OFFSET;
                 this._gameInfo.shotParameters.power += (timeDelta > PlayerTurn.SHOT_POWER_MAXIMUM) ?
                     PlayerTurn.SHOT_POWER_MAXIMUM : timeDelta;
-                this._gameInfo.shotParameters.direction = this._gameInfo.line.lineGeometry.vertices[1].clone().normalize();
+                this._gameInfo.shotParameters.direction = this._gameInfo.line.lineGeometry.vertices[1]
+                    .clone()
+                    .normalize();
                 newState = PlayerShooting.getInstance();
             }
         }

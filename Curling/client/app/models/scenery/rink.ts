@@ -7,9 +7,9 @@ export class Rink extends Group implements RinkInfo {
     public static readonly INITIAL_STONE_POSITION = new Vector3(0, 0, -18);
 
     private static readonly MODEL_PATH = "/assets/models/json/curling-rink.json";
-    private static readonly POSITION = {x: 0, y: 0, z: 0};
-    private static readonly SCALE = {x: 1, y: 1, z: 1};
-    private static readonly MATERIAL_PROPERTIES = {wireframe: false, shininess: 0.4};
+    private static readonly POSITION = { x: 0, y: 0, z: 0 };
+    private static readonly SCALE = { x: 1, y: 1, z: 1 };
+    private static readonly MATERIAL_PROPERTIES = { wireframe: false, shininess: 0.4 };
 
     private _material: MeshPhongMaterial;
 

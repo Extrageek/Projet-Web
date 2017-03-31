@@ -63,7 +63,7 @@ export class RenderService {
             mousePositionPlaneXZ: new Vector3(0, 0, 0),
             powerBar: 0,
             gameState: null,
-            shotParameters: {spin: 0, direction: null, power: null},
+            shotParameters: { spin: 0, direction: null, power: null },
             stoneHandler: null,
             textureHandler: null,
             particlesService: null
@@ -295,7 +295,7 @@ export class RenderService {
     switchSpin(event: KeyboardEvent) {
         let sKeyCode = 83;
         if (event.keyCode === sKeyCode) {
-            this._gameInfo.shotParameters.spin = (this._gameInfo.shotParameters.spin + 1) % 2
+            this._gameInfo.shotParameters.spin = (this._gameInfo.shotParameters.spin + 1) % 2;
         }
     }
 

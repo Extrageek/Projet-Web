@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { ObjectLoader, Vector3 } from "three";
 import { Stone, StoneColor, StoneSpin } from "./../stone";
 
-describe("Stone tester should", function() {
+describe("Stone tester should", function () {
     this.timeout(15000);
     let objectLoader: ObjectLoader;
 
@@ -34,7 +34,7 @@ describe("Stone tester should", function() {
         }).catch(() => {
             console.log("rip");
             console.log("rip");
-        });;
+        });
     });
 
     it("build stone with a clockwise spin then invert its spin", done => {
