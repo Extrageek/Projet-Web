@@ -1,6 +1,7 @@
 import { Vector3 } from "three";
 import { AbstractGameState } from "./abstract-game-state";
 import { IGameInfo } from "./../../services/game-handler/game-info.interface";
+import { ParticlesService } from "./../../services/game-physics/particles.service";
 
 export class EndGame extends AbstractGameState {
 
@@ -30,17 +31,19 @@ export class EndGame extends AbstractGameState {
     }
 
     protected performEnteringState() {
+        console.log("entering end game set");
+        //this._gameInfo.particlesService = new ParticlesService(this._gameInfo.scene);
         if (this._gameInfo.gameStatus.scorePlayer > this._gameInfo.gameStatus.scoreComputer) {
-            this._gameInfo.textureHandler.addText(new Vector3(0, 5, -10), "Vous avez gagné!");
-            //this._textureHandler.setText("Vous avez gagné!", this._scene);
+            //this._gameInfo.textureHandler.addText(new Vector3(0, 5, -10), "Vous avez gagné!");
+            this._gameInfo.textureHandler.addText(new Vector3(0, 0, 0), "Vous avez gagné!");
         }
         else if (this._gameInfo.gameStatus.scorePlayer < this._gameInfo.gameStatus.scoreComputer) {
-            this._gameInfo.textureHandler.addText(new Vector3(0, 5, -10), "Vous avez perdu!");
-            //this._textureHandler.setText("Vous avez perdu!", this._scene);
+            //this._gameInfo.textureHandler.addText(new Vector3(0, 5, -10), "Vous avez perdu!");
+            this._gameInfo.textureHandler.addText(new Vector3(0, 0, 0), "Vous avez perdu!");
         }
         else {
-            this._gameInfo.textureHandler.addText(new Vector3(7, 3.5, -18), "C'est une partie nulle.");
-            //this._textureHandler.setText("C'est une partie nulle.", this._scene);
+            //this._gameInfo.textureHandler.addText(new Vector3(7, 3.5, -18), "C'est une partie nulle.");
+            this._gameInfo.textureHandler.addText(new Vector3(7, 0, 0), "C'est une partie nulle.");
         }
     }
 

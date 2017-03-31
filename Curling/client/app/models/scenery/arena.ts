@@ -3,9 +3,9 @@ import { Group, MeshPhongMaterial, Object3D, ObjectLoader } from "three";
 export class Arena extends Group {
 
     private static readonly MODEL_PATH = "/assets/models/json/arena.json";
-    private static readonly POSITION = {x: 0, y: 0, z: 0};
-    private static readonly SCALE = {x: 1, y: 1, z: 1};
-    private static readonly MATERIAL_PROPERTIES = {wireframe: false, shininess: 0.2};
+    private static readonly POSITION = { x: 0, y: 0, z: 0 };
+    private static readonly SCALE = { x: 1, y: 1, z: 1 };
+    private static readonly MATERIAL_PROPERTIES = { wireframe: false, shininess: 0.2 };
 
     private _material: MeshPhongMaterial;
 

@@ -4,7 +4,7 @@ import { ComputerAI } from "../computerAI";
 import { Rink } from "../scenery/rink";
 import { RinkInfo } from "../scenery/rink-info.interface";
 import { Stone, StoneColor } from "../stone";
-import { Difficulty } from "../difficulty"; 
+import { Difficulty } from "../difficulty";
 import { ShotParameters } from "../shot-parameters.interface";
 import { GameComponent } from "../game-component.interface";
 
@@ -13,29 +13,29 @@ function updateLoopAndVerifyPosition(numberOfUpdates: number,
     gameComponent: GameComponent & Object3D,
     positionToPass: Vector3,
     done: MochaDone
-    ) {
-        const tpf = 1 / 60;
-        let i = 0;
-        let stonePassedByThisPosition = false;
-        while (!stonePassedByThisPosition && i < numberOfUpdates) {
-            gameComponent.update(tpf);
-            stonePassedByThisPosition = gameComponent.position.clone().sub(positionToPass).length() < Stone.BOUNDING_SPHERE_RADIUS;
-            ++i;
-        }
-        if (stonePassedByThisPosition) {
-            done();
-        }
+) {
+    const tpf = 1 / 60;
+    let i = 0;
+    let stonePassedByThisPosition = false;
+    while (!stonePassedByThisPosition && i < numberOfUpdates) {
+        gameComponent.update(tpf);
+        stonePassedByThisPosition = gameComponent.position.clone().sub(positionToPass).length() <
+            Stone.BOUNDING_SPHERE_RADIUS;
+        ++i;
+    }
+    if (stonePassedByThisPosition) {
+        done();
+    }
 }
 
-let rinkInfo: RinkInfo = 
-{
-    targetCenter: Rink.TARGET_CENTER,
-    initialStonePosition: Rink.INITIAL_STONE_POSITION,
-    targetRadius: 1
+let rinkInfo: RinkInfo =
+    {
+        targetCenter: Rink.TARGET_CENTER,
+        initialStonePosition: Rink.INITIAL_STONE_POSITION,
+        targetRadius: 1
+    };
 
-}
-
-let meanFriction = (Stone.SPEED_DIMINUTION_NUMBER + Stone.SPEED_DIMINUTION_NUMBER_WITH_SWEEP) / 2
+let meanFriction = (Stone.SPEED_DIMINUTION_NUMBER + Stone.SPEED_DIMINUTION_NUMBER_WITH_SWEEP) / 2;
 
 describe("computerAI should", () => {
 
@@ -48,7 +48,7 @@ describe("computerAI should", () => {
 describe("computerAI should", () => {
 
     let computerAI: ComputerAI;
-    let objectLoader: ObjectLoader
+    let objectLoader: ObjectLoader;
 
     before(() => {
         objectLoader = new ObjectLoader();

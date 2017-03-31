@@ -20,18 +20,6 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
     _messageArray: Array<IGameMessage>;
     _username: string;
 
-    private _onJoinedRoomSubscription: Subscription;
-    private _onLeaveRoomSubscription: Subscription;
-    private _onReceivedMessageSubscription: Subscription;
-
-    private _onPlaceWordSubscription: Subscription;
-    private _onChangedLetterCommandSubscription: Subscription;
-    private _onPassCommandSubscription: Subscription;
-
-    private _onCommandRequest: Subscription;
-    private _onInvalidCommandSubscription: Subscription;
-    private _onNotAllowedCommandSubscription: Subscription;
-
     private _hasNewMessages: boolean;
 
     @ViewChild("scroll") private myScrollContainer: ElementRef;
@@ -48,10 +36,10 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
         });
 
         // Subscribe to event by calling the related method and save them for unsubsciption OnDestroy
-        this._onJoinedRoomSubscription = this.onJoinedRoom();
-        this._onLeaveRoomSubscription = this.onLeaveRoom();
-        this._onReceivedMessageSubscription = this.onReceivedMessage();
-        this._onCommandRequest = this.onCommandRequest();
+        this.onJoinedRoom();
+        this.onLeaveRoom();
+        this.onReceivedMessage();
+        this.onCommandRequest();
     }
 
     ngOnDestroy() {

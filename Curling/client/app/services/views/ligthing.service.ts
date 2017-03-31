@@ -7,10 +7,9 @@ export class LightingService {
     public get spotLights(): Array<SpotLight> {
         return this._spotLights;
     }
-    public set spotLights(v: Array<SpotLight>) {
-        this._spotLights = v;
+    public set spotLights(lights: Array<SpotLight>) {
+        this._spotLights = lights;
     }
-
 
     constructor() {
         this.createSpotLights();

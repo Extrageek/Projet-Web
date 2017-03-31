@@ -39,7 +39,7 @@ export class ComputerShooting extends AbstractGameState {
                 let newState: AbstractGameState;
                 if (this._gameInfo.gameStatus.currentStonesPlayer === 0
                     && this._gameInfo.gameStatus.currentStonesComputer === 0) {
-                        newState = EndSet.getInstance();
+                    newState = EndSet.getInstance();
                 }
                 else {
                     newState = LoadingStone.getInstance();

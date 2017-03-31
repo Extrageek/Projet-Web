@@ -1,5 +1,7 @@
-import { Scene, FontLoader, TextGeometry, MeshPhongMaterial, MultiMaterial, Mesh, Group, TextGeometryParameters, Font,
-     Vector3 } from "three";
+import {
+    Scene, FontLoader, TextGeometry, MeshPhongMaterial, MultiMaterial, Mesh, Group, TextGeometryParameters, Font,
+    Vector3
+} from "three";
 
 export class TextureHandler {
 
@@ -20,19 +22,19 @@ export class TextureHandler {
 
     public static createTextureHandler(sceneToAddTextures: Scene, fontPath = TextureHandler.HELVETIKER_FONT)
         : Promise<TextureHandler> {
-            return new Promise<TextureHandler>((resolve, reject) => {
+        return new Promise<TextureHandler>((resolve, reject) => {
             //The font parameter is supposed to be an object of font type. Typescript has a wrong callback parameter.
-                TextureHandler.FONT_LOADER.load(fontPath,
-                    (font: any) => {
-                        resolve(new TextureHandler(sceneToAddTextures, font));
-                    },
-                    (event: any) => {
-                        //Nothing to do
-                    },
-                    (event: any) => {
-                        reject("Can't load the font!");
-                    });
-            });
+            TextureHandler.FONT_LOADER.load(fontPath,
+                (font: any) => {
+                    resolve(new TextureHandler(sceneToAddTextures, font));
+                },
+                (event: any) => {
+                    //Nothing to do
+                },
+                (event: any) => {
+                    reject("Can't load the font!");
+                });
+        });
     }
 
     private constructor(sceneToAddTextures: Scene, font: Font) {
@@ -51,23 +53,23 @@ export class TextureHandler {
     }
 
     public addText(position: Vector3, texte: string, textGeometryParameters = this._defaultParameters): number {
-            //Create the text.
-            let textGeometry = new TextGeometry(texte, textGeometryParameters);
-            textGeometry.computeBoundingBox();
-            let textMaterial = new MeshPhongMaterial({color: THREE.ColorKeywords.red});
-            let textMesh = new Mesh(textGeometry, textMaterial);
-            textMesh.rotation.set(0, Math.PI, 0);
-            textMesh.position = position;
-            this._scene.add(textMesh);
+        //Create the text.
+        let textGeometry = new TextGeometry(texte, textGeometryParameters);
+        textGeometry.computeBoundingBox();
+        let textMaterial = new MeshPhongMaterial({ color: THREE.ColorKeywords.red });
+        let textMesh = new Mesh(textGeometry, textMaterial);
+        textMesh.rotation.set(0, Math.PI, 0);
+        textMesh.position.set(position.x, position.y, position.z);
+        this._scene.add(textMesh);
 
-            //Store the informations for future modifications.
-            Object.defineProperty(this._allTexts, this._textNumber.toString(),
-                {value: {"textGeometry": textGeometry, "textMaterial": textMaterial, "textMesh": textMesh}});
+        //Store the informations for future modifications.
+        Object.defineProperty(this._allTexts, this._textNumber.toString(),
+            { value: { "textGeometry": textGeometry, "textMaterial": textMaterial, "textMesh": textMesh } });
 
-            //Return the identifier to permit future modifications.
-            let identifier = this._textNumber;
-            ++this._textNumber;
-            console.log("text added");
-            return identifier;
+        //Return the identifier to permit future modifications.
+        let identifier = this._textNumber;
+        ++this._textNumber;
+        console.log("text added");
+        return identifier;
     }
 }

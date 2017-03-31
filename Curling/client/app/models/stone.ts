@@ -92,7 +92,7 @@ export class Stone extends Group implements GameComponent {
 
     public set spin(s: StoneSpin) {
         this._spin = s;
-        this._thetaPerFrame = Stone.THETA * (this._spin === StoneSpin.Clockwise? -1 : 1);
+        this._thetaPerFrame = Stone.THETA * (this._spin === StoneSpin.Clockwise ? -1 : 1);
     }
 
     public static createStone(objectLoader: ObjectLoader, stoneColor: StoneColor, initialPosition: Vector3)

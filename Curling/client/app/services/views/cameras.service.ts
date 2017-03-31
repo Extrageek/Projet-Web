@@ -17,11 +17,11 @@ interface FollowUpdate {
 @Injectable()
 export class CameraService implements GameComponent {
     private static readonly FIELD_OF_VIEW = 65;
-    public static readonly INITIAL_POSITION_P = {x: 0, y: 6, z: -24};
-    private static readonly POINT_TO_P = {x: 0, y: 0, z: -10};
-    private static readonly INITIAL_POSITION_T = {x: 0, y: 20, z: 0};
-    private static readonly POINT_TO_T = {x: 0, y: 0, z: 0};
-    private static readonly ROTATION_T = {x: 0, y: 0, z: -Math.PI / 2};
+    public static readonly INITIAL_POSITION_P = { x: 0, y: 6, z: -24 };
+    private static readonly POINT_TO_P = { x: 0, y: 0, z: -10 };
+    private static readonly INITIAL_POSITION_T = { x: 0, y: 20, z: 0 };
+    private static readonly POINT_TO_T = { x: 0, y: 0, z: 0 };
+    private static readonly ROTATION_T = { x: 0, y: 0, z: -Math.PI / 2 };
     private static readonly PERSPECTIVE_CAMERA_INDEX = 0;
     private static readonly TOPVIEW_CAMERA_INDEX = 1;
 
@@ -51,9 +51,9 @@ export class CameraService implements GameComponent {
     }
 
     private createNewPerspectiveCamera(
-        position: {x: number, y: number, z: number},
-        lookAt: {x: number, y: number, z: number},
-        rotation?: {x: number, y: number, z: number}) {
+        position: { x: number, y: number, z: number },
+        lookAt: { x: number, y: number, z: number },
+        rotation?: { x: number, y: number, z: number }) {
         let camera = new PerspectiveCamera(CameraService.FIELD_OF_VIEW, window.innerWidth / window.innerHeight,
             1, 10000);
         camera.position.set(position.x, position.y, position.z);
@@ -64,7 +64,7 @@ export class CameraService implements GameComponent {
             camera.rotateZ(rotation.z);
         }
         camera.add(SoundManager.getInstance().listener); // Ajout un ecouteur a la camera
-        var listiner = SoundManager.getInstance().listener;
+        let listiner = SoundManager.getInstance().listener;
         this._cameras.push(camera);
 
     }
@@ -80,19 +80,21 @@ export class CameraService implements GameComponent {
             let camera = this._cameras[CameraService.PERSPECTIVE_CAMERA_INDEX];
             let distance = new Vector3(0, 0, camera.position.z - objectToFollow.position.z);
             this._camerasToUpdate.push(
-            {followInformation: {
-                "objectToFollow": objectToFollow,
-                "objectWhoFollow": camera,
-                "distanceVector": distance
-                },
-                "functionToApply": this.followObjectOnZAxis});
+                {
+                    followInformation: {
+                        "objectToFollow": objectToFollow,
+                        "objectWhoFollow": camera,
+                        "distanceVector": distance
+                    },
+                    "functionToApply": this.followObjectOnZAxis
+                });
         }
     }
 
     public stopPerspectiveCameraToFollowObjectOnZ() {
         if (this._perspectiveCameraMoving) {
             this._perspectiveCameraMoving = false;
-            let index = this._camerasToUpdate.findIndex((element : FollowUpdate) => {
+            let index = this._camerasToUpdate.findIndex((element: FollowUpdate) => {
                 return element.followInformation.objectWhoFollow ===
                     this._cameras[CameraService.PERSPECTIVE_CAMERA_INDEX];
             });

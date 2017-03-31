@@ -12,7 +12,6 @@ export interface Points {
 
 export class StoneHandler implements GameComponent {
 
-
     public static readonly SHOT_POWER_MINIMUM = 0.2;
     public static readonly SHOT_POWER_MAXIMUM = 4;
     public static readonly SHOT_POWER_OFFSET = 1;

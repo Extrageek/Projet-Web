@@ -3,11 +3,11 @@ import { Object3D } from "three";
 
 import { expect } from "chai";
 
-let instance : SoundManager;
-describe("Sound manager should should", function() {
+let instance: SoundManager;
+describe("Sound manager should should", function () {
     this.timeout(15000);
 
-    before(()=> {
+    before(() => {
         instance = SoundManager.getInstance();
     });
 
@@ -16,7 +16,7 @@ describe("Sound manager should should", function() {
     });
 
     it("Broom sound should be correctly initialized and playable", () => {
-        setTimeout(()=> {
+        setTimeout(() => {
             let broomSoundIn = instance.broomInSound;
             expect(broomSoundIn).to.be.an.instanceof(Audio);
             expect(broomSoundIn.getLoop()).to.equal(false);
@@ -24,7 +24,7 @@ describe("Sound manager should should", function() {
     });
 
     it("Initialize the instance of a sound manager should not be undefined", () => {
-        setTimeout(()=> {
+        setTimeout(() => {
             let broomSoundOut = instance.broomOutSound;
             expect(broomSoundOut).to.be.an.instanceof(Audio);
             expect(broomSoundOut.getLoop()).to.equal(false);
@@ -32,7 +32,7 @@ describe("Sound manager should should", function() {
     });
 
     it("Initialize the instance of a sound manager should not be undefined", () => {
-        setTimeout(()=> {
+        setTimeout(() => {
             let collisionSound = instance.collisionSound;
             expect(collisionSound).to.be.an.instanceof(Audio);
             expect(collisionSound.getLoop()).to.equal(false);
@@ -41,9 +41,9 @@ describe("Sound manager should should", function() {
 
     it("Initialize the instance of a sound manager should not be undefined", () => {
 
-        let obj : Object3D;
+        let obj: Object3D;
         obj = new Object3D();
-        setTimeout(()=> {
+        setTimeout(() => {
             let audioListener = instance.listener;
             expect(audioListener).to.be.an.instanceof(AudioListener);
             obj.add(audioListener);
