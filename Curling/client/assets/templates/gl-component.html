@@ -8,19 +8,19 @@
     class="power-bar"
     color="primary"
     mode="determinate"
-    [value]="renderService._gameInfo.power">
+    [value]="renderService._gameInfo.powerBar">
 </md-progress-bar>
 
 <div *ngIf="renderService._gameInfo.isSelectingPower
-    && renderService._gameInfo.stoneHandler !== null
-    && renderService._gameInfo.stoneHandler.currentSpin === 1"
+    && renderService._gameInfo.shotParameters !== null
+    && renderService._gameInfo.shotParameters.spin === 1"
     class="clockwiseArrow">
         <img src=" ../../assets/images/clockwise-arrow.png" alt="Sens horaire" height="30vw" width="30vw">
 </div>
 
 <div *ngIf="renderService._gameInfo.isSelectingPower
-    && renderService._gameInfo.stoneHandler !== null
-    && renderService._gameInfo.stoneHandler.currentSpin === 0"
+    && renderService._gameInfo.shotParameters.spin !== null
+    && renderService._gameInfo.shotParameters.spin === 0"
     class="counterclockwiseArrow">
         <img src=" ../../assets/images/counterclockwise-arrow.png" alt="Sens anti-horaire" height="30vw" width="30vw">
 </div>

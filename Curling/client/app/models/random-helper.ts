@@ -1,0 +1,5 @@
+export class RandomHelper {
+    public static getNumberInRangeIncluded(min: number, max: number) {
+        return Math.random() * (max - min) + min;
+    }
+}

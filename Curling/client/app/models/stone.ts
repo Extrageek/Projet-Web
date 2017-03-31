@@ -17,21 +17,14 @@ export class Stone extends Group implements GameComponent {
 
     private static readonly STONES_PATH =
     ["/assets/models/json/curling-stone-blue.json", "/assets/models/json/curling-stone-red.json"];
-    private static readonly BOUNDING_SPHERE_RADIUS = 0.26;
+    public static readonly BOUNDING_SPHERE_RADIUS = 0.26;
     private static readonly SCALE = { x: 1, y: 1, z: 1 };
     private static readonly MATERIAL_PROPERTIES = { wireframe: false, shininess: 0.7 };
+    public static readonly ROTATION_DISPLACEMENT = Math.PI * 3 / 1250;
     public static readonly SPEED_DIMINUTION_NUMBER = 0.25;
     public static readonly SPEED_DIMINUTION_NUMBER_WITH_SWEEP = 0.09;
     private static readonly MINIMUM_SPEED = 0.001;
     //private static readonly SWEEPING_CURL_COEFF = 0.0001;
-
-    private _theta: number;
-    public get theta(): number {
-        return this._theta;
-    }
-    public set theta(angle: number) {
-        this._theta = angle;
-    }
 
     public _material: MeshPhongMaterial;
     private _stoneColor: StoneColor;
@@ -40,6 +33,7 @@ export class Stone extends Group implements GameComponent {
     private _direction: Vector3;
     private _sweeping: boolean;
     private _spin: StoneSpin;
+    private _thetaPerFrame: number;
     //Bounding sphere used for collisions. Only works if the stones are displaced on the XZ plane.
     private _boundingSphere: Sphere;
     private _lastBoundingSphere: Sphere;
@@ -77,7 +71,6 @@ export class Stone extends Group implements GameComponent {
         this._boundingSphere = new Sphere(this.position, Stone.BOUNDING_SPHERE_RADIUS);
         this._lastBoundingSphere = this._boundingSphere;
         this._lastPosition = this.position;
-        this.theta = Math.PI / 25000;
         this._curlMatrix = new Matrix3();
     }
 
@@ -130,6 +123,7 @@ export class Stone extends Group implements GameComponent {
 
     public set spin(s: StoneSpin) {
         this._spin = s;
+        this._thetaPerFrame = Stone.ROTATION_DISPLACEMENT * (this._spin === StoneSpin.Clockwise? -1 : 1);
     }
 
     public revertToLastPosition() {
@@ -140,8 +134,7 @@ export class Stone extends Group implements GameComponent {
     public update(timePerFrame: number) {
         if (this._speed !== 0) {
             this.saveOldValues();
-            this.calculateRotationAngle();
-            this.calculateCurlMatrix();
+            this.calculateCurlMatrix(this._thetaPerFrame * timePerFrame);
             //Applying MRUA equation. Xf = Xi + V0*t + a*t^2 / 2, where t = timePerFrame, V0 = speed,
             //Xf is the final position, Xi is the initial position and a = -SPEED_DIMINUTION_NUMBER.
             //CurlMatrix is applied to the MRUA equaion to add a spin effect
@@ -206,24 +199,10 @@ export class Stone extends Group implements GameComponent {
         return observable;
     }
 
-    private calculateRotationAngle() {
-        let oldTheta = this.theta;
-        // invert spin from counterclockwise to clockwise
-        if (this._spin === StoneSpin.Clockwise && oldTheta > 0) {
-            this.theta = -this.theta;
-        }
-        // invert spin from clockwise to counterclockwise
-        else if (this._spin === StoneSpin.CounterClockwise && oldTheta < 0) {
-            this.theta = -this.theta;
-        }
-    }
-
-    private calculateCurlMatrix() {
-        if (this._curlMatrix !== null || this._curlMatrix !== undefined) {
-            this._curlMatrix.set(
-                Math.cos(this.theta), 0, Math.sin(this.theta),
-                0, 1, 0,
-                -Math.sin(this.theta), 0, Math.cos(this.theta));
-        }
+    private calculateCurlMatrix(theta: number) {
+        this._curlMatrix.set(
+            Math.cos(theta), 0, Math.sin(theta),
+            0, 1, 0,
+            -Math.sin(theta), 0, Math.cos(theta));
     }
 }
