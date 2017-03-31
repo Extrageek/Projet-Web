@@ -57,7 +57,7 @@ export class TextureHandler {
             let textMaterial = new MeshPhongMaterial({color: THREE.ColorKeywords.red});
             let textMesh = new Mesh(textGeometry, textMaterial);
             textMesh.rotation.set(0, Math.PI, 0);
-            textMesh.position = position;
+            textMesh.position.set(position[0], position[1], position[2]);
             this._scene.add(textMesh);
 
             //Store the informations for future modifications.
