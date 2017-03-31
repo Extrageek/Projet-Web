@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
-import { FormsModule } from '@angular/forms';
 
 import { BoardComponent } from "./../components/board.component";
 import { EaselComponent } from "./../components/easel.component";
@@ -10,7 +11,7 @@ import { GameComponent } from "./../components/game-room.component";
 import { WaitingRoomComponent } from "./../components/waiting-room.component";
 
 @NgModule({
-    imports: [BrowserModule, FormsModule],
+    imports: [BrowserModule, FormsModule, MaterialModule],
     declarations: [
         BoardComponent,
         ChatroomComponent,

@@ -9,7 +9,8 @@ import { Player } from "../models/player";
 @Component({
     moduleId: module.id,
     selector: "game-initiation-selector",
-    templateUrl: "../../assets/templates/game-initiation.html"
+    templateUrl: "../../assets/templates/game-initiation.html",
+    styleUrls: [ "./../../assets/stylesheets/game-initiation.css" ]
 })
 
 export class GameInitiationComponent implements OnInit, OnDestroy {

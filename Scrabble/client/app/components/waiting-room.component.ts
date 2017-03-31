@@ -5,11 +5,11 @@ import { SocketService } from "../services/socket-service";
 import { SocketEventType } from "../commons/socket-eventType";
 import { IRoomMessage } from "../commons/messages/room-message.interface";
 
-
 @Component({
     moduleId: module.id,
     selector: "waiting-room-selector",
-    templateUrl: "../../assets/templates/waiting-room.html"
+    templateUrl: "../../assets/templates/waiting-room.html",
+    styleUrls: [ "./../../assets/stylesheets/waiting-room.css" ]
 })
 export class WaitingRoomComponent implements OnInit, OnDestroy {
     private _username = "";
