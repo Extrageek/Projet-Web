@@ -33,8 +33,7 @@ export class ComputerShooting extends AbstractGameState {
 
     protected performEnteringState() {
         this._gameInfo.stoneHandler.performShot(
-            this._gameInfo.direction,
-            this._gameInfo.speed,
+            this._gameInfo.shotParameters,
             () => {
                 this._gameInfo.gameStatus.usedStone();
                 let newState: AbstractGameState;

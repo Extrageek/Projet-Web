@@ -7,9 +7,6 @@ import { ComputerTurn } from "./computer-turn";
 
 export class LoadingStone extends AbstractGameState {
 
-    private static readonly STONE_POSITION_X = 0;
-    private static readonly STONE_POSITION_Y = 0;
-    private static readonly STONE_POSITION_Z = -18;
     private static _instance: AbstractGameState = null;
 
     /**
@@ -43,11 +40,6 @@ export class LoadingStone extends AbstractGameState {
     protected performEnteringState() {
         this._gameInfo.stoneHandler.generateNewStone()
         .then((stone: Stone) => {
-            stone.position.set(
-                LoadingStone.STONE_POSITION_X,
-                LoadingStone.STONE_POSITION_Y,
-                LoadingStone.STONE_POSITION_Z
-            );
             this._gameInfo.scene.add(stone);
             this._gameInfo.cameraService.movePerspectiveCameraToFollowObjectOnZ(stone);
 

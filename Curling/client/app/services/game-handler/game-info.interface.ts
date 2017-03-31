@@ -8,6 +8,7 @@ import { CameraType } from "../game-physics/camera-type";
 import { AbstractGameState } from "./../../models/states/abstract-game-state";
 import { Broom } from "../../models/broom";
 import { Rink } from "../../models/scenery/rink";
+import { ShotParameters } from "../../models/shot-parameters.interface";
 
 export interface IGameInfo {
     stoneHandler: StoneHandler;
@@ -31,9 +32,8 @@ export interface IGameInfo {
 
     //For Angular progress bar
     isSelectingPower: boolean;
-    power: number;
+    powerBar: number;
 
     //For shooting
-    speed: number;
-    direction: Vector3;
+    shotParameters: ShotParameters;
 }
