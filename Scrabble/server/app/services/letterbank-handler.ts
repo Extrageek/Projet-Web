@@ -64,7 +64,7 @@ export class LetterBankHandler {
         return newEasel;
     }
 
-    private putLetterBackInBank(lettersToBeChanged: Array<Letter>) {
+    public putLetterBackInBank(lettersToBeChanged: Array<Letter>) {
         for (let index = 0; index < lettersToBeChanged.length; index++) {
             this.bank.putLetterBackInBank(lettersToBeChanged[index]);
         }

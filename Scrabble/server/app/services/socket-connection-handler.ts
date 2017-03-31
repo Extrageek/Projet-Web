@@ -286,8 +286,9 @@ export class SocketConnectionHandler {
                     // Emit a message with the new letters to the sender
                     socket.emit(SocketEventType.initializeEasel, initialsLetters);
                     socket.emit(SocketEventType.updateLetterInEasel, initialsLetters.length);
-                    this._socket.to(room.roomId)
-                        .emit(SocketEventType.updateLetterInBank, room.letterBankHandler.bank.numberOfLettersInBank);
+                    this._socket.to(room.roomId).emit(
+                        SocketEventType.updateLetterInBank,
+                        room.letterBankHandler.bank.numberOfLettersInBank);
 
                     // Update the players queue for everyone in the room
                     let playersQueues = room.getAndUpdatePlayersQueue();
@@ -299,48 +300,48 @@ export class SocketConnectionHandler {
     // On player disconnect event
     private subscribeToDisconnectEvent(socket: SocketIO.Socket) {
 
+        console.log('socket connect - ', socket.id);
+
         socket.on(SocketEventType.disconnect, () => {
             let leavingPlayer = this._roomHandler.getPlayerBySocketId(socket.id);
 
+            console.log('socket connect - ', socket.id);
             if (leavingPlayer !== null) {
 
                 let playerRoom = this._roomHandler.getRoomByUsername(leavingPlayer.username);
 
+                // TOOD: We must wait after 5 seconds before removing the player
                 if (leavingPlayer !== null
                     && leavingPlayer !== undefined
                     && playerRoom !== null
                     && playerRoom !== undefined) {
 
-                    playerRoom.removePlayer(leavingPlayer);
+                    this._roomHandler.handleTheALeavingEvent(socket.id);
 
+                    // If the room is empty, remove it
                     if (playerRoom.players.count === 0) {
                         this._roomHandler.removeRoom(playerRoom);
-                        // TODO: Should be handle in a next User Story
-                        // Maybe in a logger
-
                     } else {
+                        let message = `${leavingPlayer.username}` + ` left the room`;
 
-                        // Create a response for the room members
-                        let roomMessage: IRoomMessage = {
-                            _username: leavingPlayer.username,
-                            _roomId: playerRoom.roomId,
-                            _numberOfMissingPlayers: playerRoom.numberOfMissingPlayers(),
-                            _roomIsReady: false,
-                            _message: `${leavingPlayer.username}` + ` left the room`,
-                            _date: new Date(),
-                            _commandType: null,
-                        };
+                        // Create a response for the other members of the room
+                        let roomMessage = this._messageHandler.createRoomMessageResponse(
+                            leavingPlayer.username,
+                            playerRoom,
+                            message);
 
                         // If the leaving player has the turn in the game, this state should be released,
                         // we should give the turn to the next one
-                        // TODO: Check after when we will implement in the next sprint exactly what to do
-                        // when a user is leaving
                         if (leavingPlayer.username === playerRoom.players.peek().username) {
                             // Update the players queue for everyone in the room
                             let playersQueues = playerRoom.getAndUpdatePlayersQueue();
                             this._socket.to(playerRoom.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
-
                         }
+
+                        this._socket.to(playerRoom.roomId).emit(
+                            SocketEventType.updateLetterInBank,
+                            playerRoom.letterBankHandler.bank.numberOfLettersInBank);
+
                         // Emit a message for the other players in the room.
                         this._socket.to(playerRoom.roomId).emit(SocketEventType.leaveRoom, roomMessage);
                     }
