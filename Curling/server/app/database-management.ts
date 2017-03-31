@@ -10,7 +10,6 @@ export class DatabaseManager {
             return false;
         }
         else {
-            console.log("-- DatabaseManager addUser --");
             let db = await MongoClient.connect(url);
             let isInserted = false;
             try {
@@ -18,10 +17,6 @@ export class DatabaseManager {
                 (await collection.insertOne(body).then((result: any) => {
                     if (result.insertedCount === 1) {
                         isInserted = true;
-                        console.log("-- user inserted --");
-                    }
-                    else {
-                        console.log("-- user not inserted --");
                     }
                 }));
             } finally {
@@ -36,7 +31,6 @@ export class DatabaseManager {
             return false;
         }
         else {
-            console.log("-- DatabaseManager removeUser --");
             let db = await MongoClient.connect(url);
             let isRemoved = false;
             try {
@@ -46,23 +40,17 @@ export class DatabaseManager {
                     console.log(result.deletedCount);
                     if (result.deletedCount === 1) {
                         isRemoved = true;
-                        console.log("-- user removed --");
-                    }
-                    else {
-                        console.log("-- user not removed --");
                     }
                 }));
             } finally {
                 db.close();
             }
-            console.log("-- isRemoved ", isRemoved);
             return isRemoved;
         }
     }
 
     static async getAllRecords(): Promise<Array<any>> {
         try {
-            console.log("-- DatabaseManager getAllRecords --");
             let db = await MongoClient.connect(url);
             let docs: Array<any>;
             try {
@@ -82,15 +70,10 @@ export class DatabaseManager {
         let isInserted = false;
         let db = await MongoClient.connect(url);
         try {
-            console.log("-- DatabaseManager saveGameRecord --");
             let collection = db.collection('leaderboard');
             (await collection.insertOne(body).then((result: any) => {
                 if (result.insertedCount === 1) {
                     isInserted = true;
-                    console.log("-- game record inserted --");
-                }
-                else {
-                    console.log("-- game record not inserted --");
                 }
             }));
         } finally {
