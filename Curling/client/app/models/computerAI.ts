@@ -71,7 +71,7 @@ export class ComputerAI {
 
     private determineShotParameters(destinationPosition: Vector3, minPower: number, maxPower: number): ShotParameters {
         let shotPower = RandomHelper.getNumberInRangeIncluded(minPower, maxPower);
-        let spin = RandomHelper.getNumberInRangeIncluded(0, 1);
+        let spin = RandomHelper.getIntegerNumberInRange(0, 1);
         let spinModifier = spin === StoneSpin.Clockwise? 1 : -1;
         let adjustmentAngle = ComputerAI.DIRECTION_ADJUSTMENT * spinModifier * this._rotationDisplacementAngle / shotPower;
         let adjustmentMatrix = new Matrix3().set(
