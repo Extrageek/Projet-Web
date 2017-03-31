@@ -8,6 +8,7 @@ import {
 import { GameStatusService } from "./../game-status.service";
 import { CameraService } from "./../views/cameras.service";
 import { LightingService } from "./../views/ligthing.service";
+import { ParticlesService } from "./../game-physics/particles.service";
 
 import { StoneHandler } from "../game-physics/stone-handler";
 import { TextureHandler } from "../views/texture-handler";
@@ -66,7 +67,7 @@ export class RenderService {
             speed: 0,
             stoneHandler: null,
             textureHandler: null,
-
+            particlesService: null
         };
         this._lightingService = lightingService;
         Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "cameraService", { value: cameraService });
