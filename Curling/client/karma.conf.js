@@ -71,6 +71,7 @@ module.exports = function(config) {
             { pattern: assetsBase + 'images/*.*', watched: false, included: false, served: true },
             { pattern: assetsBase + 'templates/*.html', watched: false, included: false, served: true },
             { pattern: assetsBase + 'stylesheets/*.css', watched: false, included: false, served: true },
+            { pattern: assetsBase + 'sounds/*.wav', watched: false, included: false, served: true },
 
             // RxJs
             { pattern: 'node_modules/rxjs/**/*.js', included: false, watched: false },
@@ -98,6 +99,7 @@ module.exports = function(config) {
       // The CSS files that will be copied by gulp are in the output folder
       { pattern: appBase + '**/*.css', included: false, watched: true },
       { pattern: appBase + '**/*.html', included: false, watched: true },
+      { pattern: appBase + '**/*.wav', included: false, watched: true },
 
             // Paths for debugging with source maps in dev tools
       { pattern: appSrcBase + '**/*.ts', included: false, watched: false },

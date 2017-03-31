@@ -2,7 +2,7 @@ import { ObjectLoader, Vector3, Box3, Scene } from 'three';
 import { RinkInfo } from '../../models/scenery/rink-info.interface';
 import { Stone, StoneSpin, StoneColor } from '../../models/stone';
 import { GameComponent } from '../../models/game-component.interface';
-import { SoundManager, soundType } from "../sound-manager";
+import { SoundManager } from "../sound-manager";
 
 export interface Points {
     player: number;
