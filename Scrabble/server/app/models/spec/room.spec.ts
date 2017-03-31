@@ -442,7 +442,7 @@ describe("Room", () => {
         expect(room.countPointsOfLettersRemainingOnOtherPlayersEasels(player1.socketId)).to.be.equals(19);
     });
 
-    it("should count the points of remaining letters on players easels but the targeted player.", () => {
+    it("should verify the last placed word and accept it.(horizontal word)", () => {
         let roomCapacity = 1;
         let room = new Room(roomCapacity);
         let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
@@ -461,32 +461,103 @@ describe("Room", () => {
             _letters: ["B", "A", "C"],
             _squarePosition: { _column: 7, _row: "h" },
             _wordOrientation: CommandsHelper.HORIZONTAL_ORIENTATION
-        }
+        };
         let isValid = room.verifyWordsCreated(response, player1.socketId);
         expect(isValid).to.be.true;
     });
-});
-    // public verifyWordsCreated(response: IPlaceWordResponse, socketId: string): boolean {
-    //     let areValidWords = false;
-    //     this._playersQueue.forEach((player: Player) => {
-    //         if (player.socketId === socketId) {
-    //             areValidWords = this._board.verificationService.verifyWordsCreated(response, this._board);
-    //             if (areValidWords) {
-    //                 player.updateScore(this._board.verificationService.score);
-    //             }
-    //         }
-    //     });
-    //     return areValidWords;
-    // }
 
-    // public removeLastLettersPlacedAndRefill(socketId: string): Array<string> {
-    //     let removedLetters = this._board.removeLastLettersAddedFromBoard();
-    //     let previousEasel: Array<string>;
-    //     this._playersQueue.forEach((player: Player) => {
-    //         if (player.socketId === socketId) {
-    //             player.easel.addLetters(removedLetters);
-    //             previousEasel = this._letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
-    //         }
-    //     });
-    //     return previousEasel;
-    // }
+    it("should verify the last placed word and reject it (horizontal word).", () => {
+        let roomCapacity = 1;
+        let room = new Room(roomCapacity);
+        let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+        player1.score = 10;
+        // !placer h8h bac.
+        room.board.squares[7][7].letter.alphabetLetter = "B";
+        room.board.squares[7][7].letter.point = 3;
+        room.board.squares[7][8].letter.alphabetLetter = "B";
+        room.board.squares[7][8].letter.point = 1;
+        room.board.squares[7][9].letter.alphabetLetter = "C";
+        room.board.squares[7][9].letter.point = 3;
+        room.board.lastLettersAdded =
+            [new SquarePosition("h", 8), new SquarePosition("h", 9), new SquarePosition("h", 10)];
+        room.addPlayer(player1);
+        let response: IPlaceWordResponse = {
+            _letters: ["B", "B", "C"],
+            _squarePosition: { _column: 7, _row: "h" },
+            _wordOrientation: CommandsHelper.HORIZONTAL_ORIENTATION
+        };
+        let isValid = room.verifyWordsCreated(response, player1.socketId);
+        expect(isValid).to.be.false;
+    });
+
+    it("should verify the last placed word and accept it.(vertical word)", () => {
+        let roomCapacity = 1;
+        let room = new Room(roomCapacity);
+        let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+        player1.score = 10;
+        // !placer h8h bac.
+        room.board.squares[7][7].letter.alphabetLetter = "B";
+        room.board.squares[7][7].letter.point = 3;
+        room.board.squares[8][7].letter.alphabetLetter = "A";
+        room.board.squares[8][7].letter.point = 1;
+        room.board.squares[9][7].letter.alphabetLetter = "C";
+        room.board.squares[9][7].letter.point = 3;
+        room.board.lastLettersAdded =
+            [new SquarePosition("h", 8), new SquarePosition("i", 8), new SquarePosition("j", 8)];
+        room.addPlayer(player1);
+        let response: IPlaceWordResponse = {
+            _letters: ["B", "A", "C"],
+            _squarePosition: { _column: 7, _row: "h" },
+            _wordOrientation: CommandsHelper.VERTICAL_ORIENTATION
+        };
+        let isValid = room.verifyWordsCreated(response, player1.socketId);
+        expect(isValid).to.be.true;
+    });
+
+    it("should verify the last placed word and reject it (vertical word).", () => {
+        let roomCapacity = 1;
+        let room = new Room(roomCapacity);
+        let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+        player1.score = 10;
+        // !placer h8h bac.
+        room.board.squares[7][7].letter.alphabetLetter = "B";
+        room.board.squares[7][7].letter.point = 3;
+        room.board.squares[8][7].letter.alphabetLetter = "B";
+        room.board.squares[8][7].letter.point = 1;
+        room.board.squares[9][7].letter.alphabetLetter = "C";
+        room.board.squares[9][7].letter.point = 3;
+        room.board.lastLettersAdded =
+            [new SquarePosition("h", 8), new SquarePosition("i", 8), new SquarePosition("j", 8)];
+
+        room.addPlayer(player1);
+        let response: IPlaceWordResponse = {
+            _letters: ["B", "B", "C"],
+            _squarePosition: { _column: 7, _row: "h" },
+            _wordOrientation: CommandsHelper.VERTICAL_ORIENTATION
+        };
+        let isValid = room.verifyWordsCreated(response, player1.socketId);
+        expect(isValid).to.be.false;
+    });
+
+    it("should remove last placed letters and refill the easel.", () => {
+        let roomCapacity = 1;
+        let room = new Room(roomCapacity);
+        let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+        player1.score = 10;
+        player1.easel.letters = new Array<Letter>();
+        // !placer h8h bac.
+        room.board.squares[7][7].letter.alphabetLetter = "B";
+        room.board.squares[7][7].letter.point = 3;
+        room.board.squares[7][8].letter.alphabetLetter = "B";
+        room.board.squares[7][8].letter.point = 3;
+        room.board.squares[7][9].letter.alphabetLetter = "C";
+        room.board.squares[7][9].letter.point = 3;
+        room.board.lastLettersAdded =
+            [new SquarePosition("h", 8), new SquarePosition("h", 9), new SquarePosition("h", 10)];
+        room.addPlayer(player1);
+        let previousEasel = room.removeLastLettersPlacedAndRefill(player1.socketId);
+        let easel = room.letterBankHandler.parseFromListOfLetterToListOfString(player1.easel.letters);
+        expect(easel.toString()).to.be.equals(previousEasel.toString());
+        expect(easel.length).to.be.equals(previousEasel.length);
+    });
+});
