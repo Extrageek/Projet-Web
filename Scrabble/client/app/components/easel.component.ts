@@ -29,8 +29,6 @@ export class EaselComponent implements OnInit, OnDestroy {
     private _letters: Array<IScrabbleLetter>;
     private _indexOfLettersToExchange: Array<number>;
     private _keyEventKeyCode: string;
-    private _exchangeLetterSubscription: Subscription;
-    private _initializeEaselSubscription: Subscription;
 
     public get letters(): Array<IScrabbleLetter> {
         return this._letters;
@@ -60,8 +58,8 @@ export class EaselComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this._exchangeLetterSubscription = this.onExchangeLetterRequest();
-        this._initializeEaselSubscription = this.initializeEaselOnConnection();
+        this.onExchangeLetterRequest();
+        this.initializeEaselOnConnection();
         this._letters = new Array<IScrabbleLetter>();
     }
 

@@ -176,4 +176,40 @@ export class RoomHandler {
         }
         return false;
     }
+
+
+    public handleTheALeavingEvent(socketId: string): boolean {
+
+        if (socketId === null) {
+            throw new Error("Null argument error: the player cannot be null");
+        }
+
+        try {
+            // Get the leaving player by his/her socket id
+            let leavingPlayer = this.getPlayerBySocketId(socketId);
+
+            console.log("Leaving player name", leavingPlayer.username);
+
+            let easelLetter = leavingPlayer.easel.letters;
+            console.log(easelLetter);
+
+            let testroom = this.getRoomBySocketId(socketId);
+            console.log("before", testroom.letterBankHandler.getNumberOfLettersInBank(), testroom.roomCapacity);
+
+            let room = this.getRoomBySocketId(socketId);
+
+            // Put the letters of the player back in the LetterBank
+            room.letterBankHandler.putLetterBackInBank(easelLetter);
+
+
+            // Remove the player from the room
+            room.removePlayer(leavingPlayer);
+
+            console.log("after", room.letterBankHandler.getNumberOfLettersInBank(), room.roomCapacity);
+
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
 }
