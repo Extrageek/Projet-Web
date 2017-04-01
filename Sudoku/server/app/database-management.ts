@@ -20,14 +20,24 @@ export class DatabaseManager {
                     resolve(new DatabaseManager(db));
                 })
                 .catch((reason: any) => {
-                    reject(reason);
+                    resolve(new DatabaseManager());
                 });
         });
     }
 
-    private constructor(dbConnection: Db) {
-        this._dbConnection = dbConnection;
-        this._dbConnection.on("close", this.reconnectToDatabase.bind(this));
+    private constructor(dbConnection?: Db) {
+        if (dbConnection !== undefined) {
+            this._dbConnection = dbConnection;
+            this._dbConnection.on("close", this.markedDisconnectedAndTryToReconnect.bind(this));
+        } else {
+            console.log("Can't connect to the database. Retrying in 30 seconds.");
+            setTimeout(this.reconnectToDatabase.bind(this), 30000);
+        }
+    }
+
+    private markedDisconnectedAndTryToReconnect() {
+        this._dbConnection = undefined;
+        this.reconnectToDatabase();
     }
 
     private reconnectToDatabase() {
@@ -36,6 +46,7 @@ export class DatabaseManager {
             .then((db: Db) => {
                 console.log("Reconnected succesfully.");
                 this._dbConnection = db;
+                this._dbConnection.on("close", this.reconnectToDatabase.bind(this));
             })
             .catch((reason: any) => {
                 console.log("Can't connect to the server. " + reason);
@@ -45,25 +56,32 @@ export class DatabaseManager {
     }
 
     public async addUser(body: any): Promise<boolean> {
-        let isInserted = false;
-        if (body.username !== "") {
-            let collection = this._dbConnection.collection("username");
-            await collection.insertOne(body)
-                .then((result: InsertOneWriteOpResult) => {
-                    if (result.insertedCount === 1) {
-                        isInserted = true;
-                        console.log("-- user inserted --");
-                    }
-                })
-                .catch((reason) => {
-                    console.log("An exception occur while inserting user : " + reason);
-                });
+        let isInserted;
+        if (this._dbConnection !== undefined) {
+            isInserted = false;
+            if (body.username !== "") {
+                let collection = this._dbConnection.collection("username");
+                await collection.insertOne(body)
+                    .then((result: InsertOneWriteOpResult) => {
+                        if (result.insertedCount === 1) {
+                            isInserted = true;
+                            console.log("-- user inserted --");
+                        }
+                    })
+                    .catch((reason) => {
+                        console.log("An exception occur while inserting user : " + reason);
+                    });
+            }
+        } else {
+            //Authorize the connection if the server doesn't have a connection to the database.
+            isInserted = true;
         }
         return isInserted;
     }
 
     public async removeUser(body: any): Promise<boolean> {
         let isRemoved = false;
+        if (this._dbConnection !== undefined) {
         let collection = this._dbConnection.collection("username");
         await collection.deleteOne(body)
             .then((result: DeleteWriteOpResultObject) => {
@@ -75,6 +93,7 @@ export class DatabaseManager {
             .catch((reason) => {
                 console.log("An exception occur while removing user : " + reason);
             });
+        }
         return isRemoved;
     }
 
@@ -94,17 +113,19 @@ export class DatabaseManager {
 
     public async saveGameRecord(body: any): Promise<boolean> {
         let isInserted = false;
+        if (this._dbConnection !== undefined) {
         let collection = this._dbConnection.collection('leaderboard');
-        await collection.insertOne(body)
-            .then((result: InsertOneWriteOpResult) => {
-                if (result.insertedCount === 1) {
-                    isInserted = true;
-                    console.log("-- game record inserted --");
-                }
-            })
-            .catch((reason) => {
-                console.log("An exception occur while removing user : " + reason);
-            });
+            await collection.insertOne(body)
+                .then((result: InsertOneWriteOpResult) => {
+                    if (result.insertedCount === 1) {
+                        isInserted = true;
+                        console.log("-- game record inserted --");
+                    }
+                })
+                .catch((reason) => {
+                    console.log("An exception occur while removing user : " + reason);
+                });
+        }
         return isInserted;
     }
 }
