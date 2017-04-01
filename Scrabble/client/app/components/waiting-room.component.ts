@@ -60,8 +60,6 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
             .subscribe((roomMessage: IRoomMessage) => {
                 console.log("Joined the room", roomMessage);
                 if (roomMessage._roomIsReady) {
-                    this.socketService
-                        .emitMessage(SocketEventType.INITIALIZE_EASEL, this.socketService.player.username);
                     console.log(this.socketService.player.username);
                     this.router.navigate(["/game-room", this.socketService.player.username]);
                 } else {
