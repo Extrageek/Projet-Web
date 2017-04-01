@@ -12,7 +12,6 @@ import { SocketEventType } from "../commons/socket-eventType";
     templateUrl: "../../assets/templates/information-panel.html",
     styleUrls: ["../../assets/stylesheets/information-panel.css"]
 })
-
 export class InformationPanelComponent implements OnInit, AfterViewInit {
     public _lettersOnEasel: number;
     public _lettersInBank: number;
@@ -96,6 +95,7 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
             .subscribe((response: Array<string>) => {
                 if (response !== undefined && response !== null) {
                     // Temporary settings, we can use a manager to
+                    console.log("\n\n\n" + response + "\n\n\n");
                     this.socketService.playersPriorityQueue = response;
                 }
             });

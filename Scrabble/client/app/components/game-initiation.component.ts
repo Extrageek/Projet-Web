@@ -10,15 +10,12 @@ import { Player } from "../models/player";
     moduleId: module.id,
     selector: "game-initiation-selector",
     templateUrl: "../../assets/templates/game-initiation.html",
-    styleUrls: [ "./../../assets/stylesheets/game-initiation.css" ]
+    styleUrls: ["./../../assets/stylesheets/game-initiation.css"]
 })
 
 export class GameInitiationComponent implements OnInit, OnDestroy {
-
-    private _username = "";
     private _onConnectedSubscription: Subscription;
     private _onJoinedRoomSubscription: Subscription;
-    private _onLeaveRoomSubscription: Subscription;
     private _onUsernameAlreadyExistSubscription: Subscription;
     private _onInvalidRequestEventSubscription: Subscription;
     private _onConnectionErrorSubscription: Subscription;
@@ -31,14 +28,13 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
         // Subscribe to event by calling the related method and save them for unsubscription OnDestroy
         this._onConnectedSubscription = this.onConnected();
         this._onJoinedRoomSubscription = this.onJoinedRoom();
-        this._onLeaveRoomSubscription = this.onLeaveRoom();
         this._onUsernameAlreadyExistSubscription = this.onUsernameAlreadyExists();
         this._onInvalidRequestEventSubscription = this.onInvalidRequest();
         this._onConnectionErrorSubscription = this.onConnectionError();
     }
 
     ngOnDestroy() {
-        // unsubscribe to all the listening events
+        // this.unsubscribeToChannelEvent();
     }
 
     // A callback function when the client is connected to the server.
@@ -54,23 +50,13 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
         return this.socketService.subscribeToChannelEvent(SocketEventType.JOIN_ROOM)
             .subscribe((roomMessage: IRoomMessage) => {
                 console.log("Joined the room", roomMessage);
+                this.socketService.missingPlayers = roomMessage._numberOfMissingPlayers;
                 if (roomMessage._roomIsReady) {
-                    this.socketService.emitMessage(SocketEventType.INITIALIZE_EASEL, this._username);
-                    this.router.navigate(["/game-room", this._username]);
+                    // this.unsubscribeToChannelEvent();
+                    this.router.navigate(["/game-room"]);
                 } else {
-                    this.socketService.player = new Player(this._username);
-                    this.socketService.player.numberOfPlayers = roomMessage._numberOfMissingPlayers;
-                    console.log(this.socketService.player.numberOfPlayers);
-                    this.router.navigate(["/waiting-room", this._username]);
+                    this.router.navigate(["/waiting-room"]);
                 }
-            });
-    }
-
-    // A callback when the player join a room
-    private onLeaveRoom(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.LEAVE_ROOM)
-            .subscribe((roomMessage: IRoomMessage) => {
-                console.log("Left the room", roomMessage);
             });
     }
 
@@ -86,6 +72,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
     private onUsernameAlreadyExists(): Subscription {
         return this.socketService.subscribeToChannelEvent(SocketEventType.USERNAME_ALREADY_EXIST)
             .subscribe(() => {
+                //TODO: activate div like bootstrap alert-success
                 alert("This username is already taken, please choose another username.");
             });
     }
@@ -99,14 +86,23 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
     }
 
     // A callback function when the user ask for a new game.
-    public sendNewGameRequest(username: string, numberOfPlayers: string) {
-        if (username === null || numberOfPlayers === null) {
+    public sendNewGameRequest(username: string, numberOfPlayersStr: string) {
+        if (username === null || numberOfPlayersStr === null) {
             throw new Error("Null argument error: All the parameters are required");
         }
-
-        this._username = username;
+        let numberOfPlayers = Number(numberOfPlayersStr);
+        this.socketService.player.username = username;
+        this.socketService.player.numberOfPlayers = numberOfPlayers;
         this.socketService.emitMessage(
             SocketEventType.NEW_GAME_REQUEST,
-            { 'username': username, 'gameType': Number(numberOfPlayers) });
+            { 'username': username, 'gameType': numberOfPlayers });
+    }
+
+    private unsubscribeToChannelEvent() {
+        this._onConnectedSubscription.unsubscribe();
+        this._onJoinedRoomSubscription.unsubscribe();
+        this._onUsernameAlreadyExistSubscription.unsubscribe();
+        this._onInvalidRequestEventSubscription.unsubscribe();
+        this._onConnectionErrorSubscription.unsubscribe();
     }
 }

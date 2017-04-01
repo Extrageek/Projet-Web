@@ -16,6 +16,7 @@ export class Player {
         this._username = username;
         this._score = 0;
         this.letters = new Array<IScrabbleLetter>();
+        this._numberOfPlayers = 1;
     }
 
     public get letters(): Array<IScrabbleLetter> {

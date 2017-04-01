@@ -85,7 +85,7 @@ export class Room {
 
     // Check if the room is full or not
     public isFull(): boolean {
-        return this._playersQueue.count === this._roomCapacity;
+        return (this._playersQueue.count === this._roomCapacity);
     }
 
     // Add a new player to the current room

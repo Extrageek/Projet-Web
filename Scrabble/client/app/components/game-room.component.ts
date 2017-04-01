@@ -17,11 +17,11 @@ import { ChatroomComponent } from "./chatroom.component";
 import { BoardComponent } from "./board.component";
 
 
-declare var jQuery: any;
+declare let jQuery: any;
 
 @Component({
     moduleId: module.id,
-    providers: [SocketService, GameRoomManagerService, CommandsService, EaselManagerService],
+    providers: [GameRoomManagerService, CommandsService, EaselManagerService],
     selector: "game-room-selector",
     templateUrl: "../../assets/templates/game-room.html",
     styleUrls: ["../../assets/stylesheets/game-room.css"],
@@ -54,14 +54,11 @@ export class GameComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.activatedRoute.params.subscribe(params => {
-            this.socketService.player = new Player(params['id']);
-            console.log(this.socketService.player);
-        });
-
         // TODO: unsubscribe all the event in the ngOnDestroy
         this.socketService.subscribeToChannelEvent(SocketEventType.CONNECT_ERROR)
             .subscribe(this.onConnectionError);
+        this.socketService.emitMessage(SocketEventType.INITIALIZE_EASEL, this.socketService.player.username);
+
     }
 
     ngOnDestroy() {

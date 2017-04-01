@@ -13,25 +13,35 @@ const SERVER_PORT = 3002;
 @Injectable()
 export class SocketService {
 
-    static _socket: SocketIOClient.Socket = null;
-    static _playersPriorityQueue: Array<string>;
-    private _player : Player;
+    _socket: SocketIOClient.Socket = null;
+    _playersPriorityQueue: Array<string>;
+    private _player: Player;
+    private _missingPlayers: number;
     private _serverUri: string = 'http://localhost:' + SERVER_PORT;
 
-    public get player() : Player {
+    public get missingPlayers(): number {
+        return this._missingPlayers;
+    }
+    public set missingPlayers(v: number) {
+        this._missingPlayers = v;
+    }
+
+    public get player(): Player {
         return this._player;
     }
-    public set player(v : Player) {
+
+    public set player(v: Player) {
         this._player = v;
     }
 
     // Must be removed after a clean debug
     public set playersPriorityQueue(players: Array<string>) {
-        SocketService._playersPriorityQueue = players;
+        this._playersPriorityQueue = players;
     }
 
-    constructor(private router: Router, private activatedRoute: ActivatedRoute) {
-        SocketService._playersPriorityQueue = new Array<string>();
+    constructor(private router: Router) {
+        this._playersPriorityQueue = new Array<string>();
+        this._player = new Player("");
         this.initializeClient();
     }
 
@@ -50,47 +60,48 @@ export class SocketService {
         //         //}
         //     }
 
-        this.activatedRoute.params.subscribe(params => {
-            if (SocketService._socket === null) {
-                SocketService._socket = io.connect(this._serverUri, { 'forceNew': false });
 
-                // this.subscribeToChannelEvent(SocketEventType.updatePlayersQueue)
-                //     .subscribe((players: Array<string>) => {
-                //         this._playersPriorityQueue = players;
-                //     });
+        if (this._socket === null) {
+            this._socket = io.connect(this._serverUri, { 'forceNew': false });
 
-                // TODO: Leave this for now, I'm working on it
-                if (this.activatedRoute.params["id"] !== null) {
-                    this.router.navigate(["/", ]);
-                }
-            }
-        });
+            // this.subscribeToChannelEvent(SocketEventType.updatePlayersQueue)
+            //     .subscribe((players: Array<string>) => {
+            //         this._playersPriorityQueue = players;
+            //     });
+
+            // TODO: Leave this for now, I'm working on it
+            // if (this.activatedRoute.params["id"] !== null) {
+            //     this.router.navigate(["/", ]);
+            // }
+        }
+
 
     }
 
     public emitMessage(socketEventType: SocketEventType, data?: Object) {
-        SocketService._socket.emit(socketEventType.toString(), data);
+        this._socket.emit(socketEventType.toString(), data);
     }
 
     public subscribeToChannelEvent(socketEventType: SocketEventType) {
         let observable = new Observable((observer: any) => {
 
-            SocketService._socket.on(socketEventType.toString(), (data: any) => {
+            this._socket.on(socketEventType.toString(), (data: any) => {
                 observer.next(data);
             });
 
             return () => {
-                SocketService._socket.disconnect();
+                this._socket.disconnect();
             };
         });
         return observable;
     }
 
     public getCurrentPlayer(): string {
-        return SocketService._playersPriorityQueue[0];
+        console.log(this._playersPriorityQueue);
+        return this._playersPriorityQueue[0];
     }
 
     public getNextPlayer(): string {
-        return SocketService._playersPriorityQueue[1];
+        return this._playersPriorityQueue[1];
     }
 }

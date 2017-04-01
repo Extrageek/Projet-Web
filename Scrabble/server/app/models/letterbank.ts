@@ -16,6 +16,7 @@ export class LetterBank {
     public get numberOfLettersInBank(): number {
         return this._numberOfLettersInBank;
     }
+
     public set numberOfLettersInBank(numberOfLettersInBank: number) {
         this._numberOfLettersInBank = numberOfLettersInBank;
     }

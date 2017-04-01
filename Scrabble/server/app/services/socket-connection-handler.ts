@@ -84,7 +84,7 @@ export class SocketConnectionHandler {
                         let player = new Player(connectionInfos.username, connectionInfos.gameType, socket.id);
                         let room = this._roomHandler.addPlayer(player);
                         let message = `${player.username}` + ` joined the room`;
-
+                        console.log(room);
                         // Create the response to send
                         let response = this._messageHandler.createRoomMessageResponse(player.username, room, message);
                         socket.join(response._roomId);

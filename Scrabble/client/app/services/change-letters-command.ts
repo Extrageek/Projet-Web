@@ -2,8 +2,8 @@ import { EaselComponent } from "../components/easel.component";
 import { EaselManagerService } from "./easel-manager.service";
 import { IScrabbleLetter } from "../models/scrabble-letter";
 import { ICommand } from "./commons/command.interface";
-import { CommandStatus } from './commons/command-status';
-import { CommandType } from './commons/command-type';
+import { CommandStatus } from "./commons/command-status";
+import { CommandType } from "./commons/command-type";
 import { ICommandRequest } from "./commons/command-request.interface";
 import { CommandsHelper } from "./commons/commands-helper";
 
@@ -75,7 +75,7 @@ export class ChangeLettersCommand implements ICommand {
                     return this.commandRequest;
                 }
 
-                tempEaselLetters[letterIndex] = '-1';
+                tempEaselLetters[letterIndex] = "-1";
                 indexOfLettersToChange.push(letterIndex);
             }
 

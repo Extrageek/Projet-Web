@@ -77,7 +77,7 @@ export class RoomHandler {
         let room = this._rooms.find((element) => {
             return !element.isFull() && element.roomCapacity === roomCapacity;
         });
-        return (typeof (room) !== "undefined") ? room : null;
+        return room;
     }
 
     // Find a player with the given socket TODO: By username

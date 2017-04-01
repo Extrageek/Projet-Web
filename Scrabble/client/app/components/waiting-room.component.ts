@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 import { SocketService } from "../services/socket-service";
 import { SocketEventType } from "../commons/socket-eventType";
@@ -9,10 +9,10 @@ import { IRoomMessage } from "../commons/messages/room-message.interface";
     moduleId: module.id,
     selector: "waiting-room-selector",
     templateUrl: "../../assets/templates/waiting-room.html",
-    styleUrls: [ "./../../assets/stylesheets/waiting-room.css" ]
+    styleUrls: ["./../../assets/stylesheets/waiting-room.css"]
 })
 export class WaitingRoomComponent implements OnInit, OnDestroy {
-    private _username = "";
+    // private _username = "";
     private _numberOfPlayerMissing: number;
     private _onJoinedRoomSubscription: Subscription;
 
@@ -20,15 +20,17 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
         return this._numberOfPlayerMissing;
     }
 
-    constructor(private router: Router, private socketService: SocketService) {
+    constructor(
+        private router: Router,
+        private socketService: SocketService) {
         // Default constructor
-            console.log(this.socketService.player.numberOfPlayers);
-            this._numberOfPlayerMissing = this.socketService.player.numberOfPlayers;
+        console.log(this.socketService.player);
+        this._numberOfPlayerMissing = this.socketService.missingPlayers;
     }
 
     ngOnInit() {
-            this._onJoinedRoomSubscription = this.onJoinedRoom();
-       }
+        this._onJoinedRoomSubscription = this.onJoinedRoom();
+    }
 
     ngOnDestroy() {
         // unsubscribe to all the listening events
@@ -40,8 +42,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
             .subscribe((roomMessage: IRoomMessage) => {
                 console.log("Joined the room", roomMessage);
                 if (roomMessage._roomIsReady) {
-                    this.socketService.emitMessage(SocketEventType.INITIALIZE_EASEL, this._username);
-                    this.router.navigate(["/game-room", this._username]);
+                    this.router.navigate(["/game-room"]);
                 } else {
                     this._numberOfPlayerMissing = roomMessage._numberOfMissingPlayers;
                 }

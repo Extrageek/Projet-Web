@@ -5,23 +5,21 @@ import { BoardComponent } from "../components/board.component";
 import { ChatroomComponent } from "../components/chatroom.component";
 import { GameComponent } from "../components/game-room.component";
 
-import { EaselManagerService } from "./easel-manager.service";
-
 import { CommandType } from "./commons/command-type";
 import { CommandsHelper } from "./commons/commands-helper";
 
-import { MessageCommand } from './message-command';
-import { ChangeLettersCommand } from './change-letters-command';
-import { PlaceWordCommand } from './place-word-command';
-import { PassCommand } from './pass-command';
-import { GuideCommand } from './guide-command';
+import { MessageCommand } from "./message-command";
+import { ChangeLettersCommand } from "./change-letters-command";
+import { PlaceWordCommand } from "./place-word-command";
+import { PassCommand } from "./pass-command";
+import { GuideCommand } from "./guide-command";
 
 const PARAM_INDEX = 1;
 
 @Injectable()
 export class CommandsService {
 
-    constructor(private easelManagerService: EaselManagerService) { }
+    constructor() { }
 
     public invokeAndExecuteMessageCommand(
         receiverChatRoom: ChatroomComponent,
@@ -111,7 +109,7 @@ export class CommandsService {
             request.commandType = CommandType.GuideCmd;
             request.parameters = texte.split(CommandsHelper.GUIDE)[PARAM_INDEX].trim();
 
-        } else if (texte.startsWith('!') && !texte.startsWith(CommandsHelper.PLACE_COMMAND)) {
+        } else if (texte.startsWith("!") && !texte.startsWith(CommandsHelper.PLACE_COMMAND)) {
             request.commandType = CommandType.InvalidCmd;
             request.parameters = texte.trim();
 

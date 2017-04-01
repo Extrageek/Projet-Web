@@ -8,8 +8,8 @@ import { WaitingRoomComponent } from "./../components/waiting-room.component";
 const appRoutes: Routes = [
   { path: "", redirectTo: "/game-start", pathMatch: "full" },
   { path: "game-start", component: GameInitiationComponent },
-  { path: "game-room/:id", component: GameComponent, data: { id: "" } },
-  { path: "waiting-room/:id:missingPlayers", component: WaitingRoomComponent, data: { id: "", missingPlayers: "" } }
+  { path: "game-room", component: GameComponent },
+  { path: "waiting-room", component: WaitingRoomComponent }
 ];
 
 @NgModule({

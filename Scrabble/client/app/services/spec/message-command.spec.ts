@@ -2,7 +2,6 @@ import { NO_ERRORS_SCHEMA, } from "@angular/core";
 import { APP_BASE_HREF } from "@angular/common";
 import { RouterTestingModule, } from "@angular/router/testing";
 import { Router, ActivatedRoute } from "@angular/router";
-import { GameRoomModule } from '../../modules/game-room.module';
 import { GameStartModule } from '../../modules/game-start.module';
 import {
     fakeAsync,
@@ -28,7 +27,6 @@ import { ICommandRequest } from "../commons/command-request.interface";
 import { SocketEventType } from '../../commons/socket-eventType';
 import { MessageCommand } from "../message-command";
 
-import { SocketService } from "../socket-service";
 import { EaselManagerService } from "../easel-manager.service";
 
 import { Observable } from "rxjs/Observable";
@@ -43,11 +41,10 @@ describe("MessageCommand", function () {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             schemas: [NO_ERRORS_SCHEMA],
-            imports: [GameRoomModule, GameStartModule],
+            imports: [GameStartModule],
             declarations: [],
             providers: [
                 { provide: APP_BASE_HREF, useValue: '/game-room/test' },
-                SocketService,
                 EaselManagerService
             ],
 
