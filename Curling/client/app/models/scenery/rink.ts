@@ -2,8 +2,8 @@ import { Group, MeshPhongMaterial, ObjectLoader, Object3D, Vector3 } from "three
 import { RinkInfo } from "./rink-info.interface";
 
 export class Rink extends Group implements RinkInfo {
-    public static readonly TARGET_CENTER = new Vector3(0, 0, 17.5);
-    public static readonly TARGET_RADIUS = 1/*TODO:Find the radius*/;
+    public static readonly TARGET_CENTER = new Vector3(0, 0, 17.36);
+    public static readonly TARGET_RADIUS = 1.825;
     public static readonly INITIAL_STONE_POSITION = new Vector3(0, 0, -18);
 
     private static readonly MODEL_PATH = "/assets/models/json/curling-rink.json";

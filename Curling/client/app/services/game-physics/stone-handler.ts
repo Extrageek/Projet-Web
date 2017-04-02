@@ -26,8 +26,9 @@ export class StoneHandler implements GameComponent {
     private _stonesToBeRemoved: Stone[];
     private _callbackAfterShotFinished: Function;
     private _outOfBoundsRink: Box3;
-    private _boxBetweenLines: Box3;
+    private _boxBetweenLinesForBroom: Box3;
     private _invalidAreaForStonesToBeIn : Box3;
+    private _stonesGivingPoints : Stone[];
 
     constructor(objectLoader: ObjectLoader, rinkInfo: RinkInfo, firstPlayer: StoneColor) {
         this._rinkInfo = rinkInfo;
@@ -38,8 +39,8 @@ export class StoneHandler implements GameComponent {
         this._callbackAfterShotFinished = null;
         this._outOfBoundsRink = new Box3(new Vector3(-2.15, 0, -22.5), new Vector3(2.15, 0, 22.5));
 
-        this._boxBetweenLines = new Box3(new Vector3(-2.15, 0, -14.75), new Vector3(2.15, 0, 14.75));
-        this._boxBetweenLines.translate(new Vector3(0, 0, 2.95));
+        this._boxBetweenLinesForBroom = new Box3(new Vector3(-2.15, 0, -14.75), new Vector3(2.15, 0, 14.75));
+        this._boxBetweenLinesForBroom.translate(new Vector3(0, 0, 2.95));
 
         this._invalidAreaForStonesToBeIn = new Box3(new Vector3(-2.15, 0, -17.75), new Vector3(2.15, 0, 17.75));
         this._invalidAreaForStonesToBeIn.translate(new Vector3(0, 0, -7.15));
@@ -81,7 +82,12 @@ export class StoneHandler implements GameComponent {
 
     //TODO: Count the points by looking at the RinkInfo and the position of the array of stones.
     public countPoints(): Points {
-        return { player: 0, computer: 0 };
+        if (this._stonesGivingPoints[0].stoneColor === StoneColor.Blue) {
+            return { player: this._stonesGivingPoints.length, computer: 0 };
+        } else {
+            return { player: 0, computer: this._stonesGivingPoints.length };
+        }
+            // return { player: 0, computer: 0 };
     }
 
     public cleanAllStones(scene: Scene) {
@@ -107,6 +113,7 @@ export class StoneHandler implements GameComponent {
             });
             this.verifyOutOfBounds();
             if (!aStoneIsMoving && !isCollision) {
+                this.calculatePoints();
                 this._callbackAfterShotFinished();
                 this._callbackAfterShotFinished = null;
             }
@@ -118,7 +125,7 @@ export class StoneHandler implements GameComponent {
         if (typeof this._stoneOnTheGame[lastIndex] === "undefined") {
             return false;
         } else{
-            return !(this._boxBetweenLines.intersectsSphere(this._stoneOnTheGame[lastIndex].boundingSphere));
+            return !(this._boxBetweenLinesForBroom.intersectsSphere(this._stoneOnTheGame[lastIndex].boundingSphere));
         }
     }
 
@@ -153,8 +160,6 @@ export class StoneHandler implements GameComponent {
             if (stoneToVerify !== stone) {
                 if (stoneToVerify.boundingSphere.intersectsSphere(stone.boundingSphere)) {
                     SoundManager.getInstance().collisionSound;
-                    // let sound = document.getElementById("collisions");
-                    // (<HTMLAudioElement>sound).play();
                     stonesHit.push(stone);
                 }
             }
@@ -212,4 +217,55 @@ export class StoneHandler implements GameComponent {
             stone.direction = stone.position.clone().sub(stoneHiting.position).normalize();
         });
     }
+
+    public calculatePoints() {
+        let closestStone : Stone;
+        let stonesThatGivesPoints = Array<Stone>();
+
+        if (this.stoneOnTheGame.length !== 0) {
+            closestStone = this.findClosestStone(this._rinkInfo.targetCenter);
+            if (closestStone !== undefined) {
+                let opponentColor = (closestStone.stoneColor === StoneColor.Blue) ? StoneColor.Red : StoneColor.Blue;
+                let opponentClosestStone = this.findClosestStone(closestStone.position, opponentColor);
+                let distanceBetweenRedAndBlue = this._rinkInfo.targetRadius;
+                if (opponentClosestStone !== undefined) {
+                    distanceBetweenRedAndBlue = this.obtainDistance(closestStone.position,
+                        opponentClosestStone.position);
+                }
+                this._stoneOnTheGame.forEach((stone: Stone) => {
+                    if (stone.stoneColor === closestStone.stoneColor) {
+                        let distanceBetweenSameStone = this.obtainDistance(closestStone.position, stone.position);
+                        if (distanceBetweenSameStone < distanceBetweenRedAndBlue
+                            && distanceBetweenSameStone < this._rinkInfo.targetRadius) {
+                                stonesThatGivesPoints.push(stone);
+                        }
+                    } else {
+                        return; // This return passes to the next element of the for each
+                    }
+                });
+            } else {
+                stonesThatGivesPoints = new Array<Stone>();
+            }
+        }
+        this._stonesGivingPoints = stonesThatGivesPoints;
+    }
+    private findClosestStone(startingPoint: Vector3, stoneColor?: StoneColor) : Stone {
+        let minimumDistance = this._rinkInfo.targetRadius;
+        let closestStone : Stone;
+        this._stoneOnTheGame.forEach((stone: Stone) => {
+            if (stoneColor !== undefined && stone.stoneColor !== stoneColor) {
+                return; // This return passes to the next element of the for each
+            }
+                let currentDistance = this.obtainDistance(startingPoint, stone.position);
+                if (currentDistance < minimumDistance) {
+                    minimumDistance = currentDistance;
+                    closestStone = stone;
+                }
+        });
+        return closestStone;
+    }
+    private obtainDistance(startingPoint: Vector3, endingPoint: Vector3 ) : number {
+        return startingPoint.clone().sub(endingPoint).length();
+    }
+
 }
