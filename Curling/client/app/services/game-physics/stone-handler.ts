@@ -27,8 +27,8 @@ export class StoneHandler implements GameComponent {
     private _callbackAfterShotFinished: Function;
     private _outOfBoundsRink: Box3;
     private _boxBetweenLinesForBroom: Box3;
-    private _invalidAreaForStonesToBeIn : Box3;
-    private _stonesGivingPoints : Stone[];
+    private _invalidAreaForStonesToBeIn: Box3;
+    private _stonesGivingPoints: Stone[];
 
     constructor(objectLoader: ObjectLoader, rinkInfo: RinkInfo, firstPlayer: StoneColor) {
         this._rinkInfo = rinkInfo;
@@ -44,7 +44,6 @@ export class StoneHandler implements GameComponent {
 
         this._invalidAreaForStonesToBeIn = new Box3(new Vector3(-2.15, 0, -17.75), new Vector3(2.15, 0, 17.75));
         this._invalidAreaForStonesToBeIn.translate(new Vector3(0, 0, -7.15));
-
     }
 
     public get stoneOnTheGame(): Stone[] {
@@ -87,7 +86,7 @@ export class StoneHandler implements GameComponent {
         } else {
             return { player: 0, computer: this._stonesGivingPoints.length };
         }
-            // return { player: 0, computer: 0 };
+        // return { player: 0, computer: 0 };
     }
 
     public cleanAllStones(scene: Scene) {
@@ -120,11 +119,11 @@ export class StoneHandler implements GameComponent {
         }
     }
 
-    public checkPassHogLine() : Boolean {
+    public checkPassHogLine(): Boolean {
         let lastIndex = this._stoneOnTheGame.length - 1;
         if (typeof this._stoneOnTheGame[lastIndex] === "undefined") {
             return false;
-        } else{
+        } else {
             return !(this._boxBetweenLinesForBroom.intersectsSphere(this._stoneOnTheGame[lastIndex].boundingSphere));
         }
     }
@@ -219,7 +218,7 @@ export class StoneHandler implements GameComponent {
     }
 
     public calculatePoints() {
-        let closestStone : Stone;
+        let closestStone: Stone;
         let stonesThatGivesPoints = Array<Stone>();
 
         if (this.stoneOnTheGame.length !== 0) {
@@ -237,7 +236,7 @@ export class StoneHandler implements GameComponent {
                         let distanceBetweenSameStone = this.obtainDistance(closestStone.position, stone.position);
                         if (distanceBetweenSameStone < distanceBetweenRedAndBlue
                             && distanceBetweenSameStone < this._rinkInfo.targetRadius) {
-                                stonesThatGivesPoints.push(stone);
+                            stonesThatGivesPoints.push(stone);
                         }
                     } else {
                         return; // This return passes to the next element of the for each
@@ -249,23 +248,24 @@ export class StoneHandler implements GameComponent {
         }
         this._stonesGivingPoints = stonesThatGivesPoints;
     }
-    private findClosestStone(startingPoint: Vector3, stoneColor?: StoneColor) : Stone {
+
+    private findClosestStone(startingPoint: Vector3, stoneColor?: StoneColor): Stone {
         let minimumDistance = this._rinkInfo.targetRadius;
-        let closestStone : Stone;
+        let closestStone: Stone;
         this._stoneOnTheGame.forEach((stone: Stone) => {
             if (stoneColor !== undefined && stone.stoneColor !== stoneColor) {
                 return; // This return passes to the next element of the for each
             }
-                let currentDistance = this.obtainDistance(startingPoint, stone.position);
-                if (currentDistance < minimumDistance) {
-                    minimumDistance = currentDistance;
-                    closestStone = stone;
-                }
+            let currentDistance = this.obtainDistance(startingPoint, stone.position);
+            if (currentDistance < minimumDistance) {
+                minimumDistance = currentDistance;
+                closestStone = stone;
+            }
         });
         return closestStone;
     }
-    private obtainDistance(startingPoint: Vector3, endingPoint: Vector3 ) : number {
+
+    private obtainDistance(startingPoint: Vector3, endingPoint: Vector3): number {
         return startingPoint.clone().sub(endingPoint).length();
     }
-
 }

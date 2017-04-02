@@ -13,7 +13,7 @@ export class ComputerTurn extends AbstractGameState {
 
     private _computerAI: ComputerAI;
 
-    /**         
+    /**
      * Initialize the unique ComputerTurn state.
      * @param gameInfo The informations to use by the state.
      * @param doInitialization Set to true only if the game is entering immediatly in this state.
