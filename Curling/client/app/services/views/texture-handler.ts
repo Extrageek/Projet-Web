@@ -52,13 +52,18 @@ export class TextureHandler {
         };
     }
 
-    public addText(position: Vector3, texte: string, textGeometryParameters = this._defaultParameters): number {
+    public addText(
+        position: Vector3,
+        texte: string,
+        colorHexCode: number,
+        textGeometryParameters = this._defaultParameters) {
         //Create the text.
         let textGeometry = new TextGeometry(texte, textGeometryParameters);
         textGeometry.computeBoundingBox();
-        let textMaterial = new MeshPhongMaterial({ color: THREE.ColorKeywords.red });
+        //let textMaterial = new MeshPhongMaterial({ color: THREE.ColorKeywords.red });
+        let textMaterial = new MeshPhongMaterial({ color: colorHexCode, shininess: 0.8 });
         let textMesh = new Mesh(textGeometry, textMaterial);
-        textMesh.rotation.set(0, Math.PI, 0);
+        textMesh.rotation.set( Math.PI / 10, Math.PI, 0);
         textMesh.position.set(position.x, position.y, position.z);
         this._scene.add(textMesh);
 
@@ -69,7 +74,5 @@ export class TextureHandler {
         //Return the identifier to permit future modifications.
         let identifier = this._textNumber;
         ++this._textNumber;
-        console.log("text added");
-        return identifier;
     }
 }
