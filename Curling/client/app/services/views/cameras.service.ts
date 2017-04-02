@@ -66,7 +66,6 @@ export class CameraService implements GameComponent {
         camera.add(SoundManager.getInstance().listener); // Ajout un ecouteur a la camera
         let listiner = SoundManager.getInstance().listener;
         this._cameras.push(camera);
-
     }
 
     public nextCamera(): PerspectiveCamera {
@@ -122,5 +121,8 @@ export class CameraService implements GameComponent {
             element.functionToApply(element.followInformation);
         });
     }
-}
 
+    public moveCameraEndRink() {
+        this._cameras[0].position.set(0, 6, 10);
+    }
+}

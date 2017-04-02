@@ -12,10 +12,8 @@ export class ComputerTurn extends AbstractGameState {
     private static _instance: AbstractGameState = null;
 
     private _computerAI: ComputerAI;
-    // Speed should be chosen by AI
-    private _speed = 8;
 
-    /**
+    /**         
      * Initialize the unique ComputerTurn state.
      * @param gameInfo The informations to use by the state.
      * @param doInitialization Set to true only if the game is entering immediatly in this state.
