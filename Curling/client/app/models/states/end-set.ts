@@ -42,12 +42,12 @@ export class EndSet extends AbstractGameState {
             this._gameInfo.gameStatus.currentSet += 1;
             this._gameInfo.gameStatus.resetStones();
             this._gameInfo.stoneHandler.cleanAllStones(this._gameInfo.scene);
-            if (points.player > points.computer) {
-                this._gameInfo.gameStatus.currentPlayer = CurrentPlayer.BLUE;
-            }
-            else if (points.player < points.computer) {
-                this._gameInfo.gameStatus.currentPlayer = CurrentPlayer.RED;
-            }
+            // if (points.player > points.computer) {
+            //     this._gameInfo.gameStatus.currentPlayer = CurrentPlayer.BLUE;
+            // }
+            // else if (points.player < points.computer) {
+            //     this._gameInfo.gameStatus.currentPlayer = CurrentPlayer.RED;
+            // }
             newState = LoadingStone.getInstance();
         }
         else {
