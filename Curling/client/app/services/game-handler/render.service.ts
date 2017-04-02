@@ -66,7 +66,8 @@ export class RenderService {
             shotParameters: { spin: 0, direction: null, power: null },
             stoneHandler: null,
             textureHandler: null,
-            particlesService: null
+            particlesService: null,
+            lighting: lightingService
         };
         this._lightingService = lightingService;
         Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "cameraService", { value: cameraService });
@@ -230,6 +231,13 @@ export class RenderService {
         this.onResize();
     }
 
+    public setEndGameView() {
+        if (this._currentCamera === this._gameInfo.cameraService.topViewCamera) {
+            this.switchCamera();
+        }
+        this._gameInfo.cameraService.moveCameraEndRink();
+    }
+
     private onFinishedLoadingModel() {
         ++this._numberOfModelsLoaded;
         if (!this._animationStarted && this._numberOfModelsLoaded >= RenderService.NUMBER_OF_MODELS_TO_LOAD) {
@@ -309,9 +317,5 @@ export class RenderService {
 
     onMouseReleased() {
         this._gameInfo.gameState.onMouseButtonReleased();
-    }
-
-    public updateText(newText: string) {
-        //this._textureHandler.setText(newText, this._scene);
     }
 }

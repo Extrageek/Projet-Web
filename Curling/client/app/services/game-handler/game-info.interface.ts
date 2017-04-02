@@ -10,6 +10,7 @@ import { AbstractGameState } from "./../../models/states/abstract-game-state";
 import { Broom } from "../../models/broom";
 import { Rink } from "../../models/scenery/rink";
 import { ShotParameters } from "../../models/shot-parameters.interface";
+import { LightingService } from "./../views/ligthing.service";
 
 export interface IGameInfo {
     stoneHandler: StoneHandler;
@@ -17,6 +18,7 @@ export interface IGameInfo {
     cameraService: CameraService;
     particlesService: ParticlesService;
     gameStatus: GameStatusService;
+    lighting: LightingService;
     currentCamera: CameraType;
     line: {
         lineGeometry: Geometry,
