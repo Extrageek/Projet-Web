@@ -31,15 +31,15 @@ describe("Broom class should", () => {
         });
     });
 
-    it("validate a collision between sweep and stone", () => {
+    it("validate a collision between sweep and stone", done => {
         let stones = new Array<Stone>();
         Stone.createStone(objectLoader, StoneColor.Red, new Vector3(0, 0, 0)).then((stone) => {
             stones.push(stone);
-        }
-        );
-        Broom.createBroom(objectLoader, new Vector3(0, 0, 0)).then((broom: Broom) => {
-            broom.verifyBroomCollision(stones);
-            expect(stones[0].sweeping).to.be.true;
+            Broom.createBroom(objectLoader, new Vector3(0, 0, 0)).then((broom: Broom) => {
+                broom.verifyBroomCollision(stones);
+                expect(stones[0].isSweeping).to.be.true;
+                done();
+            });
         });
     });
 
@@ -47,10 +47,10 @@ describe("Broom class should", () => {
         let stones = new Array<Stone>();
         Stone.createStone(objectLoader, StoneColor.Red, new Vector3(0, 0, 0)).then((stone) => {
             stones.push(stone);
-        });
-        Broom.createBroom(objectLoader, new Vector3(0, 0, 20)).then((broom: Broom) => {
-            broom.verifyBroomCollision(stones);
-            expect(stones[0].sweeping).to.be.false;
+            Broom.createBroom(objectLoader, new Vector3(0, 0, 20)).then((broom: Broom) => {
+                broom.verifyBroomCollision(stones);
+                expect(stones[0].isSweeping).to.be.false;
+            });
         });
     });
 });

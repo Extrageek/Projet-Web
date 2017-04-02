@@ -27,7 +27,7 @@ export class Broom extends Group {
         super();
         this.copy(<this>obj, true);
         this._material = new MeshPhongMaterial(Broom.MATERIAL_PROPERTIES);
-        this.position.set(0, 0, -11.4);
+        this.position.set(initialPosition.x, initialPosition.y, initialPosition.z);
         this.scale.set(Broom.SCALE.x, Broom.SCALE.y, Broom.SCALE.z);
         this._redBroom = true;
         this._boundingSphere = new THREE.Sphere(this.position, Broom.BOUNDING_SPHERE_RADIUS);
