@@ -70,8 +70,12 @@ export class StoneHandler implements GameComponent {
         this._callbackAfterShotFinished = callbackWhenShotFinished;
     }
 
-    public generateNewStone(): Promise<Stone> {
-        this._currentPlayer = (this._currentPlayer + 1) % StoneColor.NumberOfColors;
+    public generateNewStone(currentPlayer? : StoneColor): Promise<Stone> {
+        if (currentPlayer !== undefined) {
+            this._currentPlayer = currentPlayer;
+        } else {
+            this._currentPlayer = (this._currentPlayer + 1) % StoneColor.NumberOfColors;
+        }
         return Stone.createStone(this._objectLoader, this._currentPlayer, this._rinkInfo.initialStonePosition)
             .then((stone: Stone) => {
                 this._stoneOnTheGame.push(stone);

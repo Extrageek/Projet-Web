@@ -38,7 +38,7 @@ export class LoadingStone extends AbstractGameState {
      * change to computerTurn otherwise.
      */
     protected performEnteringState() {
-        this._gameInfo.stoneHandler.generateNewStone()
+        this._gameInfo.stoneHandler.generateNewStone(this._gameInfo.gameStatus.currentPlayer)
             .then((stone: Stone) => {
                 this._gameInfo.scene.add(stone);
                 this._gameInfo.cameraService.movePerspectiveCameraToFollowObjectOnZ(stone);
