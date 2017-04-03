@@ -23,6 +23,7 @@
                 {{_gameStatus.scorePlayer}} - {{_gameStatus.scoreComputer}}
             </div>
             <div id="gameSet" class="col-sm-12">
+               <!--TODO : METTRE NG-FOR-->
                 <div class="col-sm-5">
                     <div *ngIf="_gameStatus.currentSet < 1" id="firstSetToDo" class="pull-right"></div>
                     <div *ngIf="_gameStatus.currentSet >= 1" id="firstSetDone" class="pull-right"></div>
@@ -44,7 +45,7 @@
         </div>
         <div class="col-sm-1">
         </div>
-
+        <!--TODO : METTRE NG-FOR-->
         <div class="col-sm-12">
             <div id="playerStones" class="pull-left col-sm-3">
                 <div *ngIf="_gameStatus.currentStonesPlayer > 0">

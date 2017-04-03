@@ -85,12 +85,17 @@ export class StoneHandler implements GameComponent {
 
     //TODO: Count the points by looking at the RinkInfo and the position of the array of stones.
     public countPoints(): Points {
-        if (this._stonesGivingPoints[0].stoneColor === StoneColor.Blue) {
-            return { player: this._stonesGivingPoints.length, computer: 0 };
-        } else {
-            return { player: 0, computer: this._stonesGivingPoints.length };
+
+        if(this._stonesGivingPoints.length !== 0) {
+            if (this._stonesGivingPoints[0].stoneColor === StoneColor.Blue) {
+                return { player: this._stonesGivingPoints.length, computer: 0 };
+            } else {
+                return { player: 0, computer: this._stonesGivingPoints.length };
+            }
+
+        } else  {
+            return { player: 0, computer: 0 };
         }
-        // return { player: 0, computer: 0 };
     }
 
     public cleanAllStones(scene: Scene) {
