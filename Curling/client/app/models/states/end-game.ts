@@ -44,7 +44,9 @@ export class EndGame extends AbstractGameState {
         }
         else {
             this._gameInfo.textureHandler.addText(textPositin, "C'est une partie nulle", 0x000000);
+
         }
+        this._gameInfo.gameStatus.gameIsFinished();
     }
 
     protected performLeavingState() {

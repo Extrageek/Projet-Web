@@ -8,61 +8,62 @@ export class GameStatusService {
     public static readonly DEFAULT_SET = 1;
 
     private _scorePlayer: number;
-    private _scoreComputer: number;
-    private _currentSet: number;
-    private _currentStonesPlayer: number;
-    private _currentStonesComputer: number;
-    private _isLaunched: boolean;
-    private _currentPlayer: CurrentPlayer;
-
     public get scorePlayer(): number {
         return this._scorePlayer;
     }
-
     public set scorePlayer(score: number) {
         this._scorePlayer = score;
     }
 
+    private _scoreComputer: number;
     public get scoreComputer(): number {
         return this._scoreComputer;
     }
-
     public set scoreComputer(score: number) {
         this._scoreComputer = score;
     }
 
+    private _currentSet: number;
     public get currentSet(): number {
         return this._currentSet;
     }
-
     public set currentSet(set: number) {
         this._currentSet = set;
     }
 
+    private _currentStonesPlayer: number;
     public get currentStonesPlayer(): number {
         return this._currentStonesPlayer;
     }
-
     public set currentStonesPlayer(count: number) {
         this._currentStonesPlayer = count;
     }
 
+    private _currentStonesComputer: number;
     public get currentStonesComputer(): number {
         return this._currentStonesComputer;
     }
-
     public set currentStonesComputer(count: number) {
         this._currentStonesComputer = count;
     }
 
+    private _isLaunched: boolean;
     public get isLaunched(): boolean {
         return this._isLaunched;
     }
-
     public set isLaunched(value: boolean) {
         this._isLaunched = value;
     }
 
+    private _isFinished: boolean;
+    public get isFinished(): boolean {
+        return this._isFinished;
+    }
+    public set isFinished(gameFinished: boolean) {
+        this._isFinished = gameFinished;
+    }
+
+    private _currentPlayer: CurrentPlayer;
     public get currentPlayer(): number {
         return this._currentPlayer;
     }
@@ -71,13 +72,14 @@ export class GameStatusService {
     }
 
     constructor() {
-        this._scorePlayer = GameStatusService.DEFAULT_SCORE;
-        this._scoreComputer = GameStatusService.DEFAULT_SCORE;
-        this._currentSet = GameStatusService.DEFAULT_SET;
-        this._currentStonesPlayer = GameStatusService.INITIAL_NUMBER_OF_STONES;
-        this._currentStonesComputer = GameStatusService.INITIAL_NUMBER_OF_STONES;
-        this._isLaunched = false;
-        this._currentPlayer = CurrentPlayer.INVALID;
+        this.scorePlayer = GameStatusService.DEFAULT_SCORE;
+        this.scoreComputer = GameStatusService.DEFAULT_SCORE;
+        this.currentSet = GameStatusService.DEFAULT_SET;
+        this.currentStonesPlayer = GameStatusService.INITIAL_NUMBER_OF_STONES;
+        this.currentStonesComputer = GameStatusService.INITIAL_NUMBER_OF_STONES;
+        this.isLaunched = false;
+        this.isFinished = false;
+        this.currentPlayer = CurrentPlayer.INVALID;
     }
 
     public nextPlayer() {
@@ -134,5 +136,9 @@ export class GameStatusService {
             this.currentPlayer = CurrentPlayer.RED;
             return false;
         }
+    }
+
+    public gameIsFinished() {
+        this.isFinished = true;
     }
 }
