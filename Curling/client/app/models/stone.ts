@@ -205,13 +205,13 @@ export class Stone extends Group implements GameComponent {
                 });
                 millisecond += Stone.TEN_MILLISECONDS;
                 if (millisecond === Stone.ONE_SECOND) {
-                    observer.next();
                     clearTimeout(id);
                 }
             }, Stone.TEN_MILLISECONDS);
         });
         return observable;
     }
+
 
     private calculateCurlMatrix(theta: number) {
         this._curlMatrix.set(
