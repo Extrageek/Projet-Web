@@ -35,10 +35,12 @@ export class EndGame extends AbstractGameState {
     }
 
     protected performEnteringState() {
-        console.log("entering end game set");
-        //this._gameInfo.cameraService.moveCameraEndRink();
-        //this._gameInfo.lighting.adjustEndGameStateLighthing(this._gameInfo.scene);
+        this.addEndGameText();
         //this._gameInfo.particlesService = new ParticlesService(this._gameInfo.scene);
+        this._gameInfo.gameStatus.gameIsFinished();
+    }
+
+    private addEndGameText() {
         if (this._gameInfo.gameStatus.scorePlayer > this._gameInfo.gameStatus.scoreComputer) {
             this._gameInfo.textureHandler.addText(EndGame.TEXT_POSITION, "Vous avez gagne!", EndGame.BLUE);
         }
@@ -48,7 +50,6 @@ export class EndGame extends AbstractGameState {
         else {
             this._gameInfo.textureHandler.addText(EndGame.TEXT_POSITION, "C'est une partie nulle", EndGame.YELLOW);
         }
-        this._gameInfo.gameStatus.gameIsFinished();
     }
 
     protected performLeavingState() {
