@@ -33,7 +33,6 @@ import { SoundManager } from "../sound-manager";
 @Injectable()
 export class RenderService {
 
-
     private static readonly NUMBER_OF_MODELS_TO_LOAD = 4;
 
     private _numberOfModelsLoaded: number;
@@ -44,6 +43,7 @@ export class RenderService {
     private _clock: Clock;
     private _renderer: Renderer;
     private _animationStarted: boolean;
+    private _endStateAnimationStarted: boolean;
 
     private _gameInfo: IGameInfo;
 
@@ -73,6 +73,7 @@ export class RenderService {
         Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "cameraService", { value: cameraService });
         this._gameInfo.gameStatus.randomFirstPlayer();
         this._animationStarted = false;
+        this._endStateAnimationStarted = false;
         this._numberOfModelsLoaded = 0;
         this._objectLoader = new ObjectLoader();
     }
@@ -266,6 +267,20 @@ export class RenderService {
             keys.forEach((key: string) => {
                 this._gameInfo.gameComponentsToUpdate[key].update(timePerFrame);
             });
+            // Following Action only done at the end of the game
+            if (this._gameInfo.gameState === EndGame.getInstance()) {
+                // Following action only done once
+                if (!this._endStateAnimationStarted) {
+                    this._endStateAnimationStarted = true;
+                    // We want the animation to be done in a perspective view
+                    if (this._currentCamera === this._gameInfo.cameraService.topViewCamera) {
+                        this.switchCamera();
+                    }
+                    this._gameInfo.cameraService.moveCameraEndRink();
+                    this._gameInfo.lighting.adjustEndGameStateLighthing(this._gameInfo.scene);
+                }
+                this._gameInfo.stoneHandler.bounceWinningPlayerStones();
+            }
         }
         this._renderer.render(this._gameInfo.scene, this._currentCamera);
     }

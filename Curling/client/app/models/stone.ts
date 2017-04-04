@@ -219,4 +219,13 @@ export class Stone extends Group implements GameComponent {
             0, 1, 0,
             -Math.sin(theta), 0, Math.cos(theta));
     }
+
+    public bounce() {
+        if (this.position.y !== 0) {
+            this.position.y = 15;
+        }
+        else {
+            this.position.y = 0;
+        }
+    }
 }
