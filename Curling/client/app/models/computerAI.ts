@@ -53,12 +53,10 @@ export class ComputerAI {
             //Determine the direction.
             if (stonePositionToShotOnIt === undefined) {
                 shotParameters.direction = ComputerAI.directionsToAimInCenter[shotParameters.spin].clone();
-                console.log("center");
             } else {
                 this._physicEngine.speed = shotParameters.power;
                 this._physicEngine.spin = shotParameters.spin;
                 shotParameters.direction = this._physicEngine.calculateDirectionToPassAtPosition(stonePositionToShotOnIt);
-                console.log(shotParameters);
             }
 
             return shotParameters;

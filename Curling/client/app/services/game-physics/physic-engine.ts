@@ -139,7 +139,10 @@ export class PhysicEngine implements GameComponent {
      */
     private calculateArrivalPoint(positionForDirection: Vector3): Vector3 {
         //Save the position, speed and direction to restore them after the shot.
-        let savedPosition = this._position.clone();
+        //Keep the reference to the object position. It is REALLY important to not modify this object, because the
+        //object position could be the position of an object of the scene.
+        let savedPosition = this._position;
+        this._position = this._position.clone();
         let savedDirection = this._direction.clone();
         let savedSpeed = this._speed;
         
@@ -220,7 +223,7 @@ export class PhysicEngine implements GameComponent {
 
     private calculateNextFrame(timePerFrame: number) {
         this._direction.applyAxisAngle(PhysicEngine.Y_AXIS, this._theta);
-        this.position.add(this._direction.clone().multiplyScalar(
+        this._position.add(this._direction.clone().multiplyScalar(
             this._speed * timePerFrame - PhysicEngine.SPEED_DIMINUTION_NUMBER * Math.pow(timePerFrame, 2) / 2
             )
         );
