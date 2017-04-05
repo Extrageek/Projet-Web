@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { Vector3 } from "three";
-import { PhysicEngine, ObjectSpin } from "../game-physics/physic-engine";
+import { PhysicEngine } from "../game-physics/physic-engine";
+import { StoneSpin } from "../../models/stone";
 
 //Precision for the float numbers that aren't exactly equals.
 const precision = 0.0001;
@@ -38,7 +39,7 @@ describe("PhysicEngine should", () => {
         let position = new Vector3(1, 1, 1);
         let direction = new Vector3(1, 0, 1).normalize();
         let speed = 1;
-        let spin = ObjectSpin.Clockwise;
+        let spin = StoneSpin.Clockwise;
         physicEngine.position = position;
         physicEngine.direction = direction;
         physicEngine.speed = 1;

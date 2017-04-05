@@ -1,11 +1,7 @@
 import { Vector3 } from "three";
 import { GameComponent } from "../../models/game-component.interface";
 import { ShotParameters } from "../../models/shot-parameters.interface";
-
-export enum ObjectSpin {
-    CounterClockwise = 0,
-    Clockwise = 1
-}
+import { StoneSpin } from "../../models/stone";
 
 /**
  * Class to calculate the physic movement of the stones on the game and automatically update the position.
@@ -14,7 +10,7 @@ export enum ObjectSpin {
 export class PhysicEngine implements GameComponent {
 
     public static readonly THETA = Math.PI / 25000;
-    private static readonly Y_AXIS = new Vector3(0, 1, 0);
+    public static readonly Y_AXIS = new Vector3(0, 1, 0);
     public static readonly SPEED_DIMINUTION_NUMBER = 0.25;
     public static readonly SPEED_DIMINUTION_NUMBER_WITH_SWEEP = 0.09;
     private static readonly MINIMUM_SPEED = 0.001;
@@ -26,7 +22,7 @@ export class PhysicEngine implements GameComponent {
     private _position: Vector3;
     private _direction: Vector3;
     private _speed: number;
-    private _spin: ObjectSpin;
+    private _spin: StoneSpin;
     //The positive or negative value of THETA for the rotation.
     private _theta: number;
     private _isSweeping: boolean;
@@ -65,16 +61,16 @@ export class PhysicEngine implements GameComponent {
         this._speed = speed;
     }
 
-    public get spin(): ObjectSpin {
+    public get spin(): StoneSpin {
         return this._spin;
     }
 
-    public set spin(spin: ObjectSpin) {
+    public set spin(spin: StoneSpin) {
         if (spin === undefined || spin === null) {
             throw new Error("The spin cannot be null.")
         }
         this._spin = spin;
-        this._theta = PhysicEngine.THETA * (spin === ObjectSpin.Clockwise ? -1 : 1);
+        this._theta = PhysicEngine.THETA * (spin === StoneSpin.Clockwise ? -1 : 1);
     }
 
     public get isSweeping(): boolean {
@@ -110,7 +106,7 @@ export class PhysicEngine implements GameComponent {
             this._speed = speed;
         }
         this._timeAccumulation = 0;
-        this.spin = ObjectSpin.Clockwise;
+        this.spin = StoneSpin.Clockwise;
         this._isSweeping = false;
     }
 
@@ -204,7 +200,6 @@ export class PhysicEngine implements GameComponent {
      */
     public update(timePerFrame: number) {
         if (this._speed !== 0) {
-
             //Use the timeAccumulation not used in the precedent update.
             let time = this._timeAccumulation + timePerFrame;
 

@@ -6,6 +6,7 @@ import { ComputerShooting } from "./computer-shooting";
 import { ComputerAI } from "../../models/computerAI";
 import { Stone } from "../../models/stone";
 import { Difficulty } from "../../models/difficulty";
+import { StoneColor } from "../../models/stone";
 
 export class ComputerTurn extends AbstractGameState {
 
@@ -34,11 +35,12 @@ export class ComputerTurn extends AbstractGameState {
 
     private constructor(gameInfo: IGameInfo, doInitialization = false) {
         super(gameInfo, doInitialization);
-        this._computerAI = new ComputerAI(gameInfo.rink, 0.85, Stone.THETA, Difficulty.PERFECT);
+        this._computerAI = new ComputerAI(gameInfo.rink, Difficulty.PERFECT);
     }
     protected performEnteringState(): void {
         //TODO : Pass in parameters the real arrays.
-        let shotParameters = this._computerAI.determineNextShotParameters([], []);
+        let nearestPlayerStone = this._gameInfo.stoneHandler.findClosestCenterStonePosition(StoneColor.Blue);
+        let shotParameters = this._computerAI.determineNextShotParameters(nearestPlayerStone);
         this._gameInfo.shotParameters.power = shotParameters.power;
         this._gameInfo.shotParameters.direction = shotParameters.direction;
         this._gameInfo.shotParameters.spin = shotParameters.spin;

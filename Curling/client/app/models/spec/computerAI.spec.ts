@@ -40,7 +40,7 @@ let meanFriction = (Stone.SPEED_DIMINUTION_NUMBER + Stone.SPEED_DIMINUTION_NUMBE
 describe("computerAI should", () => {
 
     it("construct itself", () => {
-        expect(() => { new ComputerAI(rinkInfo, meanFriction, Stone.THETA, Difficulty.HARD); })
+        expect(() => { new ComputerAI(rinkInfo, Difficulty.HARD); })
             .to.not.throw(Error);
     });
 });
@@ -55,14 +55,14 @@ describe("computerAI should", () => {
     });
 
     beforeEach(() => {
-        computerAI = new ComputerAI(rinkInfo, meanFriction, Stone.THETA, Difficulty.PERFECT);
+        computerAI = new ComputerAI(rinkInfo, Difficulty.PERFECT);
 
     });
 
     it("throw stone at right position", done => {
         Stone.createStone(objectLoader, StoneColor.Red, rinkInfo.initialStonePosition)
             .then((stone: Stone) => {
-                let shotParameters = computerAI.determineNextShotParameters([], []);
+                let shotParameters = computerAI.determineNextShotParameters();
                 console.log(shotParameters);
                 stone.direction = shotParameters.direction;
                 stone.speed = shotParameters.power;
