@@ -271,15 +271,14 @@ export class RenderService {
             if (this._gameInfo.gameState === EndGame.getInstance()) {
                 // Following action only done once
                 if (!this._endStateAnimationStarted) {
-                    this._endStateAnimationStarted = true;
                     // We want the animation to be done in a perspective view
+                    this._endStateAnimationStarted = true;
                     if (this._currentCamera === this._gameInfo.cameraService.topViewCamera) {
                         this.switchCamera();
                     }
                     this._gameInfo.cameraService.moveCameraEndRink();
                     this._gameInfo.lighting.adjustEndGameStateLighthing(this._gameInfo.scene);
                 }
-                this._gameInfo.stoneHandler.bounceWinningPlayerStones();
             }
         }
         this._renderer.render(this._gameInfo.scene, this._currentCamera);

@@ -194,7 +194,7 @@ export class Stone extends Group implements GameComponent {
             (<THREE.Mesh>child).material.opacity = 1;
         });
 
-        let observable = new Observable((observer: any) => {
+        let observable = new Observable(() => {
             let millisecond = 0;
             let id = setInterval(() => {
 
@@ -221,11 +221,15 @@ export class Stone extends Group implements GameComponent {
     }
 
     public bounce() {
-        if (this.position.y !== 0) {
-            this.position.y = 15;
-        }
-        else {
-            this.position.y = 0;
-        }
+        let observer  =  {
+            next: (v: number) => {
+                //TODO: IMPLEMENT BOUNCING MECHANICS
+            },
+            complete:() => {
+                console.log("YOUR LOVE IS FADING");
+                this.changeStoneOpacity();
+            }
+        };
+    return observer;
     }
 }
