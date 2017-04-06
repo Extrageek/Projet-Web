@@ -58,7 +58,6 @@ export class GameComponent implements OnInit, OnDestroy {
         this.socketService.subscribeToChannelEvent(SocketEventType.CONNECT_ERROR)
             .subscribe(this.onConnectionError);
         this.socketService.emitMessage(SocketEventType.INITIALIZE_EASEL, this.socketService.player.username);
-
     }
 
     ngOnDestroy() {
@@ -103,7 +102,7 @@ export class GameComponent implements OnInit, OnDestroy {
             this.handleInputCommand(commandParameters);
         }
 
-        this._inputMessage = '';
+        this._inputMessage = ''.toString();
     }
 
     public handleInputCommand(commandParameters: { commandType: CommandType, parameters: string }) {
