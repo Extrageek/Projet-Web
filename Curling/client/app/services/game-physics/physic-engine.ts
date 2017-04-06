@@ -216,7 +216,7 @@ export class PhysicEngine implements GameComponent {
             //Apply X frame displacements.
             for (let i = 0; i < numberOfFramesPassed; ++i) {
                 this.calculateNextFrame(PhysicEngine.REFERENCE_TPF);
-                this.decrementSpeed(timePerFrame);
+                this.decrementSpeed(PhysicEngine.REFERENCE_TPF);
             }
         }
     }

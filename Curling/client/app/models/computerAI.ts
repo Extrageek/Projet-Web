@@ -56,7 +56,9 @@ export class ComputerAI {
             } else {
                 this._physicEngine.speed = shotParameters.power;
                 this._physicEngine.spin = shotParameters.spin;
-                shotParameters.direction = this._physicEngine.calculateDirectionToPassAtPosition(stonePositionToShotOnIt);
+                let direction = this._physicEngine.calculateDirectionToPassAtPosition(stonePositionToShotOnIt);
+                shotParameters.direction = direction !== null ? 
+                    direction : ComputerAI.directionsToAimInCenter[shotParameters.spin].clone();
             }
 
             return shotParameters;

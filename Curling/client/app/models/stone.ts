@@ -1,5 +1,6 @@
 import { ObjectLoader, Group, MeshPhongMaterial, Object3D, Sphere, Vector3, Matrix3 } from "three";
 import { GameComponent } from "./game-component.interface";
+import { PhysicEngine } from "../services/game-physics/physic-engine";
 import { Observable } from "rxjs/Observable";
 
 export enum StoneSpin {
@@ -16,32 +17,21 @@ export enum StoneColor {
 export class Stone extends Group implements GameComponent {
 
     private static readonly STONES_PATH =
-    ["/assets/models/json/curling-stone-blue.json", "/assets/models/json/curling-stone-red.json"];
-    public static readonly THETA = Math.PI * 3 / 1250;
+        ["/assets/models/json/curling-stone-blue.json", "/assets/models/json/curling-stone-red.json"];
     private static readonly ONE_SECOND = 1000;
     private static readonly TEN_MILLISECONDS = 10;
     public static readonly BOUNDING_SPHERE_RADIUS = 0.26;
     private static readonly SCALE = { x: 1, y: 1, z: 1 };
     private static readonly MATERIAL_PROPERTIES = { wireframe: false, shininess: 0.7 };
-    public static readonly SPEED_DIMINUTION_NUMBER = 0.25;
-    public static readonly SPEED_DIMINUTION_NUMBER_WITH_SWEEP = 0.09;
-    private static readonly MINIMUM_SPEED = 0.001;
     private static readonly SECONDS_PER_FULL_ROTATION = 4;
-    //private static readonly SWEEPING_CURL_COEFF = 0.0001;
 
-    public _material: MeshPhongMaterial;
+    private _material: MeshPhongMaterial;
     private _stoneColor: StoneColor;
-    //Speed orientation and quantity in meters per second
-    private _speed: number;
-    private _direction: Vector3;
-    private _sweeping: boolean;
-    private _spin: StoneSpin;
-    private _thetaPerFrame: number;
+    private _physicEngine: PhysicEngine;
     //Bounding sphere used for collisions. Only works if the stones are displaced on the XZ plane.
     private _boundingSphere: Sphere;
     private _lastBoundingSphere: Sphere;
     private _lastPosition: Vector3;
-    private _curlMatrix: Matrix3;
 
     public get boundingSphere(): Sphere {
         return this._boundingSphere;
@@ -52,47 +42,42 @@ export class Stone extends Group implements GameComponent {
         return this._material;
     }
 
+    //The following getters and setters are used to transmit the informations to the physic engine to avoid
+    //a direct access to the physic engine object from the outside.
     public get stoneColor() {
         return this._stoneColor;
     }
 
     public get isSweeping(): boolean {
-        return this._sweeping;
+        return this._physicEngine.isSweeping;
     }
 
     public set sweeping(sweep: boolean) {
-        this._sweeping = sweep;
+        this._physicEngine.isSweeping = sweep;
     }
 
     public get speed(): number {
-        return this._speed;
+        return this._physicEngine.speed;
     }
 
     public set speed(speed: number) {
-        if (speed == null || speed === undefined || speed < 0) {
-            throw new Error("The speed cannot be null or less than 0.");
-        }
-        this._speed = speed;
+        this._physicEngine.speed = speed;
     }
 
     public get direction(): Vector3 {
-        return this._direction;
+        return this._physicEngine.direction;
     }
 
     public set direction(direction: Vector3) {
-        if (direction === null || direction === undefined) {
-            throw new Error("The direction is not a valid vector.");
-        }
-        this._direction = direction.normalize();
+        this._physicEngine.direction = direction;
     }
 
     public get spin(): StoneSpin {
-        return this._spin;
+        return this._physicEngine.spin;
     }
 
-    public set spin(s: StoneSpin) {
-        this._spin = s;
-        this._thetaPerFrame = Stone.THETA * (this._spin === StoneSpin.Clockwise ? -1 : 1);
+    public set spin(spin: StoneSpin) {
+        this._physicEngine.spin = spin
     }
 
     public static createStone(objectLoader: ObjectLoader, stoneColor: StoneColor, initialPosition: Vector3)
@@ -115,18 +100,18 @@ export class Stone extends Group implements GameComponent {
     private constructor(obj: Object3D, initialPosition: Vector3, stoneColor: StoneColor) {
         super();
         this.copy(<this>obj, true);
+        //Set material properties
         this._material = new MeshPhongMaterial(Stone.MATERIAL_PROPERTIES);
-        this.position.set(initialPosition.x, initialPosition.y, initialPosition.z);
         this.scale.set(Stone.SCALE.x, Stone.SCALE.y, Stone.SCALE.z);
-        this.sweeping = false;
-        this._stoneColor = stoneColor;
-        this._speed = 0;
-        this._direction = new Vector3(0, 0, 1);
-        this._spin = StoneSpin.Clockwise;
+        //Set position
+        this.position.set(initialPosition.x, initialPosition.y, initialPosition.z);
+        this._lastPosition = initialPosition.clone();
+        //Set bounding sphere
         this._boundingSphere = new Sphere(this.position, Stone.BOUNDING_SPHERE_RADIUS);
         this._lastBoundingSphere = this._boundingSphere;
-        this._lastPosition = this.position;
-        this._curlMatrix = new Matrix3();
+        //Set other parameters
+        this._stoneColor = stoneColor;
+        this._physicEngine = new PhysicEngine(this.position,  new Vector3(0, 0, 1), 0);
     }
 
     public revertToLastPosition() {
@@ -135,21 +120,10 @@ export class Stone extends Group implements GameComponent {
     }
 
     public update(timePerFrame: number) {
-        if (this._speed !== 0) {
-            this.saveOldValues();
-            this.calculateCurlMatrix(this._thetaPerFrame * timePerFrame);
-            //Applying MRUA equation. Xf = Xi + V0*t + a*t^2 / 2, where t = timePerFrame, V0 = speed,
-            //Xf is the final position, Xi is the initial position and a = -SPEED_DIMINUTION_NUMBER.
-            //CurlMatrix is applied to the MRUA equaion to add a spin effect
-            this.position.add((this._direction.applyMatrix3(this._curlMatrix).clone()
-                .multiplyScalar(this._speed * timePerFrame - Stone.SPEED_DIMINUTION_NUMBER
-                * Math.pow(timePerFrame, 2) / 2)
-            ));
-            this.position.y = 0;
-            this.stoneSpinning(timePerFrame);
-            this.decrementSpeed(timePerFrame);
-            this.calculateNewBoundingSphere();
-        }
+        this.saveOldValues();
+        this._physicEngine.update(timePerFrame);
+        this.stoneSpinning(timePerFrame);
+        this.calculateNewBoundingSphere();
     }
 
     private stoneSpinning(timePerFrame: number) {
@@ -165,19 +139,6 @@ export class Stone extends Group implements GameComponent {
     private saveOldValues() {
         this._lastBoundingSphere = this._boundingSphere.clone();
         this._lastPosition = this.position.clone();
-    }
-
-    private decrementSpeed(timePerFrame: number) {
-        if (this._sweeping) {
-            this._speed -= timePerFrame * Stone.SPEED_DIMINUTION_NUMBER_WITH_SWEEP;
-            this._sweeping = false;
-        }
-        else {
-            this._speed -= timePerFrame * Stone.SPEED_DIMINUTION_NUMBER;
-        }
-        if (this._speed <= Stone.MINIMUM_SPEED) {
-            this._speed = 0;
-        }
     }
 
     /**
@@ -210,14 +171,6 @@ export class Stone extends Group implements GameComponent {
             }, Stone.TEN_MILLISECONDS);
         });
         return observable;
-    }
-
-
-    private calculateCurlMatrix(theta: number) {
-        this._curlMatrix.set(
-            Math.cos(theta), 0, Math.sin(theta),
-            0, 1, 0,
-            -Math.sin(theta), 0, Math.cos(theta));
     }
 
     public bounce() {
