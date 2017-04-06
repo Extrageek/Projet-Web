@@ -109,7 +109,6 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
         if (message._commandType === CommandType.GuideCmd) {
             this._messageArray.push(message);
             this._hasNewMessages = true;
-            console.log("sasa");
         }
     }
 
