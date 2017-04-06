@@ -59,7 +59,7 @@ describe("computerAI should", () => {
     it("throw stone at right position", done => {
         Stone.createStone(objectLoader, StoneColor.Red, rinkInfo.initialStonePosition)
             .then((stone: Stone) => {
-                let shotParameters = computerAI.determineNextShotParameters();
+                let shotParameters = computerAI.determineShotParametersCenter();
                 console.log(shotParameters);
                 stone.direction = shotParameters.direction;
                 stone.speed = shotParameters.power;

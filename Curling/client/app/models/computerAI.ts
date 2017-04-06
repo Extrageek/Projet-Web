@@ -10,11 +10,18 @@ export class ComputerAI {
     //Different ranges following the difficulty enumeration
     //WARNING : If the physic or the arena dimension change, these numbers must change to be able
     //to shot in the center.
-    private static readonly INTERVAL_MAX_SHOOT_POWER = [
+    private static readonly INTERVAL_SHOOT_POWER_CENTER = [
         { min: 3.9, max: 4.5 },
         { min: 4, max: 4.3 },
         { min: 4.21, max: 4.21 }
     ];
+
+    private static readonly INTERVAL_SHOT_POWER_PUSH = [
+        { min: 5, max: 5.5},
+        { min: 5.2, max: 5.8},
+        { min: 5.8, max: 5.8}
+    ];
+
     //This constant is used to adjust the direction when launching the stone in the center. Because it is difficult
     //to calculate the exact speed and direction the stone must take to arrive at a final position, this constant
     //is used instead.
@@ -31,36 +38,50 @@ export class ComputerAI {
     private _rinkInfo: RinkInfo;
     private _meanFrictionCoefficients: number;
     private _difficulty: Difficulty;
-    private _minShotPower: number;
-    private _maxShotPower: number;
+    private _minShotPowerCenter: number;
+    private _maxShotPowerCenter: number;
+    private _minShotPowerPush: number;
+    private _maxShotPowerPush: number;
     private _physicEngine: PhysicEngine;
 
     constructor(rinkInfo: RinkInfo, difficulty: Difficulty) {
         this._rinkInfo = rinkInfo;
-        this._minShotPower = ComputerAI.INTERVAL_MAX_SHOOT_POWER[difficulty].min;
-        this._maxShotPower = ComputerAI.INTERVAL_MAX_SHOOT_POWER[difficulty].max;
+        this._minShotPowerCenter = ComputerAI.INTERVAL_SHOOT_POWER_CENTER[difficulty].min;
+        this._maxShotPowerCenter = ComputerAI.INTERVAL_SHOOT_POWER_CENTER[difficulty].max;
+        this._minShotPowerPush = ComputerAI.INTERVAL_SHOT_POWER_PUSH[difficulty].min;
+        this._maxShotPowerPush = ComputerAI.INTERVAL_SHOT_POWER_PUSH[difficulty].max;
         this._physicEngine = new PhysicEngine(rinkInfo.initialStonePosition);
     }
 
-    public determineNextShotParameters(stonePositionToShotOnIt?: Vector3): ShotParameters {
-            //Determine random shotPower and spin following the computer difficulty.
-            let shotParameters: ShotParameters = {
-                spin: RandomHelper.getIntegerNumberInRange(0, 1),
-                direction: null,
-                power: RandomHelper.getNumberInRangeIncluded(this._minShotPower, this._maxShotPower)
-            };
+    public determineShotParametersOnStone(stonePositionToShotOnIt?: Vector3): ShotParameters {
+        if (stonePositionToShotOnIt === undefined || stonePositionToShotOnIt === null) {
+            throw new Error("The stone position to shot on it cannot be null");
+        }
 
-            //Determine the direction.
-            if (stonePositionToShotOnIt === undefined) {
-                shotParameters.direction = ComputerAI.directionsToAimInCenter[shotParameters.spin].clone();
-            } else {
-                this._physicEngine.speed = shotParameters.power;
-                this._physicEngine.spin = shotParameters.spin;
-                let direction = this._physicEngine.calculateDirectionToPassAtPosition(stonePositionToShotOnIt);
-                shotParameters.direction = direction !== null ? 
-                    direction : ComputerAI.directionsToAimInCenter[shotParameters.spin].clone();
-            }
+        //Determine random shotPower and spin following the computer difficulty.
+        let shotParameters: ShotParameters = {
+            spin: RandomHelper.getIntegerNumberInRange(0, 1),
+            direction: null,
+            power: RandomHelper.getNumberInRangeIncluded(this._minShotPowerPush, this._maxShotPowerPush)
+        }
 
-            return shotParameters;
+        //Determine the direction.
+        this._physicEngine.speed = shotParameters.power;
+        this._physicEngine.spin = shotParameters.spin;
+        this._physicEngine.position.copy(this._rinkInfo.initialStonePosition);
+        let direction = this._physicEngine.calculateDirectionToPassAtPosition(stonePositionToShotOnIt);
+        shotParameters.direction = direction !== null ? 
+                direction : ComputerAI.directionsToAimInCenter[shotParameters.spin].clone();
+
+        return shotParameters;
+    }
+
+    public determineShotParametersCenter(): ShotParameters {
+        let spin = RandomHelper.getIntegerNumberInRange(0, 1);
+        return {
+            spin: spin,
+            direction: ComputerAI.directionsToAimInCenter[spin].clone(),
+            power: RandomHelper.getNumberInRangeIncluded(this._minShotPowerCenter, this._maxShotPowerCenter)
+        };
     }
 }

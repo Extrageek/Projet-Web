@@ -38,9 +38,13 @@ export class ComputerTurn extends AbstractGameState {
         this._computerAI = new ComputerAI(gameInfo.rink, Difficulty.PERFECT);
     }
     protected performEnteringState(): void {
-        //TODO : Pass in parameters the real arrays.
         let nearestPlayerStone = this._gameInfo.stoneHandler.findClosestCenterStonePosition(StoneColor.Blue);
-        let shotParameters = this._computerAI.determineNextShotParameters(nearestPlayerStone);
+        let shotParameters;
+        if (nearestPlayerStone !== undefined) {
+             shotParameters = this._computerAI.determineShotParametersOnStone(nearestPlayerStone);
+        } else {
+            shotParameters = this._computerAI.determineShotParametersCenter();
+        }
         this._gameInfo.shotParameters.power = shotParameters.power;
         this._gameInfo.shotParameters.direction = shotParameters.direction;
         this._gameInfo.shotParameters.spin = shotParameters.spin;

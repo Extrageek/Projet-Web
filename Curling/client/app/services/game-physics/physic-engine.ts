@@ -119,14 +119,15 @@ export class PhysicEngine implements GameComponent {
      */
     public calculateDirectionToPassAtPosition(positionToPassBy: Vector3): Vector3 {
         let directionToGo: Vector3 = null;
-
         //Calculate where the object arrive when it is shot in the direction of the final position.
         let arrivalPoint = this.calculateArrivalPoint(positionToPassBy);
         if (arrivalPoint !== null) {
+            let distanceWithPositionToPassBy = positionToPassBy.clone().sub(this._position);
+            let distanceWithArrivalPoint = arrivalPoint.clone().sub(this._position);
             //Calculate the angle of derivation and apply on the direction to go.
-            let adjustmentAngle = -Math.atan((arrivalPoint.x - this._position.x) / (arrivalPoint.z - this._position.z));
-            directionToGo = positionToPassBy.clone().sub(this._position)
-                .applyAxisAngle(PhysicEngine.Y_AXIS, adjustmentAngle).normalize();
+            let adjustmentAngle = distanceWithArrivalPoint.angleTo(distanceWithPositionToPassBy) * this.getAngleSign();
+            directionToGo = distanceWithPositionToPassBy.applyAxisAngle(PhysicEngine.Y_AXIS, adjustmentAngle)
+                .normalize();
         }
         return directionToGo;
     }
@@ -240,5 +241,9 @@ export class PhysicEngine implements GameComponent {
         if (this._speed <= PhysicEngine.MINIMUM_SPEED) {
             this._speed = 0;
         }
+    }
+
+    private getAngleSign(): number {
+        return this._spin === StoneSpin.CounterClockwise ? -1 : 1;
     }
 }
