@@ -267,6 +267,7 @@ export class RenderService {
             keys.forEach((key: string) => {
                 this._gameInfo.gameComponentsToUpdate[key].update(timePerFrame);
             });
+
             // Following Action only done at the end of the game
             if (this._gameInfo.gameState === EndGame.getInstance()) {
                 // Following action only done once

@@ -221,15 +221,15 @@ export class Stone extends Group implements GameComponent {
     }
 
     public bounce() {
-        let observer  =  {
+        let observer = {
             next: (v: number) => {
                 //TODO: IMPLEMENT BOUNCING MECHANICS
             },
-            complete:() => {
+            complete: () => {
                 console.log("YOUR LOVE IS FADING");
                 this.changeStoneOpacity();
             }
         };
-    return observer;
+        return observer;
     }
 }

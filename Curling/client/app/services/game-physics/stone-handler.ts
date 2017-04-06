@@ -290,20 +290,20 @@ export class StoneHandler implements GameComponent {
     public bounceWinningPlayerStones() {
         let source = new IntervalObservable(StoneHandler.TEN_MILLISECONDS);
         let subject = new Subject();
-        let subscriptions = new Array <Subscription>();
+        let subscriptions = new Array<Subscription>();
         let multicast = source.multicast(subject);
         this.stoneOnTheGame.forEach((stone: Stone) => {
             multicast.subscribe(stone.bounce());
         });
         multicast.connect();
 
-        let timerID = setTimeout(()=> {
+        let timerID = setTimeout(() => {
             subject.complete();
             // subscriptions.forEach((subscription: Subscription) => {
             //     subscription.unsubscribe();
             // });
 
             clearTimeout(timerID);
-        }, StoneHandler.FIVE_SECOND)
+        }, StoneHandler.FIVE_SECOND);
     }
 }
