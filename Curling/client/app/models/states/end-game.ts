@@ -36,7 +36,7 @@ export class EndGame extends AbstractGameState {
 
     protected performEnteringState() {
         this.addEndGameText();
-        // this._gameInfo.stoneHandler.bounceWinningPlayerStones();
+        this._gameInfo.stoneHandler.bounceWinningPlayerStones();
 
         //this._gameInfo.particlesService = new ParticlesService(this._gameInfo.scene);
         this._gameInfo.gameStatus.gameIsFinished();
