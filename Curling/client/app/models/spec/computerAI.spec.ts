@@ -8,7 +8,6 @@ import { Difficulty } from "../difficulty";
 import { ShotParameters } from "../shot-parameters.interface";
 import { GameComponent } from "../game-component.interface";
 
-
 function updateLoopAndVerifyPosition(numberOfUpdates: number,
     gameComponent: GameComponent & Object3D,
     positionToPass: Vector3,
@@ -34,8 +33,6 @@ let rinkInfo: RinkInfo =
         initialStonePosition: Rink.INITIAL_STONE_POSITION,
         targetRadius: 1
     };
-
-let meanFriction = (Stone.SPEED_DIMINUTION_NUMBER + Stone.SPEED_DIMINUTION_NUMBER_WITH_SWEEP) / 2;
 
 describe("computerAI should", () => {
 
