@@ -70,7 +70,6 @@ export class RenderService {
             lighting: lightingService
         };
         this._lightingService = lightingService;
-        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "cameraService", { value: cameraService });
         this._gameInfo.gameStatus.randomFirstPlayer();
         this._animationStarted = false;
         this._endStateAnimationStarted = false;
@@ -211,6 +210,8 @@ export class RenderService {
         this._gameInfo.stoneHandler = new StoneHandler(this._objectLoader, rinkInfo, stoneColor);
         Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "stoneHandler",
             { value: this._gameInfo.stoneHandler });
+        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "cameraService",
+            { value: this._gameInfo.cameraService });
         this.initializeAllStates(stoneColor);
         this._gameInfo.gameState = LoadingStone.getInstance();
         this.onFinishedLoadingModel();
