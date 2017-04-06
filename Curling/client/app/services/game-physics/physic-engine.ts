@@ -208,8 +208,10 @@ export class PhysicEngine implements GameComponent {
             let time = this._timeAccumulation + timePerFrame;
 
             //Calculate the number of frames that passed.
-            let numberOfFramesPassed = time % PhysicEngine.REFERENCE_TPF;
-            let incompleteFrameTime = time - PhysicEngine.REFERENCE_TPF * numberOfFramesPassed;
+            let numberOfFramesWithDecimalsPassed = time / PhysicEngine.REFERENCE_TPF;
+            let numberOfFramesPassed = Math.trunc(numberOfFramesWithDecimalsPassed);
+            let incompleteFrameTime = 
+                PhysicEngine.REFERENCE_TPF * (numberOfFramesWithDecimalsPassed - numberOfFramesPassed);
 
             //Keep the incomplete frame time for the next update
             this._timeAccumulation = incompleteFrameTime;
