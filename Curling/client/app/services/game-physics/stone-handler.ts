@@ -92,6 +92,10 @@ export class StoneHandler implements GameComponent {
             });
     }
 
+    public setSweepingOfCurrentStone(isSweeping: boolean) {
+        this._stoneOnTheGame[this._stoneOnTheGame.length - 1].sweeping = isSweeping;
+    }
+
     //TODO: Count the points by looking at the RinkInfo and the position of the array of stones.
     public countPoints(): Points {
 
@@ -281,6 +285,14 @@ export class StoneHandler implements GameComponent {
             }
         });
         return closestStone;
+    }
+
+    public findClosestCenterStonePosition(stoneColor: StoneColor): Vector3 {
+        if (stoneColor === undefined || stoneColor === null) {
+            throw new Error("The stone color cannot be null.");
+        }
+        let closestStone = this.findClosestStone(this._rinkInfo.targetCenter, stoneColor);
+        return closestStone !== undefined ? closestStone.position.clone() : undefined;
     }
 
     private obtainDistance(startingPoint: Vector3, endingPoint: Vector3): number {

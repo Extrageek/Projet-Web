@@ -42,7 +42,7 @@ export class Rink extends Group implements RinkInfo {
     }
 
     public get targetCenter(): Vector3 {
-        return Rink.TARGET_CENTER;
+        return Rink.TARGET_CENTER.clone();
     }
 
     public get targetRadius(): number {
@@ -50,6 +50,6 @@ export class Rink extends Group implements RinkInfo {
     }
 
     public get initialStonePosition(): Vector3 {
-        return Rink.INITIAL_STONE_POSITION;
+        return Rink.INITIAL_STONE_POSITION.clone();
     }
 }
