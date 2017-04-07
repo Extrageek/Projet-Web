@@ -33,9 +33,7 @@ export class BoardComponent implements OnInit {
         this.socketService.subscribeToChannelEvent(SocketEventType.UPDATE_BOARD)
             .subscribe((response: any) => {
                 if (response !== undefined) {
-                    console.log("Board response from the server ", response);
                     this.board = new Board(response._squares);
-                    console.log(this.board);
                 }
             });
     }

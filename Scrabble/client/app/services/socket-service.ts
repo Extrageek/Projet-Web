@@ -97,7 +97,6 @@ export class SocketService {
     }
 
     public getCurrentPlayer(): string {
-        console.log(this._playersPriorityQueue);
         return this._playersPriorityQueue[0];
     }
 
