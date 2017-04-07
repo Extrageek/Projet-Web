@@ -13,5 +13,15 @@
 }
 
 h1.centered {
+    padding: 2vh 0;
+    text-align: center;
     width: 100%;
+}
+
+h3.centered {
+    word-break: keep-all;
+}
+
+.btn-danger {
+    margin: 2vh 0;
 }

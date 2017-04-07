@@ -76,6 +76,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
             .subscribe(() => {
                 //TODO: activate div like bootstrap alert-success
                 alert("This username is already taken, please choose another username.");
+                this.socketService.player.username = "";
             });
     }
 
