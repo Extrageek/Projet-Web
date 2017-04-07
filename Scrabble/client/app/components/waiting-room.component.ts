@@ -30,6 +30,9 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        if (this.socketService.player.username === "") {
+            this.router.navigate(["/"]);
+        }
         this.socketService.subscribeToChannelEvent(SocketEventType.CONNECT_ERROR)
             .subscribe(this.onConnectionError);
         this._onJoinedRoomSubscription = this.onJoinedRoom();

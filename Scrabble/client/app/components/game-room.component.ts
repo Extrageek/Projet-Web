@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Output, ViewChild, EventEmitter } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 
 import { SocketService } from "../services/socket-service";
 import { EaselManagerService } from "../services/easel-manager.service";
@@ -44,6 +44,7 @@ export class GameComponent implements OnInit, OnDestroy {
     _inputMessage: string;
 
     constructor(
+        private router: Router,
         private activatedRoute: ActivatedRoute,
         private socketService: SocketService,
         private gameRoomEventManagerService: GameRoomManagerService,
@@ -54,6 +55,9 @@ export class GameComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        if (this.socketService.player.username === "") {
+            this.router.navigate(["/"]);
+        }
         // TODO: unsubscribe all the event in the ngOnDestroy
         this.socketService.subscribeToChannelEvent(SocketEventType.CONNECT_ERROR)
             .subscribe(this.onConnectionError);
