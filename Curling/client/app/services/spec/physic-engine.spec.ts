@@ -31,7 +31,8 @@ describe("PhysicEngine should", () => {
             .to.throw(Error);
         expect(() => { physicEngine.speed = undefined; }, "should speed setter trown an error").to.throw(Error);
         expect(() => { physicEngine.spin = undefined; }, "should spin setter trown an error").to.throw(Error);
-        expect(() => { physicEngine.isSweeping = undefined; }, "should isSweeping setter trown an error").to.throw(Error);
+        expect(() => { physicEngine.isSweeping = undefined; }, "should isSweeping setter trown an error")
+            .to.throw(Error);
     });
 
     it("test setters with valid parameters", () => {
@@ -47,7 +48,8 @@ describe("PhysicEngine should", () => {
         position.setZ(2);
 
         expect(physicEngine.position.equals(position), "position should be the same").to.equal(true);
-        expect(physicEngine.direction.sub(direction).length() < precision, "direction should be the same").to.equal(true);
+        expect(physicEngine.direction.sub(direction).length() < precision, "direction should be the same")
+            .to.equal(true);
         expect(physicEngine.speed, "speed should be the same").to.equal(speed);
         expect(physicEngine.spin, "spin should be the same").to.equal(spin);
     });
@@ -58,7 +60,7 @@ describe("PhysicEngine should", () => {
     //If the physic engine changes, these constants could need to be updated.
     const finalPosition = new Vector3(-1.2878691, 0, 31.9611290);
     const positionToPassBy = new Vector3(0, 0, 15);
-    const stoneNearOtherStonePrecision = 0.5
+    const stoneNearOtherStonePrecision = 0.5;
 
     let physicEngine: PhysicEngine;
     let position = new Vector3(0, 0, 0);
@@ -80,7 +82,8 @@ describe("PhysicEngine should", () => {
         let newDirection = physicEngine.calculateDirectionToPassAtPosition(positionToPassBy);
         expect(newDirection).to.not.equal(undefined).and.to.not.equal(null);
         physicEngine.direction = newDirection;
-        while (physicEngine.speed > 0 && positionToPassBy.clone().sub(physicEngine.position).length() > stoneNearOtherStonePrecision) {
+        while (physicEngine.speed > 0 &&
+            positionToPassBy.clone().sub(physicEngine.position).length() > stoneNearOtherStonePrecision) {
             physicEngine.update(PhysicEngine.REFERENCE_TPF);
         }
         expect(physicEngine.position.clone().sub(positionToPassBy).length())

@@ -67,7 +67,7 @@ export class PhysicEngine implements GameComponent {
 
     public set spin(spin: StoneSpin) {
         if (spin === undefined || spin === null) {
-            throw new Error("The spin cannot be null.")
+            throw new Error("The spin cannot be null.");
         }
         this._spin = spin;
         this._theta = PhysicEngine.THETA * (spin === StoneSpin.Clockwise ? -1 : 1);
@@ -146,7 +146,7 @@ export class PhysicEngine implements GameComponent {
         this._position = this._position.clone();
         let savedDirection = this._direction.clone();
         let savedSpeed = this._speed;
-        
+
         //Set the parameters to launch the object.
         this._direction = positionForDirection.clone().sub(this._position).normalize();
         let distanceToMove = positionForDirection.clone().sub(this._position).length();
@@ -172,24 +172,24 @@ export class PhysicEngine implements GameComponent {
 
     /**
      * Update the stone position using the following physic.
-     * 
+     *
      * Physic information
      * Each frame, wich means 60 times per second, the direction is rotated and the new position of the
      * stone is calculated. If it took more than 1 / 60 second to call the update, than the calculation must be
      * applied multiple times to be sure that if the game updates slowly, the stone follow the same way. It is
      * essential for the AI to be able to shot on the other stones.
-     * 
+     *
      * The equations
      * The MRUA equation used are :
      * Xf = Xi + V*t + a*t^2 / 2, where t = timePerFrame, V = current speed,
      *     Xf is the final position, Xi is the initial position and a = -SPEED_DIMINUTION_NUMBER
-     * Vf = Vi - t * a, where Vf = the final speed, Vi = initial speed, t = time per frame reference and 
-     *     a = -SPEED_DIMINUTION_NUMBER 
-     * 
+     * Vf = Vi - t * a, where Vf = the final speed, Vi = initial speed, t = time per frame reference and
+     *     a = -SPEED_DIMINUTION_NUMBER
+     *
      * The di equation is generated from the MRUA equations applied a certain number of times.
      * di = V*t - at^2(i - 1/2), where di is the displacement vector of a frame number i, V is the current speed and t
      *     is the time per frame reference (1 / 60).
-     * 
+     *
      * The y and x equations are generated from the geometry that gave the movement. They are not directly used because
      * the vectors are directly added together, but if an equation is founded to avoid the addition of the serie, it
      * would greatly decrease the calculation to do.
@@ -197,9 +197,9 @@ export class PhysicEngine implements GameComponent {
      *     where theta is a constant
      * x = length(d1) * sin(theta) + length(d2) * sin(2*theta) + ... + length(dn) * sin((n-1)*theta), where theta is a
      *     constant
-     * 
+     *
      * x and y are the final position for this frame.
-     * 
+     *
      * @param timePerFrame The time since the last call of this function.
      */
     public update(timePerFrame: number) {
@@ -210,7 +210,7 @@ export class PhysicEngine implements GameComponent {
             //Calculate the number of frames that passed.
             let numberOfFramesWithDecimalsPassed = time / PhysicEngine.REFERENCE_TPF;
             let numberOfFramesPassed = Math.trunc(numberOfFramesWithDecimalsPassed);
-            let incompleteFrameTime = 
+            let incompleteFrameTime =
                 PhysicEngine.REFERENCE_TPF * (numberOfFramesWithDecimalsPassed - numberOfFramesPassed);
 
             //Keep the incomplete frame time for the next update

@@ -40,7 +40,7 @@ export abstract class ComputerAI {
     protected static readonly directionsToAimInCenter = [
         new Vector3(0, 0, 1).applyAxisAngle(PhysicEngine.Y_AXIS, -ComputerAI.ANGLE_ADJUSTMENT),
         new Vector3(0, 0, 1).applyAxisAngle(PhysicEngine.Y_AXIS, ComputerAI.ANGLE_ADJUSTMENT)
-    ]
+    ];
 
     protected _rinkInfo: RinkInfo;
     protected _physicEngine: PhysicEngine;

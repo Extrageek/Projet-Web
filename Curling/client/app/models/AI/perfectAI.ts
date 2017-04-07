@@ -21,7 +21,7 @@ export class PerfectAI extends ComputerAI {
             spin: RandomHelper.getIntegerNumberInRange(0, 1),
             direction: null,
             power: RandomHelper.getNumberInRangeIncluded(PerfectAI.SHOT_TO_PUSH_STONE, PerfectAI.SHOT_TO_PUSH_STONE)
-        }
+        };
 
         //Determine the direction.
         this._physicEngine.speed = shotParameters.power;

@@ -25,7 +25,7 @@ export class HardAI extends ComputerAI {
             spin: RandomHelper.getIntegerNumberInRange(0, 1),
             direction: null,
             power: RandomHelper.getNumberInRangeIncluded(HardAI.MIN_SHOT_TO_PUSH_STONE, HardAI.MAX_SHOT_TO_PUSH_STONE)
-        }
+        };
 
         //Determine the direction.
         this._physicEngine.speed = shotParameters.power;

@@ -22,7 +22,7 @@ export class NormalAI extends ComputerAI {
     public determineShotParametersOnCenter(): ShotParameters {
         return this.randomShot();
     }
-    
+
     private randomShot(): ShotParameters {
         let spin = RandomHelper.getIntegerNumberInRange(0, 1);
         console.log("spin");

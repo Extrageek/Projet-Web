@@ -283,7 +283,7 @@ export class StoneHandler implements GameComponent {
             throw new Error("The stone color cannot be null.");
         }
         let closestStone = this.findClosestStone(this._rinkInfo.targetCenter, stoneColor);
-        return closestStone !== undefined? closestStone.position.clone() : undefined;
+        return closestStone !== undefined ? closestStone.position.clone() : undefined;
     }
 
     private obtainDistance(startingPoint: Vector3, endingPoint: Vector3): number {

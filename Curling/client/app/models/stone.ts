@@ -77,7 +77,7 @@ export class Stone extends Group implements GameComponent {
     }
 
     public set spin(spin: StoneSpin) {
-        this._physicEngine.spin = spin
+        this._physicEngine.spin = spin;
     }
 
     public static createStone(objectLoader: ObjectLoader, stoneColor: StoneColor, initialPosition: Vector3)
@@ -111,7 +111,7 @@ export class Stone extends Group implements GameComponent {
         this._lastBoundingSphere = this._boundingSphere;
         //Set other parameters
         this._stoneColor = stoneColor;
-        this._physicEngine = new PhysicEngine(this.position,  new Vector3(0, 0, 1), 0);
+        this._physicEngine = new PhysicEngine(this.position, new Vector3(0, 0, 1), 0);
     }
 
     public revertToLastPosition() {
