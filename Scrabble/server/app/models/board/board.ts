@@ -49,8 +49,6 @@ export class Board {
             let columnIndex = this._lastLettersAdded[index].column - 1;
             let letter = this._squares[rowIndex][columnIndex].letter;
             removedLetters.push(new Letter(letter.alphabetLetter, letter.point, letter.quantity));
-
-            console.log(" last letter removed --------- ", removedLetters[removedLetters.length - 1].alphabetLetter);
             this._squares[rowIndex][columnIndex].letter = new Letter("", 0, 0);
             this._squares[rowIndex][columnIndex].squareValue = this._squares[rowIndex][columnIndex].type.toString();
         }
@@ -100,7 +98,6 @@ export class Board {
     }
 
     private assignStarToSquare(): void {
-        this.squares[7][7].type = SquareType.STAR;
         this.squares[7][7].squareValue = SquareType.STAR;
     }
 
@@ -132,6 +129,7 @@ export class Board {
         this.squares[3][3].type = SquareType.DOUBLE_WORD_COUNT;
         this.squares[3][11].type = SquareType.DOUBLE_WORD_COUNT;
         this.squares[4][4].type = SquareType.DOUBLE_WORD_COUNT;
+        this.squares[7][7].type = SquareType.DOUBLE_WORD_COUNT;
         this.squares[4][10].type = SquareType.DOUBLE_WORD_COUNT;
         this.squares[10][4].type = SquareType.DOUBLE_WORD_COUNT;
         this.squares[10][10].type = SquareType.DOUBLE_WORD_COUNT;

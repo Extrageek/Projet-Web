@@ -6,6 +6,10 @@ import { ParticlesService } from "./../../services/game-physics/particles.servic
 export class EndGame extends AbstractGameState {
 
     private static _instance: AbstractGameState = null;
+    private static readonly TEXT_POSITION = new Vector3(6, 3, 17);
+    private static readonly RED = 0xff0000;
+    private static readonly BLUE = 0x0000ff;
+    private static readonly YELLOW = 0xffff00;
 
     /**
      * Initialize the unique EndGame state.
@@ -31,22 +35,23 @@ export class EndGame extends AbstractGameState {
     }
 
     protected performEnteringState() {
-        console.log("entering end game set");
-        this._gameInfo.cameraService.moveCameraEndRink();
-        this._gameInfo.lighting.adjustEndGameStateLighthing(this._gameInfo.scene);
+        this.addEndGameText();
+        this._gameInfo.stoneHandler.bounceWinningPlayerStones();
+
         //this._gameInfo.particlesService = new ParticlesService(this._gameInfo.scene);
-        let textPositin = new Vector3(6, 3, 17);
+        this._gameInfo.gameStatus.gameIsFinished();
+    }
+
+    private addEndGameText() {
         if (this._gameInfo.gameStatus.scorePlayer > this._gameInfo.gameStatus.scoreComputer) {
-            this._gameInfo.textureHandler.addText(textPositin, "Vous avez gagné!", 0x0000ff);
+            this._gameInfo.textureHandler.addText(EndGame.TEXT_POSITION, "Vous avez gagne!", EndGame.BLUE);
         }
         else if (this._gameInfo.gameStatus.scorePlayer < this._gameInfo.gameStatus.scoreComputer) {
-            this._gameInfo.textureHandler.addText(textPositin, "Vous avez perdu!", 0xff0000);
+            this._gameInfo.textureHandler.addText(EndGame.TEXT_POSITION, "Vous avez perdu!", EndGame.RED);
         }
         else {
-            this._gameInfo.textureHandler.addText(textPositin, "C'est une partie nulle", 0x000000);
-
+            this._gameInfo.textureHandler.addText(EndGame.TEXT_POSITION, "C'est une partie nulle", EndGame.YELLOW);
         }
-        this._gameInfo.gameStatus.gameIsFinished();
     }
 
     protected performLeavingState() {

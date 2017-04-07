@@ -194,7 +194,7 @@ export class Stone extends Group implements GameComponent {
             (<THREE.Mesh>child).material.opacity = 1;
         });
 
-        let observable = new Observable((observer: any) => {
+        let observable = new Observable(() => {
             let millisecond = 0;
             let id = setInterval(() => {
 
@@ -205,7 +205,6 @@ export class Stone extends Group implements GameComponent {
                 });
                 millisecond += Stone.TEN_MILLISECONDS;
                 if (millisecond === Stone.ONE_SECOND) {
-                    observer.next();
                     clearTimeout(id);
                 }
             }, Stone.TEN_MILLISECONDS);
@@ -213,10 +212,24 @@ export class Stone extends Group implements GameComponent {
         return observable;
     }
 
+
     private calculateCurlMatrix(theta: number) {
         this._curlMatrix.set(
             Math.cos(theta), 0, Math.sin(theta),
             0, 1, 0,
             -Math.sin(theta), 0, Math.cos(theta));
+    }
+
+    public bounce() {
+        let observer = {
+            next: (v: number) => {
+                //TODO: IMPLEMENT BOUNCING MECHANICS
+            },
+            complete: () => {
+                console.log("YOUR LOVE IS FADING");
+                this.changeStoneOpacity();
+            }
+        };
+        return observer;
     }
 }

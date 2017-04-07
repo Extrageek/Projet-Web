@@ -9,8 +9,8 @@ import { DatabaseManager } from "./database-management";
 import { Dashboard } from "./models/dashboard/dashboard";
 import { Activity, Type } from "./models/dashboard/activity";
 
-let Address6 = require('ip-address').Address6;
-let Address4 = require('ip-address').Address4;
+//let Address6 = require('ip-address').Address6;
+//let Address4 = require('ip-address').Address4;
 
 module Route {
 
@@ -50,8 +50,9 @@ module Route {
          */
         public getNewPuzzle(request: express.Request, res: express.Response, next: express.NextFunction) {
             let difficulty = request.params.difficulty;
-            let address = new Address6(request.ip);
-            let ip = address.isLoopback() ? "localhost" : address.to4();
+            //let address = new Address6(request.ip);
+            //let ip = address.isLoopback() ? "localhost" : address.to4();
+            let ip = "localhost";
 
             Dashboard.getInstance().addActivity(new Activity(new Date, Type.GRID_DEMAND, "ip: " + ip));
 
