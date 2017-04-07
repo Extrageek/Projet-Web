@@ -27,7 +27,10 @@ export class Stone extends Group implements GameComponent {
     public static readonly SPEED_DIMINUTION_NUMBER_WITH_SWEEP = 0.09;
     private static readonly MINIMUM_SPEED = 0.001;
     private static readonly SECONDS_PER_FULL_ROTATION = 4;
-    //private static readonly SWEEPING_CURL_COEFF = 0.0001;
+    private static readonly UPPER_BOUNCE_BOUND = 5;
+    private static readonly LOWER_BOUNCE_BOUND = 1;
+    private static readonly UPPER_BOUNCE_INCREMENT_BOUND = 0.1;
+    private static readonly LOWER_BOUNCE_INCREMENT_BOUND = 0.05;
 
     public _material: MeshPhongMaterial;
     private _stoneColor: StoneColor;
@@ -141,11 +144,10 @@ export class Stone extends Group implements GameComponent {
             //Applying MRUA equation. Xf = Xi + V0*t + a*t^2 / 2, where t = timePerFrame, V0 = speed,
             //Xf is the final position, Xi is the initial position and a = -SPEED_DIMINUTION_NUMBER.
             //CurlMatrix is applied to the MRUA equaion to add a spin effect
-            this.position.add((this._direction.applyMatrix3(this._curlMatrix).clone()
+            this.position.add((this._direction.clone()
                 .multiplyScalar(this._speed * timePerFrame - Stone.SPEED_DIMINUTION_NUMBER
                 * Math.pow(timePerFrame, 2) / 2)
             ));
-            this.position.y = 0;
             this.stoneSpinning(timePerFrame);
             this.decrementSpeed(timePerFrame);
             this.calculateNewBoundingSphere();
@@ -221,13 +223,25 @@ export class Stone extends Group implements GameComponent {
     }
 
     public bounce() {
+
+        let incrementBounce = (Math.random() * (Stone.UPPER_BOUNCE_INCREMENT_BOUND
+            - Stone.LOWER_BOUNCE_INCREMENT_BOUND)) + Stone.LOWER_BOUNCE_INCREMENT_BOUND;
+
+        let upperBound = Math.floor(Math.random() * (Stone.UPPER_BOUNCE_BOUND
+                - Stone.LOWER_BOUNCE_BOUND)) + Stone.LOWER_BOUNCE_BOUND;
+        let lowerBound = 0;
+
         let observer = {
             next: (v: number) => {
-                //TODO: IMPLEMENT BOUNCING MECHANICS
+                if (this.position.y > upperBound) {
+                    incrementBounce = -incrementBounce;
+                } else if (this.position.y < lowerBound) {
+                    incrementBounce = -incrementBounce;
+                }
+                this.position.y += incrementBounce;
             },
             complete: () => {
-                console.log("YOUR LOVE IS FADING");
-                this.changeStoneOpacity();
+                this.changeStoneOpacity().subscribe();
             }
         };
         return observer;

@@ -26,7 +26,7 @@ export class StoneHandler implements GameComponent {
     public static readonly COLLISION_SPEED_TRANSFERED_PERCENT = 0.85;
 
     private static readonly FIVE_SECOND = 5000;
-    private static readonly TEN_MILLISECONDS = 10;
+    private static readonly FIFTY_MILLISECONDS = 50;
 
     private _rinkInfo: RinkInfo;
     private _currentPlayer: StoneColor;
@@ -288,9 +288,9 @@ export class StoneHandler implements GameComponent {
     }
 
     public bounceWinningPlayerStones() {
-        let source = new IntervalObservable(StoneHandler.TEN_MILLISECONDS);
+        let source = new IntervalObservable(StoneHandler.FIFTY_MILLISECONDS);
         let subject = new Subject();
-        let subscriptions = new Array<Subscription>();
+        let subscriptions = new Array <Subscription>();
         let multicast = source.multicast(subject);
         this.stoneOnTheGame.forEach((stone: Stone) => {
             multicast.subscribe(stone.bounce());
@@ -299,10 +299,6 @@ export class StoneHandler implements GameComponent {
 
         let timerID = setTimeout(() => {
             subject.complete();
-            // subscriptions.forEach((subscription: Subscription) => {
-            //     subscription.unsubscribe();
-            // });
-
             clearTimeout(timerID);
         }, StoneHandler.FIVE_SECOND);
     }
