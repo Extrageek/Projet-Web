@@ -78,16 +78,24 @@ export class VerificationService {
         let scoreWord = 0;
         let isWordDouble = false;
         let isWordTriple = false;
+        console.log(board.lastLettersAdded.toString());
 
         for (let indexOffset = 0; indexOffset < word.length; indexOffset++) {
             let square = board.squares[rowIndex][firstColumnIndex + indexOffset];
+
+            console.log("INDEX COLUMN SQUARE ------------------------", board.lastLettersAdded[indexLastLettersAdded].column - 1);
+            console.log("INDEX ROW SQUARE ------------------------", BoardHelper.convertCharToIndex(board.lastLettersAdded[indexLastLettersAdded].row));
 
             let isSquareNewLetter =
                 board.lastLettersAdded[indexLastLettersAdded].column - 1 === firstColumnIndex + indexOffset
                 && BoardHelper.convertCharToIndex(board.lastLettersAdded[indexLastLettersAdded].row)
                 === rowIndex;
+            indexLastLettersAdded += (isSquareNewLetter) ? 1 : 0;
+            console.log("square.type --------------------- ", square.type);
+            console.log("square.squareValue -------------------- ", square.squareValue);
+            console.log("POINT LETTER --------------------- ", square.letter.point);
             scoreWord += this.calculateScoreLetterInSquare(square, isSquareNewLetter);
-
+            console.log(scoreWord);
             if (isSquareNewLetter && square.type === SquareType.DOUBLE_WORD_COUNT) {
                 isWordDouble = true;
             }
@@ -105,15 +113,24 @@ export class VerificationService {
         let scoreWord = 0;
         let isWordDouble = false;
         let isWordTriple = false;
+        console.log(board.lastLettersAdded.toString());
 
         for (let indexOffset = 0; indexOffset < word.length; indexOffset++) {
             let square = board.squares[firstRowIndex + indexOffset][columnIndex];
+            console.log("INDEX COLUMN SQUARE ------------------------", board.lastLettersAdded[indexLastLettersAdded].column - 1);
+            console.log("INDEX ROW SQUARE ------------------------", BoardHelper.convertCharToIndex(board.lastLettersAdded[indexLastLettersAdded].row));
 
             let isSquareNewLetter =
                 board.lastLettersAdded[indexLastLettersAdded].column - 1 === columnIndex
                 && BoardHelper.convertCharToIndex(board.lastLettersAdded[indexLastLettersAdded].row)
                 === firstRowIndex + indexOffset;
+            indexLastLettersAdded += (isSquareNewLetter) ? 1 : 0;
+
+            console.log("square.type --------------------- ", square.type);
+            console.log("square.squareValue -------------------- ", square.squareValue);
+            console.log("POINT LETTER --------------------- ", square.letter.point);
             scoreWord += this.calculateScoreLetterInSquare(square, isSquareNewLetter);
+            console.log(scoreWord);
 
             if (isSquareNewLetter && square.type === SquareType.DOUBLE_WORD_COUNT) {
                 isWordDouble = true;
@@ -200,6 +217,7 @@ export class VerificationService {
     }
 
     public calculateScoreLetterInSquare(square: Square, isSquareNewLetter: boolean): number {
+        console.log("IS NEW LETTER ----- ", isSquareNewLetter);
         if (isSquareNewLetter) {
             if (square.type === SquareType.DOUBLE_LETTER_COUNT) {
                 return square.letter.point * BONUS_DOUBLE;
@@ -212,11 +230,11 @@ export class VerificationService {
     }
 
     public applyBonusDoubleOrTripleWord(score: number, isWordDouble: boolean, isWordTriple: boolean): number {
-        if (isWordDouble) {
-            return score * BONUS_DOUBLE;
-        }
-        else if (isWordTriple) {
+        if (isWordTriple) {
             return score * BONUS_TRIPLE;
+        }
+        else if (isWordDouble) {
+            return score * BONUS_DOUBLE;
         }
         else {
             return score;
