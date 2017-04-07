@@ -8,12 +8,12 @@ export class BlinkDirective implements OnInit {
 
     ngOnInit() {
         setInterval((() => {
-            let style = "hidden";
-            if (this.element.nativeElement.style.visibility
-                && this.element.nativeElement.style.visibility === "hidden") {
-                    style = "visible";
+            let style = "0";
+            if (this.element.nativeElement.style.opacity
+                && this.element.nativeElement.style.opacity === "0") {
+                    style = "1";
             }
-            this.renderer.setElementStyle(this.element.nativeElement, 'visibility', style);
+            this.renderer.setElementStyle(this.element.nativeElement, 'opacity', style);
         }), this.duration);
     }
 }

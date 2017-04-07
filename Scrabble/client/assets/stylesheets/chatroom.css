@@ -20,12 +20,13 @@
     overflow-x: hidden;
     background-color: #fff;
     box-shadow: 0 0 5px rgba(0,0,0,0.16);
+    transition-duration: 1s;
 }
 
 .has-messages {
-    box-shadow: 0 0 20px 4px #42c1dd, 0 0 15px 5px #fff;
-    transition: box-shadow 4s ease-out;
-    transition-duration: 3s;
+    box-shadow: 0 0 6px 1px #000, 0 0 10px 5px #fff;
+    transition: box-shadow 2s ease-out;
+    transition-duration: 2s;
 }
 
 .msg-wrapper {
@@ -101,4 +102,8 @@ p.command-request-ok {
 
 p.command-request-error {
     color: red;
+}
+
+.glyphicon-comment {
+    transition: opacity .25s ease-in-out;
 }
