@@ -9,6 +9,8 @@ import { IRoomMessage } from "../commons/messages/room-message.interface";
 import { ICommandMessage } from "../commons/messages/command-message.interface";
 import { CommandType } from '../services/commons/command-type';
 
+import { BlinkDirective } from "../directive/blink.directive";
+
 @Component({
     moduleId: module.id,
     selector: "scrabble-chatroom-selector",
@@ -21,12 +23,14 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
     _username: string;
 
     private _hasNewMessages: boolean;
+    private _wasClicked: boolean;
 
     @ViewChild("scroll") private myScrollContainer: ElementRef;
 
     constructor(private route: ActivatedRoute, private socketService: SocketService) {
         this._messageArray = new Array<IRoomMessage>();
         this._hasNewMessages = false;
+        this._wasClicked = false;
     }
 
     ngOnInit(): void {
@@ -88,7 +92,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
                 if (response !== undefined && response._message !== null) {
                     this._messageArray.push(response as IRoomMessage);
                     this._hasNewMessages = true;
-                    console.log("Chat room: ", response.message, response.date);
+                    console.log("Chat room: ", response._message, response._date);
                 }
             });
     }
@@ -123,9 +127,14 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
 
     // Use to help the user when scrolling
     ngAfterViewChecked() {
-        if (this._hasNewMessages) {
+        if (this._hasNewMessages && !this._wasClicked) {
             this.scrollToBottom();
-            this._hasNewMessages = false;
+        }
+        if (this._wasClicked) {
+            setTimeout(() => {
+                this._hasNewMessages = false;
+                this._wasClicked = false;
+            }, 1);
         }
     }
 }

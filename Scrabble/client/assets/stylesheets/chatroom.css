@@ -15,10 +15,17 @@
 .chatMessageBox {
     height: 412px;
     border: 1px solid #ddd;
+    margin-top: 1vh;
     overflow-y: scroll;
     overflow-x: hidden;
     background-color: #fff;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.16);
+    box-shadow: 0 0 5px rgba(0,0,0,0.16);
+}
+
+.has-messages {
+    box-shadow: 0 0 20px 4px #42c1dd, 0 0 15px 5px #fff;
+    transition: box-shadow 4s ease-out;
+    transition-duration: 3s;
 }
 
 .msg-wrapper {
