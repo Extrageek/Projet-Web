@@ -20,8 +20,7 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
     public _winner: string;
     public _isWinner: boolean;
 
-    constructor(
-        private socketService: SocketService) {
+    constructor(private socketService: SocketService) {
         this._lettersOnEasel = 7;
         // TODO : get it from letterbank service
         this._lettersInBank = 102;
@@ -66,7 +65,7 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
         return this.socketService.subscribeToChannelEvent(SocketEventType.GAME_OVER)
             .subscribe((winner: string) => {
                 this._winner = winner;
-                this._isWinner = (winner === this.socketService.player.username) ? true : false;
+                this._isWinner = (winner === this.socketService.player.username);
             });
     }
 

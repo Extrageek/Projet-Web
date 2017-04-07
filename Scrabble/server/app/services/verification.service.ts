@@ -86,8 +86,9 @@ export class VerificationService {
                 board.lastLettersAdded[indexLastLettersAdded].column - 1 === firstColumnIndex + indexOffset
                 && BoardHelper.convertCharToIndex(board.lastLettersAdded[indexLastLettersAdded].row)
                 === rowIndex;
-            scoreWord += this.calculateScoreLetterInSquare(square, isSquareNewLetter);
+            indexLastLettersAdded += (isSquareNewLetter) ? 1 : 0;
 
+            scoreWord += this.calculateScoreLetterInSquare(square, isSquareNewLetter);
             if (isSquareNewLetter && square.type === SquareType.DOUBLE_WORD_COUNT) {
                 isWordDouble = true;
             }
@@ -113,6 +114,7 @@ export class VerificationService {
                 board.lastLettersAdded[indexLastLettersAdded].column - 1 === columnIndex
                 && BoardHelper.convertCharToIndex(board.lastLettersAdded[indexLastLettersAdded].row)
                 === firstRowIndex + indexOffset;
+            indexLastLettersAdded += (isSquareNewLetter) ? 1 : 0;
             scoreWord += this.calculateScoreLetterInSquare(square, isSquareNewLetter);
 
             if (isSquareNewLetter && square.type === SquareType.DOUBLE_WORD_COUNT) {
@@ -212,11 +214,11 @@ export class VerificationService {
     }
 
     public applyBonusDoubleOrTripleWord(score: number, isWordDouble: boolean, isWordTriple: boolean): number {
-        if (isWordDouble) {
-            return score * BONUS_DOUBLE;
-        }
-        else if (isWordTriple) {
+        if (isWordTriple) {
             return score * BONUS_TRIPLE;
+        }
+        else if (isWordDouble) {
+            return score * BONUS_DOUBLE;
         }
         else {
             return score;

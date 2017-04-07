@@ -4,6 +4,12 @@ import { Stone, StoneColor } from '../../models/stone';
 import { GameComponent } from '../../models/game-component.interface';
 import { SoundManager } from "../sound-manager";
 import { ShotParameters } from "../../models/shot-parameters.interface";
+import { IntervalObservable } from "rxjs/observable/IntervalObservable";
+import { Subject } from "rxjs/Subject";
+import { Subscription } from "rxjs";
+import "rxjs/add/observable/interval";
+import "rxjs/add/operator/multicast";
+
 
 export interface Points {
     player: number;
@@ -18,6 +24,9 @@ export class StoneHandler implements GameComponent {
 
     public static readonly COLLISION_SPEED_KEEP_PERCENT = 0.85;
     public static readonly COLLISION_SPEED_TRANSFERED_PERCENT = 0.85;
+
+    private static readonly FIVE_SECOND = 5000;
+    private static readonly FIFTY_MILLISECONDS = 50;
 
     private _rinkInfo: RinkInfo;
     private _currentPlayer: StoneColor;
@@ -37,7 +46,7 @@ export class StoneHandler implements GameComponent {
         this._stoneOnTheGame = new Array<Stone>();
         this._stonesToBeRemoved = new Array<Stone>();
         this._callbackAfterShotFinished = null;
-        this._outOfBoundsRink = new Box3(new Vector3(-2.15, 0, -22.5), new Vector3(2.15, 0, 22.5));
+        this._outOfBoundsRink = new Box3(new Vector3(-2.15, -15, -22.5), new Vector3(2.15, 15, 22.5));
 
         this._boxBetweenLinesForBroom = new Box3(new Vector3(-2.15, 0, -14.75), new Vector3(2.15, 0, 14.75));
         this._boxBetweenLinesForBroom.translate(new Vector3(0, 0, 2.95));
@@ -291,8 +300,18 @@ export class StoneHandler implements GameComponent {
     }
 
     public bounceWinningPlayerStones() {
-        this._stonesGivingPoints.forEach((stone: Stone) => {
-            stone.bounce();
+        let source = new IntervalObservable(StoneHandler.FIFTY_MILLISECONDS);
+        let subject = new Subject();
+        let subscriptions = new Array <Subscription>();
+        let multicast = source.multicast(subject);
+        this.stoneOnTheGame.forEach((stone: Stone) => {
+            multicast.subscribe(stone.bounce());
         });
+        multicast.connect();
+
+        let timerID = setTimeout(() => {
+            subject.complete();
+            clearTimeout(timerID);
+        }, StoneHandler.FIVE_SECOND);
     }
 }

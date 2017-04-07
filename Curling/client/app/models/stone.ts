@@ -24,8 +24,11 @@ export class Stone extends Group implements GameComponent {
     private static readonly SCALE = { x: 1, y: 1, z: 1 };
     private static readonly MATERIAL_PROPERTIES = { wireframe: false, shininess: 0.7 };
     private static readonly SECONDS_PER_FULL_ROTATION = 4;
+    private static readonly UPPER_BOUNCE_BOUND = 5;
+    private static readonly LOWER_BOUNCE_BOUND = 1;
+    private static readonly UPPER_BOUNCE_INCREMENT_BOUND = 0.1;
+    private static readonly LOWER_BOUNCE_INCREMENT_BOUND = 0.05;
 
-    private _material: MeshPhongMaterial;
     private _stoneColor: StoneColor;
     private _physicEngine: PhysicEngine;
     //Bounding sphere used for collisions. Only works if the stones are displaced on the XZ plane.
@@ -35,11 +38,6 @@ export class Stone extends Group implements GameComponent {
 
     public get boundingSphere(): Sphere {
         return this._boundingSphere;
-    }
-
-    //Used by the renderer to get the material of the group.
-    public get material() {
-        return this._material;
     }
 
     //The following getters and setters are used to transmit the informations to the physic engine to avoid
@@ -100,8 +98,6 @@ export class Stone extends Group implements GameComponent {
     private constructor(obj: Object3D, initialPosition: Vector3, stoneColor: StoneColor) {
         super();
         this.copy(<this>obj, true);
-        //Set material properties
-        this._material = new MeshPhongMaterial(Stone.MATERIAL_PROPERTIES);
         this.scale.set(Stone.SCALE.x, Stone.SCALE.y, Stone.SCALE.z);
         //Set position
         this.position.set(initialPosition.x, initialPosition.y, initialPosition.z);
@@ -155,7 +151,7 @@ export class Stone extends Group implements GameComponent {
             (<THREE.Mesh>child).material.opacity = 1;
         });
 
-        let observable = new Observable((observer: any) => {
+        let observable = new Observable(() => {
             let millisecond = 0;
             let id = setInterval(() => {
 
@@ -174,11 +170,27 @@ export class Stone extends Group implements GameComponent {
     }
 
     public bounce() {
-        if (this.position.y !== 0) {
-            this.position.y = 15;
-        }
-        else {
-            this.position.y = 0;
-        }
+
+        let incrementBounce = (Math.random() * (Stone.UPPER_BOUNCE_INCREMENT_BOUND
+            - Stone.LOWER_BOUNCE_INCREMENT_BOUND)) + Stone.LOWER_BOUNCE_INCREMENT_BOUND;
+
+        let upperBound = Math.floor(Math.random() * (Stone.UPPER_BOUNCE_BOUND
+            - Stone.LOWER_BOUNCE_BOUND)) + Stone.LOWER_BOUNCE_BOUND;
+        let lowerBound = 0;
+
+        let observer = {
+            next: (v: number) => {
+                if (this.position.y > upperBound) {
+                    incrementBounce = -incrementBounce;
+                } else if (this.position.y < lowerBound) {
+                    incrementBounce = -incrementBounce;
+                }
+                this.position.y += incrementBounce;
+            },
+            complete: () => {
+                this.changeStoneOpacity().subscribe();
+            }
+        };
+        return observer;
     }
 }

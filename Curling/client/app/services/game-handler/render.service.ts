@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import {
-    Scene, PerspectiveCamera, WebGLRenderer, Renderer,
-    ObjectLoader, Geometry, CubeGeometry, MeshBasicMaterial, MeshFaceMaterial, Mesh, Line,
+    Scene, PerspectiveCamera, WebGLRenderer, Renderer, ObjectLoader, Geometry,
+    CubeGeometry, MeshBasicMaterial, MultiMaterial, Mesh, Line,
     LineDashedMaterial, ImageUtils, BackSide, Vector3, Clock
 } from "three";
 
@@ -171,8 +171,8 @@ export class RenderService {
                 side: BackSide
             }));
         }
+        let material = new MultiMaterial(materialArray);
         let geometry = new CubeGeometry(200, 200, 200);
-        let material = new MeshFaceMaterial(materialArray);
         this._mesh = new Mesh(geometry, material);
         this._gameInfo.scene.add(this._mesh);
     }
@@ -286,19 +286,20 @@ export class RenderService {
             keys.forEach((key: string) => {
                 this._gameInfo.gameComponentsToUpdate[key].update(timePerFrame);
             });
+
             // Following Action only done at the end of the game
             if (this._gameInfo.gameState === EndGame.getInstance()) {
                 // Following action only done once
                 if (!this._endStateAnimationStarted) {
-                    this._endStateAnimationStarted = true;
                     // We want the animation to be done in a perspective view
+                    this._endStateAnimationStarted = true;
                     if (this._currentCamera === this._gameInfo.cameraService.topViewCamera) {
                         this.switchCamera();
                     }
                     this._gameInfo.cameraService.moveCameraEndRink();
                     this._gameInfo.lighting.adjustEndGameStateLighthing(this._gameInfo.scene);
                 }
-                this._gameInfo.stoneHandler.bounceWinningPlayerStones();
+                //this._gameInfo.particlesService.update();
             }
         }
         this._renderer.render(this._gameInfo.scene, this._currentCamera);
