@@ -9,6 +9,9 @@ export class SocketEventType {
     // A connected status of the client.
     static CONNECT = "connect";
 
+    // A cancelation of the client when waiting for players.
+    static CANCEL = "cancel";
+
     // A disconnected status of the client.
     static DISCONNECT = "disconnect";
 
@@ -28,6 +31,8 @@ export class SocketEventType {
     static ROOM_READY = "roomReady";
     static MESSAGE = "message";
     static PLAYER_LEFT_ROOM = "playerLeftRoom";
+
+    static PLAYER_CANCELED = "playerCanceled";
 
     //Message sent by the server if the name already exists
     static USERNAME_ALREADY_EXIST = "usernameAlreadyExist";
