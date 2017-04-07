@@ -140,8 +140,6 @@ export class RenderService {
         this._gameInfo.scene.add(this._gameInfo.line.lineMesh);
     }
 
-
-
     public linkRenderServerToCanvas(container: HTMLElement) {
         // Inser the canvas into the DOM
         if (container.getElementsByTagName("canvas").length === 0) {
@@ -232,13 +230,6 @@ export class RenderService {
         this.onResize();
     }
 
-    public setEndGameView() {
-        if (this._currentCamera === this._gameInfo.cameraService.topViewCamera) {
-            this.switchCamera();
-        }
-        this._gameInfo.cameraService.moveCameraEndRink();
-    }
-
     private onFinishedLoadingModel() {
         ++this._numberOfModelsLoaded;
         if (!this._animationStarted && this._numberOfModelsLoaded >= RenderService.NUMBER_OF_MODELS_TO_LOAD) {
@@ -274,16 +265,19 @@ export class RenderService {
                 if (!this._endStateAnimationStarted) {
                     // We want the animation to be done in a perspective view
                     this._endStateAnimationStarted = true;
-                    if (this._currentCamera === this._gameInfo.cameraService.topViewCamera) {
-                        this.switchCamera();
-                    }
-                    this._gameInfo.cameraService.moveCameraEndRink();
-                    this._gameInfo.lighting.adjustEndGameStateLighthing(this._gameInfo.scene);
+                    this.setEndGameView();
                 }
-                //this._gameInfo.particlesService.update();
+                this._gameInfo.particlesService.update();
             }
         }
         this._renderer.render(this._gameInfo.scene, this._currentCamera);
+    }
+
+    private setEndGameView() {
+        if (this._currentCamera === this._gameInfo.cameraService.topViewCamera) {
+            this.switchCamera();
+        }
+        this._gameInfo.cameraService.moveCameraEndRink();
     }
 
     public toogleFocus(toogle: boolean) {
