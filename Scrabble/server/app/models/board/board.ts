@@ -188,15 +188,16 @@ export class Board {
 
     private assignDoubleLetterCountToSquare(): void {
         this.squares[0][3].type = SquareType.DOUBLE_LETTER_COUNT;
+        this.squares[0][11].type = SquareType.DOUBLE_LETTER_COUNT;
         this.squares[2][6].type = SquareType.DOUBLE_LETTER_COUNT;
         this.squares[2][8].type = SquareType.DOUBLE_LETTER_COUNT;
         this.squares[3][0].type = SquareType.DOUBLE_LETTER_COUNT;
         this.squares[3][7].type = SquareType.DOUBLE_LETTER_COUNT;
         this.squares[3][14].type = SquareType.DOUBLE_LETTER_COUNT;
         this.squares[6][2].type = SquareType.DOUBLE_LETTER_COUNT;
-        this.squares[6][12].type = SquareType.DOUBLE_LETTER_COUNT;
         this.squares[6][6].type = SquareType.DOUBLE_LETTER_COUNT;
         this.squares[6][8].type = SquareType.DOUBLE_LETTER_COUNT;
+        this.squares[6][12].type = SquareType.DOUBLE_LETTER_COUNT;
         this.squares[7][3].type = SquareType.DOUBLE_LETTER_COUNT;
         this.squares[7][11].type = SquareType.DOUBLE_LETTER_COUNT;
         this.squares[8][2].type = SquareType.DOUBLE_LETTER_COUNT;
@@ -212,6 +213,7 @@ export class Board {
         this.squares[14][11].type = SquareType.DOUBLE_LETTER_COUNT;
 
         this.squares[0][3].squareValue = SquareType.DOUBLE_LETTER_COUNT;
+        this.squares[0][11].squareValue = SquareType.DOUBLE_LETTER_COUNT;
         this.squares[2][6].squareValue = SquareType.DOUBLE_LETTER_COUNT;
         this.squares[2][8].squareValue = SquareType.DOUBLE_LETTER_COUNT;
         this.squares[3][0].squareValue = SquareType.DOUBLE_LETTER_COUNT;

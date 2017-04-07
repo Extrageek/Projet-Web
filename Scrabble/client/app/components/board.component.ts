@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 
-import { Board } from '../models/board';
+import { Board } from "../models/board";
 
 import { SocketEventType } from "../commons/socket-eventType";
 import { SocketService } from "../services/socket-service";
@@ -8,7 +8,7 @@ import { BoardManagerService } from "../services/board-manager.service";
 import { ExceptionHelperService } from "../services/exception-helper.service";
 
 import { IPlaceWordResponse } from "../services/commons/place-command-response.interface";
-import { ICommandRequest } from '../services/commons/command-request.interface';
+import { ICommandRequest } from "../services/commons/command-request.interface";
 
 @Component({
     moduleId: module.id,
