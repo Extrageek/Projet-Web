@@ -31,6 +31,7 @@ export class Stone extends Group implements GameComponent {
 
     private _stoneColor: StoneColor;
     private _physicEngine: PhysicEngine;
+    private _material: MeshPhongMaterial;
     //Bounding sphere used for collisions. Only works if the stones are displaced on the XZ plane.
     private _boundingSphere: Sphere;
     private _lastBoundingSphere: Sphere;
@@ -66,6 +67,9 @@ export class Stone extends Group implements GameComponent {
         return this._physicEngine.direction;
     }
 
+    public get material() {
+        return this._material;
+    }
     public set direction(direction: Vector3) {
         this._physicEngine.direction = direction;
     }
@@ -100,6 +104,7 @@ export class Stone extends Group implements GameComponent {
         this.copy(<this>obj, true);
         this.scale.set(Stone.SCALE.x, Stone.SCALE.y, Stone.SCALE.z);
         //Set position
+        this._material = new MeshPhongMaterial(Stone.MATERIAL_PROPERTIES);
         this.position.set(initialPosition.x, initialPosition.y, initialPosition.z);
         this._lastPosition = initialPosition.clone();
         //Set bounding sphere
