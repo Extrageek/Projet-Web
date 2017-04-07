@@ -25,10 +25,16 @@ import { PlayerShooting } from "./../../models/states/player-shooting";
 import { ComputerShooting } from "./../../models/states/computer-shooting";
 import { EndSet } from "./../../models/states/end-set";
 import { EndGame } from "./../../models/states/end-game";
+import { Difficulty } from "./../../models/difficulty";
 
 import { RinkInfo } from "./../../models/scenery/rink-info.interface";
 import { IGameInfo } from "./game-info.interface";
 import { SoundManager } from "../sound-manager";
+import { UserService } from "../user.service";
+
+import { ComputerAI } from "../../models/AI/computerAI";
+import { HardAI } from "../../models/AI/hardAI";
+import { NormalAI } from "../../models/AI/normalAI";
 
 @Injectable()
 export class RenderService {
@@ -44,12 +50,14 @@ export class RenderService {
     private _renderer: Renderer;
     private _animationStarted: boolean;
     private _endStateAnimationStarted: boolean;
+    private _userService: UserService;
 
     private _gameInfo: IGameInfo;
 
     constructor(gameStatusService: GameStatusService,
         cameraService: CameraService,
-        lightingService: LightingService) {
+        lightingService: LightingService,
+        userService: UserService) {
         this._gameInfo = {
             gameStatus: gameStatusService,
             cameraService: cameraService,
@@ -75,6 +83,7 @@ export class RenderService {
         this._endStateAnimationStarted = false;
         this._numberOfModelsLoaded = 0;
         this._objectLoader = new ObjectLoader();
+        this._userService = userService;
     }
 
     public init(container: HTMLElement) {
@@ -198,7 +207,7 @@ export class RenderService {
     private loadArena() {
         Arena.createArena(this._objectLoader).then((arena: Arena) => {
             //this._sceneryService.mesh.add(arena);
-            this._mesh.add(arena);
+            //this._mesh.add(arena);
             this.onFinishedLoadingModel();
         });
     }
@@ -218,9 +227,18 @@ export class RenderService {
     }
 
     private initializeAllStates(stoneColor: number) {
+        let computerAI: ComputerAI;
+        if (this._userService.difficulty === Difficulty.NORMAL) {
+            computerAI = new NormalAI(this._gameInfo.rink);
+        } else if (this._userService.difficulty === Difficulty.HARD) {
+           computerAI = new HardAI(this._gameInfo.rink);
+        }
+        else {
+            throw new Error("Difficulty not reconized");
+        }
         LoadingStone.createInstance(this._gameInfo, true);
         PlayerTurn.createInstance(this._gameInfo);
-        ComputerTurn.createInstance(this._gameInfo);
+        ComputerTurn.createInstance(this._gameInfo, computerAI);
         PlayerShooting.createInstance(this._gameInfo);
         ComputerShooting.createInstance(this._gameInfo);
         EndSet.createInstance(this._gameInfo);

@@ -1,10 +1,9 @@
 import { expect } from "chai";
 import { Vector3, ObjectLoader, Object3D } from "three";
-import { ComputerAI } from "../computerAI";
+import { PerfectAI } from "../AI/perfectAI";
 import { Rink } from "../scenery/rink";
 import { RinkInfo } from "../scenery/rink-info.interface";
 import { Stone, StoneColor } from "../stone";
-import { Difficulty } from "../difficulty";
 import { ShotParameters } from "../shot-parameters.interface";
 import { GameComponent } from "../game-component.interface";
 
@@ -37,14 +36,14 @@ let rinkInfo: RinkInfo =
 describe("computerAI should", () => {
 
     it("construct itself", () => {
-        expect(() => { new ComputerAI(rinkInfo, Difficulty.HARD); })
+        expect(() => { new PerfectAI(rinkInfo); })
             .to.not.throw(Error);
     });
 });
 
 describe("computerAI should", () => {
 
-    let computerAI: ComputerAI;
+    let computerAI: PerfectAI;
     let objectLoader: ObjectLoader;
 
     before(() => {
@@ -52,14 +51,14 @@ describe("computerAI should", () => {
     });
 
     beforeEach(() => {
-        computerAI = new ComputerAI(rinkInfo, Difficulty.PERFECT);
+        computerAI = new PerfectAI(rinkInfo);
 
     });
 
     it("throw stone at right position", done => {
         Stone.createStone(objectLoader, StoneColor.Red, rinkInfo.initialStonePosition)
             .then((stone: Stone) => {
-                let shotParameters = computerAI.determineShotParametersCenter();
+                let shotParameters = computerAI.determineShotParametersOnCenter();
                 console.log(shotParameters);
                 stone.direction = shotParameters.direction;
                 stone.speed = shotParameters.power;

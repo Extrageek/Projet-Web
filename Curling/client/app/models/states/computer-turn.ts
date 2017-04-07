@@ -3,9 +3,8 @@ import { Vector3 } from "three";
 import { AbstractGameState } from "./abstract-game-state";
 import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { ComputerShooting } from "./computer-shooting";
-import { ComputerAI } from "../../models/computerAI";
+import { ComputerAI } from "../../models/AI/computerAI";
 import { Stone } from "../../models/stone";
-import { Difficulty } from "../../models/difficulty";
 import { StoneColor } from "../../models/stone";
 
 export class ComputerTurn extends AbstractGameState {
@@ -21,8 +20,8 @@ export class ComputerTurn extends AbstractGameState {
      *  Only one game state could be constructed with this value at true, because only one game state
      *  must be active at a time.
      */
-    public static createInstance(gameInfo: IGameInfo, doInitialization = false) {
-        ComputerTurn._instance = new ComputerTurn(gameInfo, doInitialization);
+    public static createInstance(gameInfo: IGameInfo, computerAI: ComputerAI, doInitialization = false) {
+        ComputerTurn._instance = new ComputerTurn(gameInfo, computerAI, doInitialization);
     }
 
     /**
@@ -33,9 +32,9 @@ export class ComputerTurn extends AbstractGameState {
         return ComputerTurn._instance;
     }
 
-    private constructor(gameInfo: IGameInfo, doInitialization = false) {
+    private constructor(gameInfo: IGameInfo, computerAI: ComputerAI, doInitialization = false) {
         super(gameInfo, doInitialization);
-        this._computerAI = new ComputerAI(gameInfo.rink, Difficulty.PERFECT);
+        this._computerAI = computerAI;
     }
     protected performEnteringState(): void {
         let nearestPlayerStone = this._gameInfo.stoneHandler.findClosestCenterStonePosition(StoneColor.Blue);
@@ -43,11 +42,12 @@ export class ComputerTurn extends AbstractGameState {
         if (nearestPlayerStone !== undefined) {
              shotParameters = this._computerAI.determineShotParametersOnStone(nearestPlayerStone);
         } else {
-            shotParameters = this._computerAI.determineShotParametersCenter();
+            shotParameters = this._computerAI.determineShotParametersOnCenter();
         }
         this._gameInfo.shotParameters.power = shotParameters.power;
         this._gameInfo.shotParameters.direction = shotParameters.direction;
         this._gameInfo.shotParameters.spin = shotParameters.spin;
+        console.log(this._gameInfo.shotParameters);
         this.leaveState(ComputerShooting.getInstance());
     }
 
