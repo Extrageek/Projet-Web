@@ -42,8 +42,8 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         // unsubscribe to all the listening events
-        this._onJoinedRoomSubscription.unsubscribe();
-        this._onCancelationSubscription.unsubscribe();
+        // this._onJoinedRoomSubscription.unsubscribe();
+        // this._onCancelationSubscription.unsubscribe();
     }
 
     // A callback function when the server is not reachable.

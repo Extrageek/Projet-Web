@@ -90,6 +90,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
         return this.socketService.subscribeToChannelEvent(SocketEventType.MESSAGE)
             .subscribe((response: any) => {
                 if (response !== undefined && response._message !== null) {
+                    this._username = this.socketService.player.username;
                     this._messageArray.push(response as IRoomMessage);
                     this._hasNewMessages = true;
                     console.log("Chat room: ", response._message, response._date);
