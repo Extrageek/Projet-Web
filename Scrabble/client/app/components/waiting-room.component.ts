@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, HostListener } from "@angular/core";
 
 import { Router } from "@angular/router";
 
@@ -18,6 +18,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
 
     private _numberOfPlayerMissing: number;
     private _onJoinedRoomSubscription: Subscription;
+    private _onCancelationSubscription: Subscription;
 
     public get numberOfPlayerMissing(): number {
         return this._numberOfPlayerMissing;
@@ -26,17 +27,20 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
     constructor(
         private router: Router,
         private socketService: SocketService) {
-        this._numberOfPlayerMissing = this.socketService.missingPlayers;
+            this._numberOfPlayerMissing = this.socketService.missingPlayers;
     }
 
     ngOnInit() {
         this.socketService.subscribeToChannelEvent(SocketEventType.CONNECT_ERROR)
             .subscribe(this.onConnectionError);
         this._onJoinedRoomSubscription = this.onJoinedRoom();
+        this._onCancelationSubscription = this.onCancelation();
     }
 
     ngOnDestroy() {
         // unsubscribe to all the listening events
+        this._onJoinedRoomSubscription.unsubscribe();
+        this._onCancelationSubscription.unsubscribe();
     }
 
     // A callback function when the server is not reachable.
@@ -48,8 +52,9 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
     private onJoinedRoom(): Subscription {
         return this.socketService.subscribeToChannelEvent(SocketEventType.JOIN_ROOM)
             .subscribe((roomMessage: IRoomMessage) => {
-                console.log("Joined the room", roomMessage);
+                console.log("Joined the waiting room", roomMessage);
                 if (roomMessage._roomIsReady) {
+                    console.log("redirecting...");
                     this.router.navigate(["/game-room"]);
                 } else {
                     this._numberOfPlayerMissing = roomMessage._numberOfMissingPlayers;
@@ -58,21 +63,23 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
     }
 
     // A callback when the player join a room
-    private onLeavedRoom(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.LEAVE_ROOM)
+    private onCancelation(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.PLAYER_CANCELED)
             .subscribe((roomMessage: IRoomMessage) => {
                 console.log("Leaved the room", roomMessage);
-                if (!roomMessage._roomIsReady) {
+                if (!roomMessage._roomIsReady && roomMessage._username !== this.socketService.player.username) {
                     this._numberOfPlayerMissing = roomMessage._numberOfMissingPlayers;
                 }
             });
     }
 
-    // @HostListener("document:keypress", ['$event'])
-    // keyboardEventHandler(event: KeyboardEvent) {
-    //     console.log(event.keyCode);
-    //     this.socketService.emitMessage(SocketEventType.DISCONNECT, this._username);
-    //     this.router.navigate(["/"]);
-    // }
+    @HostListener("window:keydown.Escape", ['$event'])
+    keyboardEventHandler(event: KeyboardEvent) {
+        console.log(SocketEventType.CANCEL, this.socketService.player.username);
+        this.socketService.emitMessage(SocketEventType.CANCEL, {
+            username: this.socketService.player.username
+        });
+        this.router.navigate(["/"]);
+    }
 }
 
