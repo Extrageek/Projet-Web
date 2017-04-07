@@ -66,6 +66,7 @@ export class SocketConnectionHandler {
             this.subscribeToPlaceWordEvent(socket);
             this.subscribeToPassEvent(socket);
             this.subscribeToInvalidCommandEvent(socket);
+            this.subscribeToCancelEvent(socket);
             this.subscribeToDisconnectEvent(socket);
 
         });
@@ -297,15 +298,52 @@ export class SocketConnectionHandler {
             });
     }
 
+    // On player cancelation event
+    private subscribeToCancelEvent(socket: SocketIO.Socket) {
+
+        socket.on(SocketEventType.cancel, () => {
+            let leavingPlayer = this._roomHandler.getPlayerBySocketId(socket.id);
+
+            if (leavingPlayer !== null) {
+
+                let playerRoom = this._roomHandler.getRoomByUsername(leavingPlayer.username);
+
+                if (leavingPlayer !== null
+                    && leavingPlayer !== undefined
+                    && playerRoom !== null
+                    && playerRoom !== undefined) {
+
+                    playerRoom.removePlayer(leavingPlayer);
+
+                    if (playerRoom.players.count === 0) {
+                        this._roomHandler.removeRoom(playerRoom);
+                    } else {
+                        let message = `${leavingPlayer.username}` + ` canceled and left the room`;
+
+                        // Create a response for the other members of the room
+                        let roomMessage = this._messageHandler.createRoomMessageResponse(
+                            leavingPlayer.username,
+                            playerRoom,
+                            message);
+
+                        // Emit a message for the other players in the room.
+                        this._socket.to(playerRoom.roomId).emit(SocketEventType.playerCanceled, roomMessage);
+                    }
+
+                    console.log("player canceled");
+                }
+            }
+        });
+    }
+
     // On player disconnect event
     private subscribeToDisconnectEvent(socket: SocketIO.Socket) {
 
-        console.log('socket connect - ', socket.id);
+        console.log('socket disconnect - ', socket.id);
 
         socket.on(SocketEventType.disconnect, () => {
             let leavingPlayer = this._roomHandler.getPlayerBySocketId(socket.id);
 
-            console.log('socket connect - ', socket.id);
             if (leavingPlayer !== null) {
 
                 let playerRoom = this._roomHandler.getRoomByUsername(leavingPlayer.username);
