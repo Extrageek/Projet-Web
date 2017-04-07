@@ -22,7 +22,6 @@ export class Stone extends Group implements GameComponent {
     private static readonly TEN_MILLISECONDS = 10;
     public static readonly BOUNDING_SPHERE_RADIUS = 0.26;
     private static readonly SCALE = { x: 1, y: 1, z: 1 };
-    private static readonly MATERIAL_PROPERTIES = { wireframe: false, shininess: 0.7 };
     public static readonly SPEED_DIMINUTION_NUMBER = 0.25;
     public static readonly SPEED_DIMINUTION_NUMBER_WITH_SWEEP = 0.09;
     private static readonly MINIMUM_SPEED = 0.001;
@@ -31,8 +30,6 @@ export class Stone extends Group implements GameComponent {
     private static readonly LOWER_BOUNCE_BOUND = 1;
     private static readonly UPPER_BOUNCE_INCREMENT_BOUND = 0.1;
     private static readonly LOWER_BOUNCE_INCREMENT_BOUND = 0.05;
-
-    public _material: MeshPhongMaterial;
     private _stoneColor: StoneColor;
     //Speed orientation and quantity in meters per second
     private _speed: number;
@@ -48,11 +45,6 @@ export class Stone extends Group implements GameComponent {
 
     public get boundingSphere(): Sphere {
         return this._boundingSphere;
-    }
-
-    //Used by the renderer to get the material of the group.
-    public get material() {
-        return this._material;
     }
 
     public get stoneColor() {
@@ -118,7 +110,6 @@ export class Stone extends Group implements GameComponent {
     private constructor(obj: Object3D, initialPosition: Vector3, stoneColor: StoneColor) {
         super();
         this.copy(<this>obj, true);
-        this._material = new MeshPhongMaterial(Stone.MATERIAL_PROPERTIES);
         this.position.set(initialPosition.x, initialPosition.y, initialPosition.z);
         this.scale.set(Stone.SCALE.x, Stone.SCALE.y, Stone.SCALE.z);
         this.sweeping = false;
@@ -228,7 +219,7 @@ export class Stone extends Group implements GameComponent {
             - Stone.LOWER_BOUNCE_INCREMENT_BOUND)) + Stone.LOWER_BOUNCE_INCREMENT_BOUND;
 
         let upperBound = Math.floor(Math.random() * (Stone.UPPER_BOUNCE_BOUND
-                - Stone.LOWER_BOUNCE_BOUND)) + Stone.LOWER_BOUNCE_BOUND;
+            - Stone.LOWER_BOUNCE_BOUND)) + Stone.LOWER_BOUNCE_BOUND;
         let lowerBound = 0;
 
         let observer = {
