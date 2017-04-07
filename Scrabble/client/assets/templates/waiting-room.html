@@ -1,10 +1,13 @@
 <div class="container">
     <h1 class="centered">Scrabble - 23</h1>
-    <hr>
-    <div *ngIf="this !== undefined" class="info">
+    <div *ngIf="this !== undefined" class="info centered">
         <h3>Nombre de joueurs manquant : {{ numberOfPlayerMissing }} </h3>
     </div>
     <div class="col-lg-1 centered">
-        <md-spinner color="warm"></md-spinner>
+        <md-spinner color="warm" class="centered"></md-spinner>
     </div>
+    <button type="button" class="btn btn-danger btn-block" 
+        (click)="cancelGame()">
+            Annuler
+    </button>
 </div>

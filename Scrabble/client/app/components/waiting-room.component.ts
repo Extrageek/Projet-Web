@@ -76,13 +76,16 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
             });
     }
 
-    @HostListener("window:keydown.Escape", ['$event'])
-    keyboardEventHandler(event: KeyboardEvent) {
-        console.log(SocketEventType.CANCEL, this.socketService.player.username);
+    private cancelGame() {
         this.socketService.emitMessage(SocketEventType.CANCEL, {
             username: this.socketService.player.username
         });
         this.router.navigate(["/"]);
+    }
+
+    @HostListener("window:keydown.Escape", ['$event'])
+    keyboardEventHandler(event: KeyboardEvent) {
+        this.cancelGame();
     }
 }
 
