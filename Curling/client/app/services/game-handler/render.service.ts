@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import {
-    Scene, PerspectiveCamera, WebGLRenderer, Renderer,
-    ObjectLoader, Geometry, CubeGeometry, MeshBasicMaterial, MeshFaceMaterial, Mesh, Line,
+    Scene, PerspectiveCamera, WebGLRenderer, Renderer, ObjectLoader, Geometry,
+    CubeGeometry, MeshBasicMaterial, MultiMaterial, Mesh, Line,
     LineDashedMaterial, ImageUtils, BackSide, Vector3, Clock
 } from "three";
 
@@ -163,8 +163,8 @@ export class RenderService {
                 side: BackSide
             }));
         }
+        let material = new MultiMaterial(materialArray);
         let geometry = new CubeGeometry(200, 200, 200);
-        let material = new MeshFaceMaterial(materialArray);
         this._mesh = new Mesh(geometry, material);
         this._gameInfo.scene.add(this._mesh);
     }
@@ -199,7 +199,7 @@ export class RenderService {
     private loadArena() {
         Arena.createArena(this._objectLoader).then((arena: Arena) => {
             //this._sceneryService.mesh.add(arena);
-            this._mesh.add(arena);
+            //this._mesh.add(arena);
             this.onFinishedLoadingModel();
         });
     }
@@ -280,6 +280,7 @@ export class RenderService {
                     this._gameInfo.cameraService.moveCameraEndRink();
                     this._gameInfo.lighting.adjustEndGameStateLighthing(this._gameInfo.scene);
                 }
+                //this._gameInfo.particlesService.update();
             }
         }
         this._renderer.render(this._gameInfo.scene, this._currentCamera);

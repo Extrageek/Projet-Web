@@ -58,7 +58,6 @@
     word-wrap: break-word;
     border-radius: 12px;
     padding: 6px;
-    white-space: pre-line; /*to show the endline in messages*/
 }
 
 .self-message p.msg{
@@ -81,12 +80,17 @@
     float: left;
 }
 
+.msg-guide {
+    white-space: pre-line;
+}
+
 .other-message p span {
     font-size: 12px;
     text-align: left;
     color: steelblue;
     margin-left:7px;
 }
+
 .other-message p:first {
     margin-top: 5px;
 }

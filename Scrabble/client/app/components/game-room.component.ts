@@ -90,17 +90,18 @@ export class GameComponent implements OnInit, OnDestroy {
 
         // If the player try a command and it's not his turn to play, let him know
         if (!this.socketService.isCurrentPlayer()
-            && commandParameters.commandType !== CommandType.MessageCmd) {
-            let message = "Veuillez attendre votre tour après " + this.socketService.getCurrentPlayer() +
-                + "pour pouvoir jouer";
+            && commandParameters.commandType !== CommandType.MessageCmd
+            && commandParameters.commandType !== CommandType.GuideCmd) {
+                let message = "Veuillez attendre votre tour après " + this.socketService.getCurrentPlayer() +
+                    + "pour pouvoir jouer";
 
-            // Ask if it's necessary to send this to the server, I'm not sure we can just push it to the chatroom
-            this.socketService.emitMessage(SocketEventType.INVALID_COMMAND_REQUEST,
-                {
-                    commandType: CommandType.InvalidCmd,
-                    commandStatus: CommandStatus.NotAllowed,
-                    data: message
-                });
+                // Ask if it's necessary to send this to the server, I'm not sure we can just push it to the chatroom
+                this.socketService.emitMessage(SocketEventType.INVALID_COMMAND_REQUEST,
+                    {
+                        commandType: CommandType.InvalidCmd,
+                        commandStatus: CommandStatus.NotAllowed,
+                        data: message
+                 });
         }
         else {
             this.handleInputCommand(commandParameters);
