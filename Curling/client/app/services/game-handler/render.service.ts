@@ -67,7 +67,6 @@ export class RenderService {
             stoneHandler: null,
             textureHandler: null,
             particlesService: null,
-            lighting: lightingService
         };
         this._lightingService = lightingService;
         Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "cameraService", { value: cameraService });
