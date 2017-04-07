@@ -1,6 +1,6 @@
 import {
-    Scene, FontLoader, TextGeometry, MeshPhongMaterial, MultiMaterial,
-    Mesh, Group, TextGeometryParameters, Font, Vector3
+    Scene, FontLoader, TextGeometry, MultiMaterial,
+    Mesh, Group, TextGeometryParameters, Font, Vector3, MeshBasicMaterial
 } from "three";
 
 export class TextureHandler {
@@ -44,7 +44,7 @@ export class TextureHandler {
         this._defaultParameters = {
             font: font,
             size: 1,
-            height: 1,
+            height: 0.1,
             curveSegments: 12,
             bevelThickness: 0.005,
             bevelSize: 0.005,
@@ -60,8 +60,7 @@ export class TextureHandler {
         //Create the text.
         let textGeometry = new TextGeometry(texte, textGeometryParameters);
         textGeometry.computeBoundingBox();
-        //let textMaterial = new MeshPhongMaterial({ color: THREE.ColorKeywords.red });
-        let textMaterial = new MeshPhongMaterial({ color: colorHexCode, shininess: 0.8 });
+        let textMaterial = new MeshBasicMaterial({ color: colorHexCode });
         let textMesh = new Mesh(textGeometry, textMaterial);
         textMesh.rotation.set( Math.PI / 10, Math.PI, 0);
         textMesh.position.set(position.x, position.y, position.z);
