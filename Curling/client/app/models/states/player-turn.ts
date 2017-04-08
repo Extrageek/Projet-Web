@@ -103,6 +103,8 @@ export class PlayerTurn extends AbstractGameState {
                 this._gameInfo.shotParameters.direction = this._gameInfo.line.lineGeometry.vertices[1]
                     .clone()
                     .normalize();
+                //Set the y value to zero because the line geometry is not exactly at y = 0.
+                this._gameInfo.shotParameters.direction.setY(0);
                 newState = PlayerShooting.getInstance();
             }
         }

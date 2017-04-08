@@ -61,35 +61,4 @@ export class LightingService {
         scene.add(spotLight.target);
         scene.add(spotLight);
     }
-
-    public adjustEndGameStateLighthing(scene: Scene) {
-        this.removeAllSpotlightsFromScene(scene);
-
-        let spotlight1 = new SpotLight(THREE.ColorKeywords.ghostwhite, 0.6, 0, 0.3);
-        spotlight1.penumbra = 0.8;
-        spotlight1.position.set(0, 8, 15);
-        spotlight1.target.position.set(5, 3, 17);
-
-        let spotlight2 = new SpotLight(THREE.ColorKeywords.ghostwhite, 0.6, 0, 0.3);
-        spotlight2.penumbra = 0.8;
-        spotlight2.position.set(0, 8, 15);
-        spotlight2.target.position.set(-5, 3, 17);
-
-        let spotlight3 = new SpotLight(THREE.ColorKeywords.ghostwhite, 0.6, 0, 0.3);
-        spotlight3.penumbra = 0.8;
-        spotlight3.position.set(0, 0, 17);
-        spotlight3.target.position.set(0, 3, 17);
-
-        this.addLightningToScene(scene, spotlight1);
-        this.addLightningToScene(scene, spotlight2);
-        this.addLightningToScene(scene, spotlight3);
-    }
-
-    private removeAllSpotlightsFromScene(scene: Scene) {
-        this.spotLights.forEach((spotlight: SpotLight) => {
-            scene.remove(spotlight);
-        });
-        this.spotLights.splice(0, this.spotLights.length);
-
-    }
 }

@@ -31,6 +31,9 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
         this._onUsernameAlreadyExistSubscription = this.onUsernameAlreadyExists();
         this._onInvalidRequestEventSubscription = this.onInvalidRequest();
         this._onConnectionErrorSubscription = this.onConnectionError();
+        if (this.socketService._socket !== null && this.socketService._socket.disconnected) {
+            this.socketService._socket.connect();
+        }
     }
 
     ngOnDestroy() {
@@ -52,7 +55,6 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
                 console.log("Joined the room", roomMessage);
                 this.socketService.missingPlayers = roomMessage._numberOfMissingPlayers;
                 if (roomMessage._roomIsReady) {
-                    // this.unsubscribeToChannelEvent();
                     this.router.navigate(["/game-room"]);
                 } else {
                     this.router.navigate(["/waiting-room"]);
@@ -74,6 +76,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
             .subscribe(() => {
                 //TODO: activate div like bootstrap alert-success
                 alert("This username is already taken, please choose another username.");
+                this.socketService.player.username = "";
             });
     }
 
@@ -87,11 +90,17 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
 
     // A callback function when the user ask for a new game.
     public sendNewGameRequest(username: string, numberOfPlayersStr: string) {
+        console.log("new game request");
         if (username === null || numberOfPlayersStr === null) {
             throw new Error("Null argument error: All the parameters are required");
         }
         let numberOfPlayers = Number(numberOfPlayersStr);
-        this.socketService.player.username = username;
+        if (this.socketService.player.username === "") {
+            this.socketService.player.username = username;
+        } else {
+            username = this.socketService.player.username;
+        }
+        console.log(this.socketService.player.username);
         this.socketService.player.numberOfPlayers = numberOfPlayers;
         this.socketService.emitMessage(
             SocketEventType.NEW_GAME_REQUEST,

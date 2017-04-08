@@ -30,9 +30,9 @@
                             <textarea #message id="inputMessage" 
                             [(ngModel)]="_inputMessage" 
                             autofocus class="form-control" rows="2" 
-                            (keydown.enter)="submitMessage()" 
+                            (keydown.enter)="submitMessage();false" 
                             (keydown)="onKeyPressEventHandler($event)" 
-                            placeholder="Enter your message">
+                            placeholder="Entrer votre message ici...">
                             </textarea>
 
 

@@ -15,6 +15,8 @@ import { InformationPanelComponent } from "./../components/information-panel.com
 import { GameComponent } from "./../components/game-room.component";
 import { WaitingRoomComponent } from "./../components/waiting-room.component";
 
+import { BlinkDirective } from "./../Directive/blink.directive";
+
 @NgModule({
     imports: [
         BrowserModule,
@@ -30,7 +32,8 @@ import { WaitingRoomComponent } from "./../components/waiting-room.component";
         ChatroomComponent,
         EaselComponent,
         InformationPanelComponent,
-        WaitingRoomComponent
+        WaitingRoomComponent,
+        BlinkDirective
     ],
     providers: [SocketService],
     bootstrap: [AppComponent]

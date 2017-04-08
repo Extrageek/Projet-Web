@@ -19,7 +19,9 @@ const PARAM_INDEX = 1;
 @Injectable()
 export class CommandsService {
 
-    constructor() { }
+    constructor() {
+        // Empty
+    }
 
     public invokeAndExecuteMessageCommand(
         receiverChatRoom: ChatroomComponent,

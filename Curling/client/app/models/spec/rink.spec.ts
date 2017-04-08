@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { Rink } from "./../scenery/rink";
-import { ObjectLoader } from "three";
+import { ObjectLoader, MeshPhongMaterial } from "three";
 
 describe("Rink class should", () => {
 
@@ -13,10 +13,10 @@ describe("Rink class should", () => {
     it("instantiate a rink object", done => {
         Rink.createRink(objectLoader).then((rink: Rink) => {
             expect(rink).to.be.instanceof(Rink);
-            expect(rink.material).to.exist;
-            expect(rink.targetCenter).to.be.equal(Rink.TARGET_CENTER);
+            expect(rink.material).to.be.instanceOf(MeshPhongMaterial);
+            expect(rink.targetCenter.equals(Rink.TARGET_CENTER)).to.be.equal(true);
             expect(rink.targetRadius).to.be.equal(Rink.TARGET_RADIUS);
-            expect(rink.initialStonePosition).to.be.equal(Rink.INITIAL_STONE_POSITION);
+            expect(rink.initialStonePosition.equals(Rink.INITIAL_STONE_POSITION)).to.be.equal(true);
             done();
         });
     });

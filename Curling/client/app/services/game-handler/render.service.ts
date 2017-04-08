@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import {
-    Scene, PerspectiveCamera, WebGLRenderer, Renderer,
-    ObjectLoader, Geometry, CubeGeometry, MeshBasicMaterial, MeshFaceMaterial, Mesh, Line,
+    Scene, PerspectiveCamera, WebGLRenderer, Renderer, ObjectLoader, Geometry,
+    CubeGeometry, MeshBasicMaterial, MultiMaterial, Mesh, Line,
     LineDashedMaterial, ImageUtils, BackSide, Vector3, Clock
 } from "three";
 
@@ -25,10 +25,16 @@ import { PlayerShooting } from "./../../models/states/player-shooting";
 import { ComputerShooting } from "./../../models/states/computer-shooting";
 import { EndSet } from "./../../models/states/end-set";
 import { EndGame } from "./../../models/states/end-game";
+import { Difficulty } from "./../../models/difficulty";
 
 import { RinkInfo } from "./../../models/scenery/rink-info.interface";
 import { IGameInfo } from "./game-info.interface";
 import { SoundManager } from "../sound-manager";
+import { UserService } from "../user.service";
+
+import { ComputerAI } from "../../models/AI/computerAI";
+import { HardAI } from "../../models/AI/hardAI";
+import { NormalAI } from "../../models/AI/normalAI";
 
 @Injectable()
 export class RenderService {
@@ -44,12 +50,14 @@ export class RenderService {
     private _renderer: Renderer;
     private _animationStarted: boolean;
     private _endStateAnimationStarted: boolean;
+    private _userService: UserService;
 
     private _gameInfo: IGameInfo;
 
     constructor(gameStatusService: GameStatusService,
         cameraService: CameraService,
-        lightingService: LightingService) {
+        lightingService: LightingService,
+        userService: UserService) {
         this._gameInfo = {
             gameStatus: gameStatusService,
             cameraService: cameraService,
@@ -67,15 +75,14 @@ export class RenderService {
             stoneHandler: null,
             textureHandler: null,
             particlesService: null,
-            lighting: lightingService
         };
         this._lightingService = lightingService;
-        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "cameraService", { value: cameraService });
         this._gameInfo.gameStatus.randomFirstPlayer();
         this._animationStarted = false;
         this._endStateAnimationStarted = false;
         this._numberOfModelsLoaded = 0;
         this._objectLoader = new ObjectLoader();
+        this._userService = userService;
     }
 
     public init(container: HTMLElement) {
@@ -140,8 +147,6 @@ export class RenderService {
         this._gameInfo.scene.add(this._gameInfo.line.lineMesh);
     }
 
-
-
     public linkRenderServerToCanvas(container: HTMLElement) {
         // Inser the canvas into the DOM
         if (container.getElementsByTagName("canvas").length === 0) {
@@ -163,8 +168,8 @@ export class RenderService {
                 side: BackSide
             }));
         }
+        let material = new MultiMaterial(materialArray);
         let geometry = new CubeGeometry(200, 200, 200);
-        let material = new MeshFaceMaterial(materialArray);
         this._mesh = new Mesh(geometry, material);
         this._gameInfo.scene.add(this._mesh);
     }
@@ -199,7 +204,7 @@ export class RenderService {
     private loadArena() {
         Arena.createArena(this._objectLoader).then((arena: Arena) => {
             //this._sceneryService.mesh.add(arena);
-            this._mesh.add(arena);
+            //this._mesh.add(arena);
             this.onFinishedLoadingModel();
         });
     }
@@ -211,15 +216,26 @@ export class RenderService {
         this._gameInfo.stoneHandler = new StoneHandler(this._objectLoader, rinkInfo, stoneColor);
         Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "stoneHandler",
             { value: this._gameInfo.stoneHandler });
+        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "cameraService",
+            { value: this._gameInfo.cameraService });
         this.initializeAllStates(stoneColor);
         this._gameInfo.gameState = LoadingStone.getInstance();
         this.onFinishedLoadingModel();
     }
 
     private initializeAllStates(stoneColor: number) {
+        let computerAI: ComputerAI;
+        if (this._userService.difficulty === Difficulty.NORMAL) {
+            computerAI = new NormalAI(this._gameInfo.rink);
+        } else if (this._userService.difficulty === Difficulty.HARD) {
+           computerAI = new HardAI(this._gameInfo.rink);
+        }
+        else {
+            throw new Error("Difficulty not reconized");
+        }
         LoadingStone.createInstance(this._gameInfo, true);
         PlayerTurn.createInstance(this._gameInfo);
-        ComputerTurn.createInstance(this._gameInfo);
+        ComputerTurn.createInstance(this._gameInfo, computerAI);
         PlayerShooting.createInstance(this._gameInfo);
         ComputerShooting.createInstance(this._gameInfo);
         EndSet.createInstance(this._gameInfo);
@@ -230,13 +246,6 @@ export class RenderService {
         this._currentCamera = this._gameInfo.cameraService.nextCamera();
         this._gameInfo.currentCamera = (this._gameInfo.currentCamera + 1) % CameraType.NB_CAMERAS;
         this.onResize();
-    }
-
-    public setEndGameView() {
-        if (this._currentCamera === this._gameInfo.cameraService.topViewCamera) {
-            this.switchCamera();
-        }
-        this._gameInfo.cameraService.moveCameraEndRink();
     }
 
     private onFinishedLoadingModel() {
@@ -267,22 +276,26 @@ export class RenderService {
             keys.forEach((key: string) => {
                 this._gameInfo.gameComponentsToUpdate[key].update(timePerFrame);
             });
+
             // Following Action only done at the end of the game
             if (this._gameInfo.gameState === EndGame.getInstance()) {
                 // Following action only done once
                 if (!this._endStateAnimationStarted) {
-                    this._endStateAnimationStarted = true;
                     // We want the animation to be done in a perspective view
-                    if (this._currentCamera === this._gameInfo.cameraService.topViewCamera) {
-                        this.switchCamera();
-                    }
-                    this._gameInfo.cameraService.moveCameraEndRink();
-                    this._gameInfo.lighting.adjustEndGameStateLighthing(this._gameInfo.scene);
+                    this._endStateAnimationStarted = true;
+                    this.setEndGameView();
                 }
-                this._gameInfo.stoneHandler.bounceWinningPlayerStones();
+                this._gameInfo.particlesService.update();
             }
         }
         this._renderer.render(this._gameInfo.scene, this._currentCamera);
+    }
+
+    private setEndGameView() {
+        if (this._currentCamera === this._gameInfo.cameraService.topViewCamera) {
+            this.switchCamera();
+        }
+        this._gameInfo.cameraService.moveCameraEndRink();
     }
 
     public toogleFocus(toogle: boolean) {

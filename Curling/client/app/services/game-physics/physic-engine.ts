@@ -67,7 +67,7 @@ export class PhysicEngine implements GameComponent {
 
     public set spin(spin: StoneSpin) {
         if (spin === undefined || spin === null) {
-            throw new Error("The spin cannot be null.")
+            throw new Error("The spin cannot be null.");
         }
         this._spin = spin;
         this._theta = PhysicEngine.THETA * (spin === StoneSpin.Clockwise ? -1 : 1);
@@ -119,14 +119,15 @@ export class PhysicEngine implements GameComponent {
      */
     public calculateDirectionToPassAtPosition(positionToPassBy: Vector3): Vector3 {
         let directionToGo: Vector3 = null;
-
         //Calculate where the object arrive when it is shot in the direction of the final position.
         let arrivalPoint = this.calculateArrivalPoint(positionToPassBy);
         if (arrivalPoint !== null) {
+            let distanceWithPositionToPassBy = positionToPassBy.clone().sub(this._position);
+            let distanceWithArrivalPoint = arrivalPoint.clone().sub(this._position);
             //Calculate the angle of derivation and apply on the direction to go.
-            let adjustmentAngle = -Math.atan((arrivalPoint.x - this._position.x) / (arrivalPoint.z - this._position.z));
-            directionToGo = positionToPassBy.clone().sub(this._position)
-                .applyAxisAngle(PhysicEngine.Y_AXIS, adjustmentAngle).normalize();
+            let adjustmentAngle = distanceWithArrivalPoint.angleTo(distanceWithPositionToPassBy) * this.getAngleSign();
+            directionToGo = distanceWithPositionToPassBy.applyAxisAngle(PhysicEngine.Y_AXIS, adjustmentAngle)
+                .normalize();
         }
         return directionToGo;
     }
@@ -139,10 +140,13 @@ export class PhysicEngine implements GameComponent {
      */
     private calculateArrivalPoint(positionForDirection: Vector3): Vector3 {
         //Save the position, speed and direction to restore them after the shot.
-        let savedPosition = this._position.clone();
+        //Keep the reference to the object position. It is REALLY important to not modify this object, because the
+        //object position could be the position of an object of the scene.
+        let savedPosition = this._position;
+        this._position = this._position.clone();
         let savedDirection = this._direction.clone();
         let savedSpeed = this._speed;
-        
+
         //Set the parameters to launch the object.
         this._direction = positionForDirection.clone().sub(this._position).normalize();
         let distanceToMove = positionForDirection.clone().sub(this._position).length();
@@ -168,24 +172,24 @@ export class PhysicEngine implements GameComponent {
 
     /**
      * Update the stone position using the following physic.
-     * 
+     *
      * Physic information
      * Each frame, wich means 60 times per second, the direction is rotated and the new position of the
      * stone is calculated. If it took more than 1 / 60 second to call the update, than the calculation must be
      * applied multiple times to be sure that if the game updates slowly, the stone follow the same way. It is
      * essential for the AI to be able to shot on the other stones.
-     * 
+     *
      * The equations
      * The MRUA equation used are :
      * Xf = Xi + V*t + a*t^2 / 2, where t = timePerFrame, V = current speed,
      *     Xf is the final position, Xi is the initial position and a = -SPEED_DIMINUTION_NUMBER
-     * Vf = Vi - t * a, where Vf = the final speed, Vi = initial speed, t = time per frame reference and 
-     *     a = -SPEED_DIMINUTION_NUMBER 
-     * 
+     * Vf = Vi - t * a, where Vf = the final speed, Vi = initial speed, t = time per frame reference and
+     *     a = -SPEED_DIMINUTION_NUMBER
+     *
      * The di equation is generated from the MRUA equations applied a certain number of times.
      * di = V*t - at^2(i - 1/2), where di is the displacement vector of a frame number i, V is the current speed and t
      *     is the time per frame reference (1 / 60).
-     * 
+     *
      * The y and x equations are generated from the geometry that gave the movement. They are not directly used because
      * the vectors are directly added together, but if an equation is founded to avoid the addition of the serie, it
      * would greatly decrease the calculation to do.
@@ -193,9 +197,9 @@ export class PhysicEngine implements GameComponent {
      *     where theta is a constant
      * x = length(d1) * sin(theta) + length(d2) * sin(2*theta) + ... + length(dn) * sin((n-1)*theta), where theta is a
      *     constant
-     * 
+     *
      * x and y are the final position for this frame.
-     * 
+     *
      * @param timePerFrame The time since the last call of this function.
      */
     public update(timePerFrame: number) {
@@ -204,8 +208,10 @@ export class PhysicEngine implements GameComponent {
             let time = this._timeAccumulation + timePerFrame;
 
             //Calculate the number of frames that passed.
-            let numberOfFramesPassed = time % PhysicEngine.REFERENCE_TPF;
-            let incompleteFrameTime = time - PhysicEngine.REFERENCE_TPF * numberOfFramesPassed;
+            let numberOfFramesWithDecimalsPassed = time / PhysicEngine.REFERENCE_TPF;
+            let numberOfFramesPassed = Math.trunc(numberOfFramesWithDecimalsPassed);
+            let incompleteFrameTime =
+                PhysicEngine.REFERENCE_TPF * (numberOfFramesWithDecimalsPassed - numberOfFramesPassed);
 
             //Keep the incomplete frame time for the next update
             this._timeAccumulation = incompleteFrameTime;
@@ -213,14 +219,14 @@ export class PhysicEngine implements GameComponent {
             //Apply X frame displacements.
             for (let i = 0; i < numberOfFramesPassed; ++i) {
                 this.calculateNextFrame(PhysicEngine.REFERENCE_TPF);
-                this.decrementSpeed(timePerFrame);
+                this.decrementSpeed(PhysicEngine.REFERENCE_TPF);
             }
         }
     }
 
     private calculateNextFrame(timePerFrame: number) {
         this._direction.applyAxisAngle(PhysicEngine.Y_AXIS, this._theta);
-        this.position.add(this._direction.clone().multiplyScalar(
+        this._position.add(this._direction.clone().multiplyScalar(
             this._speed * timePerFrame - PhysicEngine.SPEED_DIMINUTION_NUMBER * Math.pow(timePerFrame, 2) / 2
             )
         );
@@ -237,5 +243,9 @@ export class PhysicEngine implements GameComponent {
         if (this._speed <= PhysicEngine.MINIMUM_SPEED) {
             this._speed = 0;
         }
+    }
+
+    private getAngleSign(): number {
+        return this._spin === StoneSpin.CounterClockwise ? -1 : 1;
     }
 }

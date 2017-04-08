@@ -1,71 +1,63 @@
-import { Geometry, ParticleBasicMaterial, Vector3, ParticleSystem, Scene, Particle } from "three";
+import {
+    Geometry, ParticleBasicMaterial, Vector3, ParticleSystem,
+    Scene, Particle, PointsMaterial, Points
+} from "three";
 import { IGameInfo } from "./../game-handler/game-info.interface";
 
 export class ParticlesService {
 
     private readonly PARTICLES_COUNT = 1800;
     private _geometry: Geometry;
-    private _material: ParticleBasicMaterial;
-    private _particle: Particle;
-    private _particleSystem: ParticleSystem;
-    private _scene: Scene;
+    private _material: PointsMaterial;
+    private _particleSystem: Points;
 
     constructor(scene: Scene) {
-        // this._scene = scene;
-        // this._geometry = new THREE.Geometry();
-        // this._material = new THREE.ParticleBasicMaterial({
-        //     color: 0xFFFFFF,
-        //     size: 20
-        // });
-        // this._particleSystem = new ParticleSystem(this._geometry, this._material);
-        // this.createParticles();
+        this._geometry = new THREE.Geometry();
+        this._material = new THREE.PointsMaterial({
+            color: 0xFFF000,
+            size: 0.5
+        });
+        this.createParticles(scene);
     }
 
-    private createParticles() {
-        // for (let count = 0; count < this.PARTICLES_COUNT; count++) {
-
-        //     // create a particle with random position values, -250 -> 250
-        //     let pX = Math.random() * 500 - 250,
-        //         pY = Math.random() * 500 - 250,
-        //         pZ = Math.random() * 500 - 250;
-        //     let direction = new THREE.Vector3(pX, pY, pZ);
-
-        //     // add it to the geometry
-        //     this._geometry.vertices.push(direction);
-        //     this._particle = new Particle(this._material);
-        //     this._particleSystem.add(this._particle);
-        // }
-        // // add it to the scene
-        // this._scene.add(this._particleSystem);
+    private createParticles(scene: Scene) {
+        for (let count = 0; count < this.PARTICLES_COUNT; count++) {
+            //this.setConffetiColor();
+            this.setConffetiPosition();
+        }
+        this._particleSystem = new THREE.Points(this._geometry, this._material);
+        scene.add(this._particleSystem);
     }
 
-    // animation loop
+    private setConffetiColor() {
+        let hexColor = Number('0x' + ("000000" + Math.random().toString(16).slice(2, 8).toUpperCase()).slice(-6));
+        this._material = new PointsMaterial({
+            color: hexColor
+        });
+    }
+
+    private setConffetiPosition() {
+        let positionAxisX = Math.random() * 100 - 50;
+        let positionAxisY = Math.random() * 5 - 5;
+        let positionAxisZ = Math.random() * 100 - 50;
+        this._geometry.vertices.push(new THREE.Vector3(positionAxisX, positionAxisY, positionAxisZ));
+    }
+
     public update() {
-
-        // // add some rotation to the system
+        // this._particleSystem.rotation.x += 0.01;
         // this._particleSystem.rotation.y += 0.01;
+        // this._particleSystem.rotation.z += 0.01;
 
-        // let count = this.PARTICLES_COUNT;
-        // while (count--) {
-        //     // check if we need to reset
-        //     if (this._particle.position.y < -200) {
-        //         this._particle.position.y = 200;
-        //         this._particle.velocity.y = 0;
-        //     }
-
-        //     // update the velocity with
-        //     // a splat of randomniz
-        //     this._particle.velocity.y -= Math.random() * .1;
-
-        //     // and the position
-        //     this._particle.position.addSelf(
-        //         this._particle.velocity);
-        // }
-
-        // // flag to the particle system
-        // // that we've changed its vertices.
-        // this._particleSystem.
-        //     geometry.
-        //     __dirtyVertices = true;
+        if (this._particleSystem.position.y > 0) {
+            this._particleSystem.position.set(
+                this._particleSystem.position.x,
+                this._particleSystem.position.y -= 0.1,
+                this._particleSystem.position.z);
+        } else {
+            this._particleSystem.position.set(
+                this._particleSystem.position.x,
+                0,
+                this._particleSystem.position.z);
+        }
     }
 }

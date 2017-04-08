@@ -6,7 +6,7 @@ import { ParticlesService } from "./../../services/game-physics/particles.servic
 export class EndGame extends AbstractGameState {
 
     private static _instance: AbstractGameState = null;
-    private static readonly TEXT_POSITION = new Vector3(6, 3, 17);
+    private static readonly TEXT_POSITION = new Vector3(6, 3, 20);
     private static readonly RED = 0xff0000;
     private static readonly BLUE = 0x0000ff;
     private static readonly YELLOW = 0xffff00;
@@ -36,7 +36,8 @@ export class EndGame extends AbstractGameState {
 
     protected performEnteringState() {
         this.addEndGameText();
-        //this._gameInfo.particlesService = new ParticlesService(this._gameInfo.scene);
+        this._gameInfo.stoneHandler.bounceWinningPlayerStones();
+        this._gameInfo.particlesService = new ParticlesService(this._gameInfo.scene);
         this._gameInfo.gameStatus.gameIsFinished();
     }
 

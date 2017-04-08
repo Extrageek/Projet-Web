@@ -9,6 +9,9 @@ export class SocketEventType {
     // A connected status of the client.
     static connect = "connect";
 
+    // A cancelation of the client when waiting for players.
+    static cancel = "cancel";
+
     // A disconnected status of the client.
     static disconnect = "disconnect";
 
@@ -28,7 +31,7 @@ export class SocketEventType {
     static roomReady = "roomReady";
     static message = "message";
 
-    static playerLeftRoom = "playerLeftRoom";
+    static playerCanceled = "playerCanceled";
 
     static initializeEasel = "initializeEasel";
     static updatePlayersQueue = "updatePlayersQueue";

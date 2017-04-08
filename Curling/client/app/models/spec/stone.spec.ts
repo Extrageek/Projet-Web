@@ -13,7 +13,6 @@ describe("Stone tester should", function () {
     it("load red stone", done => {
         Stone.createStone(objectLoader, StoneColor.Red, new Vector3(0, 0, 0)).then((stone: Stone) => {
             expect(stone).to.be.instanceof(Stone);
-            expect(stone.material).exist;
             expect(stone.stoneColor).to.equals(StoneColor.Red);
             done();
         }).catch(() => {

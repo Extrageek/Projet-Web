@@ -9,6 +9,8 @@ import { IRoomMessage } from "../commons/messages/room-message.interface";
 import { ICommandMessage } from "../commons/messages/command-message.interface";
 import { CommandType } from '../services/commons/command-type';
 
+import { BlinkDirective } from "../directive/blink.directive";
+
 @Component({
     moduleId: module.id,
     selector: "scrabble-chatroom-selector",
@@ -21,12 +23,14 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
     _username: string;
 
     private _hasNewMessages: boolean;
+    private _wasClicked: boolean;
 
     @ViewChild("scroll") private myScrollContainer: ElementRef;
 
     constructor(private route: ActivatedRoute, private socketService: SocketService) {
         this._messageArray = new Array<IRoomMessage>();
         this._hasNewMessages = false;
+        this._wasClicked = false;
     }
 
     ngOnInit(): void {
@@ -51,7 +55,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
             .subscribe((response: ICommandMessage<any>) => {
                 if (response !== undefined && response._message !== null) {
                     this._messageArray.push(response);
-                    this._hasNewMessages = true;
+                    this._hasNewMessages = (this._username !== response._username);
                     console.log("CommandRequest Chatroom", response);
                 }
             });
@@ -63,7 +67,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
             .subscribe((response: IRoomMessage) => {
                 if (response !== undefined && response._message !== null) {
                     this._messageArray.push(response);
-                    this._hasNewMessages = true;
+                    this._hasNewMessages = (this._username !== response._username);
                     console.log("Chat room:Joined ", response._message);
                 }
             });
@@ -86,9 +90,10 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
         return this.socketService.subscribeToChannelEvent(SocketEventType.MESSAGE)
             .subscribe((response: any) => {
                 if (response !== undefined && response._message !== null) {
+                    this._username = this.socketService.player.username;
                     this._messageArray.push(response as IRoomMessage);
-                    this._hasNewMessages = true;
-                    console.log("Chat room: ", response.message, response.date);
+                    this._hasNewMessages = (this._username !== response._username);
+                    console.log("Chat room: ", response._message, response._date);
                 }
             });
     }
@@ -109,7 +114,6 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
         if (message._commandType === CommandType.GuideCmd) {
             this._messageArray.push(message);
             this._hasNewMessages = true;
-            console.log("sasa");
         }
     }
 
@@ -124,9 +128,14 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
 
     // Use to help the user when scrolling
     ngAfterViewChecked() {
-        if (this._hasNewMessages) {
+        if (this._hasNewMessages && !this._wasClicked) {
             this.scrollToBottom();
-            this._hasNewMessages = false;
+        }
+        if (this._wasClicked) {
+            setTimeout(() => {
+                this._hasNewMessages = false;
+                this._wasClicked = false;
+            }, 1);
         }
     }
 }

@@ -201,7 +201,6 @@ export class RoomHandler {
             // Put the letters of the player back in the LetterBank
             room.letterBankHandler.putLetterBackInBank(easelLetter);
 
-
             // Remove the player from the room
             room.removePlayer(leavingPlayer);
 
