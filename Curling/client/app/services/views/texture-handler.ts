@@ -12,6 +12,9 @@ export class TextureHandler {
     private _defaultParameters: TextGeometryParameters;
     private _scene: Scene;
     private _allTexts: Object;
+    get allTexts(): Object {
+        return this._allTexts;
+    }
     private _textNumber: number;
     private _text: string;
     private _textMaterial: MultiMaterial;
@@ -52,11 +55,11 @@ export class TextureHandler {
         };
     }
 
-    public addText(
+    public addText (
         position: Vector3,
         texte: string,
         colorHexCode: number,
-        textGeometryParameters = this._defaultParameters) {
+        textGeometryParameters = this._defaultParameters): number {
         //Create the text.
         let textGeometry = new TextGeometry(texte, textGeometryParameters);
         textGeometry.computeBoundingBox();
@@ -69,9 +72,15 @@ export class TextureHandler {
         //Store the informations for future modifications.
         Object.defineProperty(this._allTexts, this._textNumber.toString(),
             { value: { "textGeometry": textGeometry, "textMaterial": textMaterial, "textMesh": textMesh } });
-
+        console.log(this._allTexts);
         //Return the identifier to permit future modifications.
         let identifier = this._textNumber;
         ++this._textNumber;
+        return identifier;
+    }
+    public removeText(identifier: number) {
+            console.log(this._allTexts);
+            delete this._allTexts[identifier];
+            console.log(this._allTexts);
     }
 }

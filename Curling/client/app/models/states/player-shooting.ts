@@ -80,7 +80,6 @@ export class PlayerShooting extends AbstractGameState {
         for (let i = 0; i < this._gameInfo.rink.children.length; i++) {
             let child = this._gameInfo.rink.children[i];
             let intersects = this._raycaster.intersectObject(child);
-            // Toggle rotation bool for meshes that we clicked
             if (intersects.length > 0) {
                 this._gameInfo.broom.position.set(0, 0, 0);
                 this._gameInfo.broom.position.copy(intersects[0].point);
@@ -92,7 +91,6 @@ export class PlayerShooting extends AbstractGameState {
     protected performMouseButtonPress(): AbstractGameState {
         if (!this._gameInfo.broom.isRed()) {
             this._gameInfo.broom.position.add(new THREE.Vector3(0.2, 0, 0));
-            // TODO : A VOIR COMMENT ENLEVER GET ELEM
             SoundManager.getInstance().broomInSound;
             if (!this._isHoldingMouseButton) {
                 this._isHoldingMouseButton = true;
@@ -106,10 +104,7 @@ export class PlayerShooting extends AbstractGameState {
         if (!this._gameInfo.broom.isRed()) {
             this._gameInfo.broom.translateZ(0.3);
             this._isHoldingMouseButton = false;
-            // TODO : A VOIR COMMENT ENLEVER GET ELEM
             SoundManager.getInstance().broomOutSound;
-            // let sound = document.getElementById("broomOut");
-            // (<HTMLAudioElement>sound).play();
         }
         return null;
     }
