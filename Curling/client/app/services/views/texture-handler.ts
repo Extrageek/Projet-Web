@@ -79,8 +79,6 @@ export class TextureHandler {
         return identifier;
     }
     public removeText(identifier: number) {
-            console.log(this._allTexts);
             delete this._allTexts[identifier];
-            console.log(this._allTexts);
     }
 }

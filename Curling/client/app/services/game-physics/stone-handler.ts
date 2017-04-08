@@ -299,17 +299,25 @@ export class StoneHandler implements GameComponent {
         return startingPoint.clone().sub(endingPoint).length();
     }
 
-    public bounceWinningPlayerStones() {
+    public bounceWinningPlayerStones(stoneColor : StoneColor) {
         let source = new IntervalObservable(StoneHandler.FIFTY_MILLISECONDS);
         let subject = new Subject();
+        let subscriptions = new Array<Subscription>();
         let multicast = source.multicast(subject);
-        this._stonesGivingPoints.forEach((stone: Stone) => {
-            multicast.subscribe(stone.bounce());
+
+        this._stoneOnTheGame.forEach((stone: Stone) => {
+            if (stone.stoneColor === stoneColor) {
+                subscriptions.push(multicast.subscribe(stone.bounce()));
+            }
         });
+
         multicast.connect();
 
         let timerID = setTimeout(() => {
             subject.complete();
+            subscriptions.forEach((subscription: Subscription) => {
+                subscription.unsubscribe();
+            });
             clearTimeout(timerID);
         }, StoneHandler.FIVE_SECOND);
     }

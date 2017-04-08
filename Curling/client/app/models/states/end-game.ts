@@ -2,6 +2,7 @@ import { Vector3 } from "three";
 import { AbstractGameState } from "./abstract-game-state";
 import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { ParticlesService } from "./../../services/game-physics/particles.service";
+import { StoneColor } from "../stone";
 
 export class EndGame extends AbstractGameState {
 
@@ -36,16 +37,17 @@ export class EndGame extends AbstractGameState {
 
     protected performEnteringState() {
         this.addEndGameText();
-        this._gameInfo.stoneHandler.bounceWinningPlayerStones();
         this._gameInfo.particlesService = new ParticlesService(this._gameInfo.scene);
         this._gameInfo.gameStatus.gameIsFinished();
     }
 
     private addEndGameText() {
         if (this._gameInfo.gameStatus.scorePlayer > this._gameInfo.gameStatus.scoreComputer) {
+            this._gameInfo.stoneHandler.bounceWinningPlayerStones(StoneColor.Blue);
             this._gameInfo.textureHandler.addText(EndGame.TEXT_POSITION, "Vous avez gagne!", EndGame.BLUE);
         }
         else if (this._gameInfo.gameStatus.scorePlayer < this._gameInfo.gameStatus.scoreComputer) {
+            this._gameInfo.stoneHandler.bounceWinningPlayerStones(StoneColor.Red);
             this._gameInfo.textureHandler.addText(EndGame.TEXT_POSITION, "Vous avez perdu!", EndGame.RED);
         }
         else {
