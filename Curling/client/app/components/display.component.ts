@@ -7,7 +7,6 @@ import { GameStatusService } from "./../services/game-status.service";
 
 @Component({
     moduleId: module.id,
-    providers: [RestApiProxyService],
     selector: "display-component",
     templateUrl: "../../assets/templates/display-component.html",
     styleUrls: ["../../assets/stylesheets/display-component.css", "../../assets/stylesheets/menu-hamburger.css"]

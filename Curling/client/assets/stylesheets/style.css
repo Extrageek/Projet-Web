@@ -9,8 +9,8 @@ a {
 body{
     background-image: url("../images/curling.jpg");
     background-size: cover;
-  margin: 0px;
-  overflow: hidden;
+    margin: 0px;
+    overflow: hidden;
 }
 
 .user-setting {
