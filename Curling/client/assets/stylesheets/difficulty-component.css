@@ -1,0 +1,19 @@
+.card {
+    position: fixed;
+    top: 30%;
+    left: 33%;
+    text-align: center;
+    font-size: 28px;
+    width: 512px;
+    height: 240px;
+    background-color: rgb(255, 231, 200);
+}
+
+md-card-title {
+    color: black;
+    height: 176px;
+}
+#container {
+    background-color: rgba(122, 133, 255, 0.9);
+}
+
