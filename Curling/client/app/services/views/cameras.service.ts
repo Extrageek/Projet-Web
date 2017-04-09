@@ -30,6 +30,10 @@ export class CameraService implements GameComponent {
     private _lastCameraUsedIndex: number;
     private _perspectiveCameraMoving: boolean;
 
+    get currentCamera() {
+        return this._cameras[this._lastCameraUsedIndex];
+    }
+
     get perspectiveCamera() {
         this._lastCameraUsedIndex = CameraService.PERSPECTIVE_CAMERA_INDEX;
         return this._cameras[CameraService.PERSPECTIVE_CAMERA_INDEX];
@@ -44,7 +48,7 @@ export class CameraService implements GameComponent {
         this._cameras = new Array<PerspectiveCamera>();
         this._camerasToUpdate = new Array<FollowUpdate>();
         this._perspectiveCameraMoving = false;
-        this._lastCameraUsedIndex = -1;
+        this._lastCameraUsedIndex = 0;
         this.createNewPerspectiveCamera(CameraService.INITIAL_POSITION_P, CameraService.POINT_TO_P);
         this.createNewPerspectiveCamera(CameraService.INITIAL_POSITION_T, CameraService.POINT_TO_T,
             CameraService.ROTATION_T);

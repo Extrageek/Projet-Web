@@ -1,8 +1,9 @@
 import { AbstractGameState } from "./abstract-game-state";
-import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { LoadingStone } from "./loading-stone";
 import { EndSet } from "./end-set";
 import { GameComponent } from "../../models/game-component.interface";
+import { IGameInfo } from "./../../services/game-handler/game-info.interface";
+import { IGameServices } from "../../services/game-handler/games-services.interface";
 
 export class ComputerShooting extends AbstractGameState {
 
@@ -15,8 +16,8 @@ export class ComputerShooting extends AbstractGameState {
      *  Only one game state could be constructed with this value at true, because only one game state
      *  must be active at a time.
      */
-    public static createInstance(gameInfo: IGameInfo, doInitialization = false) {
-        ComputerShooting._instance = new ComputerShooting(gameInfo, doInitialization);
+    public static createInstance(gameServices: IGameServices, gameInfo: IGameInfo) {
+        ComputerShooting._instance = new ComputerShooting(gameServices, gameInfo);
     }
 
     /**
@@ -27,13 +28,13 @@ export class ComputerShooting extends AbstractGameState {
         return ComputerShooting._instance;
     }
 
-    private constructor(gameInfo: IGameInfo, doInitialization = false) {
-        super(gameInfo, doInitialization);
+    private constructor(gameServices:IGameServices, gameInfo: IGameInfo) {
+        super(gameServices, gameInfo);
     }
 
     protected performEnteringState() {
-        this._gameInfo.stoneHandler.performShot(
-            this._gameInfo.shotParameters,
+        this._gameServices.stoneHandler.performShot(
+            AbstractGameState.shotParameters,
             () => {
                 this._gameInfo.gameStatus.usedStone();
                 let newState: AbstractGameState;
@@ -49,9 +50,9 @@ export class ComputerShooting extends AbstractGameState {
     }
 
     protected performLeavingState() {
-        this._gameInfo.stoneHandler.removeOutOfBoundsStones(this._gameInfo.scene);
+        this._gameServices.stoneHandler.removeOutOfBoundsStones();
         this._gameInfo.gameStatus.nextPlayer();
-        this._gameInfo.cameraService.replacePCameraToInitialPosition();
+        this._gameServices.cameraService.replacePCameraToInitialPosition();
     }
 
     protected performMouseMove(event: MouseEvent): AbstractGameState {

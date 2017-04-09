@@ -1,23 +1,22 @@
 <modifier [container]="container"> </modifier>
 <md-progress-bar
-    *ngIf="renderService._gameInfo.isSelectingPower
-        && renderService._gameInfo.stoneHandler !== null"
+    *ngIf="renderService._angularInfo.isSelectingPower"
     class="power-bar"
     color="primary"
     mode="determinate"
-    [value]="renderService._gameInfo.powerBar">
+    [value]="renderService._angularInfo.powerBar">
 </md-progress-bar>
 
-<div *ngIf="renderService._gameInfo.isSelectingPower
-    && renderService._gameInfo.shotParameters !== null
-    && renderService._gameInfo.shotParameters.spin === 1"
+<div *ngIf="renderService._angularInfo.isSelectingPower
+    && renderService._angularInfo !== null
+    && renderService._angularInfo.spin === 1"
     class="clockwiseArrow">
         <img src=" ../../assets/images/clockwise-arrow.png" alt="Sens horaire" height="30vw" width="30vw">
 </div>
 
-<div *ngIf="renderService._gameInfo.isSelectingPower
-    && renderService._gameInfo.shotParameters.spin !== null
-    && renderService._gameInfo.shotParameters.spin === 0"
+<div *ngIf="renderService._angularInfo.isSelectingPower
+    && renderService._angularInfo.spin !== null
+    && renderService._angularInfo.spin === 0"
     class="counterclockwiseArrow">
         <img src=" ../../assets/images/counterclockwise-arrow.png" alt="Sens anti-horaire" height="30vw" width="30vw">
 </div>

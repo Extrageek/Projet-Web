@@ -16,8 +16,10 @@ describe("StoneHandler tests should", () => {
 
     let objectLoader: ObjectLoader;
     let rinkInfo: RinkInfo;
+    let scene: Scene;
 
     before(() => {
+        scene = new Scene();
         objectLoader = new ObjectLoader();
         rinkInfo = {
             targetCenter: new Vector3(0, 0, -15),
@@ -27,7 +29,7 @@ describe("StoneHandler tests should", () => {
     });
 
     it("create a StoneHandler and generate a red stone", done => {
-        let stoneHandler = new StoneHandler(objectLoader, rinkInfo, StoneColor.Red);
+        let stoneHandler = new StoneHandler(objectLoader, rinkInfo, scene, StoneColor.Red);
         stoneHandler.generateNewStone().then((stone: Stone) => {
             expect(stone.stoneColor).to.equals(StoneColor.Red);
             done();
@@ -35,7 +37,7 @@ describe("StoneHandler tests should", () => {
     });
 
     it("create a StoneHandler and generate a blue stone", done => {
-        let stoneHandler = new StoneHandler(objectLoader, rinkInfo, StoneColor.Blue);
+        let stoneHandler = new StoneHandler(objectLoader, rinkInfo, scene, StoneColor.Blue);
         stoneHandler.generateNewStone().then((stone: Stone) => {
             expect(stone.stoneColor).to.equals(StoneColor.Blue);
             done();
@@ -45,6 +47,7 @@ describe("StoneHandler tests should", () => {
 
 describe("StoneHandler tests should", () => {
 
+    let scene: Scene;
     let objectLoader: ObjectLoader;
     let rinkInfo: RinkInfo;
     let stoneHandler: StoneHandler;
@@ -53,6 +56,7 @@ describe("StoneHandler tests should", () => {
     let shotParameters2: ShotParameters;
 
     before(() => {
+        scene = new Scene();
         objectLoader = new ObjectLoader();
         rinkInfo = {
             targetCenter: new Vector3(0, 0, -15),
@@ -62,7 +66,7 @@ describe("StoneHandler tests should", () => {
     });
 
     beforeEach(() => {
-        stoneHandler = new StoneHandler(objectLoader, rinkInfo, StoneColor.Blue);
+        stoneHandler = new StoneHandler(objectLoader, rinkInfo, scene, StoneColor.Blue);
         shotParameters1 =
             {
                 power: 1,
@@ -87,7 +91,7 @@ describe("StoneHandler tests should", () => {
 
     it("clean all stones generated", done => {
         stoneHandler.generateNewStone().then((stone: Stone) => {
-            stoneHandler.cleanAllStones(new Scene());
+            stoneHandler.cleanAllStones();
             expect(() => { stoneHandler.performShot(shotParameters1); }).to.throw(Error);
             done();
         });

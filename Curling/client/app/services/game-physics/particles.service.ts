@@ -26,7 +26,6 @@ export class ParticlesService {
             this.setConffetiPosition();
         }
         this._particleSystem = new THREE.Points(this._geometry, this._material);
-        scene.add(this._particleSystem);
     }
 
     private setConffetiColor() {

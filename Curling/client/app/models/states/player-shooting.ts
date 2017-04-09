@@ -1,9 +1,9 @@
 import { AbstractGameState } from "./abstract-game-state";
-import { IGameInfo } from "./../../services/game-handler/game-info.interface";
+import { EndSet } from "./end-set";
 import { LoadingStone } from "./loading-stone";
 import { CameraType } from "./../../services/game-physics/camera-type";
-import { EndSet } from "./end-set";
-import { SoundManager } from "../../services/sound-manager";
+import { IGameInfo } from "./../../services/game-handler/game-info.interface";
+import { IGameServices } from "../../services/game-handler/games-services.interface";
 
 export class PlayerShooting extends AbstractGameState {
 
@@ -19,8 +19,8 @@ export class PlayerShooting extends AbstractGameState {
      *  Only one game state could be constructed with this value at true, because only one game state
      *  must be active at a time.
      */
-    public static createInstance(gameInfo: IGameInfo, doInitialization = false) {
-        PlayerShooting._instance = new PlayerShooting(gameInfo, doInitialization);
+    public static createInstance(gameServices: IGameServices, gameInfo: IGameInfo) {
+        PlayerShooting._instance = new PlayerShooting(gameServices, gameInfo);
     }
 
     /**
@@ -31,16 +31,16 @@ export class PlayerShooting extends AbstractGameState {
         return PlayerShooting._instance;
     }
 
-    private constructor(gameInfo: IGameInfo, doInitialization = false) {
-        super(gameInfo, doInitialization);
+    private constructor(gameServices: IGameServices, gameInfo: IGameInfo) {
+        super(gameServices, gameInfo);
     }
 
     protected performEnteringState() {
-        this._gameInfo.scene.add(this._gameInfo.broom);
+        this._gameInfo.broom.showBroom();
         //TODO : CHANGE GREEN ONCE YOU PASS THE FIRST LINE
         this._gameInfo.broom.changeColourTo(THREE.ColorKeywords.green);
-        this._gameInfo.stoneHandler.performShot(
-            this._gameInfo.shotParameters,
+        this._gameServices.stoneHandler.performShot(
+            AbstractGameState.shotParameters,
             () => {
                 this._gameInfo.gameStatus.usedStone();
                 let newState: AbstractGameState;
@@ -56,20 +56,20 @@ export class PlayerShooting extends AbstractGameState {
     }
 
     protected performLeavingState() {
-        this._gameInfo.scene.remove(this._gameInfo.broom);
-        this._gameInfo.stoneHandler.removeOutOfBoundsStones(this._gameInfo.scene);
+        this._gameInfo.broom.hideBroom();
+        this._gameServices.stoneHandler.removeOutOfBoundsStones();
         this._gameInfo.gameStatus.nextPlayer();
-        this._gameInfo.cameraService.replacePCameraToInitialPosition();
+        this._gameServices.cameraService.replacePCameraToInitialPosition();
     }
 
     protected performMouseMove(event: MouseEvent): AbstractGameState {
 
         let currentCamera: THREE.Camera;
         if (this._gameInfo.currentCamera === CameraType.PERSPECTIVE_CAM) {
-            currentCamera = this._gameInfo.cameraService.perspectiveCamera;
+            currentCamera = this._gameServices.cameraService.perspectiveCamera;
         }
         else if (this._gameInfo.currentCamera === CameraType.ORTHOGRAPHIC_CAM) {
-            currentCamera = this._gameInfo.cameraService.topViewCamera;
+            currentCamera = this._gameServices.cameraService.topViewCamera;
         }
 
         let x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -93,10 +93,10 @@ export class PlayerShooting extends AbstractGameState {
         if (!this._gameInfo.broom.isRed()) {
             this._gameInfo.broom.position.add(new THREE.Vector3(0.2, 0, 0));
             // TODO : A VOIR COMMENT ENLEVER GET ELEM
-            SoundManager.getInstance().broomInSound;
+            this._gameServices.soundService.broomInSound;
             if (!this._isHoldingMouseButton) {
                 this._isHoldingMouseButton = true;
-                this._gameInfo.broom.verifyBroomCollision(this._gameInfo.stoneHandler.stoneOnTheGame);
+                this._gameInfo.broom.verifyBroomCollision(this._gameServices.stoneHandler.stoneOnTheGame);
             }
         }
         return null;
@@ -107,7 +107,7 @@ export class PlayerShooting extends AbstractGameState {
             this._gameInfo.broom.translateZ(0.3);
             this._isHoldingMouseButton = false;
             // TODO : A VOIR COMMENT ENLEVER GET ELEM
-            SoundManager.getInstance().broomOutSound;
+            this._gameServices.soundService.broomOutSound;
             // let sound = document.getElementById("broomOut");
             // (<HTMLAudioElement>sound).play();
         }
@@ -115,7 +115,7 @@ export class PlayerShooting extends AbstractGameState {
     }
 
     public update(timePerFrame: number) {
-        if (this._gameInfo.stoneHandler.checkPassHogLine()) {
+        if (this._gameServices.stoneHandler.checkPassHogLine()) {
             this._gameInfo.broom.changeColourTo(THREE.ColorKeywords.red);
         }
         else {

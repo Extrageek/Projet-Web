@@ -1,8 +1,9 @@
 import { AbstractGameState } from "./abstract-game-state";
-import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { LoadingStone } from "./loading-stone";
 import { EndGame } from "./end-game";
 import { CurrentPlayer } from "../../models/current-player";
+import { IGameInfo } from "./../../services/game-handler/game-info.interface";
+import { IGameServices } from "../../services/game-handler/games-services.interface";
 
 export class EndSet extends AbstractGameState {
 
@@ -17,8 +18,8 @@ export class EndSet extends AbstractGameState {
      *  Only one game state could be constructed with this value at true, because only one game state
      *  must be active at a time.
      */
-    public static createInstance(gameInfo: IGameInfo, doInitialization = false): void {
-        EndSet._instance = new EndSet(gameInfo, doInitialization);
+    public static createInstance(gameServices: IGameServices, gameInfo: IGameInfo): void {
+        EndSet._instance = new EndSet(gameServices, gameInfo);
     }
 
     /**
@@ -29,19 +30,19 @@ export class EndSet extends AbstractGameState {
         return EndSet._instance;
     }
 
-    private constructor(gameInfo: IGameInfo, doInitialization = false) {
-        super(gameInfo, doInitialization);
+    private constructor(gameServices: IGameServices, gameInfo: IGameInfo) {
+        super(gameServices, gameInfo);
     }
 
     protected performEnteringState() {
-        let points = this._gameInfo.stoneHandler.countPoints();
+        let points = this._gameServices.stoneHandler.countPoints();
         this._gameInfo.gameStatus.incrementScorePlayer(points.player);
         this._gameInfo.gameStatus.incrementScoreComputer(points.computer);
         let newState: AbstractGameState;
         if (this._gameInfo.gameStatus.currentSet < EndSet.NUMBER_OF_SETS_TO_PLAY) {
             this._gameInfo.gameStatus.currentSet += 1;
             this._gameInfo.gameStatus.resetStones();
-            this._gameInfo.stoneHandler.cleanAllStones(this._gameInfo.scene);
+            this._gameServices.stoneHandler.cleanAllStones();
             if (points.player > points.computer) {
                 this._gameInfo.gameStatus.currentPlayer = CurrentPlayer.BLUE;
             }

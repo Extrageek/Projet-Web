@@ -1,7 +1,8 @@
 import { Vector3 } from "three";
 import { AbstractGameState } from "./abstract-game-state";
-import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { ParticlesService } from "./../../services/game-physics/particles.service";
+import { IGameInfo } from "./../../services/game-handler/game-info.interface";
+import { IGameServices } from "../../services/game-handler/games-services.interface";
 
 export class EndGame extends AbstractGameState {
 
@@ -18,8 +19,8 @@ export class EndGame extends AbstractGameState {
      *  Only one game state could be constructed with this value at true, because only one game state
      *  must be active at a time.
      */
-    public static createInstance(gameInfo: IGameInfo, doInitialization = false) {
-        EndGame._instance = new EndGame(gameInfo, doInitialization);
+    public static createInstance(gameServices: IGameServices, gameInfo: IGameInfo) {
+        EndGame._instance = new EndGame(gameServices, gameInfo);
     }
 
     /**
@@ -30,31 +31,34 @@ export class EndGame extends AbstractGameState {
         return EndGame._instance;
     }
 
-    private constructor(gameInfo: IGameInfo, doInitialization = false) {
-        super(gameInfo, doInitialization);
+    private constructor(gameServices: IGameServices, gameInfo: IGameInfo) {
+        super(gameServices, gameInfo);
     }
 
     protected performEnteringState() {
+        this._gameServices.cameraService.perspectiveCamera;
+        this._gameServices.cameraService.moveCameraEndRink();
+        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "particleService",
+            { value: this._gameServices.particlesService });
         this.addEndGameText();
-        this._gameInfo.stoneHandler.bounceWinningPlayerStones();
-        this._gameInfo.particlesService = new ParticlesService(this._gameInfo.scene);
+        this._gameServices.stoneHandler.bounceWinningPlayerStones();
         this._gameInfo.gameStatus.gameIsFinished();
     }
 
     private addEndGameText() {
         if (this._gameInfo.gameStatus.scorePlayer > this._gameInfo.gameStatus.scoreComputer) {
-            this._gameInfo.textureHandler.addText(EndGame.TEXT_POSITION, "Vous avez gagne!", EndGame.BLUE);
+            this._gameServices.textureHandler.addText(EndGame.TEXT_POSITION, "Vous avez gagne!", EndGame.BLUE);
         }
         else if (this._gameInfo.gameStatus.scorePlayer < this._gameInfo.gameStatus.scoreComputer) {
-            this._gameInfo.textureHandler.addText(EndGame.TEXT_POSITION, "Vous avez perdu!", EndGame.RED);
+            this._gameServices.textureHandler.addText(EndGame.TEXT_POSITION, "Vous avez perdu!", EndGame.RED);
         }
         else {
-            this._gameInfo.textureHandler.addText(EndGame.TEXT_POSITION, "C'est une partie nulle", EndGame.YELLOW);
+            this._gameServices.textureHandler.addText(EndGame.TEXT_POSITION, "C'est une partie nulle", EndGame.YELLOW);
         }
     }
 
     protected performLeavingState() {
-        //Nothing to do
+        delete this._gameInfo.gameComponentsToUpdate["particleService"];
     }
 
     protected performMouseMove(): AbstractGameState {

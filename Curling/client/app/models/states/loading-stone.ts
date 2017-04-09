@@ -1,9 +1,10 @@
 import { AbstractGameState } from "./abstract-game-state";
-import { IGameInfo } from "./../../services/game-handler/game-info.interface";
-import { Stone } from "../../models/stone";
 import { CurrentPlayer } from "../../models/current-player";
 import { PlayerTurn } from "./player-turn";
 import { ComputerTurn } from "./computer-turn";
+import { Stone } from "../../models/stone";
+import { IGameInfo } from "./../../services/game-handler/game-info.interface";
+import { IGameServices } from "../../services/game-handler/games-services.interface";
 
 export class LoadingStone extends AbstractGameState {
 
@@ -16,8 +17,8 @@ export class LoadingStone extends AbstractGameState {
      *  Only one game state could be constructed with this value at true, because only one game state
      *  must be active at a time.
      */
-    public static createInstance(gameInfo: IGameInfo, doInitialization = false) {
-        LoadingStone._instance = new LoadingStone(gameInfo, doInitialization);
+    public static createInstance(gameServices: IGameServices, gameInfo: IGameInfo) {
+        LoadingStone._instance = new LoadingStone(gameServices, gameInfo);
     }
 
     /**
@@ -28,8 +29,8 @@ export class LoadingStone extends AbstractGameState {
         return LoadingStone._instance;
     }
 
-    private constructor(gameInfo: IGameInfo, doInitialization = false) {
-        super(gameInfo, doInitialization);
+    private constructor(gameServices: IGameServices, gameInfo: IGameInfo) {
+        super(gameServices, gameInfo);
     }
 
     /**
@@ -38,10 +39,9 @@ export class LoadingStone extends AbstractGameState {
      * change to computerTurn otherwise.
      */
     protected performEnteringState() {
-        this._gameInfo.stoneHandler.generateNewStone(this._gameInfo.gameStatus.currentPlayer)
+        this._gameServices.stoneHandler.generateNewStone(this._gameInfo.gameStatus.currentPlayer)
             .then((stone: Stone) => {
-                this._gameInfo.scene.add(stone);
-                this._gameInfo.cameraService.movePerspectiveCameraToFollowObjectOnZ(stone);
+                this._gameServices.cameraService.movePerspectiveCameraToFollowObjectOnZ(stone);
 
                 let newState: AbstractGameState;
                 if (this._gameInfo.gameStatus.currentPlayer === CurrentPlayer.BLUE) {

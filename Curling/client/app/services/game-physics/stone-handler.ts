@@ -17,11 +17,6 @@ export interface Points {
 }
 
 export class StoneHandler implements GameComponent {
-
-    public static readonly SHOT_POWER_MINIMUM = 0.2;
-    public static readonly SHOT_POWER_MAXIMUM = 4;
-    public static readonly SHOT_POWER_OFFSET = 1;
-
     public static readonly COLLISION_SPEED_KEEP_PERCENT = 0.85;
     public static readonly COLLISION_SPEED_TRANSFERED_PERCENT = 0.85;
 
@@ -29,6 +24,7 @@ export class StoneHandler implements GameComponent {
     private static readonly FIFTY_MILLISECONDS = 50;
 
     private _rinkInfo: RinkInfo;
+    private _scene: Scene;
     private _currentPlayer: StoneColor;
     private _objectLoader: ObjectLoader;
     private _stoneOnTheGame: Stone[];
@@ -39,8 +35,9 @@ export class StoneHandler implements GameComponent {
     private _invalidAreaForStonesToBeIn: Box3;
     private _stonesGivingPoints: Stone[];
 
-    constructor(objectLoader: ObjectLoader, rinkInfo: RinkInfo, firstPlayer: StoneColor) {
+    constructor(objectLoader: ObjectLoader, rinkInfo: RinkInfo, scene: Scene, firstPlayer: StoneColor) {
         this._rinkInfo = rinkInfo;
+        this._scene = scene;
         this._currentPlayer = firstPlayer - 1;
         this._objectLoader = objectLoader;
         this._stoneOnTheGame = new Array<Stone>();
@@ -59,9 +56,9 @@ export class StoneHandler implements GameComponent {
         return this._stoneOnTheGame;
     }
 
-    public removeOutOfBoundsStones(scene: Scene) {
+    public removeOutOfBoundsStones() {
         for (let stone of this._stonesToBeRemoved) {
-            scene.remove(stone);
+            this._scene.remove(stone);
         }
     }
 
@@ -88,6 +85,7 @@ export class StoneHandler implements GameComponent {
         return Stone.createStone(this._objectLoader, this._currentPlayer, this._rinkInfo.initialStonePosition)
             .then((stone: Stone) => {
                 this._stoneOnTheGame.push(stone);
+                this._scene.add(stone);
                 return stone;
             });
     }
@@ -111,9 +109,9 @@ export class StoneHandler implements GameComponent {
         }
     }
 
-    public cleanAllStones(scene: Scene) {
+    public cleanAllStones() {
         this._stoneOnTheGame.forEach((stone: Stone) => {
-            scene.remove(stone);
+            this._scene.remove(stone);
         });
         this._stoneOnTheGame.splice(0, this._stoneOnTheGame.length);
     }

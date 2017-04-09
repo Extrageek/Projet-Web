@@ -1,12 +1,24 @@
-import { IGameInfo } from "./../../services/game-handler/game-info.interface";
+import { Vector3 } from "three";
+import { StoneSpin } from "../stone";
+import { IGameInfo } from "../../services/game-handler/game-info.interface";
+import { IGameServices } from "../../services/game-handler/games-services.interface";
+import { ShotParameters } from "../shot-parameters.interface";
 import { GameComponent } from "../game-component.interface";
 
 export abstract class AbstractGameState implements GameComponent {
 
     private static hasDoneInitialization = false;
-    private static objectNumber = 0;
+    //For states that need parameters for shooting
+    protected static shotParameters: ShotParameters = {
+        spin: StoneSpin.Clockwise,
+        direction: new Vector3(0, 0, 1),
+        power: 0
+    };
+    //Function to call when changing from a state to another one.
+    private static onChangingState: (abstractGameState: AbstractGameState) => void;
 
     private _isActive: boolean;
+    protected _gameServices: IGameServices;
     protected _gameInfo: IGameInfo;
 
     /**
@@ -16,20 +28,47 @@ export abstract class AbstractGameState implements GameComponent {
      *  Only one game state could be constructed with this value at true, because only one game state
      *  must be active at a time.
      */
-    protected constructor(gameInfo: IGameInfo, doInitialization: boolean) {
+    protected constructor(gameServices: IGameServices, gameInfo: IGameInfo) {
         if (gameInfo === null || gameInfo === undefined) {
-            throw new Error("The game info parameter cannot be null or undefined");
+            throw new Error("The game info parameter cannot be null or undefined.");
         }
+        if (gameServices === null || gameServices == undefined) {
+            throw new Error("The game services parameter cannot be null or undefined.");
+        }
+        this._gameServices = gameServices;
         this._gameInfo = gameInfo;
+        this._isActive = false;
+    }
 
-        if (doInitialization) {
-            if (AbstractGameState.hasDoneInitialization) {
-                throw new Error("One game state has already been initialized.");
-            }
-            AbstractGameState.hasDoneInitialization = true;
-            this.enteringState();
+    /**
+     * Start the game with this state.
+     * @param onChangingState A function to call with the new state as a parameter when the state changes.
+     *    This function should be handled by the StatesHandler.
+     */
+    public beginWithThisState(onChangingState = (abstractGameState: AbstractGameState) => {}) {
+        if (AbstractGameState.hasDoneInitialization) {
+            throw new Error("A state has already been initialized.");
         }
-        this._isActive = doInitialization;
+        AbstractGameState.onChangingState = onChangingState;
+        AbstractGameState.hasDoneInitialization = true;
+        this.enteringState();
+    }
+
+    /**
+     * Call this function to interrupt the game. It will leave the current state and will not enter in a new state.
+     * It can be used to restart the game.
+     * The beginWithThisState method must be called on a state to restart the game.
+     * This function can only be called on the active state.
+     * This function should be handled by the StatesHandler.
+     */
+    public forceExitState() {
+        if (!this._isActive) {
+            throw new Error("The force exit method must be called on the active state.");
+        }
+        this.leavingState();
+        AbstractGameState.hasDoneInitialization = false;
+        AbstractGameState.onChangingState(null);
+        AbstractGameState.onChangingState = null;
     }
 
     private enteringState() {
@@ -51,8 +90,8 @@ export abstract class AbstractGameState implements GameComponent {
      * @param newState The new state to go.
      */
     protected leaveState(newState: AbstractGameState) {
-        let paramFromLastState = this.leavingState();
-        this._gameInfo.gameState = newState;
+        this.leavingState();
+        AbstractGameState.onChangingState(newState);
         newState.enteringState();
     }
 
@@ -76,8 +115,22 @@ export abstract class AbstractGameState implements GameComponent {
     }
 
     /**
+     * Method to call when the button to switch spin is pressed. It will execute the corresponding action for the game.
+     * 
+     */
+    public onSpinButtonPressed() {
+        this.performAction(this.performSpinButtonPressed);
+    }
+
+    /**
+     * Method to call when the space button is pressed. It will execute the corresponding action for the game.
+     */
+    public onSpaceBarPressed() {
+        this.performAction(this.performCameraToggle);
+    }
+
+    /**
      * Method to call when a mouse movement is detected. It will execute the corresponding action for the game.
-     * @returns AbstractGameState The new state to which it is transited, or null if no transition was done.
      */
     public onMouseMove(event: MouseEvent) {
         this.performAction(this.performMouseMove.bind(this, event));
@@ -85,7 +138,6 @@ export abstract class AbstractGameState implements GameComponent {
 
     /**
      * Method to call when the left mouse button is detected. It will execute the corresponding action for the game.
-     * @returns AbstractGameState The new state to which it is transited, or null if no transition was done.
      */
     public onMouseButtonPress() {
         this.performAction(this.performMouseButtonPress);
@@ -93,19 +145,35 @@ export abstract class AbstractGameState implements GameComponent {
 
     /**
      * Method to call when the left mouse button is released. It will execute the corresponding action for the game.
-     * @returns AbstractGameState The new state to which it is transited, or null if no transition was done.
      */
     public onMouseButtonReleased() {
         this.performAction(this.performMouseButtonReleased);
     }
 
     public update(timePerFrame: number) {
-        //Do nothing by default. The child classes can override this method.
+        //Do nothing by default. The children classes can override this method.
     }
 
     protected abstract performEnteringState(): void;
 
     protected abstract performLeavingState(): void;
+
+    /**
+     * The children classes can override this method to give a particular behaviour when the spin button is pressed.
+     * @returns AbstractGameState The new state to which it must transit, or null if no transition is necessary.
+     */
+    protected performSpinButtonPressed(): AbstractGameState {
+        return null;
+    }
+
+    /**
+     * The children classes can override this method to give a particular behaviour when the button to toggle the
+     * camera is pressed.
+     * @returns AbstractGameState The new state to which it must transit, or null if no transition is necessary.
+     */
+    protected performCameraToggle(): AbstractGameState {
+        return null;
+    }
 
     protected abstract performMouseMove(event: MouseEvent): AbstractGameState
 

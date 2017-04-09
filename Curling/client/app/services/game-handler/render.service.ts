@@ -9,10 +9,13 @@ import { GameStatusService } from "./../game-status.service";
 import { CameraService } from "./../views/cameras.service";
 import { LightingService } from "./../views/ligthing.service";
 import { ParticlesService } from "./../game-physics/particles.service";
+import { SoundManager } from "../sound-manager";
+import { UserService } from "../user.service";
 
 import { StoneHandler } from "../game-physics/stone-handler";
 import { TextureHandler } from "../views/texture-handler";
 import { CameraType } from "../game-physics/camera-type";
+import { StatesHandler } from "./states-handler";
 
 import { Rink } from "./../../models/scenery/rink";
 import { StoneColor } from "./../../models/stone";
@@ -29,8 +32,8 @@ import { Difficulty } from "./../../models/difficulty";
 
 import { RinkInfo } from "./../../models/scenery/rink-info.interface";
 import { IGameInfo } from "./game-info.interface";
-import { SoundManager } from "../sound-manager";
-import { UserService } from "../user.service";
+import { IGameServices } from "./games-services.interface";
+import { IAngularInfo } from "./angular-info.interface";
 
 import { ComputerAI } from "../../models/AI/computerAI";
 import { HardAI } from "../../models/AI/hardAI";
@@ -42,51 +45,60 @@ export class RenderService {
     private static readonly NUMBER_OF_MODELS_TO_LOAD = 4;
 
     private _numberOfModelsLoaded: number;
-    private _currentCamera: PerspectiveCamera;
     private _lightingService: LightingService;
     private _objectLoader: ObjectLoader;
     private _mesh: Mesh;
+    private _scene: Scene;
     private _clock: Clock;
     private _renderer: Renderer;
     private _animationStarted: boolean;
     private _endStateAnimationStarted: boolean;
-    private _userService: UserService;
 
+    private _gameServices: IGameServices;
     private _gameInfo: IGameInfo;
+    private _angularInfo: IAngularInfo;
 
     constructor(gameStatusService: GameStatusService,
         cameraService: CameraService,
         lightingService: LightingService,
         userService: UserService) {
-        this._gameInfo = {
-            gameStatus: gameStatusService,
+
+        this._gameServices = {
             cameraService: cameraService,
-            broom: null,
-            rink: null,
-            scene: new Scene(),
-            currentCamera: CameraType.PERSPECTIVE_CAM,
-            gameComponentsToUpdate: new Object(),
-            isSelectingPower: false,
-            line: { lineGeometry: null, lineDashedMaterial: null, lineMesh: null, lineAnimationSlower: null },
-            mousePositionPlaneXZ: new Vector3(0, 0, 0),
-            powerBar: 0,
-            gameState: null,
-            shotParameters: { spin: 0, direction: null, power: null },
+            particlesService: null,
+            soundService: null,
             stoneHandler: null,
             textureHandler: null,
-            particlesService: null,
+            userService: userService
+        }
+        
+        this._gameInfo = {
+            gameStatus: gameStatusService,
+            broom: null,
+            rink: null,
+            currentCamera: CameraType.PERSPECTIVE_CAM,
+            gameComponentsToUpdate: new Object(),
+            line: { lineGeometry: null, lineDashedMaterial: null, lineMesh: null, lineAnimationSlower: null },
+            mousePositionPlaneXZ: new Vector3(0, 0, 0)
         };
+
+        this._angularInfo = {
+            isSelectingPower: false,
+            powerBar: 0,
+            spin: 0
+        }
         this._lightingService = lightingService;
         this._gameInfo.gameStatus.randomFirstPlayer();
         this._animationStarted = false;
         this._endStateAnimationStarted = false;
         this._numberOfModelsLoaded = 0;
+        this._scene = new Scene();
         this._objectLoader = new ObjectLoader();
-        this._userService = userService;
     }
 
     public init(container: HTMLElement) {
-        if (this._gameInfo.scene.children.length > 0) {
+
+        if (this._scene.children.length > 0) {
             this.linkRenderServerToCanvas(container);
             window.addEventListener("resize", _ => this.onResize());
             return;
@@ -97,11 +109,9 @@ export class RenderService {
         this._renderer = new WebGLRenderer({ antialias: true, devicePixelRatio: window.devicePixelRatio });
         this._renderer.setSize(window.innerWidth, window.innerHeight, true);
 
-        this._currentCamera = this._gameInfo.cameraService.perspectiveCamera;
-
         //Part 2: Scenery
         this.generateSkybox();
-        this._lightingService.setUpLighting(this._gameInfo.scene);
+        this._lightingService.setUpLighting(this._scene);
 
         //Part 3: Components
         this.loadComponents();
@@ -119,11 +129,21 @@ export class RenderService {
     }
 
     public loadComponents() {
+        this.loadParticleService();
+        this.loadSoundService();
         this.loadTextureHandler();
         this.loadRink();
         this.loadArena();
         this.loadLine();
         this.loadBroom();
+    }
+
+    private loadParticleService() {
+        this._gameServices.particlesService = new ParticlesService(this._scene);
+    }
+
+    private loadSoundService() {
+        this._gameServices.soundService = SoundManager.getInstance();
     }
 
     public loadLine() {
@@ -144,7 +164,7 @@ export class RenderService {
         this._gameInfo.line.lineDashedMaterial = material;
         this._gameInfo.line.lineMesh = new Line(geometry, material);
         this._gameInfo.line.lineAnimationSlower = 0;
-        this._gameInfo.scene.add(this._gameInfo.line.lineMesh);
+        this._scene.add(this._gameInfo.line.lineMesh);
     }
 
     public linkRenderServerToCanvas(container: HTMLElement) {
@@ -171,13 +191,13 @@ export class RenderService {
         let material = new MultiMaterial(materialArray);
         let geometry = new CubeGeometry(200, 200, 200);
         this._mesh = new Mesh(geometry, material);
-        this._gameInfo.scene.add(this._mesh);
+        this._scene.add(this._mesh);
     }
 
     private loadTextureHandler() {
-        TextureHandler.createTextureHandler(this._gameInfo.scene)
+        TextureHandler.createTextureHandler(this._scene)
             .then((textureHandler: TextureHandler) => {
-                this._gameInfo.textureHandler = textureHandler;
+                this._gameServices.textureHandler = textureHandler;
                 this.onFinishedLoadingModel();
             })
             .catch((error) => {
@@ -186,7 +206,7 @@ export class RenderService {
             });
     }
     public loadBroom() {
-        Broom.createBroom(this._objectLoader, new Vector3(0, 0, -11.4))
+        Broom.createBroom(this._objectLoader, this._scene, new Vector3(0, 0, -11.4))
             .then((broom: Broom) => {
                 this._gameInfo.broom = broom;
                 this.onFinishedLoadingModel();
@@ -213,21 +233,24 @@ export class RenderService {
     private loadStoneHandler(rinkInfo: RinkInfo) {
         let stoneColor: StoneColor;
         stoneColor = this._gameInfo.gameStatus.currentPlayer === 0 ? StoneColor.Blue : StoneColor.Red;
-        this._gameInfo.stoneHandler = new StoneHandler(this._objectLoader, rinkInfo, stoneColor);
+        this._gameServices.stoneHandler = new StoneHandler(this._objectLoader, rinkInfo, this._scene, stoneColor);
         Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "stoneHandler",
-            { value: this._gameInfo.stoneHandler });
+            { value: this._gameServices.stoneHandler });
         Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "cameraService",
-            { value: this._gameInfo.cameraService });
+            { value: this._gameServices.cameraService });
+        /*
         this.initializeAllStates(stoneColor);
         this._gameInfo.gameState = LoadingStone.getInstance();
+        */
         this.onFinishedLoadingModel();
     }
 
+    /*
     private initializeAllStates(stoneColor: number) {
         let computerAI: ComputerAI;
-        if (this._userService.difficulty === Difficulty.NORMAL) {
+        if (this._gameServices.userService.difficulty === Difficulty.NORMAL) {
             computerAI = new NormalAI(this._gameInfo.rink);
-        } else if (this._userService.difficulty === Difficulty.HARD) {
+        } else if (this._gameServices.userService.difficulty === Difficulty.HARD) {
            computerAI = new HardAI(this._gameInfo.rink);
         }
         else {
@@ -241,9 +264,10 @@ export class RenderService {
         EndSet.createInstance(this._gameInfo);
         EndGame.createInstance(this._gameInfo);
     }
+    */
 
     public switchCamera() {
-        this._currentCamera = this._gameInfo.cameraService.nextCamera();
+        this._gameServices.cameraService.nextCamera();
         this._gameInfo.currentCamera = (this._gameInfo.currentCamera + 1) % CameraType.NB_CAMERAS;
         this.onResize();
     }
@@ -252,9 +276,9 @@ export class RenderService {
         ++this._numberOfModelsLoaded;
         if (!this._animationStarted && this._numberOfModelsLoaded >= RenderService.NUMBER_OF_MODELS_TO_LOAD) {
             this._animationStarted = true;
-            if (document.hasFocus()) {
-                this._clock.start();
-            }
+            StatesHandler.createInstance(this._gameServices, this._gameInfo, this._angularInfo);
+            StatesHandler.getInstance().startGame();
+            this._clock.start();
             // Add events here to be sure they won"t encounter undefined property
             window.addEventListener("mousemove", (event: MouseEvent) => this.onMouseMove(event));
             window.addEventListener("keydown", (event: KeyboardEvent) => this.switchSpin(event));
@@ -270,32 +294,15 @@ export class RenderService {
         if (this._clock.running === true) {
             let timePerFrame = this._clock.getDelta();
             //Execute the update action in the state
-            this._gameInfo.gameState.update(timePerFrame);
+            StatesHandler.getInstance().update(timePerFrame);
             //Update the other components
             let keys = Object.getOwnPropertyNames(this._gameInfo.gameComponentsToUpdate);
             keys.forEach((key: string) => {
                 this._gameInfo.gameComponentsToUpdate[key].update(timePerFrame);
             });
 
-            // Following Action only done at the end of the game
-            if (this._gameInfo.gameState === EndGame.getInstance()) {
-                // Following action only done once
-                if (!this._endStateAnimationStarted) {
-                    // We want the animation to be done in a perspective view
-                    this._endStateAnimationStarted = true;
-                    this.setEndGameView();
-                }
-                this._gameInfo.particlesService.update();
-            }
         }
-        this._renderer.render(this._gameInfo.scene, this._currentCamera);
-    }
-
-    private setEndGameView() {
-        if (this._currentCamera === this._gameInfo.cameraService.topViewCamera) {
-            this.switchCamera();
-        }
-        this._gameInfo.cameraService.moveCameraEndRink();
+        this._renderer.render(this._scene, this._gameServices.cameraService.currentCamera);
     }
 
     public toogleFocus(toogle: boolean) {
@@ -312,8 +319,8 @@ export class RenderService {
         let newWidth: number = window.innerWidth * factor;
         let newHeight: number = window.innerHeight * factor;
 
-        this._currentCamera.aspect = newWidth / newHeight;
-        this._currentCamera.updateProjectionMatrix();
+        this._gameServices.cameraService.currentCamera.aspect = newWidth / newHeight;
+        this._gameServices.cameraService.currentCamera.updateProjectionMatrix();
 
         this._renderer.setSize(newWidth, newHeight);
     }
@@ -322,8 +329,8 @@ export class RenderService {
         const width = window.innerWidth;
         const height = window.innerHeight;
 
-        this._currentCamera.aspect = width / height;
-        this._currentCamera.updateProjectionMatrix();
+        this._gameServices.cameraService.currentCamera.aspect = width / height;
+        this._gameServices.cameraService.currentCamera.updateProjectionMatrix();
 
         this._renderer.setSize(width, height);
     }
@@ -331,19 +338,19 @@ export class RenderService {
     switchSpin(event: KeyboardEvent) {
         let sKeyCode = 83;
         if (event.keyCode === sKeyCode) {
-            this._gameInfo.shotParameters.spin = (this._gameInfo.shotParameters.spin + 1) % 2;
+            StatesHandler.getInstance().onSpinButtonPressed();
         }
     }
 
     onMouseMove(event: MouseEvent) {
-        this._gameInfo.gameState.onMouseMove(event);
+        StatesHandler.getInstance().onMouseMove(event);
     }
 
     onMousePressed() {
-        this._gameInfo.gameState.onMouseButtonPress();
+        StatesHandler.getInstance().onMouseButtonPressed();
     }
 
     onMouseReleased() {
-        this._gameInfo.gameState.onMouseButtonReleased();
+        StatesHandler.getInstance().onMouseButtonReleased();
     }
 }

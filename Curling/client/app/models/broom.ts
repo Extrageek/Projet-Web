@@ -1,4 +1,4 @@
-import { ObjectLoader, Group, MeshPhongMaterial, Object3D, BoxGeometry, Vector3 } from "three";
+import { ObjectLoader, Group, MeshPhongMaterial, Object3D, BoxGeometry, Vector3, Scene } from "three";
 import { Stone } from "./stone";
 
 export class Broom extends Group {
@@ -11,21 +11,23 @@ export class Broom extends Group {
     //Bounding sphere used for collisions. Only works if the stones are displaced on the XZ plane.
     private _redBroom: Boolean;
     private _boundingSphere: THREE.Sphere;
+    private _scene: Scene;
 
-    public static createBroom(objectLoader: ObjectLoader, initialPosition: Vector3): Promise<Broom> {
+    public static createBroom(objectLoader: ObjectLoader, scene: Scene, initialPosition: Vector3): Promise<Broom> {
         return new Promise<Broom>((resolve, reject) => {
             objectLoader.load(
                 Broom.BROOM_PATH,
                 (obj: Object3D) => {
-                    resolve(new Broom(obj, initialPosition));
+                    resolve(new Broom(obj, scene, initialPosition));
                 }
             );
         });
     }
 
-    constructor(obj: Object3D, initialPosition: Vector3) {
+    constructor(obj: Object3D, scene: Scene, initialPosition: Vector3) {
         super();
         this.copy(<this>obj, true);
+        this._scene = scene;
         this._material = new MeshPhongMaterial(Broom.MATERIAL_PROPERTIES);
         this.position.set(initialPosition.x, initialPosition.y, initialPosition.z);
         this.scale.set(Broom.SCALE.x, Broom.SCALE.y, Broom.SCALE.z);
@@ -47,6 +49,14 @@ export class Broom extends Group {
 
     public isRed(): Boolean {
         return this._redBroom;
+    }
+
+    public showBroom() {
+        this._scene.add(this);
+    }
+
+    public hideBroom() {
+        this._scene.remove(this);
     }
 
     public verifyBroomCollision(stones: Stone[]) {
