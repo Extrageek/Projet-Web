@@ -4,8 +4,6 @@ import { Router } from "@angular/router";
 import { RestApiProxyService } from "./../services/rest-api-proxy.service";
 import { Record } from "../models/record";
 
-const RATIO_80_POURCENT = 0.8;
-
 @Component({
     selector: "leaderboard-component",
     templateUrl: "../../assets/templates/leaderboard-component.html",
@@ -48,7 +46,7 @@ export class LeaderboardComponent implements OnInit {
 
     public makeTableScroll() {
         let height = window.innerHeight;
-        this.leaderboard.nativeElement.style.height = (Math.round(height * RATIO_80_POURCENT)) + "px";
+        this.leaderboard.nativeElement.style.height = (Math.round(height)) + "px";
     }
 
     public returnMainPage(): void {

@@ -6,12 +6,9 @@ a {
     color: #00B7FF;
 }
 
-html {
+body{
     background-image: url("../images/curling.jpg");
     background-size: cover;
-}
-
-body{
   margin: 0px;
   overflow: hidden;
 }
