@@ -4,17 +4,19 @@ import { Router } from "@angular/router";
 import { RestApiProxyService } from "./../services/rest-api-proxy.service";
 import { UserService } from "./../services/user.service";
 import { GameStatusService } from "./../services/game-status.service";
+import { RenderService } from "../services/game-handler/render.service";
 
 @Component({
     moduleId: module.id,
     providers: [RestApiProxyService],
     selector: "display-component",
     templateUrl: "../../assets/templates/display-component.html",
-    styleUrls: ["../../assets/stylesheets/display-component.css", "../../assets/stylesheets/menu-hamburger.css"]
+    styleUrls: ["../../assets/stylesheets/display-component.css",
+                "../../assets/stylesheets/menu-hamburger.css",
+                "../../assets/stylesheets/gl-component.css"]
 })
 export class DisplayComponent implements OnInit {
     _userSetting: UserService;
-    _gameStatus: GameStatusService;
     _computerName: string;
 
     @ViewChild("hamburger") hamburger: ElementRef;
@@ -23,22 +25,36 @@ export class DisplayComponent implements OnInit {
     @HostListener("window:beforeunload")
     public async saveAndLogout() {
         await this.api.removeUsername(this._userSetting.name);
-        await this.api.createGameRecord(this._userSetting.name, this._userSetting.difficulty, this._gameStatus);
+        await this.api.createGameRecord(this._userSetting.name, this._userSetting.difficulty, this.gameStatusService);
+    }
+    
+    @HostListener("window:keydown.space", ["$event"])
+    public disableScrollingWithSpace(event: KeyboardEvent) {
+        event.preventDefault();
+    }
+
+    @HostListener("window:keyup.space", ["$event"])
+    public spaceKeyPressed(event: KeyboardEvent) {
+        this.renderService.switchCamera();
     }
 
     constructor(
         private router: Router,
         private api: RestApiProxyService,
         private userService: UserService,
-        private gameStatusService: GameStatusService) { }
+        private gameStatusService: GameStatusService,
+        private renderService: RenderService) { }
 
     ngOnInit() {
+        console.log("ngOnInit called");
         this._userSetting = this.userService;
         if (this._userSetting.name === "") {
             this.router.navigate(["/"]);
+        } else {
+            this.getComputerName();
+            console.log("starting game");
+            this.renderService.init();
         }
-        this._gameStatus = this.gameStatusService;
-        this.getComputerName();
     }
 
     public toggleOverlay(event: MouseEvent) {
@@ -52,7 +68,7 @@ export class DisplayComponent implements OnInit {
     }
 
     public gameOver() {
-        this.api.createGameRecord(this._userSetting.name, this._userSetting.difficulty, this._gameStatus);
+        this.api.createGameRecord(this._userSetting.name, this._userSetting.difficulty, this.gameStatusService);
         this.api.removeUsername(this._userSetting.name);
         this.router.navigate(["/"]);
     }

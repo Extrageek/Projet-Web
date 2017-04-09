@@ -18,26 +18,14 @@ import { CameraType } from "../game-physics/camera-type";
 import { StatesHandler } from "./states-handler";
 
 import { Rink } from "./../../models/scenery/rink";
-import { StoneColor } from "./../../models/stone";
 import { Arena } from "./../../models/scenery/arena";
 import { Broom } from "./../../models/broom";
-import { LoadingStone } from "./../../models/states/loading-stone";
-import { PlayerTurn } from "./../../models/states/player-turn";
-import { ComputerTurn } from "./../../models/states/computer-turn";
-import { PlayerShooting } from "./../../models/states/player-shooting";
-import { ComputerShooting } from "./../../models/states/computer-shooting";
-import { EndSet } from "./../../models/states/end-set";
-import { EndGame } from "./../../models/states/end-game";
-import { Difficulty } from "./../../models/difficulty";
 
+import { StoneColor } from "./../../models/stone";
 import { RinkInfo } from "./../../models/scenery/rink-info.interface";
 import { IGameInfo } from "./game-info.interface";
 import { IGameServices } from "./games-services.interface";
 import { IAngularInfo } from "./angular-info.interface";
-
-import { ComputerAI } from "../../models/AI/computerAI";
-import { HardAI } from "../../models/AI/hardAI";
-import { NormalAI } from "../../models/AI/normalAI";
 
 @Injectable()
 export class RenderService {
@@ -96,13 +84,7 @@ export class RenderService {
         this._objectLoader = new ObjectLoader();
     }
 
-    public init(container: HTMLElement) {
-
-        if (this._scene.children.length > 0) {
-            this.linkRenderServerToCanvas(container);
-            window.addEventListener("resize", _ => this.onResize());
-            return;
-        }
+    public init() {
         //Clock for the time per frame.
         this._clock = new Clock(false);
 
@@ -116,16 +98,24 @@ export class RenderService {
         //Part 3: Components
         this.loadComponents();
 
-        //Part 4: Service
-        this.linkRenderServerToCanvas(container);
-
         //Part 5: Events
         // bind to window resizes
         window.addEventListener("resize", _ => this.onResize());
     }
 
+    public putCanvasIntoHTMLElement(container: HTMLElement) {
+        if (this._renderer !== undefined) {
+            container.appendChild(this._renderer.domElement);
+        }
+    }
+
     get gameInfo(): IGameInfo {
         return this._gameInfo;
+    }
+
+    private startGame() {
+        StatesHandler.getInstance().startGame();
+        this._clock.start();
     }
 
     public loadComponents() {
@@ -165,13 +155,6 @@ export class RenderService {
         this._gameInfo.line.lineMesh = new Line(geometry, material);
         this._gameInfo.line.lineAnimationSlower = 0;
         this._scene.add(this._gameInfo.line.lineMesh);
-    }
-
-    public linkRenderServerToCanvas(container: HTMLElement) {
-        // Inser the canvas into the DOM
-        if (container.getElementsByTagName("canvas").length === 0) {
-            container.appendChild(this._renderer.domElement);
-        }
     }
 
     /**
@@ -238,33 +221,8 @@ export class RenderService {
             { value: this._gameServices.stoneHandler });
         Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "cameraService",
             { value: this._gameServices.cameraService });
-        /*
-        this.initializeAllStates(stoneColor);
-        this._gameInfo.gameState = LoadingStone.getInstance();
-        */
         this.onFinishedLoadingModel();
     }
-
-    /*
-    private initializeAllStates(stoneColor: number) {
-        let computerAI: ComputerAI;
-        if (this._gameServices.userService.difficulty === Difficulty.NORMAL) {
-            computerAI = new NormalAI(this._gameInfo.rink);
-        } else if (this._gameServices.userService.difficulty === Difficulty.HARD) {
-           computerAI = new HardAI(this._gameInfo.rink);
-        }
-        else {
-            throw new Error("Difficulty not reconized");
-        }
-        LoadingStone.createInstance(this._gameInfo, true);
-        PlayerTurn.createInstance(this._gameInfo);
-        ComputerTurn.createInstance(this._gameInfo, computerAI);
-        PlayerShooting.createInstance(this._gameInfo);
-        ComputerShooting.createInstance(this._gameInfo);
-        EndSet.createInstance(this._gameInfo);
-        EndGame.createInstance(this._gameInfo);
-    }
-    */
 
     public switchCamera() {
         this._gameServices.cameraService.nextCamera();
@@ -277,8 +235,7 @@ export class RenderService {
         if (!this._animationStarted && this._numberOfModelsLoaded >= RenderService.NUMBER_OF_MODELS_TO_LOAD) {
             this._animationStarted = true;
             StatesHandler.createInstance(this._gameServices, this._gameInfo, this._angularInfo);
-            StatesHandler.getInstance().startGame();
-            this._clock.start();
+            this.startGame();
             // Add events here to be sure they won"t encounter undefined property
             window.addEventListener("mousemove", (event: MouseEvent) => this.onMouseMove(event));
             window.addEventListener("keydown", (event: KeyboardEvent) => this.switchSpin(event));
