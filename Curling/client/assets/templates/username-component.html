@@ -1,4 +1,7 @@
 <form #f='ngForm' class="full-height user-setting">
+    <button  md-button type="button" id="leaderboardBtn" class="btn btn-primary btn-lg" (click)='goToLeaderBoard()'>
+        <p>Tableau des scores <span class="glyphicon glyphicon-stats" aria-hidden="true"></span></p>
+    </button>
     <div id="username" class="form-group user-setting-content">
         <div #alertBox class="alert alert-danger alert-dismissible fade show" role="alert">
             <button type="button" class="close" (click)="closeAlert()" aria-label="Close">
@@ -6,15 +9,12 @@
             </button>
             <strong>Pseudonyme déjà existant.</strong> Essayez-en un autre!
         </div>
-        <input id="loginInput" (change)="activateLoginNext()" class="shake" type='text' placeholder='Entrer votre pseudo...' 
-            #username />
+        <md-input-container>
+            <input id="loginInput" (change)="activateLoginNext()" class="shake" type='text' mdInput placeholder='Entrer votre pseudo...'
+                #username />
+        </md-input-container>
         <button id="loginNext" type="submit" class="btn btn-secondary btn-lg" *ngIf="_isLoginNextActivated" (click)="verifyUsername(username.value)">
             <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
         </button>
-        <div class="col-md-12">
-            <button type="button" id="leaderboardBtn" class="btn btn-primary btn-lg" (click)='goToLeaderBoard()'>
-                <p>Tableau des scores <span class="glyphicon glyphicon-stats" aria-hidden="true"></span></p>
-            </button>
-        </div>
     </div>
 </form>
