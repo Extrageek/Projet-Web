@@ -79,7 +79,7 @@ export class TextureHandler {
         return identifier;
     }
     public removeText(identifier: number) {
-        this._scene.remove(this._allTexts[identifier]);
+        this._scene.remove(this._allTexts[identifier].textMesh);
         delete this._allTexts[identifier];
     }
 }
