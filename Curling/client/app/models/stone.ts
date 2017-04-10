@@ -184,7 +184,7 @@ export class Stone extends Group implements GameComponent {
         let lowerBound = 0;
 
         let observer = {
-            next: (v: number) => {
+            next: (v: number) => { // Do not remove unused parameter
                 if (this.position.y > upperBound) {
                     incrementBounce = -incrementBounce;
                 } else if (this.position.y < lowerBound) {

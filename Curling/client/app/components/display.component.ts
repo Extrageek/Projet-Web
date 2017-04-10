@@ -8,7 +8,6 @@ import { RenderService } from "../services/game-handler/render.service";
 
 @Component({
     moduleId: module.id,
-    providers: [RestApiProxyService],
     selector: "display-component",
     templateUrl: "../../assets/templates/display-component.html",
     styleUrls: ["../../assets/stylesheets/display-component.css",

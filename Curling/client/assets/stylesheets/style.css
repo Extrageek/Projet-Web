@@ -6,14 +6,11 @@ a {
     color: #00B7FF;
 }
 
-html {
+body{
     background-image: url("../images/curling.jpg");
     background-size: cover;
-}
-
-body{
-  margin: 0px;
-  overflow: hidden;
+    margin: 0px;
+    overflow: hidden;
 }
 
 .user-setting {
@@ -22,7 +19,6 @@ body{
     position: absolute;
     left: 0;
     top: 0;
-    background-color: rgb(70,50,255); 
-    background-color: rgba(70,50,255, 0.9); 
+    background-color: rgba(122, 133, 255, 0.9);
     overflow-y: hidden;
 }

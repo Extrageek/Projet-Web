@@ -1,3 +1,4 @@
+import { Vector3 } from "three";
 import { AbstractGameState } from "./abstract-game-state";
 import { LoadingStone } from "./loading-stone";
 import { EndGame } from "./end-game";
@@ -8,9 +9,13 @@ import { IGameServices } from "../../services/game-handler/games-services.interf
 export class EndSet extends AbstractGameState {
 
     private static readonly NUMBER_OF_SETS_TO_PLAY = 3;
+    private static readonly TEXT_POSITION_ABOVE = new Vector3(6, 3, -11.4);
+    private static readonly TEXT_POSITION_BELOW = new Vector3(10, 1, -11.4);
+    private static readonly TEXT_COLOR = 0x000000;
 
     private static _instance: AbstractGameState = null;
-
+    private _newState : AbstractGameState = null;
+    private transitionText: number[] = new Array<number>();
     /**
      * Initialize the unique EndSet state.
      * @param gameInfo The informations to use by the state.
@@ -49,16 +54,22 @@ export class EndSet extends AbstractGameState {
             else if (points.player < points.computer) {
                 this._gameInfo.gameStatus.currentPlayer = CurrentPlayer.RED;
             }
-            newState = LoadingStone.getInstance();
+            this._newState = LoadingStone.getInstance();
+            this.transitionText.push(this._gameServices.textureHandler.addText(EndSet.TEXT_POSITION_ABOVE,
+                "Veuillez cliquez pour", EndSet.TEXT_COLOR));
+            this.transitionText.push(this._gameServices.textureHandler.addText(EndSet.TEXT_POSITION_BELOW,
+                "commencer la prochaine manche", EndSet.TEXT_COLOR));
         }
         else {
-            newState = EndGame.getInstance();
+            this.leaveState(EndGame.getInstance());
         }
-        this.leaveState(newState);
     }
 
     protected performLeavingState() {
-        //Nothing to do
+        this.transitionText.forEach((identifier: number) => {
+            this._gameServices.textureHandler.removeText(identifier);
+        });
+        this.transitionText.splice(0, this.transitionText.length);
     }
 
     protected performMouseMove(): AbstractGameState {
@@ -70,6 +81,6 @@ export class EndSet extends AbstractGameState {
     }
 
     protected performMouseButtonReleased(): AbstractGameState {
-        return null;
+        return this._newState;
     }
 }
