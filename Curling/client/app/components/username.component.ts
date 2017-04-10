@@ -24,15 +24,15 @@ export class UsernameComponent {
 
     public async verifyUsername(username: string) {
         await this.restApiProxyService.verifyUsername(username)
-        .then(result => {
-            this.alertBox.nativeElement.classList.add("fade");
-            this.userSettingService.name = username;
-            this.router.navigate(["/difficulty"]);
-        })
-        .catch(error => {
-            console.log(error);
-            this.alertBox.nativeElement.classList.remove("fade");
-        });
+            .then(result => {
+                this.alertBox.nativeElement.classList.add("fade");
+                this.userSettingService.name = username;
+                this.router.navigate(["/difficulty"]);
+            })
+            .catch(error => {
+                console.log(error);
+                this.alertBox.nativeElement.classList.remove("fade");
+            });
     }
 
     public activateLoginNext(username: string) {

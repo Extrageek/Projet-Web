@@ -297,7 +297,7 @@ export class StoneHandler implements GameComponent {
         return startingPoint.clone().sub(endingPoint).length();
     }
 
-    public bounceWinningPlayerStones(stoneColor : StoneColor) {
+    public bounceWinningPlayerStones(stoneColor: StoneColor) {
         let source = new IntervalObservable(StoneHandler.FIFTY_MILLISECONDS);
         let subject = new Subject();
         let subscriptions = new Array<Subscription>();

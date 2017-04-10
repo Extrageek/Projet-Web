@@ -58,8 +58,8 @@ export class RenderService {
             stoneHandler: null,
             textureHandler: null,
             userService: userService
-        }
-        
+        };
+
         this._gameInfo = {
             gameStatus: gameStatusService,
             broom: null,
@@ -74,7 +74,8 @@ export class RenderService {
             isSelectingPower: false,
             powerBar: 0,
             spin: 0
-        }
+        };
+
         this._lightingService = lightingService;
         this._gameInfo.gameStatus.randomFirstPlayer();
         this._animationStarted = false;

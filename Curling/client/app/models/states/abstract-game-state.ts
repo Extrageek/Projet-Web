@@ -32,7 +32,7 @@ export abstract class AbstractGameState implements GameComponent {
         if (gameInfo === null || gameInfo === undefined) {
             throw new Error("The game info parameter cannot be null or undefined.");
         }
-        if (gameServices === null || gameServices == undefined) {
+        if (gameServices === null || gameServices === undefined) {
             throw new Error("The game services parameter cannot be null or undefined.");
         }
         this._gameServices = gameServices;
@@ -45,7 +45,9 @@ export abstract class AbstractGameState implements GameComponent {
      * @param onChangingState A function to call with the new state as a parameter when the state changes.
      *    This function should be handled by the StatesHandler.
      */
-    public beginWithThisState(onChangingState = (abstractGameState: AbstractGameState) => {}) {
+    public beginWithThisState(onChangingState = (abstractGameState: AbstractGameState) => {
+        //Nothing for Abstract State
+    }) {
         if (AbstractGameState.hasDoneInitialization) {
             throw new Error("A state has already been initialized.");
         }

@@ -53,7 +53,7 @@ export class ComputerTurn extends AbstractGameState {
         let nearestPlayerStone = this._gameServices.stoneHandler.findClosestCenterStonePosition(StoneColor.Blue);
         let shotParameters;
         if (nearestPlayerStone !== undefined) {
-             shotParameters = this._computerAI.determineShotParametersOnStone(nearestPlayerStone);
+            shotParameters = this._computerAI.determineShotParametersOnStone(nearestPlayerStone);
         } else {
             shotParameters = this._computerAI.determineShotParametersOnCenter();
         }

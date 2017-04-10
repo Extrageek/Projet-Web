@@ -14,7 +14,7 @@ export class EndSet extends AbstractGameState {
     private static readonly TEXT_COLOR = 0x000000;
 
     private static _instance: AbstractGameState = null;
-    private _newState : AbstractGameState = null;
+    private _newState: AbstractGameState = null;
     private transitionText: number[] = new Array<number>();
     /**
      * Initialize the unique EndSet state.

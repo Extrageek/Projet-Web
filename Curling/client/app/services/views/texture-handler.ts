@@ -55,7 +55,7 @@ export class TextureHandler {
         };
     }
 
-    public addText (
+    public addText(
         position: Vector3,
         texte: string,
         colorHexCode: number,
@@ -65,7 +65,7 @@ export class TextureHandler {
         textGeometry.computeBoundingBox();
         let textMaterial = new MeshBasicMaterial({ color: colorHexCode });
         let textMesh = new Mesh(textGeometry, textMaterial);
-        textMesh.rotation.set( Math.PI / 10, Math.PI, 0);
+        textMesh.rotation.set(Math.PI / 10, Math.PI, 0);
         textMesh.position.set(position.x, position.y, position.z);
         this._scene.add(textMesh);
 

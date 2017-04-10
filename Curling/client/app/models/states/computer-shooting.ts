@@ -28,7 +28,7 @@ export class ComputerShooting extends AbstractGameState {
         return ComputerShooting._instance;
     }
 
-    private constructor(gameServices:IGameServices, gameInfo: IGameInfo) {
+    private constructor(gameServices: IGameServices, gameInfo: IGameInfo) {
         super(gameServices, gameInfo);
     }
 

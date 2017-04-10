@@ -35,7 +35,7 @@ export class StatesHandler implements GameComponent {
 
     public static getInstance() {
         if (StatesHandler._statesHandler === undefined) {
-           throw new Error("The createInstance method must be called before getting the instance.");
+            throw new Error("The createInstance method must be called before getting the instance.");
         }
         return this._statesHandler;
     }

@@ -228,7 +228,7 @@ export class PhysicEngine implements GameComponent {
         this._direction.applyAxisAngle(PhysicEngine.Y_AXIS, this._theta);
         this._position.add(this._direction.clone().multiplyScalar(
             this._speed * timePerFrame - PhysicEngine.SPEED_DIMINUTION_NUMBER * Math.pow(timePerFrame, 2) / 2
-            )
+        )
         );
     }
 
