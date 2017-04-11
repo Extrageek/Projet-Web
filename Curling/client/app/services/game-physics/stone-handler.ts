@@ -1,9 +1,9 @@
 import { ObjectLoader, Vector3, Box3, Scene } from 'three';
-import { RinkInfo } from '../../models/scenery/rink-info.interface';
+import { IRinkInfo } from '../../models/scenery/rink-info.interface';
 import { Stone, StoneColor } from '../../models/stone';
-import { GameComponent } from '../../models/game-component.interface';
+import { GameState } from '../../models/game-component.interface';
 import { SoundManager } from "../sound-manager";
-import { ShotParameters } from "../../models/shot-parameters.interface";
+import { IShotParameters } from "../../models/shot-parameters.interface";
 import { IntervalObservable } from "rxjs/observable/IntervalObservable";
 import { Subject } from "rxjs/Subject";
 import { Subscription } from "rxjs";
@@ -16,14 +16,14 @@ export interface Points {
     computer: number;
 }
 
-export class StoneHandler implements GameComponent {
+export class StoneHandler implements GameState {
     public static readonly COLLISION_SPEED_KEEP_PERCENT = 0.85;
     public static readonly COLLISION_SPEED_TRANSFERED_PERCENT = 0.85;
 
     private static readonly FIVE_SECOND = 5000;
     private static readonly FIFTY_MILLISECONDS = 50;
 
-    private _rinkInfo: RinkInfo;
+    private _rinkInfo: IRinkInfo;
     private _scene: Scene;
     private _currentPlayer: StoneColor;
     private _objectLoader: ObjectLoader;
@@ -35,7 +35,7 @@ export class StoneHandler implements GameComponent {
     private _invalidAreaForStonesToBeIn: Box3;
     private _stonesGivingPoints: Stone[];
 
-    constructor(objectLoader: ObjectLoader, rinkInfo: RinkInfo, scene: Scene, firstPlayer: StoneColor) {
+    constructor(objectLoader: ObjectLoader, rinkInfo: IRinkInfo, scene: Scene, firstPlayer: StoneColor) {
         this._rinkInfo = rinkInfo;
         this._scene = scene;
         this._currentPlayer = firstPlayer - 1;
@@ -63,7 +63,7 @@ export class StoneHandler implements GameComponent {
     }
 
     public performShot(
-        shotParameters: ShotParameters,
+        shotParameters: IShotParameters,
         callbackWhenShotFinished: Function = () => {/*Do nothing by default*/ }
     ) {
         if (this._stoneOnTheGame.length === 0) {

@@ -1,5 +1,5 @@
 import { ObjectLoader, Group, MeshPhongMaterial, Object3D, Sphere, Vector3, Matrix3 } from "three";
-import { GameComponent } from "./game-component.interface";
+import { IGameState } from "./game-state.interface";
 import { PhysicEngine } from "../services/game-physics/physic-engine";
 import { Observable } from "rxjs/Observable";
 
@@ -14,7 +14,7 @@ export enum StoneColor {
     NumberOfColors = 2
 }
 
-export class Stone extends Group implements GameComponent {
+export class Stone extends Group implements IGameState {
 
     private static readonly STONES_PATH = [
         "/assets/models/json/curling-stone-blue.json",

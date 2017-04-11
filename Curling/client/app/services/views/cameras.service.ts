@@ -1,21 +1,21 @@
 import { Injectable } from "@angular/core";
 import { Object3D, PerspectiveCamera, Vector3 } from "three";
-import { GameComponent } from "../../models/game-component.interface";
+import { IGameState } from "../../models/game-state.interface";
 import { SoundManager } from "../sound-manager";
 
-interface FollowInformation {
+interface IFollowInformation {
     objectToFollow: Object3D;
     objectWhoFollow: Object3D;
     distanceVector: Vector3;
 }
 
-interface FollowUpdate {
-    followInformation: FollowInformation;
+interface IFollowUpdate {
+    followInformation: IFollowInformation;
     functionToApply: Function;
 }
 
 @Injectable()
-export class CameraService implements GameComponent {
+export class CameraService implements IGameState {
     private static readonly FIELD_OF_VIEW = 65;
     public static readonly INITIAL_POSITION_P = { x: 0, y: 6, z: -24 };
     private static readonly POINT_TO_P = { x: 0, y: 0, z: -10 };
@@ -26,13 +26,13 @@ export class CameraService implements GameComponent {
     private static readonly TOPVIEW_CAMERA_INDEX = 1;
 
     private _cameras: PerspectiveCamera[];
-    private _camerasToUpdate: FollowUpdate[];
+    private _camerasToUpdate: IFollowUpdate[];
     private _lastCameraUsedIndex: number;
     private _perspectiveCameraMoving: boolean;
 
     constructor() {
         this._cameras = new Array<PerspectiveCamera>();
-        this._camerasToUpdate = new Array<FollowUpdate>();
+        this._camerasToUpdate = new Array<IFollowUpdate>();
         this._perspectiveCameraMoving = false;
         this._lastCameraUsedIndex = 0;
         this.createNewPerspectiveCamera(CameraService.INITIAL_POSITION_P, CameraService.POINT_TO_P);
@@ -97,7 +97,7 @@ export class CameraService implements GameComponent {
     public stopPerspectiveCameraToFollowObjectOnZ() {
         if (this._perspectiveCameraMoving) {
             this._perspectiveCameraMoving = false;
-            let index = this._camerasToUpdate.findIndex((element: FollowUpdate) => {
+            let index = this._camerasToUpdate.findIndex((element: IFollowUpdate) => {
                 return element.followInformation.objectWhoFollow ===
                     this._cameras[CameraService.PERSPECTIVE_CAMERA_INDEX];
             });
@@ -107,7 +107,7 @@ export class CameraService implements GameComponent {
         }
     }
 
-    private followObjectOnZAxis(informations: FollowInformation) {
+    private followObjectOnZAxis(informations: IFollowInformation) {
         informations.objectWhoFollow.position.z =
             informations.objectToFollow.position.z + informations.distanceVector.z;
     }
@@ -121,7 +121,7 @@ export class CameraService implements GameComponent {
     }
 
     public update(timePerFrame: number): void {
-        this._camerasToUpdate.map((element: FollowUpdate, index: number, updateArray: FollowUpdate[]) => {
+        this._camerasToUpdate.map((element: IFollowUpdate, index: number, updateArray: IFollowUpdate[]) => {
             element.functionToApply(element.followInformation);
         });
     }

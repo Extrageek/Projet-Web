@@ -2,14 +2,14 @@ import { Vector3 } from "three";
 import { StoneSpin } from "../stone";
 import { IGameInfo } from "../../services/game-handler/game-info.interface";
 import { IGameServices } from "../../services/game-handler/games-services.interface";
-import { ShotParameters } from "../shot-parameters.interface";
-import { GameComponent } from "../game-component.interface";
+import { IShotParameters } from "../shot-parameters.interface";
+import { IGameState } from "../game-state.interface";
 
-export abstract class AbstractGameState implements GameComponent {
+export abstract class AbstractGameState implements IGameState {
 
     private static hasDoneInitialization = false;
     //For states that need parameters for shooting
-    protected static shotParameters: ShotParameters = {
+    protected static shotParameters: IShotParameters = {
         spin: StoneSpin.Clockwise,
         direction: new Vector3(0, 0, 1),
         power: 0
