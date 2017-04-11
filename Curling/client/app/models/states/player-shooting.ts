@@ -66,10 +66,10 @@ export class PlayerShooting extends AbstractGameState {
 
         let currentCamera: THREE.Camera;
         if (this._gameInfo.currentCamera === CameraType.PERSPECTIVE_CAM) {
-            currentCamera = this._gameServices.cameraService.perspectiveCamera;
+            currentCamera = this._gameServices.cameraService.getPerspectiveCamera();
         }
         else if (this._gameInfo.currentCamera === CameraType.ORTHOGRAPHIC_CAM) {
-            currentCamera = this._gameServices.cameraService.topViewCamera;
+            currentCamera = this._gameServices.cameraService.getTopViewCamera();
         }
 
         let x = (event.clientX / window.innerWidth) * 2 - 1;

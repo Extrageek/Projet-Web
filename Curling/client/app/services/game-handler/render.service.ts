@@ -189,6 +189,7 @@ export class RenderService {
                 console.log(error);
             });
     }
+
     public loadBroom() {
         Broom.createBroom(this._objectLoader, this._scene, new Vector3(0, 0, -11.4))
             .then((broom: Broom) => {
@@ -258,7 +259,6 @@ export class RenderService {
             keys.forEach((key: string) => {
                 this._gameInfo.gameComponentsToUpdate[key].update(timePerFrame);
             });
-
         }
         this._renderer.render(this._scene, this._gameServices.cameraService.currentCamera);
     }

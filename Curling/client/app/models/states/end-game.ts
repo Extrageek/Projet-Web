@@ -37,15 +37,16 @@ export class EndGame extends AbstractGameState {
     }
 
     protected performEnteringState() {
-        this._gameServices.cameraService.perspectiveCamera;
+        this._gameServices.cameraService.getPerspectiveCamera();
         this._gameServices.cameraService.moveCameraEndRink();
         Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "particleService",
             { value: this._gameServices.particlesService });
-        this.addEndGameText();
+        this._gameServices.particlesService.addParticulesToScene();
+        this.addEndGameAnimation();
         this._gameInfo.gameStatus.gameIsFinished();
     }
 
-    private addEndGameText() {
+    private addEndGameAnimation() {
         if (this._gameInfo.gameStatus.scorePlayer > this._gameInfo.gameStatus.scoreComputer) {
             this._gameServices.stoneHandler.bounceWinningPlayerStones(StoneColor.Blue);
             this._gameServices.textureHandler.addText(EndGame.TEXT_POSITION, "Vous avez gagne!", EndGame.BLUE);
