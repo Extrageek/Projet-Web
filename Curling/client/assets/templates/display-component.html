@@ -1,4 +1,3 @@
-
 <div class="menu-nav">
     <button #hamburger (mousedown)="toggleOverlay($event)" class="hamburger hamburger--elastic pull-right" type="button">
         <span class="hamburger-box">
@@ -11,30 +10,24 @@
 
 <div class="col-sm-12">
     <modifier [container]="container"> </modifier>
-    <md-progress-bar
-        *ngIf="renderService._angularInfo.isSelectingPower"
-        class="power-bar"
-        color="primary"
-        mode="determinate"
+    <md-progress-bar *ngIf="renderService._angularInfo.isSelectingPower" class="power-bar" color="primary" mode="determinate"
         [value]="renderService._angularInfo.powerBar">
     </md-progress-bar>
 
     <div *ngIf="renderService._angularInfo.isSelectingPower
         && renderService._angularInfo !== null
-        && renderService._angularInfo.spin === 1"
-        class="clockwiseArrow">
-            <img src=" ../../assets/images/clockwise-arrow.png" alt="Sens horaire" height="30vw" width="30vw">
+        && renderService._angularInfo.spin === 1" class="clockwiseArrow">
+        <img src=" ../../assets/images/clockwise-arrow.png" alt="Sens horaire" height="30vw" width="30vw">
     </div>
 
     <div *ngIf="renderService._angularInfo.isSelectingPower
         && renderService._angularInfo.spin !== null
-        && renderService._angularInfo.spin === 0"
-        class="counterclockwiseArrow">
-            <img src=" ../../assets/images/counterclockwise-arrow.png" alt="Sens anti-horaire" height="30vw" width="30vw">
+        && renderService._angularInfo.spin === 0" class="counterclockwiseArrow">
+        <img src=" ../../assets/images/counterclockwise-arrow.png" alt="Sens anti-horaire" height="30vw" width="30vw">
     </div>
 
     <div #container id="threejs"> </div>
- </div>
+</div>
 
 <div id="display-component">
     <div class="col-sm-12">
@@ -48,7 +41,7 @@
                 {{gameStatusService.scorePlayer}} - {{gameStatusService.scoreComputer}}
             </div>
             <div id="gameSet" class="col-sm-12">
-               <!--TODO : METTRE NG-FOR-->
+                <!--TODO : METTRE NG-FOR-->
                 <div class="col-sm-5">
                     <div *ngIf="gameStatusService.currentSet < 1" id="firstSetToDo" class="pull-right"></div>
                     <div *ngIf="gameStatusService.currentSet >= 1" id="firstSetDone" class="pull-right"></div>
@@ -131,7 +124,12 @@
 <!-- The overlay -->
 <div #overlay id="myNav" class="overlay">
     <div class="overlay-content">
-        <p (click)="gameOver()"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Abandonner</p>
-        <p (click)="gameStatusService.resetGameStatus()"><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span> Recommencer</p>
+        <p><span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
+            <a href="#" (click)="gameOver()">Abandonner</a>
+        </p>
+        <p (click)="gameStatusService.resetGameStatus()">
+            <span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span>
+            <a href="#" (click)="gameOver()">Recommencer</a>
+        </p>
     </div>
 </div>

@@ -1,5 +1,5 @@
 import { Vector3 } from "three";
-import { GameState } from "../../models/game-component.interface";
+import { IGameState } from "../../models/game-state.interface";
 import { IShotParameters } from "../../models/shot-parameters.interface";
 import { StoneSpin } from "../../models/stone";
 
@@ -7,7 +7,7 @@ import { StoneSpin } from "../../models/stone";
  * Class to calculate the physic movement of the stones on the game and automatically update the position.
  * It is created to be used on the XZ plane.
  */
-export class PhysicEngine implements GameState {
+export class PhysicEngine implements IGameState {
 
     public static readonly THETA = Math.PI / 25000;
     public static readonly Y_AXIS = new Vector3(0, 1, 0);

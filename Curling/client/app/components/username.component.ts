@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from "@angular/core";
+import { Component, ViewChild, ElementRef, OnInit, Input } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { RestApiProxyService } from "./../services/rest-api-proxy.service";
@@ -10,7 +10,8 @@ import { UserService } from "./../services/user.service";
     templateUrl: "../../assets/templates/username-component.html",
     styleUrls: ["../../assets/stylesheets/username-component.css"]
 })
-export class UsernameComponent {
+export class UsernameComponent implements OnInit {
+
     public _isLoginNextActivated = false;
     public _username: string;
 
@@ -20,6 +21,10 @@ export class UsernameComponent {
         private router: Router,
         private restApiProxyService: RestApiProxyService,
         private userSettingService: UserService) {
+    }
+
+    ngOnInit() {
+        this.alertBox.nativeElement.classList.add("fade");
     }
 
     public async verifyUsername(username: string) {

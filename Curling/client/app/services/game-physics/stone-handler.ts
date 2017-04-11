@@ -1,7 +1,7 @@
 import { ObjectLoader, Vector3, Box3, Scene } from 'three';
 import { IRinkInfo } from '../../models/scenery/rink-info.interface';
 import { Stone, StoneColor } from '../../models/stone';
-import { GameState } from '../../models/game-component.interface';
+import { IGameState } from '../../models/game-state.interface';
 import { SoundManager } from "../sound-manager";
 import { IShotParameters } from "../../models/shot-parameters.interface";
 import { IntervalObservable } from "rxjs/observable/IntervalObservable";
@@ -16,7 +16,7 @@ export interface Points {
     computer: number;
 }
 
-export class StoneHandler implements GameState {
+export class StoneHandler implements IGameState {
     public static readonly COLLISION_SPEED_KEEP_PERCENT = 0.85;
     public static readonly COLLISION_SPEED_TRANSFERED_PERCENT = 0.85;
 
