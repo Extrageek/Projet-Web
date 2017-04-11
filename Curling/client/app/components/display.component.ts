@@ -73,4 +73,13 @@ export class DisplayComponent implements OnInit {
         this.api.removeUsername(this._userSetting.name);
         this.router.navigate(["/"]);
     }
+
+    public restartGame(): void {
+
+        console.log(this.userService.name);
+        
+       // this._userSetting.name
+        //this.gameStatusService.resetGameStatus();
+        this.router.navigate(["/difficulty"]);
+    }
 }
