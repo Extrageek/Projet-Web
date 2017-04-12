@@ -40,7 +40,11 @@ export class VerificationService {
 
         if (wordOrientation === CommandsHelper.HORIZONTAL_ORIENTATION) {
             // verify the initial word
-            areValidWords = this.verifyWordHorizontal(board, firstRowIndex, firstColumnIndex, initialWord);
+            let leftPartOfWord = this.discoverLeftPartOfWord(board, board.squares[firstRowIndex][firstColumnIndex]);
+            let rightPartOfWord = this.discoverRightPartOfWord(board,
+                board.squares[firstRowIndex][firstColumnIndex + initialWord.length]);
+            areValidWords = this.verifyWordHorizontal(board, firstRowIndex, firstColumnIndex,
+                leftPartOfWord + initialWord + rightPartOfWord);
             board.lastLettersAdded.forEach((squarePosition: SquarePosition) => {
                 let word = "";
                 let rowIndex = BoardHelper.convertCharToIndex(squarePosition.row);
@@ -56,7 +60,11 @@ export class VerificationService {
 
         } else if (wordOrientation === CommandsHelper.VERTICAL_ORIENTATION) {
             // verify the initial word
-            areValidWords = this.verifyWordVertical(board, firstRowIndex, firstColumnIndex, initialWord);
+            let topPartOfWord = this.discoverTopPartOfWord(board, board.squares[firstRowIndex][firstColumnIndex]);
+            let downPartOfWord = this.discoverDownPartOfWord(board,
+                board.squares[firstRowIndex + initialWord.length][firstColumnIndex]);
+            areValidWords = this.verifyWordVertical(board, firstRowIndex, firstColumnIndex,
+                topPartOfWord + initialWord + downPartOfWord);
             board.lastLettersAdded.forEach((squarePosition: SquarePosition) => {
                 let word = "";
                 let rowIndex = BoardHelper.convertCharToIndex(squarePosition.row);

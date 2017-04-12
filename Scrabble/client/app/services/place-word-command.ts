@@ -69,10 +69,10 @@ export class PlaceWordCommand implements ICommand {
         this.throwsErrorIfParameterIsNull(lettersInEasel);
 
         // get the differents sections of the request
-        let requestElement = this._parameters.split(' ');
+        let requestElement = this._parameters.split(" ");
 
         // Get the position of the word to be placed
-        let position = requestElement[CommandsHelper.FIRST_INDEX].split('');
+        let position = requestElement[CommandsHelper.FIRST_INDEX].split("");
         let enteredWord = requestElement[CommandsHelper.SECOND_INDEX];
         let wordToBePlaced = this.extractWordLettersFromEnteredString(enteredWord);
 
@@ -101,10 +101,6 @@ export class PlaceWordCommand implements ICommand {
 
     private extractWordPosition(wordPosition: Array<string>):
         { squarePosition: ISquarePosition, orientation: string } {
-        // if (wordPosition.length < CommandsHelper.MIN_POSITION_VALUE
-        //     || wordPosition.length > CommandsHelper.MAX_POSITION_VALUE) {
-        //     return false;
-        // }
         // Get the position of the word to be placed
         let rowIndex = wordPosition[CommandsHelper.FIRST_INDEX];
         let colIndex = Number(wordPosition[CommandsHelper.SECOND_INDEX]);
@@ -133,29 +129,23 @@ export class PlaceWordCommand implements ICommand {
     }
 
     public isScrabbleLetters(enteredLetters: Array<string>): boolean {
-        let notScrabbleLetters = new Array<string>();
-
         if (enteredLetters.length === 0) {
             return false;
         }
 
-        notScrabbleLetters = enteredLetters.filter((value) => {
-            return !(LetterHelper.LETTER_A_KEY_CODE <= value.charCodeAt(0)
-                && value.charCodeAt(0) <= LetterHelper.LETTER_Z_KEY_CODE)
-                && value !== CommandsHelper.BLANK_VALUE;
+        let areValidLetters = true;
+        enteredLetters.forEach((letter: string) => {
+            if (areValidLetters) {
+                areValidLetters = (LetterHelper.isLetterCapital(letter) || LetterHelper.isLetter(letter));
+            }
         });
-        return (notScrabbleLetters.length === 0);
+        return areValidLetters;
     }
 
     private extractWordLettersFromEnteredString(enteredWord: string): Array<string> {
         let wordToBePlaced: Array<string>;
         if (enteredWord !== undefined) {
-            wordToBePlaced = this._easelManagerService.parseStringToListofChar(enteredWord);
-            wordToBePlaced.forEach((letter) => {
-                if (letter === CommandsHelper.BLANK_VALUE) {
-                    letter = CommandsHelper.BLANK_WORD;
-                }
-            });
+            wordToBePlaced = this._easelManagerService.parseStringToListOfChar(enteredWord);
             return wordToBePlaced;
         }
     }
@@ -163,8 +153,8 @@ export class PlaceWordCommand implements ICommand {
     public isValidRowPosition(letter: string): boolean {
         this.throwsErrorIfParameterIsEmpty(letter);
         let keyCode = letter.toUpperCase().charCodeAt(0);
-        return keyCode >= LetterHelper.LETTER_A_KEY_CODE
-            && keyCode <= LetterHelper.LETTER_O_KEY_CODE;
+        return keyCode >= LetterHelper.LETTER_A_CAPITAL_KEY_CODE
+            && keyCode <= LetterHelper.LETTER_O_CAPITAL_KEY_CODE;
     }
 
     public isValidColumnPosition(index: number): boolean {

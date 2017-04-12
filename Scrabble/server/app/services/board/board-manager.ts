@@ -7,6 +7,7 @@ import { LetterHelper } from "../../models/commons/letter-helper";
 import { Player } from "../../models/player";
 import { Board } from "../../models/board/board";
 import { Letter } from "../../models/letter";
+import { Alphabet } from "../../models/commons/alphabet";
 import { SquareType } from "../../models/square/square-type";
 import { IPlaceWordResponse } from "../commons/command/place-word-response.interface";
 import { LetterBankHandler } from "../letterbank-handler";
@@ -56,11 +57,11 @@ export class BoardManager {
         let isPlaced = false;
         if (response._wordOrientation === CommandsHelper.HORIZONTAL_ORIENTATION) {
             isPlaced = this.placeWordInHorizontalOrientation(
-                firstRowIndex, firstColumnIndex, scrabbleLetters);
+                firstRowIndex, firstColumnIndex, scrabbleLetters, letters);
 
         } else if (response._wordOrientation === CommandsHelper.VERTICAL_ORIENTATION) {
             isPlaced = this.placeWordInVerticalOrientation(
-                firstRowIndex, firstColumnIndex, scrabbleLetters);
+                firstRowIndex, firstColumnIndex, scrabbleLetters, letters);
         }
 
         if (isPlaced) {
@@ -73,12 +74,13 @@ export class BoardManager {
     private placeWordInHorizontalOrientation(
         firstRowIndex: number,
         columnIndex: number,
-        letters: Array<Letter>): boolean {
+        scrabbleLetters: Array<Letter>,
+        trueWord: Array<string>): boolean {
 
         let request: IValidationRequest = {
             _firstRowNumber: firstRowIndex,
             _columnIndex: columnIndex,
-            _letters: letters,
+            _letters: scrabbleLetters,
             _player: this._player
         };
 
@@ -87,7 +89,7 @@ export class BoardManager {
         }
 
         this._board.resetLastLettersAdded();
-        for (let index = 0; index < letters.length; index++) {
+        for (let index = 0; index < scrabbleLetters.length; index++) {
             let nextColumnIndex = columnIndex + index;
 
             // Get the row number from the given letter
@@ -95,26 +97,31 @@ export class BoardManager {
 
             if (!currentSquare.isBusy) {
                 this._board.squares[firstRowIndex][nextColumnIndex].squareValue =
-                    letters[index].alphabetLetter;
-                this._board.squares[firstRowIndex][nextColumnIndex].letter = letters[index];
+                    scrabbleLetters[index].alphabetLetter;
+                this._board.squares[firstRowIndex][nextColumnIndex].letter = scrabbleLetters[index];
+                if (scrabbleLetters[index].alphabetLetter === Alphabet.blank.letter) {
+                    this._board.squares[firstRowIndex][nextColumnIndex].letter.alphabetLetter
+                        = trueWord[index].toUpperCase();
+                }
                 this._board.squares[firstRowIndex][nextColumnIndex].isBusy = true;
-                this._player.easel.removeLetter(letters[index].alphabetLetter);
+                this._player.easel.removeLetter(scrabbleLetters[index].alphabetLetter);
+                console.log("REMOVE LETTER -- ", scrabbleLetters[index].alphabetLetter);
                 this._board.addLastLetterAdded(firstRowIndex, nextColumnIndex);
             }
         }
-
         return true;
     }
 
     private placeWordInVerticalOrientation(
         firstRowIndex: number,
         columnIndex: number,
-        letters: Array<Letter>): boolean {
+        scrabbleLetters: Array<Letter>,
+        trueWord: Array<string>): boolean {
 
         let request: IValidationRequest = {
             _firstRowNumber: firstRowIndex,
             _columnIndex: columnIndex,
-            _letters: letters,
+            _letters: scrabbleLetters,
             _player: this._player
         };
 
@@ -123,16 +130,20 @@ export class BoardManager {
         }
 
         this._board.resetLastLettersAdded();
-        for (let index = 0; index < letters.length; index++) {
+        for (let index = 0; index < scrabbleLetters.length; index++) {
             let nextRowIndex = firstRowIndex + index;
             let nextSquare = this._board.squares[nextRowIndex][columnIndex];
 
             if (!nextSquare.isBusy) {
                 this._board.squares[nextRowIndex][columnIndex].squareValue =
-                    letters[index].alphabetLetter;
-                this._board.squares[nextRowIndex][columnIndex].letter = letters[index];
+                    scrabbleLetters[index].alphabetLetter;
+                this._board.squares[nextRowIndex][columnIndex].letter = scrabbleLetters[index];
+                if (scrabbleLetters[index].alphabetLetter === Alphabet.blank.letter) {
+                    this._board.squares[nextRowIndex][columnIndex].letter.alphabetLetter
+                        = trueWord[index].toUpperCase();
+                }
                 this._board.squares[nextRowIndex][columnIndex].isBusy = true;
-                this._player.easel.removeLetter(letters[index].alphabetLetter);
+                this._player.easel.removeLetter(scrabbleLetters[index].alphabetLetter);
                 this._board.addLastLetterAdded(nextRowIndex, columnIndex);
             }
         }

@@ -20,15 +20,14 @@ export class LetterBankHandler {
         this._bank = new LetterBank();
     }
 
-    public initializeEasel(): Array<string> {
-        let newEasel = this.getLetterFromBank(FULL_EASEL);
-        return this.parseFromListOfLetterToListOfString(newEasel);
+    public initializeEasel(): Array<Letter> {
+        return this.getLetterFromBank(FULL_EASEL);
     }
 
     public exchangeLetters(lettersToBeChanged: Array<string>): Array<string> {
         let newLetters = new Array<Letter>();
         if (lettersToBeChanged.length < this.bank.numberOfLettersInBank) {
-            this.putLetterBackInBank(this.parseFromListOfStringToListOfLetter(lettersToBeChanged));
+            this.putLetterBackInBank(this.parseFromListOfStringToListOfLetterForExchange(lettersToBeChanged));
             newLetters = this.getLetterFromBank(lettersToBeChanged.length);
         }
 
@@ -68,16 +67,13 @@ export class LetterBankHandler {
         for (let index = 0; index < lettersToBeChanged.length; index++) {
             this.bank.putLetterBackInBank(lettersToBeChanged[index]);
         }
-        // lettersToBeChanged.map((letter) => {
-        //     this.bank.putLetterBackInBank(letter);
-        // } );
     }
 
     private getRandomLetter(): number {
         let randomNumber = (Math.random() * (1 - Math.random()) / (1 - Math.random()));
         // console.log("randomNumber: ", randomNumber);
-        let offset = MAX_LETTER_POSITION - MIN_LETTER_POSITION;
-        return Math.floor((randomNumber * offset) % offset + MIN_LETTER_POSITION);
+        let offset = MAX_LETTER_POSITION - MIN_LETTER_POSITION; //this._bank.numberOfLettersInBank;
+        return Math.floor((randomNumber * offset) % offset);
     }
 
     public parseFromListOfStringToListOfLetter(alphabets: Array<string>): Array<Letter> {
@@ -85,15 +81,36 @@ export class LetterBankHandler {
         if (alphabets === null) {
             throw new Error("Null argument error: the letters cannot be null");
         }
-
+        console.log("parseFromListtoLetter");
         let letters = new Array<Letter>();
-        alphabets.forEach((element => {
-            let letter = this._bank.bank.filter((alphaLetter) => {
-                let alphabet = (element === "*") ? "blank" : element;
+        alphabets.forEach((element: string) => {
+            let letter = this._bank.bank.filter((alphaLetter: Letter) => {
+                // If the char is an Capital letter
+                let alphabet = element.match("^[A-Z]$") ? "blank" : element.toUpperCase();
                 return alphaLetter.alphabetLetter === alphabet;
             })[0];
             letters.push(letter);
-        }));
+        });
+
+        return letters;
+    }
+
+    public parseFromListOfStringToListOfLetterForExchange(alphabets: Array<string>): Array<Letter> {
+
+        if (alphabets === null) {
+            throw new Error("Null argument error: the letters cannot be null");
+        }
+
+        let letters = new Array<Letter>();
+        alphabets.forEach((element: string) => {
+            let letter = this._bank.bank.filter((alphaLetter: Letter) => {
+                // If the char is an Capital letter
+                let alphabet = (element.match("^[*]$") !== null
+                    && element.match("^[*]$").length > 0) ? "blank" : element;
+                return alphaLetter.alphabetLetter === alphabet;
+            })[0];
+            letters.push(letter);
+        });
 
         return letters;
     }
