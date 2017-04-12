@@ -9,8 +9,8 @@ import { IGameServices } from "../../services/game-handler/games-services.interf
 export class EndSet extends AbstractGameState {
 
     private static readonly NUMBER_OF_SETS_TO_PLAY = 3;
-    private static readonly TEXT_POSITION_ABOVE = new Vector3(6, 3, -11.4);
-    private static readonly TEXT_POSITION_BELOW = new Vector3(10, 1, -11.4);
+    private static readonly TEXT_POSITION_ABOVE = new Vector3(6, 3, 20);
+    private static readonly TEXT_POSITION_BELOW = new Vector3(10, 1, 20);
     private static readonly TEXT_COLOR = 0x000000;
 
     private static _instance: AbstractGameState = null;
@@ -45,9 +45,6 @@ export class EndSet extends AbstractGameState {
         this._gameInfo.gameStatus.incrementScoreComputer(points.computer);
         let newState: AbstractGameState;
         if (this._gameInfo.gameStatus.currentSet < EndSet.NUMBER_OF_SETS_TO_PLAY) {
-            this._gameInfo.gameStatus.currentSet += 1;
-            this._gameInfo.gameStatus.resetStones();
-            this._gameServices.stoneHandler.cleanAllStones();
             if (points.player > points.computer) {
                 this._gameInfo.gameStatus.currentPlayer = CurrentPlayer.BLUE;
             }
@@ -57,7 +54,7 @@ export class EndSet extends AbstractGameState {
             this._newState = LoadingStone.getInstance();
             this._gameServices.cameraService.setPerspectiveCameraCurrent();
             this.transitionText.push(this._gameServices.textureHandler.addText(EndSet.TEXT_POSITION_ABOVE,
-                "Veuillez cliquez pour", EndSet.TEXT_COLOR));
+                "Veuillez cliquer pour", EndSet.TEXT_COLOR));
             this.transitionText.push(this._gameServices.textureHandler.addText(EndSet.TEXT_POSITION_BELOW,
                 "commencer la prochaine manche", EndSet.TEXT_COLOR));
         }
@@ -88,6 +85,9 @@ export class EndSet extends AbstractGameState {
     }
 
     protected performMouseButtonReleased(): AbstractGameState {
+        this._gameInfo.gameStatus.currentSet += 1;
+        this._gameInfo.gameStatus.resetStones();
+        this._gameServices.stoneHandler.cleanAllStones();
         return this._newState;
     }
 }

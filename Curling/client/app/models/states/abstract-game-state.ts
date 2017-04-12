@@ -89,16 +89,19 @@ export abstract class AbstractGameState implements IGameState {
 
     /**
      * Force to change to the new state.
-     * ALWAYS calls this function when a state transition is needed.
-     * Avoid to call this function in one of mouse abstract methods. It will be automatically called when these
-     * methods return.
+     * ALWAYS calls this function when a state transition is needed. If a stop request has been made with
+     * the method forceExitState, the _isActive attribute will already be false, so nothing will happen.
+     * Avoid to call this function in one of input event methods. It will be automatically called when these
+     * event methods return.
      * @param newState The new state to go.
      */
     protected leaveState(newState: AbstractGameState) {
-        this.leavingState().then(() => {
-            AbstractGameState.onChangingState(newState);
-            newState.enteringState();
-        });
+        if (this._isActive) {
+            this.leavingState().then(() => {
+                AbstractGameState.onChangingState(newState);
+                newState.enteringState();
+            });
+        }
     }
 
     /**

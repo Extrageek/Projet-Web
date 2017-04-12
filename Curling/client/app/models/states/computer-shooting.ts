@@ -1,6 +1,5 @@
 import { AbstractGameState } from "./abstract-game-state";
-import { LoadingStone } from "./loading-stone";
-import { EndSet } from "./end-set";
+import { WaitNextTurn } from "./wait-next-turn";
 import { IGameState } from "../../models/game-state.interface";
 import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { IGameServices } from "../../services/game-handler/games-services.interface";
@@ -37,22 +36,14 @@ export class ComputerShooting extends AbstractGameState {
             AbstractGameState.shotParameters,
             () => {
                 this._gameInfo.gameStatus.usedStone();
-                let newState: AbstractGameState;
-                if (this._gameInfo.gameStatus.currentStonesPlayer === 0
-                    && this._gameInfo.gameStatus.currentStonesComputer === 0) {
-                    newState = EndSet.getInstance();
-                }
-                else {
-                    newState = LoadingStone.getInstance();
-                }
-                this.leaveState(newState);
+                this.leaveState(WaitNextTurn.getInstance());
             });
     }
 
     protected performLeavingState(): Promise<void> {
+        this._gameServices.cameraService.stopPerspectiveCameraToFollowObjectOnZ();
         this._gameServices.stoneHandler.removeOutOfBoundsStones();
         this._gameInfo.gameStatus.nextPlayer();
-        this._gameServices.cameraService.replacePCameraToInitialPosition();
         return Promise.resolve();
     }
 

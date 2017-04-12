@@ -7,6 +7,7 @@ import { LoadingStone } from "../../models/states/loading-stone";
 import { PlayerShooting } from "../../models/states/player-shooting";
 import { PlayerTurn } from "../../models/states/player-turn";
 import { Starting } from "../../models/states/starting";
+import { WaitNextTurn } from "../../models/states/wait-next-turn";
 import { IGameInfo } from "../../services/game-handler/game-info.interface";
 import { ComputerAI } from "../../models/AI/ComputerAI";
 import { NormalAI } from "../../models/AI/normalAI";
@@ -55,6 +56,7 @@ export class StatesHandler implements IGameState {
         PlayerTurn.createInstance(gameServices, gameInfo, angularInfo);
         PlayerShooting.createInstance(gameServices, gameInfo);
         Starting.createInstance(gameServices, gameInfo);
+        WaitNextTurn.createInstance(gameServices, gameInfo, angularInfo);
     }
 
     public startGame() {

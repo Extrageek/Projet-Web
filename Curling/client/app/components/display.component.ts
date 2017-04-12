@@ -19,6 +19,7 @@ import { RenderService } from "../services/game-handler/render.service";
 export class DisplayComponent implements OnInit {
     _userSetting: UserService;
     _computerName: string;
+    _textToShow: string;
 
     @ViewChild("hamburger") hamburger: ElementRef;
     @ViewChild("overlay") overlay: ElementRef;
@@ -44,7 +45,9 @@ export class DisplayComponent implements OnInit {
         private api: RestApiProxyService,
         private userService: UserService,
         private gameStatusService: GameStatusService,
-        private renderService: RenderService) { }
+        private renderService: RenderService) {
+            this._textToShow = "Cliquez pour continuer."
+        }
 
     ngOnInit() {
         console.log("ngOnInit called");

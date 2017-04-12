@@ -70,7 +70,8 @@ export class RenderService {
         this._angularInfo = {
             isSelectingPower: false,
             powerBar: 0,
-            spin: 0
+            spin: 0,
+            showText: false
         };
 
         this._lightingService = lightingService;

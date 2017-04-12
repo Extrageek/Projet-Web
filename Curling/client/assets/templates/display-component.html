@@ -6,6 +6,10 @@
     </button>
 </div>
 
+<div class="textNextShot" *ngIf="renderService._angularInfo.showText">
+    {{_textToShow}}
+</div>
+
 <div *ngIf="!gameStatusService.isShooting" class="hide-cursor">&nbsp;</div>
 
 <div class="col-sm-12">
