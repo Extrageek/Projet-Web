@@ -83,4 +83,8 @@ export class ParticlesService {
     public addParticulesToScene() {
         this._scene.add(this._particleSystem);
     }
+
+    public removeParticulesFromScene() {
+        this._scene.remove(this._particleSystem);
+    }
 }

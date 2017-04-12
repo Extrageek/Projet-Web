@@ -39,8 +39,7 @@ export class RenderService {
     private _scene: Scene;
     private _clock: Clock;
     private _renderer: Renderer;
-    private _animationStarted: boolean;
-    private _endStateAnimationStarted: boolean;
+    private _animationID: number;
 
     private _gameServices: IGameServices;
     private _gameInfo: IGameInfo;
@@ -64,10 +63,8 @@ export class RenderService {
             gameStatus: gameStatusService,
             broom: null,
             rink: null,
-            currentCamera: CameraType.PERSPECTIVE_CAM,
             gameComponentsToUpdate: new Object(),
-            line: { lineGeometry: null, lineDashedMaterial: null, lineMesh: null, lineAnimationSlower: null },
-            mousePositionPlaneXZ: new Vector3(0, 0, 0)
+            line: { lineGeometry: null, lineDashedMaterial: null, lineMesh: null, lineAnimationSlower: null }
         };
 
         this._angularInfo = {
@@ -78,35 +75,46 @@ export class RenderService {
 
         this._lightingService = lightingService;
         this._gameInfo.gameStatus.randomFirstPlayer();
-        this._animationStarted = false;
-        this._endStateAnimationStarted = false;
+        this._animationID = null;
         this._numberOfModelsLoaded = 0;
         this._scene = new Scene();
         this._objectLoader = new ObjectLoader();
     }
 
-    public init() {
-        //Clock for the time per frame.
-        this._clock = new Clock(false);
+    public initAndStart() {
+        if (!this._animationID && this._numberOfModelsLoaded >= RenderService.NUMBER_OF_MODELS_TO_LOAD) {
+            this.startGame();
+        }
+        else {
+            //Clock for the time per frame.
+            this._clock = new Clock(false);
 
-        this._renderer = new WebGLRenderer({ antialias: true, devicePixelRatio: window.devicePixelRatio });
-        this._renderer.setSize(window.innerWidth, window.innerHeight, true);
+            this._renderer = new WebGLRenderer({ antialias: true, devicePixelRatio: window.devicePixelRatio });
 
-        //Part 2: Scenery
-        this.generateSkybox();
-        this._lightingService.setUpLighting(this._scene);
+            //Part 2: Scenery
+            this.generateSkybox();
+            this._lightingService.setUpLighting(this._scene);
 
-        //Part 3: Components
-        this.loadComponents();
+            //Part 3: Components
+            this.loadComponents();
 
-        //Part 5: Events
-        // bind to window resizes
-        window.addEventListener("resize", _ => this.onResize());
+            //Part 5: Events
+            // bind to window resizes
+            window.addEventListener("resize", _ => this.onResize());
+        }
     }
 
     public putCanvasIntoHTMLElement(container: HTMLElement) {
         if (this._renderer !== undefined) {
+            console.log("append canvas!");
             container.appendChild(this._renderer.domElement);
+        }
+    }
+
+    public removeCanvasElement() {
+        if (this._renderer.domElement.parentElement) {
+            console.log("remove canvas!");
+            this._renderer.domElement.parentElement.removeChild(this._renderer.domElement);
         }
     }
 
@@ -116,7 +124,27 @@ export class RenderService {
 
     private startGame() {
         StatesHandler.getInstance().startGame();
+        this._renderer.setSize(window.innerWidth, window.innerHeight);
+        this._gameServices.cameraService.resizeCurrentCamera();
         this._clock.start();
+        this.animate();
+    }
+
+    /**
+     * Stop the running game. If the game is loading something asynchronous (a stone), then the game must wait until
+     * the resolution of the promise to be able to stop the game. Otherwise, new stones could be loaded before the
+     * old stones were cleared. The game cannot be restarted until the promise is resolved.
+     * @return Promise<void> A promise that will resolve when the game is really stoped.
+     */
+    public stopGame(): Promise<void> {
+        if (this._animationID) {
+            window.cancelAnimationFrame(this._animationID);
+            this._clock.stop();
+            return StatesHandler.getInstance().stopGame()
+                .then(() => {
+                    this._animationID = null;
+                });
+        }
     }
 
     public loadComponents() {
@@ -226,16 +254,9 @@ export class RenderService {
         this.onFinishedLoadingModel();
     }
 
-    public switchCamera() {
-        this._gameServices.cameraService.nextCamera();
-        this._gameInfo.currentCamera = (this._gameInfo.currentCamera + 1) % CameraType.NB_CAMERAS;
-        this.onResize();
-    }
-
     private onFinishedLoadingModel() {
         ++this._numberOfModelsLoaded;
-        if (!this._animationStarted && this._numberOfModelsLoaded >= RenderService.NUMBER_OF_MODELS_TO_LOAD) {
-            this._animationStarted = true;
+        if (!this._animationID && this._numberOfModelsLoaded >= RenderService.NUMBER_OF_MODELS_TO_LOAD) {
             StatesHandler.createInstance(this._gameServices, this._gameInfo, this._angularInfo);
             this.startGame();
             // Add events here to be sure they won"t encounter undefined property
@@ -243,12 +264,11 @@ export class RenderService {
             window.addEventListener("keydown", (event: KeyboardEvent) => this.switchSpin(event));
             window.addEventListener("mousedown", _ => this.onMousePressed());
             window.addEventListener("mouseup", _ => this.onMouseReleased());
-            this.animate();
         }
     }
 
     private animate() {
-        window.requestAnimationFrame(() => this.animate());
+        this._animationID = window.requestAnimationFrame(() => this.animate());
 
         if (this._clock.running === true) {
             let timePerFrame = this._clock.getDelta();
@@ -272,43 +292,43 @@ export class RenderService {
         }
     }
 
-    onWindowResize() {
-        let factor = 0.8;
-        let newWidth: number = window.innerWidth * factor;
-        let newHeight: number = window.innerHeight * factor;
-
-        this._gameServices.cameraService.currentCamera.aspect = newWidth / newHeight;
-        this._gameServices.cameraService.currentCamera.updateProjectionMatrix();
-
-        this._renderer.setSize(newWidth, newHeight);
-    }
-
     onResize() {
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-
-        this._gameServices.cameraService.currentCamera.aspect = width / height;
-        this._gameServices.cameraService.currentCamera.updateProjectionMatrix();
-
-        this._renderer.setSize(width, height);
+        if (this._animationID) {
+            this._gameServices.cameraService.resizeCurrentCamera();
+            this._renderer.setSize(window.innerWidth, window.innerHeight);
+        }
     }
 
     switchSpin(event: KeyboardEvent) {
-        let sKeyCode = 83;
-        if (event.keyCode === sKeyCode) {
-            StatesHandler.getInstance().onSpinButtonPressed();
+        if (this._animationID) {
+            let sKeyCode = 83;
+            if (event.keyCode === sKeyCode) {
+                StatesHandler.getInstance().onSpinButtonPressed();
+            }
+        }
+    }
+    
+    public switchCamera() {
+        if (this._animationID) {
+            StatesHandler.getInstance().onSpacebarPressed();    
         }
     }
 
     onMouseMove(event: MouseEvent) {
-        StatesHandler.getInstance().onMouseMove(event);
+        if (this._animationID) {
+            StatesHandler.getInstance().onMouseMove(event);
+        }
     }
 
     onMousePressed() {
-        StatesHandler.getInstance().onMouseButtonPressed();
+        if (this._animationID) {
+            StatesHandler.getInstance().onMouseButtonPressed();
+        }
     }
 
     onMouseReleased() {
-        StatesHandler.getInstance().onMouseButtonReleased();
+        if (this._animationID) {
+            StatesHandler.getInstance().onMouseButtonReleased();
+        }
     }
 }

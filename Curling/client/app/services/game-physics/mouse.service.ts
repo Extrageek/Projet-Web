@@ -1,22 +1,21 @@
-import { Vector3 } from "three";
-import { CameraType } from "../game-physics/camera-type";
+import { Plane, Object3D, Vector3, Raycaster, Intersection, Camera } from "three";
 
-export function calculateMousePosition(event: MouseEvent, cameraType: CameraType): Vector3 {
-    let mousePosition: Vector3;
-    if (cameraType === CameraType.PERSPECTIVE_CAM) {
-        mousePosition = new Vector3(
-            -(event.clientX / window.innerWidth) / 0.02215 + 22.55, // Numbers to align with the rink model
-            0,
-            (event.clientY / window.innerHeight) / 0.008 + 46.75 // Numbers to align with the rink model
-        );
-    } else if (cameraType === CameraType.ORTHOGRAPHIC_CAM) {
-        mousePosition = new Vector3(
-            -(event.clientY / window.innerHeight) / 0.038 + 13.2,
-            0,
-            (event.clientX / window.innerWidth) / 0.0268 - 18.6
-        );
-    } else {
-        throw new Error("calculateMousePosition : camera unrecognized");
-    }
-    return mousePosition;
+const XZPlane = new Plane(new Vector3(0, 1, 0));
+const raycaster = new Raycaster();
+
+export function calculateMousePositionOnXZPlane(event: MouseEvent, camera: Camera): Vector3 {
+    raycaster.setFromCamera(calculateMousePosition(event), camera);
+    return raycaster.ray.intersectPlane(XZPlane);
+}
+
+export function calculateMousePositionOnObject(event: MouseEvent, object: Object3D, camera: Camera): Intersection[] {
+    raycaster.setFromCamera(calculateMousePosition(event), camera);
+    return raycaster.intersectObject(object, true);
+}
+
+function calculateMousePosition(event: MouseEvent): {x: number, y: number} {
+    return {
+        x: (event.clientX / window.innerWidth) * 2 - 1,
+        y: - (event.clientY / window.innerHeight) * 2 + 1
+    };
 }

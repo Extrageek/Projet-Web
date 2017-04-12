@@ -62,39 +62,43 @@ export abstract class AbstractGameState implements IGameState {
      * The beginWithThisState method must be called on a state to restart the game.
      * This function can only be called on the active state.
      * This function should be handled by the StatesHandler.
+     * @return Promise<void> The promise returned will be resolved when the game will be stoped.
      */
-    public forceExitState() {
+    public forceExitState(): Promise<void> {
         if (!this._isActive) {
             throw new Error("The force exit method must be called on the active state.");
         }
-        this.leavingState();
-        AbstractGameState.hasDoneInitialization = false;
-        AbstractGameState.onChangingState(null);
-        AbstractGameState.onChangingState = null;
+        return this.leavingState().then(() => {
+            AbstractGameState.hasDoneInitialization = false;
+            AbstractGameState.onChangingState(null);
+            AbstractGameState.onChangingState = null;
+        });
     }
 
     private enteringState() {
         this._isActive = true;
+        console.log("entering state");
+        console.log(this);
         this.performEnteringState();
     }
 
-    private leavingState() {
+    private leavingState(): Promise<void> {
         this._isActive = false;
-        this.performLeavingState();
+        return this.performLeavingState();
     }
 
     /**
      * Force to change to the new state.
      * ALWAYS calls this function when a state transition is needed.
-     * DO NOT only change the _gameInfo.gameStatus variable because the _isActive property will not be changed.
      * Avoid to call this function in one of mouse abstract methods. It will be automatically called when these
      * methods return.
      * @param newState The new state to go.
      */
     protected leaveState(newState: AbstractGameState) {
-        this.leavingState();
-        AbstractGameState.onChangingState(newState);
-        newState.enteringState();
+        this.leavingState().then(() => {
+            AbstractGameState.onChangingState(newState);
+            newState.enteringState();
+        });
     }
 
     /**
@@ -158,7 +162,14 @@ export abstract class AbstractGameState implements IGameState {
 
     protected abstract performEnteringState(): void;
 
-    protected abstract performLeavingState(): void;
+    /**
+     * Method called when the state must leave. The subclasses must override this method if they must perform cleanup.
+     * If they can't leave immediately, they can return a promise and resolve it when the leaving process is complete.
+     * @return Promise<Object> The promise that will be resolved when the leaving process is complete.
+     */
+    protected performLeavingState(): Promise<void> {
+        return Promise.resolve();
+    }
 
     /**
      * The children classes can override this method to give a particular behaviour when the spin button is pressed.
@@ -170,10 +181,12 @@ export abstract class AbstractGameState implements IGameState {
 
     /**
      * The children classes can override this method to give a particular behaviour when the button to toggle the
-     * camera is pressed.
+     * camera is pressed. By default, the camera view is changed.
      * @returns AbstractGameState The new state to which it must transit, or null if no transition is necessary.
      */
     protected performCameraToggle(): AbstractGameState {
+        this._gameServices.cameraService.nextCamera();
+        this._gameServices.cameraService.resizeCurrentCamera();
         return null;
     }
 

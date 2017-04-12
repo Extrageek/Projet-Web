@@ -6,6 +6,7 @@ import { EndSet } from "../../models/states/end-set";
 import { LoadingStone } from "../../models/states/loading-stone";
 import { PlayerShooting } from "../../models/states/player-shooting";
 import { PlayerTurn } from "../../models/states/player-turn";
+import { Starting } from "../../models/states/starting";
 import { IGameInfo } from "../../services/game-handler/game-info.interface";
 import { ComputerAI } from "../../models/AI/ComputerAI";
 import { NormalAI } from "../../models/AI/normalAI";
@@ -24,7 +25,6 @@ export class StatesHandler implements IGameState {
     private static _statesHandler: StatesHandler;
 
     private _activeState: AbstractGameState;
-    private _sharedStateInfo: IGameInfo;
 
     public static createInstance(gameServices: IGameServices, gameInfo: IGameInfo, angularInfo: IAngularInfo) {
         if (StatesHandler._statesHandler !== undefined) {
@@ -45,7 +45,7 @@ export class StatesHandler implements IGameState {
      * must only be called one time.
      */
     private constructor(gameServices: IGameServices, gameInfo: IGameInfo, angularInfo: IAngularInfo) {
-        this._sharedStateInfo = gameInfo;
+        this._activeState = null;
         ComputerShooting.createInstance(gameServices, gameInfo);
         ComputerTurn.createInstance(gameServices, gameInfo,
             this.createComputerAI(gameServices.userService.difficulty, gameInfo.rink));
@@ -54,16 +54,25 @@ export class StatesHandler implements IGameState {
         LoadingStone.createInstance(gameServices, gameInfo);
         PlayerTurn.createInstance(gameServices, gameInfo, angularInfo);
         PlayerShooting.createInstance(gameServices, gameInfo);
+        Starting.createInstance(gameServices, gameInfo);
     }
 
     public startGame() {
-        this._activeState = LoadingStone.getInstance();
+        if (this._activeState) {
+            throw new Error("The game is already started");
+        }
+        this._activeState = Starting.getInstance();
         this._activeState.beginWithThisState(this.onStateChange.bind(this));
     }
 
-    public stopGame() {
-        this._activeState.forceExitState();
-        this._sharedStateInfo.gameStatus.resetGameStatus();
+
+    public stopGame(): Promise<void> {
+        if (!this._activeState) {
+            throw new Error("The game is not running at this moment.");
+        }
+        return this._activeState.forceExitState().then(() => {
+            this._activeState = null;
+        });
     }
 
     private createComputerAI(difficulty: Difficulty, rinkInfo: IRinkInfo): ComputerAI {

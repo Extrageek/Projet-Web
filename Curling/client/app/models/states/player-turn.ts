@@ -3,7 +3,7 @@ import { AbstractGameState } from "./abstract-game-state";
 import { CameraType } from "./../../services/game-physics/camera-type";
 import { PlayerShooting } from "./player-shooting";
 import { CurrentPlayer } from "../../models/current-player";
-import { calculateMousePosition } from "./../../services/game-physics/mouse.service";
+import { calculateMousePositionOnXZPlane } from "./../../services/game-physics/mouse.service";
 import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { IGameServices } from "../../services/game-handler/games-services.interface";
 import { IAngularInfo } from "../../services/game-handler/angular-info.interface";
@@ -29,6 +29,7 @@ export class PlayerTurn extends AbstractGameState {
     //performMouseButtonReleased(). Even if the user pull his mouse out of the window and release the button
     //out of the window, it will not pass two times in the same function.
     private _mouseIsPressed: boolean;
+    private _mousePosition: Vector3;
 
     /**
      * Initialize the unique PlayerTurn state.
@@ -54,6 +55,7 @@ export class PlayerTurn extends AbstractGameState {
         this._angularInfo = angularInfo;
         this._powerTimer = new Clock(false);
         this._mouseIsPressed = false;
+        this._mousePosition = new Vector3();
         this._spinParameter = 0;
     }
 
@@ -64,9 +66,10 @@ export class PlayerTurn extends AbstractGameState {
         this._gameInfo.gameStatus.currentPlayer = CurrentPlayer.BLUE;
     }
 
-    public performLeavingState() {
+    public performLeavingState(): Promise<void> {
         this._gameInfo.line.lineDashedMaterial.visible = false;
         this._angularInfo.isSelectingPower = false;
+        return Promise.resolve();
     }
 
     protected performSpinButtonPressed(): AbstractGameState {
@@ -76,21 +79,18 @@ export class PlayerTurn extends AbstractGameState {
     }
 
     public performMouseMove(event: MouseEvent): AbstractGameState {
-        this._gameInfo.mousePositionPlaneXZ = calculateMousePosition(event, this._gameInfo.currentCamera);
-
-        // Clamp to angle range
-        // Under
-        if (this._gameInfo.mousePositionPlaneXZ.x < PlayerTurn.SHOT_ANGLE_MINIMUM) {
-            this._gameInfo.mousePositionPlaneXZ.x = PlayerTurn.SHOT_ANGLE_MINIMUM;
+        let mousePosition = calculateMousePositionOnXZPlane(event, this._gameServices.cameraService.currentCamera);
+        if (mousePosition) {
+            this._mousePosition = mousePosition;
+            // Clamp to angle range if the mouse is farther than the angle minimum or maximum.
+            if (this._mousePosition.x < PlayerTurn.SHOT_ANGLE_MINIMUM) {
+                this._mousePosition.x = PlayerTurn.SHOT_ANGLE_MINIMUM;
+            } else if (this._mousePosition.x > PlayerTurn.SHOT_ANGLE_MAXIMUM) {
+                this._mousePosition.x = PlayerTurn.SHOT_ANGLE_MAXIMUM;
+            }
         }
-        // Over
-        if (this._gameInfo.mousePositionPlaneXZ.x > PlayerTurn.SHOT_ANGLE_MAXIMUM) {
-            this._gameInfo.mousePositionPlaneXZ.x = PlayerTurn.SHOT_ANGLE_MAXIMUM;
-        }
-
         return null;
     }
-
 
     public performMouseButtonPress(): AbstractGameState {
         if (!this._mouseIsPressed) {
@@ -143,9 +143,8 @@ export class PlayerTurn extends AbstractGameState {
         }
         ++this._gameInfo.line.lineAnimationSlower;
         this._gameInfo.line.lineGeometry.vertices.pop();
-        this._gameInfo.line.lineGeometry.vertices.push(new Vector3(this._gameInfo.mousePositionPlaneXZ.x, 0.1, 22.4));
+        this._gameInfo.line.lineGeometry.vertices.push(new Vector3(this._mousePosition.x, 0.1, 22.4));
         this._gameInfo.line.lineGeometry.computeLineDistances();
         this._gameInfo.line.lineGeometry.verticesNeedUpdate = true;
     }
-
 }

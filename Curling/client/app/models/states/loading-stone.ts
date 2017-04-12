@@ -10,6 +10,8 @@ export class LoadingStone extends AbstractGameState {
 
     private static _instance: AbstractGameState = null;
 
+    private _leavingPromise: Promise<void>;
+
     /**
      * Initialize the unique LoadingStone state.
      * @param gameInfo The informations to use by the state.
@@ -39,23 +41,27 @@ export class LoadingStone extends AbstractGameState {
      * change to computerTurn otherwise.
      */
     protected performEnteringState() {
-        this._gameServices.stoneHandler.generateNewStone(this._gameInfo.gameStatus.currentPlayer)
-            .then((stone: Stone) => {
-                this._gameServices.cameraService.movePerspectiveCameraToFollowObjectOnZ(stone);
+        this._leavingPromise = new Promise<void>((resolve, reject) => {
+            this._gameServices.stoneHandler.generateNewStone(this._gameInfo.gameStatus.currentPlayer)
+                .then((stone: Stone) => {
+                    this._gameServices.cameraService.movePerspectiveCameraToFollowObjectOnZ(stone);
 
-                let newState: AbstractGameState;
-                if (this._gameInfo.gameStatus.currentPlayer === CurrentPlayer.BLUE) {
-                    newState = PlayerTurn.getInstance();
-                }
-                else {
-                    newState = ComputerTurn.getInstance();
-                }
-                this.leaveState(newState);
-            });
+                    let newState: AbstractGameState;
+                    if (this._gameInfo.gameStatus.currentPlayer === CurrentPlayer.BLUE) {
+                        newState = PlayerTurn.getInstance();
+                    }
+                    else {
+                        newState = ComputerTurn.getInstance();
+                    }
+                    this.leaveState(newState);
+                    resolve();
+                });
+        });
+
     }
 
-    protected performLeavingState() {
-        //Nothing to do
+    protected performLeavingState(): Promise<void> {
+        return this._leavingPromise;
     }
 
     protected performMouseMove(): AbstractGameState {

@@ -54,7 +54,7 @@ export class DisplayComponent implements OnInit {
         } else {
             this.getComputerName();
             console.log("starting game");
-            this.renderService.init();
+            this.renderService.initAndStart();
         }
     }
 
@@ -71,15 +71,15 @@ export class DisplayComponent implements OnInit {
     public gameOver(): void {
         this.api.createGameRecord(this._userSetting.name, this._userSetting.difficulty, this.gameStatusService);
         this.api.removeUsername(this._userSetting.name);
+        this.renderService.removeCanvasElement();
+        this.renderService.stopGame();
         this.router.navigate(["/"]);
     }
 
-    public restartGame(): void {
-
-        console.log(this.userService.name);
-        
-       // this._userSetting.name
-        //this.gameStatusService.resetGameStatus();
-        this.router.navigate(["/difficulty"]);
+    public restartGame() {
+        this.api.createGameRecord(this._userSetting.name, this._userSetting.difficulty, this.gameStatusService);
+        this.renderService.stopGame().then(() => {
+            this.renderService.initAndStart();
+        });
     }
 }

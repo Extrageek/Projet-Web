@@ -7,7 +7,6 @@ import { Rink } from "../../models/scenery/rink";
 
 export interface IGameInfo {
     gameStatus: GameStatusService;
-    currentCamera: CameraType;
     line: {
         lineGeometry: Geometry,
         lineDashedMaterial: LineDashedMaterial,
@@ -16,7 +15,6 @@ export interface IGameInfo {
     };
     broom: Broom;
     rink: Rink;
-    mousePositionPlaneXZ: Vector3;
     //Contains all the GameComponent to update. Each property of this object must be a GameComponent.
     gameComponentsToUpdate: Object;
 }

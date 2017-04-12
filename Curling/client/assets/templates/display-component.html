@@ -124,12 +124,7 @@
 <!-- The overlay -->
 <div #overlay id="myNav" class="overlay">
     <div class="overlay-content">
-        <p><span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
-            <a href="#" (click)="gameOver()">Abandonner</a>
-        </p>
-        <p (click)="restartGame()">
-            <span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span>
-            <a href="#">Recommencer</a>
-        </p>
+        <p (click)="gameOver()"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Abandonner</p>
+        <p (click)="restartGame()"><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span> Recommencer</p>
     </div>
 </div>

@@ -13,6 +13,8 @@ export class EndGame extends AbstractGameState {
     private static readonly BLUE = 0x0000ff;
     private static readonly YELLOW = 0xffff00;
 
+    private _endGameTextIdentifier: number;
+
     /**
      * Initialize the unique EndGame state.
      * @param gameInfo The informations to use by the state.
@@ -37,31 +39,46 @@ export class EndGame extends AbstractGameState {
     }
 
     protected performEnteringState() {
-        this._gameServices.cameraService.getPerspectiveCamera();
-        this._gameServices.cameraService.moveCameraEndRink();
+        this._gameServices.cameraService.setPerspectiveCameraCurrent();
+        this._gameServices.cameraService.movePCameraEndRink();
         Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "particleService",
             { value: this._gameServices.particlesService });
         this._gameServices.particlesService.addParticulesToScene();
-        this.addEndGameAnimation();
+        this.addAppropriateEndGameText();
         this._gameInfo.gameStatus.gameIsFinished();
     }
 
-    private addEndGameAnimation() {
+    private addAppropriateEndGameText() {
         if (this._gameInfo.gameStatus.scorePlayer > this._gameInfo.gameStatus.scoreComputer) {
             this._gameServices.stoneHandler.bounceWinningPlayerStones(StoneColor.Blue);
-            this._gameServices.textureHandler.addText(EndGame.TEXT_POSITION, "Vous avez gagne!", EndGame.BLUE);
+            this.addEndGameText(EndGame.TEXT_POSITION, "Vous avez gagne!", EndGame.BLUE);
         }
         else if (this._gameInfo.gameStatus.scorePlayer < this._gameInfo.gameStatus.scoreComputer) {
             this._gameServices.stoneHandler.bounceWinningPlayerStones(StoneColor.Red);
-            this._gameServices.textureHandler.addText(EndGame.TEXT_POSITION, "Vous avez perdu!", EndGame.RED);
+            this.addEndGameText(EndGame.TEXT_POSITION, "Vous avez perdu!", EndGame.RED);
         }
         else {
-            this._gameServices.textureHandler.addText(EndGame.TEXT_POSITION, "C'est une partie nulle", EndGame.YELLOW);
+            this.addEndGameText(EndGame.TEXT_POSITION, "C'est une partie nulle", EndGame.YELLOW);
         }
     }
 
-    protected performLeavingState() {
+    protected performLeavingState(): Promise<void> {
+        this.removeEndGameText();
         delete this._gameInfo.gameComponentsToUpdate["particleService"];
+        return Promise.resolve();;
+    }
+
+    private addEndGameText(position: Vector3, text: string, textColor: number) {
+        this._endGameTextIdentifier = this._gameServices.textureHandler.addText(position, text, textColor);
+    }
+
+    private removeEndGameText() {
+        this._gameServices.textureHandler.removeText(this._endGameTextIdentifier);
+    }
+
+    //Bloc the camera toggle by overriding this method.
+    protected performCameraToggle(): AbstractGameState {
+        return null;
     }
 
     protected performMouseMove(): AbstractGameState {
