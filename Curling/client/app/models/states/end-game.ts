@@ -13,6 +13,8 @@ export class EndGame extends AbstractGameState {
     private static readonly BLUE = 0x0000ff;
     private static readonly YELLOW = 0xffff00;
 
+    private _endGameTextIdentifier: number;
+
     /**
      * Initialize the unique EndGame state.
      * @param gameInfo The informations to use by the state.
@@ -41,26 +43,35 @@ export class EndGame extends AbstractGameState {
         this._gameServices.cameraService.moveCameraEndRink();
         Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "particleService",
             { value: this._gameServices.particlesService });
-        this.addEndGameText();
+        this.addAppropriateEndGameText();
         this._gameInfo.gameStatus.gameIsFinished();
     }
 
-    private addEndGameText() {
+    private addAppropriateEndGameText() {
         if (this._gameInfo.gameStatus.scorePlayer > this._gameInfo.gameStatus.scoreComputer) {
             this._gameServices.stoneHandler.bounceWinningPlayerStones(StoneColor.Blue);
-            this._gameServices.textureHandler.addText(EndGame.TEXT_POSITION, "Vous avez gagne!", EndGame.BLUE);
+            this.addEndGameText(EndGame.TEXT_POSITION, "Vous avez gagne!", EndGame.BLUE);
         }
         else if (this._gameInfo.gameStatus.scorePlayer < this._gameInfo.gameStatus.scoreComputer) {
             this._gameServices.stoneHandler.bounceWinningPlayerStones(StoneColor.Red);
-            this._gameServices.textureHandler.addText(EndGame.TEXT_POSITION, "Vous avez perdu!", EndGame.RED);
+            this.addEndGameText(EndGame.TEXT_POSITION, "Vous avez perdu!", EndGame.RED);
         }
         else {
-            this._gameServices.textureHandler.addText(EndGame.TEXT_POSITION, "C'est une partie nulle", EndGame.YELLOW);
+            this.addEndGameText(EndGame.TEXT_POSITION, "C'est une partie nulle", EndGame.YELLOW);
         }
     }
 
     protected performLeavingState() {
+        this.removeEndGameText();
         delete this._gameInfo.gameComponentsToUpdate["particleService"];
+    }
+
+    private addEndGameText(position: Vector3, text: string, textColor: number) {
+        this._endGameTextIdentifier = this._gameServices.textureHandler.addText(position, text, textColor);
+    }
+
+    private removeEndGameText() {
+        this._gameServices.textureHandler.removeText(this._endGameTextIdentifier);
     }
 
     protected performMouseMove(): AbstractGameState {

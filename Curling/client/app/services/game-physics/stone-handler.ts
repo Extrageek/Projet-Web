@@ -42,6 +42,7 @@ export class StoneHandler implements GameComponent {
         this._objectLoader = objectLoader;
         this._stoneOnTheGame = new Array<Stone>();
         this._stonesToBeRemoved = new Array<Stone>();
+        this._stonesGivingPoints = new Array<Stone>();
         this._callbackAfterShotFinished = null;
         this._outOfBoundsRink = new Box3(new Vector3(-2.15, -15, -22.5), new Vector3(2.15, 15, 22.5));
 
@@ -113,7 +114,9 @@ export class StoneHandler implements GameComponent {
         this._stoneOnTheGame.forEach((stone: Stone) => {
             this._scene.remove(stone);
         });
-        this._stoneOnTheGame.splice(0, this._stoneOnTheGame.length);
+        this._callbackAfterShotFinished = null;
+        this._stonesGivingPoints.length = 0;
+        this._stoneOnTheGame.length = 0;
     }
 
     public update(timePerFrame: number) {
