@@ -65,12 +65,14 @@ export class StatesHandler implements GameComponent {
         this._activeState.beginWithThisState(this.onStateChange.bind(this));
     }
 
-    public stopGame() {
+
+    public stopGame(): Promise<void> {
         if (!this._activeState) {
             throw new Error("The game is not running at this moment.");
         }
-        this._activeState.forceExitState();
-        this._activeState = null;
+        return this._activeState.forceExitState().then(() => {
+            this._activeState = null;
+        });
     }
 
     private createComputerAI(difficulty: Difficulty, rinkInfo: RinkInfo): ComputerAI {

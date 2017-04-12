@@ -55,11 +55,12 @@ export class PlayerShooting extends AbstractGameState {
             });
     }
 
-    protected performLeavingState() {
+    protected performLeavingState(): Promise<void> {
         this._gameInfo.broom.hideBroom();
         this._gameServices.stoneHandler.removeOutOfBoundsStones();
         this._gameInfo.gameStatus.nextPlayer();
         this._gameServices.cameraService.replacePCameraToInitialPosition();
+        return Promise.resolve();
     }
 
     protected performMouseMove(event: MouseEvent): AbstractGameState {

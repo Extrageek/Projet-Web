@@ -60,12 +60,7 @@ export class ComputerTurn extends AbstractGameState {
         AbstractGameState.shotParameters.power = shotParameters.power;
         AbstractGameState.shotParameters.direction = shotParameters.direction;
         AbstractGameState.shotParameters.spin = shotParameters.spin;
-        console.log(AbstractGameState.shotParameters);
         this.leaveState(ComputerShooting.getInstance());
-    }
-
-    protected performLeavingState() {
-        //Nothing to do
     }
 
     protected performMouseMove(): AbstractGameState {

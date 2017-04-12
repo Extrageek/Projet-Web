@@ -129,11 +129,21 @@ export class RenderService {
         this.animate();
     }
 
-    public stopGame() {
-        window.cancelAnimationFrame(this._animationID);
-        this._animationID = null;
-        StatesHandler.getInstance().stopGame();
-        this._clock.stop();
+    /**
+     * Stop the running game. If the game is loading something asynchronous (a stone), then the game must wait until
+     * the resolution of the promise to be able to stop the game. Otherwise, new stones could be loaded before the
+     * old stones were cleared. The game cannot be restarted until the promise is resolved.
+     * @return Promise<void> A promise that will resolve when the game is really stoped.
+     */
+    public stopGame(): Promise<void> {
+        if (this._animationID) {
+            window.cancelAnimationFrame(this._animationID);
+            this._clock.stop();
+            return StatesHandler.getInstance().stopGame()
+                .then(() => {
+                    this._animationID = null;
+                });
+        }
     }
 
     public loadComponents() {

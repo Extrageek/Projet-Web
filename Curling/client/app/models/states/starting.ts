@@ -41,10 +41,6 @@ export class Starting extends AbstractGameState {
         this.leaveState(LoadingStone.getInstance());
     }
 
-    protected performLeavingState() {
-        //Nothing to do
-    }
-
     protected performMouseMove(): AbstractGameState {
         return null;
     }

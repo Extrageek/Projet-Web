@@ -66,11 +66,12 @@ export class EndSet extends AbstractGameState {
         }
     }
 
-    protected performLeavingState() {
+    protected performLeavingState(): Promise<void> {
         this.transitionText.forEach((identifier: number) => {
             this._gameServices.textureHandler.removeText(identifier);
         });
         this.transitionText.splice(0, this.transitionText.length);
+        return Promise.resolve();;
     }
 
     //Bloc the camera toggle by overriding this method.

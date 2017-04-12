@@ -76,7 +76,8 @@ export class DisplayComponent implements OnInit {
 
     public restartGame() {
         this.api.createGameRecord(this._userSetting.name, this._userSetting.difficulty, this.gameStatusService);
-        this.renderService.stopGame();
-        this.renderService.initAndStart();
+        this.renderService.stopGame().then(() => {
+            this.renderService.initAndStart();
+        });
     }
 }

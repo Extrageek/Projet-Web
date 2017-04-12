@@ -66,9 +66,10 @@ export class PlayerTurn extends AbstractGameState {
         this._gameInfo.gameStatus.currentPlayer = CurrentPlayer.BLUE;
     }
 
-    public performLeavingState() {
+    public performLeavingState(): Promise<void> {
         this._gameInfo.line.lineDashedMaterial.visible = false;
         this._angularInfo.isSelectingPower = false;
+        return Promise.resolve();
     }
 
     protected performSpinButtonPressed(): AbstractGameState {

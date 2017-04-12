@@ -61,9 +61,10 @@ export class EndGame extends AbstractGameState {
         }
     }
 
-    protected performLeavingState() {
+    protected performLeavingState(): Promise<void> {
         this.removeEndGameText();
         delete this._gameInfo.gameComponentsToUpdate["particleService"];
+        return Promise.resolve();;
     }
 
     private addEndGameText(position: Vector3, text: string, textColor: number) {
