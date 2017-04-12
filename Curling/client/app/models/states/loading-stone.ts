@@ -41,6 +41,7 @@ export class LoadingStone extends AbstractGameState {
      * change to computerTurn otherwise.
      */
     protected performEnteringState() {
+        this._gameServices.cameraService.replacePCameraToInitialPosition();
         this._leavingPromise = new Promise<void>((resolve, reject) => {
             this._gameServices.stoneHandler.generateNewStone(this._gameInfo.gameStatus.currentPlayer)
                 .then((stone: Stone) => {

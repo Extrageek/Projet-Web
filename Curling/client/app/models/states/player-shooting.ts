@@ -1,12 +1,12 @@
 import { AbstractGameState } from "./abstract-game-state";
-import { EndSet } from "./end-set";
-import { LoadingStone } from "./loading-stone";
+import { WaitNextTurn } from "./wait-next-turn";
 import { calculateMousePositionOnObject } from "../../services/game-physics/mouse.service";
 import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { IGameServices } from "../../services/game-handler/games-services.interface";
 
 export class PlayerShooting extends AbstractGameState {
 
+    private static readonly WAIT_DELAY_AFTER_SHOT = 4000;
     private static _instance: AbstractGameState = null;
     private static readonly UPDATE_NAME = "PlayerShooting";
     private _isHoldingMouseButton = false;
@@ -43,23 +43,15 @@ export class PlayerShooting extends AbstractGameState {
             AbstractGameState.shotParameters,
             () => {
                 this._gameInfo.gameStatus.usedStone();
-                let newState: AbstractGameState;
-                if (this._gameInfo.gameStatus.currentStonesPlayer === 0
-                    && this._gameInfo.gameStatus.currentStonesComputer === 0) {
-                    newState = EndSet.getInstance();
-                }
-                else {
-                    newState = LoadingStone.getInstance();
-                }
-                this.leaveState(newState);
+                this.leaveState(WaitNextTurn.getInstance());
             });
     }
 
     protected performLeavingState(): Promise<void> {
+        this._gameServices.cameraService.stopPerspectiveCameraToFollowObjectOnZ();
         this._gameInfo.broom.hideBroom();
         this._gameServices.stoneHandler.removeOutOfBoundsStones();
         this._gameInfo.gameStatus.nextPlayer();
-        this._gameServices.cameraService.replacePCameraToInitialPosition();
         return Promise.resolve();
     }
 
