@@ -89,9 +89,10 @@ export class VerificationService {
 
         for (let indexOffset = 0; indexOffset < word.length; indexOffset++) {
             let square = board.squares[rowIndex][firstColumnIndex + indexOffset];
-
+            console.log("\n\nLAST LETTER ADDED =============== ", board.lastLettersAdded[indexLastLettersAdded]);
             let isSquareNewLetter =
-                board.lastLettersAdded[indexLastLettersAdded].column - 1 === firstColumnIndex + indexOffset
+                board.lastLettersAdded[indexLastLettersAdded] !== undefined
+                && board.lastLettersAdded[indexLastLettersAdded].column - 1 === firstColumnIndex + indexOffset
                 && BoardHelper.convertCharToIndex(board.lastLettersAdded[indexLastLettersAdded].row)
                 === rowIndex;
             indexLastLettersAdded += (isSquareNewLetter) ? 1 : 0;
@@ -119,7 +120,8 @@ export class VerificationService {
             let square = board.squares[firstRowIndex + indexOffset][columnIndex];
 
             let isSquareNewLetter =
-                board.lastLettersAdded[indexLastLettersAdded].column - 1 === columnIndex
+                board.lastLettersAdded[indexLastLettersAdded] !== undefined
+                && board.lastLettersAdded[indexLastLettersAdded].column - 1 === columnIndex
                 && BoardHelper.convertCharToIndex(board.lastLettersAdded[indexLastLettersAdded].row)
                 === firstRowIndex + indexOffset;
             indexLastLettersAdded += (isSquareNewLetter) ? 1 : 0;

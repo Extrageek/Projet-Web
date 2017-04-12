@@ -84,12 +84,17 @@ export class LetterBankHandler {
         console.log("parseFromListtoLetter");
         let letters = new Array<Letter>();
         alphabets.forEach((element: string) => {
+            let alphabet =
+                element.match("^[A-Z]$") !== null
+                    && element.match("^[A-Z]$") !== undefined
+                    && element.match("^[A-Z]$").length > 0 ? "blank" : element.toUpperCase();
             let letter = this._bank.bank.filter((alphaLetter: Letter) => {
                 // If the char is an Capital letter
-                let alphabet = element.match("^[A-Z]$") ? "blank" : element.toUpperCase();
+                console.log("PARSE ////// " + alphaLetter.alphabetLetter + " - " + alphabet);
+
                 return alphaLetter.alphabetLetter === alphabet;
             })[0];
-            letters.push(letter);
+            letters.push(new Letter(letter.alphabetLetter, letter.point, letter.quantity));
         });
 
         return letters;
@@ -105,8 +110,10 @@ export class LetterBankHandler {
         alphabets.forEach((element: string) => {
             let letter = this._bank.bank.filter((alphaLetter: Letter) => {
                 // If the char is an Capital letter
-                let alphabet = (element.match("^[*]$") !== null
-                    && element.match("^[*]$").length > 0) ? "blank" : element;
+                let alphabet =
+                    (element.match("^[*]$") !== null
+                        && element.match("^[*]$") !== undefined
+                        && element.match("^[*]$").length > 0) ? "blank" : element;
                 return alphaLetter.alphabetLetter === alphabet;
             })[0];
             letters.push(letter);
