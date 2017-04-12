@@ -22,7 +22,7 @@ import { Arena } from "./../../models/scenery/arena";
 import { Broom } from "./../../models/broom";
 
 import { StoneColor } from "./../../models/stone";
-import { RinkInfo } from "./../../models/scenery/rink-info.interface";
+import { IRinkInfo } from "./../../models/scenery/rink-info.interface";
 import { IGameInfo } from "./game-info.interface";
 import { IGameServices } from "./games-services.interface";
 import { IAngularInfo } from "./angular-info.interface";
@@ -57,8 +57,8 @@ export class RenderService {
             stoneHandler: null,
             textureHandler: null,
             userService: userService
-        }
-        
+        };
+
         this._gameInfo = {
             gameStatus: gameStatusService,
             broom: null,
@@ -71,7 +71,8 @@ export class RenderService {
             isSelectingPower: false,
             powerBar: 0,
             spin: 0
-        }
+        };
+
         this._lightingService = lightingService;
         this._gameInfo.gameStatus.randomFirstPlayer();
         this._animationID = null;
@@ -216,6 +217,7 @@ export class RenderService {
                 console.log(error);
             });
     }
+
     public loadBroom() {
         Broom.createBroom(this._objectLoader, this._scene, new Vector3(0, 0, -11.4))
             .then((broom: Broom) => {
@@ -241,7 +243,7 @@ export class RenderService {
     }
 
     //Must be called after the rinkinfo is initialised.
-    private loadStoneHandler(rinkInfo: RinkInfo) {
+    private loadStoneHandler(rinkInfo: IRinkInfo) {
         let stoneColor: StoneColor;
         stoneColor = this._gameInfo.gameStatus.currentPlayer === 0 ? StoneColor.Blue : StoneColor.Red;
         this._gameServices.stoneHandler = new StoneHandler(this._objectLoader, rinkInfo, this._scene, stoneColor);
@@ -277,7 +279,6 @@ export class RenderService {
             keys.forEach((key: string) => {
                 this._gameInfo.gameComponentsToUpdate[key].update(timePerFrame);
             });
-
         }
         this._renderer.render(this._scene, this._gameServices.cameraService.currentCamera);
     }

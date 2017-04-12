@@ -112,3 +112,12 @@ display-component {
     background: mediumseagreen;
     display: inline-block;
 }
+
+.overlay-content p a {
+    color: #818181;
+}
+
+.overlay-content p a:hover {
+    color: #fff;
+    text-decoration: none;
+}

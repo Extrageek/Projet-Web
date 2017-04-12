@@ -43,6 +43,7 @@ export class EndGame extends AbstractGameState {
         this._gameServices.cameraService.movePCameraEndRink();
         Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "particleService",
             { value: this._gameServices.particlesService });
+        this._gameServices.particlesService.addParticulesToScene();
         this.addAppropriateEndGameText();
         this._gameInfo.gameStatus.gameIsFinished();
     }

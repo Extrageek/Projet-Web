@@ -2,15 +2,14 @@ import { Vector3 } from "three";
 import { StoneSpin } from "../stone";
 import { IGameInfo } from "../../services/game-handler/game-info.interface";
 import { IGameServices } from "../../services/game-handler/games-services.interface";
-import { ShotParameters } from "../shot-parameters.interface";
-import { GameComponent } from "../game-component.interface";
-import { CameraType } from "../../services/game-physics/camera-type";
+import { IShotParameters } from "../shot-parameters.interface";
+import { IGameState } from "../game-state.interface";
 
-export abstract class AbstractGameState implements GameComponent {
+export abstract class AbstractGameState implements IGameState {
 
     private static hasDoneInitialization = false;
     //For states that need parameters for shooting
-    protected static shotParameters: ShotParameters = {
+    protected static shotParameters: IShotParameters = {
         spin: StoneSpin.Clockwise,
         direction: new Vector3(0, 0, 1),
         power: 0
@@ -33,7 +32,7 @@ export abstract class AbstractGameState implements GameComponent {
         if (gameInfo === null || gameInfo === undefined) {
             throw new Error("The game info parameter cannot be null or undefined.");
         }
-        if (gameServices === null || gameServices == undefined) {
+        if (gameServices === null || gameServices === undefined) {
             throw new Error("The game services parameter cannot be null or undefined.");
         }
         this._gameServices = gameServices;
@@ -46,7 +45,9 @@ export abstract class AbstractGameState implements GameComponent {
      * @param onChangingState A function to call with the new state as a parameter when the state changes.
      *    This function should be handled by the StatesHandler.
      */
-    public beginWithThisState(onChangingState = (abstractGameState: AbstractGameState) => {}) {
+    public beginWithThisState(onChangingState = (abstractGameState: AbstractGameState) => {
+        //Nothing for Abstract State
+    }) {
         if (AbstractGameState.hasDoneInitialization) {
             throw new Error("A state has already been initialized.");
         }

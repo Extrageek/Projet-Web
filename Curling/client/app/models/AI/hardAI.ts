@@ -1,8 +1,8 @@
 import { Vector3 } from "three";
 import { ComputerAI } from "./computerAI";
-import { RinkInfo } from "./../scenery/rink-info.interface";
+import { IRinkInfo } from "./../scenery/rink-info.interface";
 import { RandomHelper } from "./../random-helper";
-import { ShotParameters } from "./../shot-parameters.interface";
+import { IShotParameters } from "./../shot-parameters.interface";
 
 export class HardAI extends ComputerAI {
 
@@ -15,13 +15,13 @@ export class HardAI extends ComputerAI {
     private static readonly MIN_PUSH_DIRECTION_MODIFIER = -0.01;
     private static readonly MAX_PUSH_DIRECTION_MODIFIER = 0.01;
 
-    constructor(rinkInfo: RinkInfo) {
+    constructor(rinkInfo: IRinkInfo) {
         super(rinkInfo);
     }
 
-    protected shotParametersOnStone(stonePositionToShotOnIt: Vector3): ShotParameters {
+    protected shotParametersOnStone(stonePositionToShotOnIt: Vector3): IShotParameters {
         //Determine random shotPower and spin.
-        let shotParameters: ShotParameters = {
+        let shotParameters: IShotParameters = {
             spin: RandomHelper.getIntegerNumberInRange(0, 1),
             direction: null,
             power: RandomHelper.getNumberInRangeIncluded(HardAI.MIN_SHOT_TO_PUSH_STONE, HardAI.MAX_SHOT_TO_PUSH_STONE)
@@ -44,7 +44,7 @@ export class HardAI extends ComputerAI {
         return shotParameters;
     }
 
-    public determineShotParametersOnCenter(): ShotParameters {
+    public determineShotParametersOnCenter(): IShotParameters {
         let spin = RandomHelper.getIntegerNumberInRange(0, 1);
         return {
             spin: spin,

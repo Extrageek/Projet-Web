@@ -1,3 +1,3 @@
-export interface GameComponent {
+export interface IGameState {
     update(timePerFrame: number): void;
 }

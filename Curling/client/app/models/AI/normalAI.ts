@@ -1,7 +1,7 @@
 import { Vector3 } from "three";
 import { ComputerAI } from "./computerAI";
-import { RinkInfo } from "./../scenery/rink-info.interface";
-import { ShotParameters } from "./../shot-parameters.interface";
+import { IRinkInfo } from "./../scenery/rink-info.interface";
+import { IShotParameters } from "./../shot-parameters.interface";
 import { RandomHelper } from "./../random-helper";
 
 export class NormalAI extends ComputerAI {
@@ -11,19 +11,19 @@ export class NormalAI extends ComputerAI {
     private static readonly MIN_DIRECTION_MODIFIER = -0.07;
     private static readonly MAX_DIRECTION_MODIFIER = 0.07;
 
-    constructor(rinkInfo: RinkInfo) {
+    constructor(rinkInfo: IRinkInfo) {
         super(rinkInfo);
     }
 
-    protected shotParametersOnStone(stonePositionToShotOnIt: Vector3): ShotParameters {
+    protected shotParametersOnStone(stonePositionToShotOnIt: Vector3): IShotParameters {
         return this.randomShot();
     }
 
-    public determineShotParametersOnCenter(): ShotParameters {
+    public determineShotParametersOnCenter(): IShotParameters {
         return this.randomShot();
     }
 
-    private randomShot(): ShotParameters {
+    private randomShot(): IShotParameters {
         let spin = RandomHelper.getIntegerNumberInRange(0, 1);
         console.log("spin");
         console.log(spin);

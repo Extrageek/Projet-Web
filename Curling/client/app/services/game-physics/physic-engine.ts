@@ -1,13 +1,13 @@
 import { Vector3 } from "three";
-import { GameComponent } from "../../models/game-component.interface";
-import { ShotParameters } from "../../models/shot-parameters.interface";
+import { IGameState } from "../../models/game-state.interface";
+import { IShotParameters } from "../../models/shot-parameters.interface";
 import { StoneSpin } from "../../models/stone";
 
 /**
  * Class to calculate the physic movement of the stones on the game and automatically update the position.
  * It is created to be used on the XZ plane.
  */
-export class PhysicEngine implements GameComponent {
+export class PhysicEngine implements IGameState {
 
     public static readonly THETA = Math.PI / 25000;
     public static readonly Y_AXIS = new Vector3(0, 1, 0);
@@ -228,7 +228,7 @@ export class PhysicEngine implements GameComponent {
         this._direction.applyAxisAngle(PhysicEngine.Y_AXIS, this._theta);
         this._position.add(this._direction.clone().multiplyScalar(
             this._speed * timePerFrame - PhysicEngine.SPEED_DIMINUTION_NUMBER * Math.pow(timePerFrame, 2) / 2
-            )
+        )
         );
     }
 

@@ -5,5 +5,6 @@ import { Component } from "@angular/core";
     selector: "mon-app",
     templateUrl: "/assets/templates/app-component.html"
 })
+
 export class AppComponent {
 }

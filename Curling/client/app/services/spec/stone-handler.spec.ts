@@ -3,8 +3,8 @@ import { ObjectLoader, Vector3, Scene } from "three";
 import { StoneHandler } from "./../game-physics/stone-handler";
 import { Stone, StoneColor, StoneSpin } from "./../../models/stone";
 import { CameraType } from "./../game-physics/camera-type";
-import { RinkInfo } from "./../../models/scenery/rink-info.interface";
-import { ShotParameters } from "../../models/shot-parameters.interface";
+import { IRinkInfo } from "./../../models/scenery/rink-info.interface";
+import { IShotParameters } from "../../models/shot-parameters.interface";
 
 function do60Updates(stoneHandler: StoneHandler) {
     for (let i = 0; i < 60; ++i) {
@@ -15,7 +15,7 @@ function do60Updates(stoneHandler: StoneHandler) {
 describe("StoneHandler tests should", () => {
 
     let objectLoader: ObjectLoader;
-    let rinkInfo: RinkInfo;
+    let rinkInfo: IRinkInfo;
     let scene: Scene;
 
     before(() => {
@@ -49,11 +49,11 @@ describe("StoneHandler tests should", () => {
 
     let scene: Scene;
     let objectLoader: ObjectLoader;
-    let rinkInfo: RinkInfo;
+    let rinkInfo: IRinkInfo;
     let stoneHandler: StoneHandler;
     let timeoutId: NodeJS.Timer;
-    let shotParameters1: ShotParameters;
-    let shotParameters2: ShotParameters;
+    let shotParameters1: IShotParameters;
+    let shotParameters2: IShotParameters;
 
     before(() => {
         scene = new Scene();

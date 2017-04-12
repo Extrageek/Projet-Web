@@ -1,7 +1,7 @@
 import { AbstractGameState } from "./abstract-game-state";
 import { LoadingStone } from "./loading-stone";
 import { EndSet } from "./end-set";
-import { GameComponent } from "../../models/game-component.interface";
+import { IGameState } from "../../models/game-state.interface";
 import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { IGameServices } from "../../services/game-handler/games-services.interface";
 
@@ -28,7 +28,7 @@ export class ComputerShooting extends AbstractGameState {
         return ComputerShooting._instance;
     }
 
-    private constructor(gameServices:IGameServices, gameInfo: IGameInfo) {
+    private constructor(gameServices: IGameServices, gameInfo: IGameInfo) {
         super(gameServices, gameInfo);
     }
 

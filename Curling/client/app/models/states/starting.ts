@@ -35,6 +35,7 @@ export class Starting extends AbstractGameState {
         this._gameServices.cameraService.stopPerspectiveCameraToFollowObjectOnZ();
         this._gameServices.cameraService.replacePCameraToInitialPosition();
         this._gameServices.cameraService.setPerspectiveCameraCurrent();
+        this._gameServices.particlesService.removeParticulesFromScene();
         this._gameServices.stoneHandler.cleanAllStones();
         this._gameInfo.gameStatus.resetGameStatus();
         this._gameInfo.gameStatus.randomFirstPlayer();

@@ -21,12 +21,12 @@ import { CameraService } from "./../services/views/cameras.service";
 import { LightingService } from "./../services/views/ligthing.service";
 
 @NgModule({
-  imports: [ BrowserModule, FormsModule, AppRoutingModule, MaterialModule],
-  declarations: [ AppComponent, LeaderboardComponent, ModifierDirective,
-                  UsernameComponent, DifficultyComponent, DisplayComponent],
-  providers: [ RenderService, RestApiProxyService, UserService,
-               GameStatusService, CameraService, LightingService ],
-  bootstrap: [ AppComponent ]
+  imports: [BrowserModule, FormsModule, AppRoutingModule, MaterialModule],
+  declarations: [AppComponent, LeaderboardComponent, ModifierDirective,
+    UsernameComponent, DifficultyComponent, DisplayComponent],
+  providers: [RenderService, RestApiProxyService, UserService,
+    GameStatusService, CameraService, LightingService],
+  bootstrap: [AppComponent]
 })
 
 export class AppModule { }

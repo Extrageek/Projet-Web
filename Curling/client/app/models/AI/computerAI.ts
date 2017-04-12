@@ -1,6 +1,6 @@
 import { Vector3, Matrix3 } from "three";
-import { RinkInfo } from "./../scenery/rink-info.interface";
-import { ShotParameters } from "./../shot-parameters.interface";
+import { IRinkInfo } from "./../scenery/rink-info.interface";
+import { IShotParameters } from "./../shot-parameters.interface";
 import { PhysicEngine } from "../../services/game-physics/physic-engine";
 import { RandomHelper } from "./../random-helper";
 
@@ -42,24 +42,24 @@ export abstract class ComputerAI {
         new Vector3(0, 0, 1).applyAxisAngle(PhysicEngine.Y_AXIS, ComputerAI.ANGLE_ADJUSTMENT)
     ];
 
-    protected _rinkInfo: RinkInfo;
+    protected _rinkInfo: IRinkInfo;
     protected _physicEngine: PhysicEngine;
 
-    constructor(rinkInfo: RinkInfo) {
+    constructor(rinkInfo: IRinkInfo) {
         this._rinkInfo = rinkInfo;
         this._physicEngine = new PhysicEngine(rinkInfo.initialStonePosition);
     }
 
-    public determineShotParametersOnStone(stonePositionToShotOnIt: Vector3): ShotParameters {
+    public determineShotParametersOnStone(stonePositionToShotOnIt: Vector3): IShotParameters {
         if (stonePositionToShotOnIt === undefined || stonePositionToShotOnIt === null) {
             throw new Error("The stone position to shot on it cannot be null");
         }
         return this.shotParametersOnStone(stonePositionToShotOnIt);
     }
 
-    protected abstract shotParametersOnStone(stonePositionToShotOnIt: Vector3): ShotParameters;
+    protected abstract shotParametersOnStone(stonePositionToShotOnIt: Vector3): IShotParameters;
 
-    public abstract determineShotParametersOnCenter(): ShotParameters;
+    public abstract determineShotParametersOnCenter(): IShotParameters;
 
     protected applyDirectionModification(direction: Vector3, angleToApply: number): Vector3 {
         console.log(angleToApply);

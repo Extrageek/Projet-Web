@@ -1,21 +1,21 @@
 import { Injectable } from "@angular/core";
 import { Object3D, PerspectiveCamera, Vector3 } from "three";
-import { GameComponent } from "../../models/game-component.interface";
+import { IGameState } from "../../models/game-state.interface";
 import { SoundManager } from "../sound-manager";
 
-interface FollowInformation {
+interface IFollowInformation {
     objectToFollow: Object3D;
     objectWhoFollow: Object3D;
     distanceVector: Vector3;
 }
 
-interface FollowUpdate {
-    followInformation: FollowInformation;
+interface IFollowUpdate {
+    followInformation: IFollowInformation;
     functionToApply: Function;
 }
 
 @Injectable()
-export class CameraService implements GameComponent {
+export class CameraService implements IGameState {
     private static readonly FIELD_OF_VIEW = 65;
     public static readonly INITIAL_POSITION_P = { x: 0, y: 6, z: -24 };
     private static readonly POINT_TO_P = { x: 0, y: 0, z: -10 };
@@ -27,7 +27,7 @@ export class CameraService implements GameComponent {
     private _topViewCamera: PerspectiveCamera;
     private _currentCamera: PerspectiveCamera;
     private _lastCameraUsedIndex: number;
-    private _updateInfo: FollowUpdate;
+    private _updateInfo: IFollowUpdate;
 
     get currentCamera() {
         return this._currentCamera;
@@ -96,7 +96,7 @@ export class CameraService implements GameComponent {
         this._updateInfo = null;
     }
 
-    private followObjectOnZAxis(informations: FollowInformation) {
+    private followObjectOnZAxis(informations: IFollowInformation) {
         informations.objectWhoFollow.position.z =
             informations.objectToFollow.position.z + informations.distanceVector.z;
     }

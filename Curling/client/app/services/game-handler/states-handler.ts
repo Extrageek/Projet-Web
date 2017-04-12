@@ -12,15 +12,15 @@ import { ComputerAI } from "../../models/AI/ComputerAI";
 import { NormalAI } from "../../models/AI/normalAI";
 import { HardAI } from "../../models/AI/hardAI";
 import { Difficulty } from "../../models/difficulty";
-import { RinkInfo } from "../../models/scenery/rink-info.interface";
-import { GameComponent } from "../../models/game-component.interface";
+import { IRinkInfo } from "../../models/scenery/rink-info.interface";
+import { IGameState } from "../../models/game-state.interface";
 import { IGameServices } from "../../services/game-handler/games-services.interface";
 import { IAngularInfo } from "../../services/game-handler/angular-info.interface";
 
 /**
  * Handle the lifecyle of the states
  */
-export class StatesHandler implements GameComponent {
+export class StatesHandler implements IGameState {
 
     private static _statesHandler: StatesHandler;
 
@@ -35,7 +35,7 @@ export class StatesHandler implements GameComponent {
 
     public static getInstance() {
         if (StatesHandler._statesHandler === undefined) {
-           throw new Error("The createInstance method must be called before getting the instance.");
+            throw new Error("The createInstance method must be called before getting the instance.");
         }
         return this._statesHandler;
     }
@@ -75,7 +75,7 @@ export class StatesHandler implements GameComponent {
         });
     }
 
-    private createComputerAI(difficulty: Difficulty, rinkInfo: RinkInfo): ComputerAI {
+    private createComputerAI(difficulty: Difficulty, rinkInfo: IRinkInfo): ComputerAI {
         let computerAI: ComputerAI;
         if (difficulty === Difficulty.NORMAL) {
             computerAI = new NormalAI(rinkInfo);

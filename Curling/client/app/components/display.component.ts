@@ -10,9 +10,11 @@ import { RenderService } from "../services/game-handler/render.service";
     moduleId: module.id,
     selector: "display-component",
     templateUrl: "../../assets/templates/display-component.html",
-    styleUrls: ["../../assets/stylesheets/display-component.css",
-                "../../assets/stylesheets/menu-hamburger.css",
-                "../../assets/stylesheets/gl-component.css"]
+    styleUrls: [
+        "../../assets/stylesheets/display-component.css",
+        "../../assets/stylesheets/menu-hamburger.css",
+        "../../assets/stylesheets/gl-component.css"
+    ]
 })
 export class DisplayComponent implements OnInit {
     _userSetting: UserService;
@@ -26,7 +28,7 @@ export class DisplayComponent implements OnInit {
         await this.api.removeUsername(this._userSetting.name);
         await this.api.createGameRecord(this._userSetting.name, this._userSetting.difficulty, this.gameStatusService);
     }
-    
+
     @HostListener("window:keydown.space", ["$event"])
     public disableScrollingWithSpace(event: KeyboardEvent) {
         event.preventDefault();
@@ -56,7 +58,7 @@ export class DisplayComponent implements OnInit {
         }
     }
 
-    public toggleOverlay(event: MouseEvent) {
+    public toggleOverlay(event: MouseEvent): void {
         event.stopImmediatePropagation();
         this.hamburger.nativeElement.classList.toggle("is-active");
         this.overlay.nativeElement.classList.toggle("is-open-menu");
@@ -66,7 +68,7 @@ export class DisplayComponent implements OnInit {
         this._computerName = this.userService.getComputerName();
     }
 
-    public gameOver() {
+    public gameOver(): void {
         this.api.createGameRecord(this._userSetting.name, this._userSetting.difficulty, this.gameStatusService);
         this.api.removeUsername(this._userSetting.name);
         this.renderService.removeCanvasElement();
