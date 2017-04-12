@@ -63,10 +63,8 @@ export class RenderService {
             gameStatus: gameStatusService,
             broom: null,
             rink: null,
-            currentCamera: CameraType.PERSPECTIVE_CAM,
             gameComponentsToUpdate: new Object(),
-            line: { lineGeometry: null, lineDashedMaterial: null, lineMesh: null, lineAnimationSlower: null },
-            mousePositionPlaneXZ: new Vector3(0, 0, 0)
+            line: { lineGeometry: null, lineDashedMaterial: null, lineMesh: null, lineAnimationSlower: null }
         };
 
         this._angularInfo = {
@@ -91,7 +89,6 @@ export class RenderService {
             this._clock = new Clock(false);
 
             this._renderer = new WebGLRenderer({ antialias: true, devicePixelRatio: window.devicePixelRatio });
-            this._renderer.setSize(window.innerWidth, window.innerHeight, true);
 
             //Part 2: Scenery
             this.generateSkybox();
@@ -126,6 +123,8 @@ export class RenderService {
 
     private startGame() {
         StatesHandler.getInstance().startGame();
+        this._renderer.setSize(window.innerWidth, window.innerHeight);
+        this._gameServices.cameraService.resizeCurrentCamera();
         this._clock.start();
         this.animate();
     }
@@ -243,12 +242,6 @@ export class RenderService {
         this.onFinishedLoadingModel();
     }
 
-    public switchCamera() {
-        this._gameServices.cameraService.nextCamera();
-        this._gameInfo.currentCamera = (this._gameInfo.currentCamera + 1) % CameraType.NB_CAMERAS;
-        this.onResize();
-    }
-
     private onFinishedLoadingModel() {
         ++this._numberOfModelsLoaded;
         if (!this._animationID && this._numberOfModelsLoaded >= RenderService.NUMBER_OF_MODELS_TO_LOAD) {
@@ -288,25 +281,11 @@ export class RenderService {
         }
     }
 
-    onWindowResize() {
-        let factor = 0.8;
-        let newWidth: number = window.innerWidth * factor;
-        let newHeight: number = window.innerHeight * factor;
-
-        this._gameServices.cameraService.currentCamera.aspect = newWidth / newHeight;
-        this._gameServices.cameraService.currentCamera.updateProjectionMatrix();
-
-        this._renderer.setSize(newWidth, newHeight);
-    }
-
     onResize() {
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-
-        this._gameServices.cameraService.currentCamera.aspect = width / height;
-        this._gameServices.cameraService.currentCamera.updateProjectionMatrix();
-
-        this._renderer.setSize(width, height);
+        if (this._animationID) {
+            this._gameServices.cameraService.resizeCurrentCamera();
+            this._renderer.setSize(window.innerWidth, window.innerHeight);
+        }
     }
 
     switchSpin(event: KeyboardEvent) {
@@ -315,6 +294,12 @@ export class RenderService {
             if (event.keyCode === sKeyCode) {
                 StatesHandler.getInstance().onSpinButtonPressed();
             }
+        }
+    }
+    
+    public switchCamera() {
+        if (this._animationID) {
+            StatesHandler.getInstance().onSpacebarPressed();    
         }
     }
 

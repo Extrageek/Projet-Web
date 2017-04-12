@@ -39,8 +39,8 @@ export class EndGame extends AbstractGameState {
     }
 
     protected performEnteringState() {
-        this._gameServices.cameraService.perspectiveCamera;
-        this._gameServices.cameraService.moveCameraEndRink();
+        this._gameServices.cameraService.setPerspectiveCameraCurrent();
+        this._gameServices.cameraService.movePCameraEndRink();
         Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "particleService",
             { value: this._gameServices.particlesService });
         this.addAppropriateEndGameText();
@@ -72,6 +72,11 @@ export class EndGame extends AbstractGameState {
 
     private removeEndGameText() {
         this._gameServices.textureHandler.removeText(this._endGameTextIdentifier);
+    }
+
+    //Bloc the camera toggle by overriding this method.
+    protected performCameraToggle(): AbstractGameState {
+        return null;
     }
 
     protected performMouseMove(): AbstractGameState {

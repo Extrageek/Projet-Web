@@ -55,6 +55,7 @@ export class EndSet extends AbstractGameState {
                 this._gameInfo.gameStatus.currentPlayer = CurrentPlayer.RED;
             }
             this._newState = LoadingStone.getInstance();
+            this._gameServices.cameraService.setPerspectiveCameraCurrent();
             this.transitionText.push(this._gameServices.textureHandler.addText(EndSet.TEXT_POSITION_ABOVE,
                 "Veuillez cliquez pour", EndSet.TEXT_COLOR));
             this.transitionText.push(this._gameServices.textureHandler.addText(EndSet.TEXT_POSITION_BELOW,
@@ -70,6 +71,11 @@ export class EndSet extends AbstractGameState {
             this._gameServices.textureHandler.removeText(identifier);
         });
         this.transitionText.splice(0, this.transitionText.length);
+    }
+
+    //Bloc the camera toggle by overriding this method.
+    protected performCameraToggle(): AbstractGameState {
+        return null;
     }
 
     protected performMouseMove(): AbstractGameState {

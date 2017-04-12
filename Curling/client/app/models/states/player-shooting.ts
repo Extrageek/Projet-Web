@@ -1,7 +1,7 @@
 import { AbstractGameState } from "./abstract-game-state";
 import { EndSet } from "./end-set";
 import { LoadingStone } from "./loading-stone";
-import { CameraType } from "./../../services/game-physics/camera-type";
+import { calculateMousePositionOnObject } from "../../services/game-physics/mouse.service";
 import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { IGameServices } from "../../services/game-handler/games-services.interface";
 
@@ -63,27 +63,9 @@ export class PlayerShooting extends AbstractGameState {
     }
 
     protected performMouseMove(event: MouseEvent): AbstractGameState {
-
-        let currentCamera: THREE.Camera;
-        if (this._gameInfo.currentCamera === CameraType.PERSPECTIVE_CAM) {
-            currentCamera = this._gameServices.cameraService.perspectiveCamera;
-        }
-        else if (this._gameInfo.currentCamera === CameraType.ORTHOGRAPHIC_CAM) {
-            currentCamera = this._gameServices.cameraService.topViewCamera;
-        }
-
-        let x = (event.clientX / window.innerWidth) * 2 - 1;
-        let y = - (event.clientY / window.innerHeight) * 2 + 1;
-
-        this._raycaster.setFromCamera({ x, y }, currentCamera);
-
-        for (let i = 0; i < this._gameInfo.rink.children.length; i++) {
-            let child = this._gameInfo.rink.children[i];
-            let intersects = this._raycaster.intersectObject(child);
-            if (intersects.length > 0) {
-                this._gameInfo.broom.position.set(0, 0, 0);
-                this._gameInfo.broom.position.copy(intersects[0].point);
-            }
+        let intersections = calculateMousePositionOnObject(event, this._gameInfo.rink, this._gameServices.cameraService.currentCamera);
+        if (intersections.length > 0) {
+            this._gameInfo.broom.position.copy(intersections[0].point);
         }
         return null;
     }

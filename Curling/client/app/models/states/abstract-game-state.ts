@@ -4,6 +4,7 @@ import { IGameInfo } from "../../services/game-handler/game-info.interface";
 import { IGameServices } from "../../services/game-handler/games-services.interface";
 import { ShotParameters } from "../shot-parameters.interface";
 import { GameComponent } from "../game-component.interface";
+import { CameraType } from "../../services/game-physics/camera-type";
 
 export abstract class AbstractGameState implements GameComponent {
 
@@ -168,10 +169,12 @@ export abstract class AbstractGameState implements GameComponent {
 
     /**
      * The children classes can override this method to give a particular behaviour when the button to toggle the
-     * camera is pressed.
+     * camera is pressed. By default, the camera view is changed.
      * @returns AbstractGameState The new state to which it must transit, or null if no transition is necessary.
      */
     protected performCameraToggle(): AbstractGameState {
+        this._gameServices.cameraService.nextCamera();
+        this._gameServices.cameraService.resizeCurrentCamera();
         return null;
     }
 

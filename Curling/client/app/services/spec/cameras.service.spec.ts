@@ -12,22 +12,11 @@ describe("Camera service should", () => {
         cameraService = new CameraService();
     });
 
-    it("create a new camera service with valid cameras", () => {
-        expect(cameraService.perspectiveCamera).to.be.instanceof(PerspectiveCamera);
-        expect(cameraService.topViewCamera).to.be.instanceof(PerspectiveCamera);
-    });
-
-    it("get perspective camera", () => {
-        expect(cameraService.perspectiveCamera).to.be.instanceof(PerspectiveCamera);
-    });
-
-    it("get topView camera", () => {
-        expect(cameraService.topViewCamera).to.be.instanceof(PerspectiveCamera);
-    });
-
     it("get perspective camera than topView camera", () => {
-        expect(cameraService.perspectiveCamera).to.be.instanceof(PerspectiveCamera);
-        expect(cameraService.topViewCamera).to.be.instanceof(PerspectiveCamera);
+        cameraService.setPerspectiveCameraCurrent();
+        expect(cameraService.currentCamera).to.be.instanceof(PerspectiveCamera);
+        cameraService.setPerspectiveCameraCurrent();
+        expect(cameraService.currentCamera).to.be.instanceof(PerspectiveCamera);
     });
 
     it("get perspective, topView and perspective camera again", () => {
@@ -42,7 +31,7 @@ describe("Camera service should", () => {
         const displacementByFrame = 0.02;
         const numberOfFrames = 80;
         let objectFollowed = new Object3D();
-        let perspectiveCamera = cameraService.perspectiveCamera;
+        let perspectiveCamera = cameraService.currentCamera;
         let displacementVector = new Vector3(0, 0, displacementByFrame * numberOfFrames);
         let expectedPosition = perspectiveCamera.position.add(displacementVector);
         cameraService.movePerspectiveCameraToFollowObjectOnZ(objectFollowed);
@@ -69,7 +58,7 @@ describe("Camera service should", () => {
         const numberOfFramesBefore = 80;
         const numberOfFramesAfter = 20;
         let objectFollowed = new Object3D();
-        let perspectiveCamera = cameraService.perspectiveCamera;
+        let perspectiveCamera = cameraService.currentCamera;
         let displacementVector = new Vector3(0, 0, displacementByFrame * numberOfFramesBefore);
         let expectedPosition = perspectiveCamera.position.add(displacementVector);
         cameraService.movePerspectiveCameraToFollowObjectOnZ(objectFollowed);
@@ -109,7 +98,7 @@ describe("Camera service should", () => {
         objectFollowed.position.set(1, 1, 1);
         cameraService.update(1);
         cameraService.replacePCameraToInitialPosition();
-        let perspectiveCamera = cameraService.perspectiveCamera;
+        let perspectiveCamera = cameraService.currentCamera;
         expect(perspectiveCamera.position.x).to.equals(CameraService.INITIAL_POSITION_P.x);
         expect(perspectiveCamera.position.y).to.equals(CameraService.INITIAL_POSITION_P.y);
         expect(perspectiveCamera.position.z).to.equals(CameraService.INITIAL_POSITION_P.z);
