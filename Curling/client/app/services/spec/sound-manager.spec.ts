@@ -17,7 +17,7 @@ describe("Sound manager should should", function () {
 
     it("Broom sound should be correctly initialized and playable", () => {
         setTimeout(() => {
-            let broomSoundIn = instance.broomInSound;
+            let broomSoundIn = instance.playBroomInSound();
             expect(broomSoundIn).to.be.an.instanceof(Audio);
             expect(broomSoundIn.getLoop()).to.equal(false);
         }, 2000);
@@ -25,7 +25,7 @@ describe("Sound manager should should", function () {
 
     it("Initialize the instance of a sound manager should not be undefined", () => {
         setTimeout(() => {
-            let broomSoundOut = instance.broomOutSound;
+            let broomSoundOut = instance.playBroomOutSound();
             expect(broomSoundOut).to.be.an.instanceof(Audio);
             expect(broomSoundOut.getLoop()).to.equal(false);
         }, 2000);
@@ -33,7 +33,7 @@ describe("Sound manager should should", function () {
 
     it("Initialize the instance of a sound manager should not be undefined", () => {
         setTimeout(() => {
-            let collisionSound = instance.collisionSound;
+            let collisionSound = instance.playCollisionSound();
             expect(collisionSound).to.be.an.instanceof(Audio);
             expect(collisionSound.getLoop()).to.equal(false);
         }, 2000);
