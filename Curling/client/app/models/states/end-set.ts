@@ -68,7 +68,7 @@ export class EndSet extends AbstractGameState {
             this._gameServices.textureHandler.removeText(identifier);
         });
         this.transitionText.splice(0, this.transitionText.length);
-        return Promise.resolve();;
+        return Promise.resolve();
     }
 
     //Bloc the camera toggle by overriding this method.

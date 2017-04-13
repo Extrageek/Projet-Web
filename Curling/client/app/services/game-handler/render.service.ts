@@ -31,6 +31,7 @@ import { IAngularInfo } from "./angular-info.interface";
 export class RenderService {
 
     private static readonly NUMBER_OF_MODELS_TO_LOAD = 4;
+    private static readonly MEDIUM_BLUE = 0x0000E0;
 
     private _numberOfModelsLoaded: number;
     private _lightingService: LightingService;
@@ -173,7 +174,7 @@ export class RenderService {
         geometry.computeLineDistances();
 
         let material = new LineDashedMaterial({
-            color: 0x0000e0,
+            color: RenderService.MEDIUM_BLUE,
             linewidth: 5,
             dashSize: 1,
             gapSize: 1,
@@ -308,10 +309,10 @@ export class RenderService {
             }
         }
     }
-    
+
     public switchCamera() {
         if (this._animationID) {
-            StatesHandler.getInstance().onSpacebarPressed();    
+            StatesHandler.getInstance().onSpacebarPressed();
         }
     }
 

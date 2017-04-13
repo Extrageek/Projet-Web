@@ -125,7 +125,7 @@ export abstract class AbstractGameState implements IGameState {
 
     /**
      * Method to call when the button to switch spin is pressed. It will execute the corresponding action for the game.
-     * 
+     *
      */
     public onSpinButtonPressed() {
         this.performAction(this.performSpinButtonPressed);

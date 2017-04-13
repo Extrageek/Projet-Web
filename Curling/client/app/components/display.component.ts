@@ -46,7 +46,7 @@ export class DisplayComponent implements OnInit {
         private userService: UserService,
         private gameStatusService: GameStatusService,
         private renderService: RenderService) {
-            this._textToShow = "Cliquez pour continuer."
+            this._textToShow = "Cliquez pour continuer.";
         }
 
     ngOnInit() {
