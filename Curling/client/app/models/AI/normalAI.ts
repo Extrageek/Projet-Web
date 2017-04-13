@@ -6,6 +6,8 @@ import { RandomHelper } from "./../random-helper";
 
 export class NormalAI extends ComputerAI {
 
+    //WARNING : If the physic or the arena dimension change, these numbers must change to be able
+    //to shot in the center.
     private static readonly MIN_SHOT_POWER = 4;
     private static readonly MAX_SHOT_POWER = 4.5;
     private static readonly MIN_DIRECTION_MODIFIER = -0.07;
@@ -25,8 +27,6 @@ export class NormalAI extends ComputerAI {
 
     private randomShot(): IShotParameters {
         let spin = RandomHelper.getIntegerNumberInRange(0, 1);
-        console.log("spin");
-        console.log(spin);
         return {
             spin: spin,
             direction: this.applyDirectionModification(ComputerAI.directionsToAimInCenter[spin].clone(),

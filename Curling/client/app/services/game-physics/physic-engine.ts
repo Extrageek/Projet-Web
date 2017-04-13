@@ -1,6 +1,5 @@
 import { Vector3 } from "three";
 import { IGameState } from "../../models/game-state.interface";
-import { IShotParameters } from "../../models/shot-parameters.interface";
 import { StoneSpin } from "../../models/stone";
 
 /**

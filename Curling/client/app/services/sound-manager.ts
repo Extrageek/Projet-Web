@@ -35,22 +35,22 @@ export class SoundManager {
         });
     }
 
-    get broomOutSound(): THREE.Audio {
+    get broomOutSound(): Audio {
         this._broomOutSound.isPlaying = false;
         return this._broomOutSound.play();
     }
 
-    get broomInSound(): THREE.Audio {
+    get broomInSound(): Audio {
         this._broomInSound.isPlaying = false;
         return this._broomInSound.play();
     }
 
-    get collisionSound(): THREE.Audio {
+    get collisionSound(): Audio {
         this._collisionSound.isPlaying = false;
         return this._collisionSound.play();
     }
 
-    get listener(): THREE.AudioListener {
+    get listener(): AudioListener {
         return this._listener;
     }
 

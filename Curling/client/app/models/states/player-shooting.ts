@@ -28,7 +28,6 @@ export class PlayerShooting extends AbstractGameState {
 
     protected performEnteringState() {
         this._gameInfo.broom.showBroom();
-        //this._gameInfo.broom.changeColourTo(THREE.ColorKeywords.green);
         this._gameServices.stoneHandler.performShot(
             AbstractGameState.shotParameters,
             () => {
@@ -46,7 +45,8 @@ export class PlayerShooting extends AbstractGameState {
     }
 
     protected performMouseMove(event: MouseEvent): AbstractGameState {
-        let intersections = calculateMousePositionOnObject(event, this._gameInfo.rink, this._gameServices.cameraService.currentCamera);
+        let intersections = calculateMousePositionOnObject(event, this._gameInfo.rink,
+            this._gameServices.cameraService.currentCamera);
         if (intersections.length > 0) {
             this._gameInfo.broom.position.copy(intersections[0].point);
         }

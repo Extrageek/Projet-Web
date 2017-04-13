@@ -9,7 +9,7 @@ import { IGameServices } from "../../services/game-handler/games-services.interf
 export class ComputerShooting extends AbstractGameState {
 
     private static _instance: AbstractGameState = null;
-    
+
     public static createInstance(gameServices: IGameServices, gameInfo: IGameInfo) {
         ComputerShooting._instance = new ComputerShooting(gameServices, gameInfo);
     }
