@@ -51,9 +51,9 @@ export class LetterBankHandler {
             randomLetter = this.bank.bank[randomNumber];
             if (this.bank.numberOfLettersInBank === 0) {
                 break;
-            } else if (this._bank.letterIsAvailable(randomLetter)) {
-                chosenLetter = this.bank.getLetterFromBank(randomLetter);
-                newEasel.push(chosenLetter);
+            } else if (randomLetter.quantity > 0) {
+                this._bank.getLetterFromBank(randomLetter);
+                newEasel.push(randomLetter);
             } else {
                 // Check of this is necessary, we can stay in an infinite loop here
                 --index;
@@ -90,11 +90,9 @@ export class LetterBankHandler {
                     && element.match("^[A-Z]$").length > 0 ? "blank" : element.toUpperCase();
             let letter = this._bank.bank.filter((alphaLetter: Letter) => {
                 // If the char is an Capital letter
-                console.log("PARSE ////// " + alphaLetter.alphabetLetter + " - " + alphabet);
-
                 return alphaLetter.alphabetLetter === alphabet;
             })[0];
-            letters.push(new Letter(letter.alphabetLetter, letter.point, letter.quantity));
+            letters.push(letter);
         });
 
         return letters;
