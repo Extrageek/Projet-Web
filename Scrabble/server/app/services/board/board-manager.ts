@@ -92,20 +92,22 @@ export class BoardManager {
         for (let index = 0; index < scrabbleLetters.length; index++) {
             let nextColumnIndex = columnIndex + index;
 
+            let letter = scrabbleLetters[index];
             // Get the row number from the given letter
             let currentSquare = this._board.squares[firstRowIndex][nextColumnIndex];
 
             if (!currentSquare.isBusy) {
                 this._board.squares[firstRowIndex][nextColumnIndex].squareValue =
-                    scrabbleLetters[index].alphabetLetter;
-                this._board.squares[firstRowIndex][nextColumnIndex].letter = scrabbleLetters[index];
-                if (scrabbleLetters[index].alphabetLetter === Alphabet.blank.letter) {
+                    letter.alphabetLetter;
+                this._board.squares[firstRowIndex][nextColumnIndex].letter
+                    = new Letter(letter.alphabetLetter, letter.point, letter.quantity);
+                if (letter.alphabetLetter === Alphabet.blank.letter) {
                     this._board.squares[firstRowIndex][nextColumnIndex].letter.alphabetLetter
                         = trueWord[index].toUpperCase();
                 }
                 this._board.squares[firstRowIndex][nextColumnIndex].isBusy = true;
-                this._player.easel.removeLetter(scrabbleLetters[index].alphabetLetter);
-                console.log("REMOVE LETTER -- ", scrabbleLetters[index].alphabetLetter);
+                this._player.easel.removeLetter(letter.alphabetLetter);
+                console.log("REMOVE LETTER -- ", letter.alphabetLetter);
                 this._board.addLastLetterAdded(firstRowIndex, nextColumnIndex);
             }
         }
@@ -133,17 +135,19 @@ export class BoardManager {
         for (let index = 0; index < scrabbleLetters.length; index++) {
             let nextRowIndex = firstRowIndex + index;
             let nextSquare = this._board.squares[nextRowIndex][columnIndex];
+            let letter = scrabbleLetters[index];
 
             if (!nextSquare.isBusy) {
                 this._board.squares[nextRowIndex][columnIndex].squareValue =
-                    scrabbleLetters[index].alphabetLetter;
-                this._board.squares[nextRowIndex][columnIndex].letter = scrabbleLetters[index];
-                if (scrabbleLetters[index].alphabetLetter === Alphabet.blank.letter) {
+                    letter.alphabetLetter;
+                this._board.squares[nextRowIndex][columnIndex].letter
+                    = new Letter(letter.alphabetLetter, letter.point, letter.quantity);
+                if (letter.alphabetLetter === Alphabet.blank.letter) {
                     this._board.squares[nextRowIndex][columnIndex].letter.alphabetLetter
                         = trueWord[index].toUpperCase();
                 }
                 this._board.squares[nextRowIndex][columnIndex].isBusy = true;
-                this._player.easel.removeLetter(scrabbleLetters[index].alphabetLetter);
+                this._player.easel.removeLetter(letter.alphabetLetter);
                 this._board.addLastLetterAdded(nextRowIndex, columnIndex);
             }
         }

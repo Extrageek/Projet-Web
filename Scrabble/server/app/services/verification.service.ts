@@ -42,7 +42,7 @@ export class VerificationService {
             // verify the initial word
             let leftPartOfWord = this.discoverLeftPartOfWord(board, board.squares[firstRowIndex][firstColumnIndex]);
             let rightPartOfWord = this.discoverRightPartOfWord(board,
-                board.squares[firstRowIndex][firstColumnIndex + initialWord.length]);
+                board.squares[firstRowIndex][firstColumnIndex + initialWord.length - 1]);
             areValidWords = this.verifyWordHorizontal(board, firstRowIndex, firstColumnIndex,
                 leftPartOfWord + initialWord + rightPartOfWord);
             board.lastLettersAdded.forEach((squarePosition: SquarePosition) => {
@@ -62,7 +62,7 @@ export class VerificationService {
             // verify the initial word
             let topPartOfWord = this.discoverTopPartOfWord(board, board.squares[firstRowIndex][firstColumnIndex]);
             let downPartOfWord = this.discoverDownPartOfWord(board,
-                board.squares[firstRowIndex + initialWord.length][firstColumnIndex]);
+                board.squares[firstRowIndex + initialWord.length - 1][firstColumnIndex]);
             areValidWords = this.verifyWordVertical(board, firstRowIndex, firstColumnIndex,
                 topPartOfWord + initialWord + downPartOfWord);
             board.lastLettersAdded.forEach((squarePosition: SquarePosition) => {
