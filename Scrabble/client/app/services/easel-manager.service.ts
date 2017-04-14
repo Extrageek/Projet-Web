@@ -75,7 +75,7 @@ export class EaselManagerService {
             this.setFocusToElementWithGivenIndex(easelLength, newPosition);
         }
 
-        console.log("new position", newPosition);
+
 
         return newPosition;
     }
@@ -123,20 +123,20 @@ export class EaselManagerService {
         }
     }
 
-    public parseStringToListofChar(texte: string): Array<string> {
+    public parseStringToListOfChar(texte: string): Array<string> {
         if (texte === null
             || texte === undefined) {
             throw new Error("Null argument error: The parameter cannot be null");
         }
         let listOfChar = new Array<string>();
         for (let index = 0; index < texte.length; ++index) {
-            listOfChar.push(texte[index].toUpperCase());
-            console.log("MOT A PLACER   --", listOfChar);
+            listOfChar.push(texte[index]);
+
         }
         return listOfChar;
     }
 
-    public parseScrabbleLettersToListofChar(scrabbleLetters: Array<IScrabbleLetter>): Array<string> {
+    public parseScrabbleLettersToListOfChar(scrabbleLetters: Array<IScrabbleLetter>): Array<string> {
         if (scrabbleLetters === null) {
             throw new Error("Null argument error: The parameter cannot be null");
         }
@@ -190,8 +190,6 @@ export class EaselManagerService {
                 return letter === enteredLetters[index]
                     || enteredLetters[index] === '*';
             });
-
-            //console.log("Easel manager", letterIndex);
 
             if (letterIndex !== -1) {
                 words.push(easelLetters[letterIndex]);

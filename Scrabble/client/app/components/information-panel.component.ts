@@ -75,8 +75,6 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
                 this._minutes = counter.minutes;
                 this._seconds = counter.seconds;
 
-                //console.log(this.minutes, this.seconds);
-
                 if (this._minutes === 0 && this._seconds === 0 && this.socketService.isCurrentPlayer()) {
                     let request = {
                         commandType: CommandType.PassCmd,
@@ -94,7 +92,7 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
             .subscribe((response: Array<string>) => {
                 if (response !== undefined && response !== null) {
                     // Temporary settings, we can use a manager to
-                    console.log("\n\n\n" + response + "\n\n\n");
+
                     this.socketService.playersPriorityQueue = response;
                 }
             });

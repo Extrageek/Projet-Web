@@ -107,7 +107,7 @@ export class BoardManager {
                 }
                 this._board.squares[firstRowIndex][nextColumnIndex].isBusy = true;
                 this._player.easel.removeLetter(letter.alphabetLetter);
-                console.log("REMOVE LETTER -- ", letter.alphabetLetter);
+
                 this._board.addLastLetterAdded(firstRowIndex, nextColumnIndex);
             }
         }

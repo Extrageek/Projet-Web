@@ -46,29 +46,29 @@ export class ChangeLettersCommand implements ICommand {
     public createExchangeEaselLettersRequest(lettersInEasel: Array<IScrabbleLetter>):
         ICommandRequest<{ indexOfLettersToChange: Array<number>, lettersToChange: Array<string> }> {
 
-        let enteredletters = this._easelManagerService.parseStringToListofChar(this.parameters);
-        if (enteredletters === null
-            || enteredletters.length === 0
-            || enteredletters.length > lettersInEasel.length) {
+        let enteredLetters = this._easelManagerService.parseStringToListOfChar(this.parameters.toUpperCase());
+        if (enteredLetters === null
+            || enteredLetters.length === 0
+            || enteredLetters.length > lettersInEasel.length) {
             this.commandRequest._commandStatus = CommandStatus.SynthaxeError;
 
         } else {
 
             let indexOfLettersToChange = new Array<number>();
-            this.commandRequest._response.lettersToChange = enteredletters;
+            this.commandRequest._response.lettersToChange = enteredLetters;
 
             let tempEaselLetters = new Array<string>();
             lettersInEasel.forEach((letter) => {
                 tempEaselLetters.push(letter._alphabetLetter);
             });
 
-            for (let index = 0; index < enteredletters.length; ++index) {
-                if (enteredletters[index] === CommandsHelper.BLANK_VALUE) {
-                    enteredletters[index] = CommandsHelper.BLANK_WORD;
+            for (let index = 0; index < enteredLetters.length; ++index) {
+                if (enteredLetters[index] === CommandsHelper.BLANK_VALUE) {
+                    enteredLetters[index] = CommandsHelper.BLANK_WORD;
                 }
 
                 let letterIndex = tempEaselLetters.findIndex((letter: string) =>
-                    letter.toUpperCase() === enteredletters[index].toUpperCase());
+                    letter.toUpperCase() === enteredLetters[index].toUpperCase());
 
                 if (letterIndex === -1 || letterIndex === undefined) {
                     this.commandRequest._commandStatus = CommandStatus.NotAllowed;

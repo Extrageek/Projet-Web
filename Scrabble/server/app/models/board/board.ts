@@ -48,7 +48,7 @@ export class Board {
             let rowIndex = BoardHelper.convertCharToIndex(this._lastLettersAdded[index].row);
             let columnIndex = this._lastLettersAdded[index].column - 1;
             let letter = this._squares[rowIndex][columnIndex].letter;
-            removedLetters.push(new Letter(letter.alphabetLetter, letter.point, letter.quantity));
+            removedLetters.push(letter);
             this._squares[rowIndex][columnIndex].letter = new Letter("", 0, 0);
             this._squares[rowIndex][columnIndex].squareValue = this._squares[rowIndex][columnIndex].type.toString();
         }

@@ -89,7 +89,7 @@ export class VerificationService {
 
         for (let indexOffset = 0; indexOffset < word.length; indexOffset++) {
             let square = board.squares[rowIndex][firstColumnIndex + indexOffset];
-            console.log("\n\nLAST LETTER ADDED =============== ", board.lastLettersAdded[indexLastLettersAdded]);
+
             let isSquareNewLetter =
                 board.lastLettersAdded[indexLastLettersAdded] !== undefined
                 && board.lastLettersAdded[indexLastLettersAdded].column - 1 === firstColumnIndex + indexOffset

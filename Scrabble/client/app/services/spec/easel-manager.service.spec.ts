@@ -141,17 +141,17 @@ describe("EaselManagerService", () => {
     });
 
     it("throw and exception if the text is null when trying to get a list of char", () => {
-        let verification = () => service.parseStringToListofChar(null);
+        let verification = () => service.parseStringToListOfChar(null);
         expect(verification).to.throw(Error);
     });
 
     it("throw and exception if the text is not null when trying to get a list of char", () => {
-        let response = service.parseStringToListofChar("abc");
+        let response = service.parseStringToListOfChar("abc");
         expect(response).to.be.an.instanceOf(Array);
     });
 
     it("throw and exception if the array is null when trying to get a list of string", () => {
-        let verification = () => service.parseScrabbleLettersToListofChar(null);
+        let verification = () => service.parseScrabbleLettersToListOfChar(null);
         expect(verification).to.throw(Error);
     });
 
@@ -160,7 +160,7 @@ describe("EaselManagerService", () => {
         scrabbleLetters.push({_alphabetLetter: Alphabet.LETTER_A, _imageSource: ""});
         scrabbleLetters.push({_alphabetLetter: Alphabet.LETTER_B, _imageSource: ""});
         scrabbleLetters.push({_alphabetLetter: Alphabet.LETTER_BLANK, _imageSource: ""});
-        let response = service.parseScrabbleLettersToListofChar(scrabbleLetters);
+        let response = service.parseScrabbleLettersToListOfChar(scrabbleLetters);
         expect(response).to.be.an.instanceOf(Array);
     });
 

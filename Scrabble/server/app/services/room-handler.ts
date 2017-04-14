@@ -188,13 +188,13 @@ export class RoomHandler {
             // Get the leaving player by his/her socket id
             let leavingPlayer = this.getPlayerBySocketId(socketId);
 
-            console.log("Leaving player name", leavingPlayer.username);
+
 
             let easelLetter = leavingPlayer.easel.letters;
-            console.log(easelLetter);
+
 
             let testroom = this.getRoomBySocketId(socketId);
-            console.log("before", testroom.letterBankHandler.getNumberOfLettersInBank(), testroom.roomCapacity);
+
 
             let room = this.getRoomBySocketId(socketId);
 
@@ -204,7 +204,7 @@ export class RoomHandler {
             // Remove the player from the room
             room.removePlayer(leavingPlayer);
 
-            console.log("after", room.letterBankHandler.getNumberOfLettersInBank(), room.roomCapacity);
+
 
             return true;
         } catch (error) {
