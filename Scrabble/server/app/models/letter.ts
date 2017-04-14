@@ -40,4 +40,12 @@ export class Letter {
         this._quantity = quantity;
         this._imageSource = "";
     }
+
+    public decrementQuantity(){
+        this._quantity--;
+    }
+
+    public incrementQuantity(){
+        this._quantity++;
+    }
 }

@@ -38,6 +38,7 @@ export class VerticalWordValidator {
         // Check if we have touched at least one existing letter in the board
         let hasTouchedLetterInTheBoard = false;
 
+
         for (let index = 0; index < request._letters.length && isWordFit; index++) {
             let rowIndex = firstRowIndex + index;
 
@@ -48,6 +49,8 @@ export class VerticalWordValidator {
 
             // get the next square object
             let nextSquare = this._board.squares[rowIndex][columnIndex];
+
+
             let letterToBePlaced = request._letters[index];
 
             // Check if the square already contains a letter or not

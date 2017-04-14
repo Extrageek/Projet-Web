@@ -70,18 +70,18 @@ export class GameComponent implements OnInit, OnDestroy {
 
     // A callback function when the server is not reachable.
     public onConnectionError() {
-        console.log("Connection Error: The server is not reachable");
+        // TODO: message derreur a afficher\
     }
 
     // A callback when the player leave a room
     public onLeaveRoom(roomMessage: IRoomMessage): void {
         // For debug
-        console.log("In Room", roomMessage);
+
     }
 
     // A callback function when in case of invalid request.
     private onInvalidRequest() {
-        console.log("In Room", "The request sent to the server is invalid");
+        // TODO: message derreur a afficher
     }
 
     // A callback fonction for the chat message submit button
@@ -92,16 +92,16 @@ export class GameComponent implements OnInit, OnDestroy {
         if (!this.socketService.isCurrentPlayer()
             && commandParameters.commandType !== CommandType.MessageCmd
             && commandParameters.commandType !== CommandType.GuideCmd) {
-                let message = "Veuillez attendre votre tour après " + this.socketService.getCurrentPlayer() +
-                    + "pour pouvoir jouer";
+            let message = "Veuillez attendre votre tour après " + this.socketService.getCurrentPlayer() +
+                + "pour pouvoir jouer";
 
-                // Ask if it's necessary to send this to the server, I'm not sure we can just push it to the chatroom
-                this.socketService.emitMessage(SocketEventType.INVALID_COMMAND_REQUEST,
-                    {
-                        commandType: CommandType.InvalidCmd,
-                        commandStatus: CommandStatus.NotAllowed,
-                        data: message
-                 });
+            // Ask if it's necessary to send this to the server, I'm not sure we can just push it to the chatroom
+            this.socketService.emitMessage(SocketEventType.INVALID_COMMAND_REQUEST,
+                {
+                    commandType: CommandType.InvalidCmd,
+                    commandStatus: CommandStatus.NotAllowed,
+                    data: message
+                });
         }
         else {
             this.handleInputCommand(commandParameters);
@@ -158,7 +158,7 @@ export class GameComponent implements OnInit, OnDestroy {
     }
 
     public executeInvalidCommand() {
-        console.log("Custom message: Invalid");
+
         this.socketService.emitMessage(SocketEventType.INVALID_COMMAND_REQUEST,
             {
                 commandType: CommandType.InvalidCmd,

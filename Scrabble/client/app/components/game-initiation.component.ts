@@ -44,7 +44,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
     private onConnected(): Subscription {
         return this.socketService.subscribeToChannelEvent(SocketEventType.CONNECT)
             .subscribe(() => {
-                console.log("I'm connected to the server");
+                // TODO: message a afficher
             });
     }
 
@@ -52,7 +52,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
     private onJoinedRoom(): Subscription {
         return this.socketService.subscribeToChannelEvent(SocketEventType.JOIN_ROOM)
             .subscribe((roomMessage: IRoomMessage) => {
-                console.log("Joined the room", roomMessage);
+
                 this.socketService.missingPlayers = roomMessage._numberOfMissingPlayers;
                 if (roomMessage._roomIsReady) {
                     this.router.navigate(["/game-room"]);
@@ -66,7 +66,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
     private onInvalidRequest(): Subscription {
         return this.socketService.subscribeToChannelEvent(SocketEventType.INVALID_REQUEST)
             .subscribe(() => {
-                console.log("The request sent to the server is invalid");
+                // TODO: message derreur a afficher
             });
     }
 
@@ -84,13 +84,13 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
     private onConnectionError(): Subscription {
         return this.socketService.subscribeToChannelEvent(SocketEventType.CONNECT_ERROR)
             .subscribe((error) => {
-                console.log("Connection Error: The server is not reachable", error);
+                // TODO: message derreur a afficher
             });
     }
 
     // A callback function when the user ask for a new game.
     public sendNewGameRequest(username: string, numberOfPlayersStr: string) {
-        console.log("new game request");
+
         if (username === null || numberOfPlayersStr === null) {
             throw new Error("Null argument error: All the parameters are required");
         }
@@ -100,7 +100,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
         } else {
             username = this.socketService.player.username;
         }
-        console.log(this.socketService.player.username);
+
         this.socketService.player.numberOfPlayers = numberOfPlayers;
         this.socketService.emitMessage(
             SocketEventType.NEW_GAME_REQUEST,
