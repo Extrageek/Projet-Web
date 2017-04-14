@@ -3,7 +3,7 @@ import { CurrentPlayer } from "./../models/current-player";
 
 @Injectable()
 export class GameStatusService {
-    public static readonly INITIAL_NUMBER_OF_STONES = 1;
+    public static readonly INITIAL_NUMBER_OF_STONES = 8;
     public static readonly DEFAULT_SCORE = 0;
     public static readonly DEFAULT_SET = 1;
 
