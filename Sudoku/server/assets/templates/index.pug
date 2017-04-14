@@ -33,13 +33,13 @@ html
             -
                 var date = activity.date.getMonth()  + "/" + activity.date.getDate() + "/" + activity.date.getUTCFullYear();
                 var time = activity.date.getHours() + ":" + activity.date.getMinutes() + ":" + activity.date.getSeconds();
-            tr
-                td #{date} | #{time}
+            tr.journalTr
+                td.journalTD #{date} | #{time}
                 if (activity.type == 0)
-                    td Génération
+                    td.journalTD Génération
                 else
-                    td Demande
-                td #{activity.description}
+                    td.journalTD Demande
+                td.journalTD #{activity.description}
 
         .mdl-layout.mdl-js-layout.mdl-layout--fixed-header
             header.mdl-layout__header
@@ -54,6 +54,9 @@ html
                     button#show-toast.mdl-button.mdl-js-button.mdl-button--icon(type='button')
                         i.material-icons help
                     |
+                    button#refresh.mdl-button.mdl-js-button.mdl-button--icon(type='button')
+                        i.material-icons refresh
+                    |
                     #toast.mdl-js-snackbar.mdl-snackbar
                         .mdl-snackbar__text
                         |
@@ -64,26 +67,28 @@ html
                         - var nEasyPuzzle = puzzleEasy.length;
                         - for (var i = 0; i < nEasyPuzzle; i ++)
                             if(puzzleEasy[i] != null)
-                                .col-sm-4
-                                    h2 Puzzle Facile #{i + 1}
+                                .col-sm-4.mdl-card.mdl-shadow--6dp.cards
+                                    .mdl-card__title.mdl-card--expand
+                                    h2.mdl-card__title-text Puzzle Facile #{i + 1}
                                     +createPuzzle(puzzleEasy[i]._puzzle)
                 section#scroll-tab-2.mdl-layout__tab-panel
                     .page-content
                         - var nHardPuzzle = puzzleHard.length;
                         - for (var i = 0; i < nHardPuzzle; i ++)
                             if(puzzleHard[i] != null)
-                                .col-sm-4
-                                    h2 Puzzle Difficle #{i + 1}
+                                .col-sm-4.mdl-card.mdl-shadow--6dp.cards
+                                    .mdl-card__title.mdl-card--expand
+                                    h2.mdl-card__title-text Puzzle Difficle #{i + 1}
                                     +createPuzzle(puzzleHard[i]._puzzle)
                 section#scroll-tab-3.mdl-layout__tab-panel
                     .page-content
                         center
-                            table.activities.mdl-data-table.mdl-js-data-table.mdl-shadow--2dp
-                                thead
+                            table.table.activities.mdl-data-table.mdl-shadow--2dp
+                                thead.journalThead
                                     tr
-                                        th.mdl-data-table__cell--non-numeric Date | Temps
-                                        th.mdl-data-table__cell--non-numeric Type
-                                        th.mdl-data-table__cell--non-numeric Description
+                                        th Date | Temps
+                                        th Type
+                                        th Description
                                 tbody
                                     -for (var x = numberOfActivities -1; x >= 0; --x)
                                         +createActivity(activities[x])
