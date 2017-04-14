@@ -1,4 +1,4 @@
-import { ObjectLoader, Group, MeshPhongMaterial, Object3D, Sphere, Vector3, Matrix3 } from "three";
+import { ObjectLoader, Group, MeshPhongMaterial, Object3D, Sphere, Vector3, Mesh } from "three";
 import { IGameState } from "./game-state.interface";
 import { PhysicEngine } from "../services/game-physics/physic-engine";
 import { Observable } from "rxjs/Observable";
@@ -43,7 +43,7 @@ export class Stone extends Group implements IGameState {
         return this._boundingSphere;
     }
 
-    //The following getters and setters are used to transmit the informations to the physic engine to avoid
+    //The following getters and setters are used to transmit the information to the physic engine to avoid
     //a direct access to the physic engine object from the outside.
     public get stoneColor() {
         return this._stoneColor;
@@ -96,11 +96,13 @@ export class Stone extends Group implements IGameState {
         });
     }
 
-    //The constructor is private because the loading of the 3D model is asynchronous.
-    //To obtain a Stone object, the createStone method must be called.
-    //The <this> tag must have been put because of perhaps an error in the declaration of the parameters in the method
-    //copy of typescript. Now, with the <this> tag, the group object passed in parameter is copied in the this class to
-    //obtain a stone object.
+    /**
+     * The constructor is private because the loading of the 3D model is asynchronous.
+     * To obtain a Stone object, the createStone method must be called.
+     * The <this> tag must have been put because of perhaps an error in the declaration of the parameters in the method
+     * copy of typescript. Now, with the <this> tag, the group object passed in parameter is copied in the this class
+     * to obtain a stone object.
+     */
     private constructor(obj: Object3D, initialPosition: Vector3, stoneColor: StoneColor) {
         super();
         this.copy(<this>obj, true);
@@ -154,8 +156,8 @@ export class Stone extends Group implements IGameState {
 
     public changeStoneOpacity() {
         this.traverse((child) => {
-            (<THREE.Mesh>child).material.transparent = true;
-            (<THREE.Mesh>child).material.opacity = 1;
+            (<Mesh>child).material.transparent = true;
+            (<Mesh>child).material.opacity = 1;
         });
 
         let observable = new Observable(() => {
@@ -163,8 +165,8 @@ export class Stone extends Group implements IGameState {
             let id = setInterval(() => {
 
                 this.traverse((child) => {
-                    if ((<THREE.Mesh>child).material.opacity > 0) {
-                        (<THREE.Mesh>child).material.opacity -= 0.01;
+                    if ((<Mesh>child).material.opacity > 0) {
+                        (<Mesh>child).material.opacity -= 0.01;
                     }
                 });
                 millisecond += Stone.TEN_MILLISECONDS;

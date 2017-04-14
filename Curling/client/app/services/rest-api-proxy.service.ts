@@ -4,8 +4,8 @@ import { Headers, Http, Response } from "@angular/http";
 import "rxjs/add/operator/toPromise";
 
 import { GameStatusService } from "./game-status.service";
-import { Difficulty } from "./../models/difficulty";
-import { Record } from "./../models/record";
+import { Difficulty } from "../models/difficulty";
+import { Record } from "../models/record";
 
 
 @Injectable()

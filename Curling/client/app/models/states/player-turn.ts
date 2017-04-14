@@ -1,13 +1,15 @@
 import { Clock, Vector3 } from "three";
 import { AbstractGameState } from "./abstract-game-state";
-import { CameraType } from "./../../services/game-physics/camera-type";
 import { PlayerShooting } from "./player-shooting";
 import { CurrentPlayer } from "../../models/current-player";
 import { calculateMousePositionOnXZPlane } from "./../../services/game-physics/mouse.service";
-import { IGameInfo } from "./../../services/game-handler/game-info.interface";
+import { IGameInfo } from "../../services/game-handler/game-info.interface";
 import { IGameServices } from "../../services/game-handler/games-services.interface";
 import { IAngularInfo } from "../../services/game-handler/angular-info.interface";
 
+/**
+ * This state is used when the player is choosing the shot parameters. It updates the dashed line.
+ */
 export class PlayerTurn extends AbstractGameState {
 
     public static readonly SHOT_ANGLE_MINIMUM = -2.25;
@@ -18,7 +20,6 @@ export class PlayerTurn extends AbstractGameState {
     private static readonly MAX_PROGRESS_BAR_PERCENT = 100;
     private static readonly ONE_SECOND = 1000;
     private static readonly LINE_WAIT = 2;
-    private static readonly UPDATE_NAME = "PlayerTurn";
 
     private static _instance: AbstractGameState = null;
 
@@ -31,21 +32,10 @@ export class PlayerTurn extends AbstractGameState {
     private _mouseIsPressed: boolean;
     private _mousePosition: Vector3;
 
-    /**
-     * Initialize the unique PlayerTurn state.
-     * @param gameInfo The informations to use by the state.
-     * @param doInitialization Set to true only if the game is entering immediatly in this state.
-     *  Only one game state could be constructed with this value at true, because only one game state
-     *  must be active at a time.
-     */
     public static createInstance(gameServices: IGameServices, gameInfo: IGameInfo, angularInfo: IAngularInfo) {
         PlayerTurn._instance = new PlayerTurn(gameServices, gameInfo, angularInfo);
     }
 
-    /**
-     * Get the instance of the state PlayerTurn. This state is used while the user is aiming and selecting power.
-     * @returns The PlayerTurn state of null if the createInstance method has not been called.
-     */
     public static getInstance(): AbstractGameState {
         return PlayerTurn._instance;
     }

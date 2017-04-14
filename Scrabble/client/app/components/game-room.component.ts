@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, Output, ViewChild, EventEmitter } from "@angular/core";
+import { Subscription } from 'rxjs/Subscription';
+import { Component, OnInit, OnDestroy, Output, ViewChild, EventEmitter, HostListener } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 
 import { SocketService } from "../services/socket-service";
@@ -41,7 +42,9 @@ export class GameComponent implements OnInit, OnDestroy {
     @ViewChild(ChatroomComponent)
     private _childChatroomComponent: ChatroomComponent;
 
-    _inputMessage: string;
+    private _inputMessage: string;
+    private _isOver: boolean;
+    private _gameOverSubscription: Subscription;
 
     constructor(
         private router: Router,
@@ -50,8 +53,8 @@ export class GameComponent implements OnInit, OnDestroy {
         private gameRoomEventManagerService: GameRoomManagerService,
         private commandsService: CommandsService) {
 
-        this._inputMessage = '';
-        // Constructor
+            // Constructor
+            this._inputMessage = '';
     }
 
     ngOnInit() {
@@ -61,11 +64,13 @@ export class GameComponent implements OnInit, OnDestroy {
         // TODO: unsubscribe all the event in the ngOnDestroy
         this.socketService.subscribeToChannelEvent(SocketEventType.CONNECT_ERROR)
             .subscribe(this.onConnectionError);
+        this._gameOverSubscription = this.onGameOver();
         this.socketService.emitMessage(SocketEventType.INITIALIZE_EASEL, this.socketService.player.username);
     }
 
     ngOnDestroy() {
         // TODO: unsubscribe to all the event in the ngOnDestroy
+        this._gameOverSubscription.unsubscribe();
     }
 
     // A callback function when the server is not reachable.
@@ -76,12 +81,22 @@ export class GameComponent implements OnInit, OnDestroy {
     // A callback when the player leave a room
     public onLeaveRoom(roomMessage: IRoomMessage): void {
         // For debug
-
+        console.log("In Room", roomMessage);
+        if (roomMessage._username === this.socketService.player.username) {
+            this.router.navigate(["/"]);
+        }
     }
 
     // A callback function when in case of invalid request.
     private onInvalidRequest() {
         // TODO: message derreur a afficher
+    }
+
+    private onGameOver(): Subscription {
+        return this.socketService.subscribeToChannelEvent(SocketEventType.GAME_OVER)
+            .subscribe((winner: string) => {
+                this._isOver = true;
+            });
     }
 
     // A callback fonction for the chat message submit button
@@ -176,9 +191,21 @@ export class GameComponent implements OnInit, OnDestroy {
 
     public onKeyPressEventHandler(event: KeyboardEvent) {
         let keyCode = event.which;
-
         if (this.gameRoomEventManagerService.isTabKey(keyCode)) {
             this._childEaselComponent.getNotificationOnTabKeyPress(keyCode);
+        }
+    }
+
+    private quitGame() {
+        this.socketService.emitMessage(SocketEventType.LEAVE_ROOM, {
+            'username': this.socketService.player.username
+        });
+    }
+
+    @HostListener("window:keydown.Escape", ['$event'])
+    public restartGame() {
+        if (this._isOver) {
+            this.quitGame();
         }
     }
 }

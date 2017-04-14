@@ -1,4 +1,5 @@
-import { ObjectLoader, Group, MeshPhongMaterial, Object3D, BoxGeometry, Vector3, Scene } from "three";
+import { ObjectLoader, Group, MeshPhongMaterial, Sphere, Object3D, Vector3, Scene,
+ColorKeywords, MeshStandardMaterial, Mesh } from "three";
 import { Stone } from "./stone";
 
 export class Broom extends Group {
@@ -9,7 +10,7 @@ export class Broom extends Group {
     private static readonly BOUNDING_SPHERE_RADIUS = 1;
     private _material: MeshPhongMaterial;
     //Bounding sphere used for collisions. Only works if the stones are displaced on the XZ plane.
-    private _redBroom: Boolean;
+    private _redBroom: boolean;
     private _boundingSphere: THREE.Sphere;
     private _scene: Scene;
 
@@ -32,22 +33,22 @@ export class Broom extends Group {
         this.position.set(initialPosition.x, initialPosition.y, initialPosition.z);
         this.scale.set(Broom.SCALE.x, Broom.SCALE.y, Broom.SCALE.z);
         this._redBroom = true;
-        this._boundingSphere = new THREE.Sphere(this.position, Broom.BOUNDING_SPHERE_RADIUS);
+        this._boundingSphere = new Sphere(this.position, Broom.BOUNDING_SPHERE_RADIUS);
     }
 
     public changeColourTo(newColour: number) {
         for (let i = 0; i < this.children.length; i++) {
             let child = this.children[i];
-            (<THREE.MeshStandardMaterial>(<THREE.Mesh>child).material).emissive.setHex(newColour);
+            (<MeshStandardMaterial>(<Mesh>child).material).emissive.setHex(newColour);
         }
-        if (THREE.ColorKeywords.green === newColour) {
+        if (ColorKeywords.green === newColour) {
             this._redBroom = false;
-        } else if (THREE.ColorKeywords.red === newColour) {
+        } else if (ColorKeywords.red === newColour) {
             this._redBroom = true;
         }
     }
 
-    public isRed(): Boolean {
+    public isRed(): boolean {
         return this._redBroom;
     }
 

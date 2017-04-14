@@ -5,10 +5,10 @@ import {
     LineDashedMaterial, ImageUtils, BackSide, Vector3, Clock
 } from "three";
 
-import { GameStatusService } from "./../game-status.service";
-import { CameraService } from "./../views/cameras.service";
-import { LightingService } from "./../views/ligthing.service";
-import { ParticlesService } from "./../game-physics/particles.service";
+import { GameStatusService } from "../game-status.service";
+import { CameraService } from "../views/cameras.service";
+import { LightingService } from "../views/ligthing.service";
+import { ParticlesService } from "../game-physics/particles.service";
 import { SoundManager } from "../sound-manager";
 import { UserService } from "../user.service";
 
@@ -17,12 +17,12 @@ import { TextureHandler } from "../views/texture-handler";
 import { CameraType } from "../game-physics/camera-type";
 import { StatesHandler } from "./states-handler";
 
-import { Rink } from "./../../models/scenery/rink";
-import { Arena } from "./../../models/scenery/arena";
-import { Broom } from "./../../models/broom";
+import { Rink } from "../../models/scenery/rink";
+import { Arena } from "../../models/scenery/arena";
+import { Broom } from "../../models/broom";
 
-import { StoneColor } from "./../../models/stone";
-import { IRinkInfo } from "./../../models/scenery/rink-info.interface";
+import { StoneColor } from "../../models/stone";
+import { IRinkInfo } from "../../models/scenery/rink-info.interface";
 import { IGameInfo } from "./game-info.interface";
 import { IGameServices } from "./games-services.interface";
 import { IAngularInfo } from "./angular-info.interface";
@@ -31,6 +31,7 @@ import { IAngularInfo } from "./angular-info.interface";
 export class RenderService {
 
     private static readonly NUMBER_OF_MODELS_TO_LOAD = 4;
+    private static readonly MEDIUM_BLUE = 0x0000E0;
 
     private _numberOfModelsLoaded: number;
     private _lightingService: LightingService;
@@ -43,7 +44,7 @@ export class RenderService {
 
     private _gameServices: IGameServices;
     private _gameInfo: IGameInfo;
-    private _angularInfo: IAngularInfo;
+    public _angularInfo: IAngularInfo;
 
     constructor(gameStatusService: GameStatusService,
         cameraService: CameraService,
@@ -107,14 +108,12 @@ export class RenderService {
 
     public putCanvasIntoHTMLElement(container: HTMLElement) {
         if (this._renderer !== undefined) {
-            console.log("append canvas!");
             container.appendChild(this._renderer.domElement);
         }
     }
 
     public removeCanvasElement() {
         if (this._renderer.domElement.parentElement) {
-            console.log("remove canvas!");
             this._renderer.domElement.parentElement.removeChild(this._renderer.domElement);
         }
     }
@@ -173,7 +172,7 @@ export class RenderService {
         geometry.computeLineDistances();
 
         let material = new LineDashedMaterial({
-            color: 0x0000e0,
+            color: RenderService.MEDIUM_BLUE,
             linewidth: 5,
             dashSize: 1,
             gapSize: 1,
@@ -308,10 +307,10 @@ export class RenderService {
             }
         }
     }
-    
+
     public switchCamera() {
         if (this._animationID) {
-            StatesHandler.getInstance().onSpacebarPressed();    
+            StatesHandler.getInstance().onSpacebarPressed();
         }
     }
 

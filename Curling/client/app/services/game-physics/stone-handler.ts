@@ -181,7 +181,7 @@ export class StoneHandler implements IGameState {
         this._stoneOnTheGame.map((stone: Stone) => {
             if (stoneToVerify !== stone) {
                 if (stoneToVerify.boundingSphere.intersectsSphere(stone.boundingSphere)) {
-                    SoundManager.getInstance().collisionSound;
+                    SoundManager.getInstance().playCollisionSound();
                     stonesHit.push(stone);
                 }
             }

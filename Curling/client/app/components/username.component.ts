@@ -1,8 +1,8 @@
 import { Component, ViewChild, ElementRef, OnInit, Input } from "@angular/core";
 import { Router } from "@angular/router";
 
-import { RestApiProxyService } from "./../services/rest-api-proxy.service";
-import { UserService } from "./../services/user.service";
+import { RestApiProxyService } from "../services/rest-api-proxy.service";
+import { UserService } from "../services/user.service";
 
 @Component({
     moduleId: module.id,

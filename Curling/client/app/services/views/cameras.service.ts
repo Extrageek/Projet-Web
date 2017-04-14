@@ -111,7 +111,7 @@ export class CameraService implements IGameState {
 
     public update(timePerFrame: number): void {
         if (this._updateInfo) {
-            this._updateInfo.functionToApply(this._updateInfo.followInformation)
+            this._updateInfo.functionToApply(this._updateInfo.followInformation);
         }
     }
 

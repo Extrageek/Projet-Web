@@ -1,11 +1,11 @@
 import { Plane, Object3D, Vector3, Raycaster, Intersection, Camera } from "three";
 
-const XZPlane = new Plane(new Vector3(0, 1, 0));
+const planeXZ = new Plane(new Vector3(0, 1, 0));
 const raycaster = new Raycaster();
 
 export function calculateMousePositionOnXZPlane(event: MouseEvent, camera: Camera): Vector3 {
     raycaster.setFromCamera(calculateMousePosition(event), camera);
-    return raycaster.ray.intersectPlane(XZPlane);
+    return raycaster.ray.intersectPlane(planeXZ);
 }
 
 export function calculateMousePositionOnObject(event: MouseEvent, object: Object3D, camera: Camera): Intersection[] {

@@ -1,11 +1,11 @@
-.main-wrapper{
+.main-wrapper {
     height: 100%;
     margin-top:2%;
     padding-left: 5%;
     padding-right: 5%;
 }
 
-.head-title{
+.head-title {
     height: 20%;
 }
 
@@ -16,7 +16,7 @@
     margin-top: 11px;
 }
 
-.info-wrapper{
+.info-wrapper {
     background-color: #eee;
     height: 630px;
 }
@@ -25,12 +25,12 @@
     padding: 15px;
     margin-top:10px;
 }
-.content-wrapper{
+.content-wrapper {
     height: 70%;
     padding: 0px;
 }
 
-.input-box{
+.input-box {
     padding: 0;
     background-color: #fff;
     box-shadow: 0 1px 5px rgba(0,0,0,0.16);
@@ -42,11 +42,11 @@
     height: 100%;
 }
 
-.chat-wrapper{
+.chat-wrapper {
     height: 80%;
 }
 
-.icon-left-box{
+.icon-left-box {
     padding: 0;
     height: 100%;
     background-color: #eee;
@@ -78,7 +78,7 @@ textarea.form-control {
 }
 
 button#btn-exchange, 
-button#submit-btn{
+button#submit-btn {
     border-radius: 0px;
 }
 
@@ -88,11 +88,11 @@ button#submit-btn {
     border-color: #ddd;
 }
 
-.footer-wrapper{
+.footer-wrapper {
     height: 10%;
 }
 
-.board-wrapper{
+.board-wrapper {
     height: 80%;
     padding: 0px;
 }
