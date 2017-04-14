@@ -1,74 +1,76 @@
+import { Vector3 } from "three";
 import { AbstractGameState } from "./abstract-game-state";
-import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { LoadingStone } from "./loading-stone";
 import { EndGame } from "./end-game";
 import { CurrentPlayer } from "../../models/current-player";
+import { IGameInfo } from "../../services/game-handler/game-info.interface";
+import { IGameServices } from "../../services/game-handler/games-services.interface";
 
+/**
+ * This state is used at the end of a game set. It counts the points and show text.
+ */
 export class EndSet extends AbstractGameState {
 
     private static readonly NUMBER_OF_SETS_TO_PLAY = 3;
+    private static readonly TEXT_POSITION_ABOVE = new Vector3(6, 3, 20);
+    private static readonly TEXT_POSITION_BELOW = new Vector3(10, 1, 20);
+    private static readonly TEXT_COLOR = 0x000000;
 
     private static _instance: AbstractGameState = null;
+    private _transitionText: number[];
 
-    /**
-     * Initialize the unique EndSet state.
-     * @param gameInfo The informations to use by the state.
-     * @param doInitialization Set to true only if the game is entering immediatly in this state.
-     *  Only one game state could be constructed with this value at true, because only one game state
-     *  must be active at a time.
-     */
-    public static createInstance(gameInfo: IGameInfo, doInitialization = false): void {
-        EndSet._instance = new EndSet(gameInfo, doInitialization);
+    public static createInstance(gameServices: IGameServices, gameInfo: IGameInfo): void {
+        EndSet._instance = new EndSet(gameServices, gameInfo);
     }
 
-    /**
-     * Get the instance of the state EndSet. This state is used while the set is finished.
-     * @returns The EndSet state of null if the createInstance method has not been called.
-     */
     public static getInstance(): AbstractGameState {
         return EndSet._instance;
     }
 
-    private constructor(gameInfo: IGameInfo, doInitialization = false) {
-        super(gameInfo, doInitialization);
+    private constructor(gameServices: IGameServices, gameInfo: IGameInfo) {
+        super(gameServices, gameInfo);
+        this._transitionText = new Array<number>();
     }
 
     protected performEnteringState() {
-        let points = this._gameInfo.stoneHandler.countPoints();
+        let points = this._gameServices.stoneHandler.countPoints();
         this._gameInfo.gameStatus.incrementScorePlayer(points.player);
         this._gameInfo.gameStatus.incrementScoreComputer(points.computer);
-        let newState: AbstractGameState;
         if (this._gameInfo.gameStatus.currentSet < EndSet.NUMBER_OF_SETS_TO_PLAY) {
-            this._gameInfo.gameStatus.currentSet += 1;
-            this._gameInfo.gameStatus.resetStones();
-            this._gameInfo.stoneHandler.cleanAllStones(this._gameInfo.scene);
             if (points.player > points.computer) {
                 this._gameInfo.gameStatus.currentPlayer = CurrentPlayer.BLUE;
-            }
-            else if (points.player < points.computer) {
+            } else if (points.player < points.computer) {
                 this._gameInfo.gameStatus.currentPlayer = CurrentPlayer.RED;
             }
-            newState = LoadingStone.getInstance();
+            this._gameServices.cameraService.setPerspectiveCameraCurrent();
+            this._transitionText.push(this._gameServices.textureHandler.addText(EndSet.TEXT_POSITION_ABOVE,
+                "Veuillez cliquer pour", EndSet.TEXT_COLOR));
+            this._transitionText.push(this._gameServices.textureHandler.addText(EndSet.TEXT_POSITION_BELOW,
+                "commencer la prochaine manche", EndSet.TEXT_COLOR));
+        } else {
+            this.leaveState(EndGame.getInstance());
         }
-        else {
-            newState = EndGame.getInstance();
-        }
-        this.leaveState(newState);
     }
 
-    protected performLeavingState() {
-        //Nothing to do
+    protected performLeavingState(): Promise<void> {
+        this._transitionText.forEach((identifier: number) => {
+            this._gameServices.textureHandler.removeText(identifier);
+        });
+        this._transitionText.splice(0, this._transitionText.length);
+        return Promise.resolve();
     }
 
-    protected performMouseMove(): AbstractGameState {
-        return null;
-    }
-
-    protected performMouseButtonPress(): AbstractGameState {
+    /**
+     * Bloc the camera toggle by overriding this method.
+     */
+    protected performCameraToggle(): AbstractGameState {
         return null;
     }
 
     protected performMouseButtonReleased(): AbstractGameState {
-        return null;
+        this._gameInfo.gameStatus.currentSet += 1;
+        this._gameInfo.gameStatus.resetStones();
+        this._gameServices.stoneHandler.cleanAllStones();
+        return LoadingStone.getInstance();
     }
 }

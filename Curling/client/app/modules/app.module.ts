@@ -6,7 +6,6 @@ import { MaterialModule } from "@angular/material";
 import { AppRoutingModule } from "./app-routing.module";
 
 import { AppComponent } from "../components/app.component";
-import { GlComponent } from "../components/gl.component";
 import { LeaderboardComponent } from "../components/leaderboard.component";
 import { UsernameComponent } from "../components/username.component";
 import { DifficultyComponent } from "../components/difficulty.component";
@@ -22,12 +21,12 @@ import { CameraService } from "./../services/views/cameras.service";
 import { LightingService } from "./../services/views/ligthing.service";
 
 @NgModule({
-  imports: [ BrowserModule, FormsModule, AppRoutingModule, MaterialModule],
-  declarations: [ AppComponent, GlComponent, LeaderboardComponent, ModifierDirective,
-                  UsernameComponent, DifficultyComponent, DisplayComponent],
-  providers: [ RenderService, RestApiProxyService, UserService,
-               GameStatusService, CameraService, LightingService ],
-  bootstrap: [ AppComponent ]
+  imports: [BrowserModule, FormsModule, AppRoutingModule, MaterialModule],
+  declarations: [AppComponent, LeaderboardComponent, ModifierDirective,
+    UsernameComponent, DifficultyComponent, DisplayComponent],
+  providers: [RenderService, RestApiProxyService, UserService,
+    GameStatusService, CameraService, LightingService],
+  bootstrap: [AppComponent]
 })
 
 export class AppModule { }

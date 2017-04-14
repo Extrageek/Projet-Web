@@ -1,11 +1,13 @@
 import { Vector3 } from "three";
 import { ComputerAI } from "./computerAI";
-import { RinkInfo } from "./../scenery/rink-info.interface";
-import { RandomHelper } from "./../random-helper";
-import { ShotParameters } from "./../shot-parameters.interface";
+import { IRinkInfo } from "../scenery/rink-info.interface";
+import { RandomHelper } from "../random-helper";
+import { IShotParameters } from "../shot-parameters.interface";
 
 export class HardAI extends ComputerAI {
 
+    //WARNING : If the physic or the arena dimension change, these numbers must change to be able
+    //to shot in the center.
     private static readonly MIN_SHOT_POWER = 4.1;
     private static readonly MAX_SHOT_POWER = 4.3;
     private static readonly MIN_SHOT_TO_PUSH_STONE = 5.2;
@@ -15,13 +17,13 @@ export class HardAI extends ComputerAI {
     private static readonly MIN_PUSH_DIRECTION_MODIFIER = -0.01;
     private static readonly MAX_PUSH_DIRECTION_MODIFIER = 0.01;
 
-    constructor(rinkInfo: RinkInfo) {
+    constructor(rinkInfo: IRinkInfo) {
         super(rinkInfo);
     }
 
-    protected shotParametersOnStone(stonePositionToShotOnIt: Vector3): ShotParameters {
+    protected shotParametersOnStone(stonePositionToShotOnIt: Vector3): IShotParameters {
         //Determine random shotPower and spin.
-        let shotParameters: ShotParameters = {
+        let shotParameters: IShotParameters = {
             spin: RandomHelper.getIntegerNumberInRange(0, 1),
             direction: null,
             power: RandomHelper.getNumberInRangeIncluded(HardAI.MIN_SHOT_TO_PUSH_STONE, HardAI.MAX_SHOT_TO_PUSH_STONE)
@@ -37,14 +39,14 @@ export class HardAI extends ComputerAI {
                 RandomHelper.getNumberInRangeIncluded(HardAI.MIN_PUSH_DIRECTION_MODIFIER,
                     HardAI.MAX_PUSH_DIRECTION_MODIFIER));
         } else {
-            //If the powers specified in the constants are enough, we never should pass here.
+            //If the powers specified in the constants are not enough, we shot in the center.
             shotParameters = this.determineShotParametersOnCenter();
         }
 
         return shotParameters;
     }
 
-    public determineShotParametersOnCenter(): ShotParameters {
+    public determineShotParametersOnCenter(): IShotParameters {
         let spin = RandomHelper.getIntegerNumberInRange(0, 1);
         return {
             spin: spin,

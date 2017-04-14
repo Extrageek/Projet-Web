@@ -1,8 +1,8 @@
 import { Vector3 } from "three";
 import { ComputerAI } from "./computerAI";
-import { RinkInfo } from "./../scenery/rink-info.interface";
+import { IRinkInfo } from "./../scenery/rink-info.interface";
 import { RandomHelper } from "./../random-helper";
-import { ShotParameters } from "./../shot-parameters.interface";
+import { IShotParameters } from "./../shot-parameters.interface";
 
 export class PerfectAI extends ComputerAI {
 
@@ -11,13 +11,13 @@ export class PerfectAI extends ComputerAI {
     private static readonly SHOT_POWER = 4.21;
     private static readonly SHOT_TO_PUSH_STONE = 5.8;
 
-    constructor(rinkInfo: RinkInfo) {
+    constructor(rinkInfo: IRinkInfo) {
         super(rinkInfo);
     }
 
-    protected shotParametersOnStone(stonePositionToShotOnIt: Vector3): ShotParameters {
+    protected shotParametersOnStone(stonePositionToShotOnIt: Vector3): IShotParameters {
         //Determine random shotPower and spin.
-        let shotParameters: ShotParameters = {
+        let shotParameters: IShotParameters = {
             spin: RandomHelper.getIntegerNumberInRange(0, 1),
             direction: null,
             power: RandomHelper.getNumberInRangeIncluded(PerfectAI.SHOT_TO_PUSH_STONE, PerfectAI.SHOT_TO_PUSH_STONE)
@@ -38,7 +38,7 @@ export class PerfectAI extends ComputerAI {
         return shotParameters;
     }
 
-    public determineShotParametersOnCenter(): ShotParameters {
+    public determineShotParametersOnCenter(): IShotParameters {
         let spin = RandomHelper.getIntegerNumberInRange(0, 1);
         return {
             spin: spin,

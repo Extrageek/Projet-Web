@@ -1,12 +1,13 @@
-import { Vector3 } from "three";
-
 import { AbstractGameState } from "./abstract-game-state";
-import { IGameInfo } from "./../../services/game-handler/game-info.interface";
 import { ComputerShooting } from "./computer-shooting";
 import { ComputerAI } from "../../models/AI/computerAI";
-import { Stone } from "../../models/stone";
 import { StoneColor } from "../../models/stone";
+import { IGameInfo } from "../../services/game-handler/game-info.interface";
+import { IGameServices } from "../../services/game-handler/games-services.interface";
 
+/**
+ * This state is used when the computer is calculating the next shot parameters.
+ */
 export class ComputerTurn extends AbstractGameState {
 
     private static _instance: AbstractGameState = null;
@@ -14,56 +15,40 @@ export class ComputerTurn extends AbstractGameState {
     private _computerAI: ComputerAI;
 
     /**
-     * Initialize the unique ComputerTurn state.
-     * @param gameInfo The informations to use by the state.
-     * @param doInitialization Set to true only if the game is entering immediatly in this state.
-     *  Only one game state could be constructed with this value at true, because only one game state
-     *  must be active at a time.
+     * Use this property to change the intelligence of the computer.
+     * @param computerAI The new computerAI used to determine the shot parameters.
      */
-    public static createInstance(gameInfo: IGameInfo, computerAI: ComputerAI, doInitialization = false) {
-        ComputerTurn._instance = new ComputerTurn(gameInfo, computerAI, doInitialization);
+    public set computerAI(computerAI: ComputerAI) {
+        if (computerAI === undefined || computerAI === null) {
+            throw new Error("The computerAI cannot be null.");
+        }
+        this._computerAI = computerAI;
     }
 
-    /**
-     * Get the instance of the state ComputerTurn. sThis state is used while the computer is aiming and chosing power.
-     * @returns The ComputerTurn state of null if the createInstance method has not been called.
-     */
+    public static createInstance(gameServices: IGameServices, gameInfo: IGameInfo, computerAI: ComputerAI) {
+        ComputerTurn._instance = new ComputerTurn(gameServices, gameInfo, computerAI);
+    }
+
     public static getInstance(): AbstractGameState {
         return ComputerTurn._instance;
     }
 
-    private constructor(gameInfo: IGameInfo, computerAI: ComputerAI, doInitialization = false) {
-        super(gameInfo, doInitialization);
+    private constructor(gameServices: IGameServices, gameInfo: IGameInfo, computerAI: ComputerAI) {
+        super(gameServices, gameInfo);
         this._computerAI = computerAI;
     }
+
     protected performEnteringState(): void {
-        let nearestPlayerStone = this._gameInfo.stoneHandler.findClosestCenterStonePosition(StoneColor.Blue);
+        let nearestPlayerStone = this._gameServices.stoneHandler.findClosestCenterStonePosition(StoneColor.Blue);
         let shotParameters;
         if (nearestPlayerStone !== undefined) {
-             shotParameters = this._computerAI.determineShotParametersOnStone(nearestPlayerStone);
+            shotParameters = this._computerAI.determineShotParametersOnStone(nearestPlayerStone);
         } else {
             shotParameters = this._computerAI.determineShotParametersOnCenter();
         }
-        this._gameInfo.shotParameters.power = shotParameters.power;
-        this._gameInfo.shotParameters.direction = shotParameters.direction;
-        this._gameInfo.shotParameters.spin = shotParameters.spin;
-        console.log(this._gameInfo.shotParameters);
+        AbstractGameState.shotParameters.power = shotParameters.power;
+        AbstractGameState.shotParameters.direction = shotParameters.direction;
+        AbstractGameState.shotParameters.spin = shotParameters.spin;
         this.leaveState(ComputerShooting.getInstance());
-    }
-
-    protected performLeavingState() {
-        //Nothing to do
-    }
-
-    protected performMouseMove(): AbstractGameState {
-        return null;
-    }
-
-    protected performMouseButtonPress(): AbstractGameState {
-        return null;
-    }
-
-    protected performMouseButtonReleased(): AbstractGameState {
-        return null;
     }
 }

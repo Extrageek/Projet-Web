@@ -2,13 +2,13 @@ import { expect } from "chai";
 import { Vector3, ObjectLoader, Object3D } from "three";
 import { PerfectAI } from "../AI/perfectAI";
 import { Rink } from "../scenery/rink";
-import { RinkInfo } from "../scenery/rink-info.interface";
+import { IRinkInfo } from "../scenery/rink-info.interface";
 import { Stone, StoneColor } from "../stone";
-import { ShotParameters } from "../shot-parameters.interface";
-import { GameComponent } from "../game-component.interface";
+import { IShotParameters } from "../shot-parameters.interface";
+import { IGameState } from "../game-state.interface";
 
 function updateLoopAndVerifyPosition(numberOfUpdates: number,
-    gameComponent: GameComponent & Object3D,
+    gameState: IGameState & Object3D,
     positionToPass: Vector3,
     done: MochaDone
 ) {
@@ -16,8 +16,8 @@ function updateLoopAndVerifyPosition(numberOfUpdates: number,
     let i = 0;
     let stonePassedByThisPosition = false;
     while (!stonePassedByThisPosition && i < numberOfUpdates) {
-        gameComponent.update(tpf);
-        stonePassedByThisPosition = gameComponent.position.clone().sub(positionToPass).length() <
+        gameState.update(tpf);
+        stonePassedByThisPosition = gameState.position.clone().sub(positionToPass).length() <
             Stone.BOUNDING_SPHERE_RADIUS;
         ++i;
     }
@@ -26,7 +26,7 @@ function updateLoopAndVerifyPosition(numberOfUpdates: number,
     }
 }
 
-let rinkInfo: RinkInfo =
+let rinkInfo: IRinkInfo =
     {
         targetCenter: Rink.TARGET_CENTER,
         initialStonePosition: Rink.INITIAL_STONE_POSITION,

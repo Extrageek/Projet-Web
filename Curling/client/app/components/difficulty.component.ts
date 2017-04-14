@@ -9,7 +9,7 @@ import { RestApiProxyService } from "./../services/rest-api-proxy.service";
     moduleId: module.id,
     selector: "difficulty-component",
     templateUrl: "/assets/templates/difficulty-component.html",
-    styleUrls: ["../../assets/stylesheets/username-component.css"]
+    styleUrls: ["../../assets/stylesheets/difficulty-component.css"]
 })
 export class DifficultyComponent implements OnInit {
     public _username: string;

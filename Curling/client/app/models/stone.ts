@@ -1,5 +1,5 @@
-import { ObjectLoader, Group, MeshPhongMaterial, Object3D, Sphere, Vector3, Matrix3 } from "three";
-import { GameComponent } from "./game-component.interface";
+import { ObjectLoader, Group, MeshPhongMaterial, Object3D, Sphere, Vector3, Mesh } from "three";
+import { IGameState } from "./game-state.interface";
 import { PhysicEngine } from "../services/game-physics/physic-engine";
 import { Observable } from "rxjs/Observable";
 
@@ -14,10 +14,12 @@ export enum StoneColor {
     NumberOfColors = 2
 }
 
-export class Stone extends Group implements GameComponent {
+export class Stone extends Group implements IGameState {
 
-    private static readonly STONES_PATH =
-        ["/assets/models/json/curling-stone-blue.json", "/assets/models/json/curling-stone-red.json"];
+    private static readonly STONES_PATH = [
+        "/assets/models/json/curling-stone-blue.json",
+        "/assets/models/json/curling-stone-red.json"
+    ];
     private static readonly ONE_SECOND = 1000;
     private static readonly TEN_MILLISECONDS = 10;
     public static readonly BOUNDING_SPHERE_RADIUS = 0.26;
@@ -31,6 +33,7 @@ export class Stone extends Group implements GameComponent {
 
     private _stoneColor: StoneColor;
     private _physicEngine: PhysicEngine;
+    private _material: MeshPhongMaterial;
     //Bounding sphere used for collisions. Only works if the stones are displaced on the XZ plane.
     private _boundingSphere: Sphere;
     private _lastBoundingSphere: Sphere;
@@ -40,7 +43,7 @@ export class Stone extends Group implements GameComponent {
         return this._boundingSphere;
     }
 
-    //The following getters and setters are used to transmit the informations to the physic engine to avoid
+    //The following getters and setters are used to transmit the information to the physic engine to avoid
     //a direct access to the physic engine object from the outside.
     public get stoneColor() {
         return this._stoneColor;
@@ -66,6 +69,9 @@ export class Stone extends Group implements GameComponent {
         return this._physicEngine.direction;
     }
 
+    public get material() {
+        return this._material;
+    }
     public set direction(direction: Vector3) {
         this._physicEngine.direction = direction;
     }
@@ -90,16 +96,19 @@ export class Stone extends Group implements GameComponent {
         });
     }
 
-    //The constructor is private because the loading of the 3D model is asynchronous.
-    //To obtain a Stone object, the createStone method must be called.
-    //The <this> tag must have been put because of perhaps an error in the declaration of the parameters in the method
-    //copy of typescript. Now, with the <this> tag, the group object passed in parameter is copied in the this class to
-    //obtain a stone object.
+    /**
+     * The constructor is private because the loading of the 3D model is asynchronous.
+     * To obtain a Stone object, the createStone method must be called.
+     * The <this> tag must have been put because of perhaps an error in the declaration of the parameters in the method
+     * copy of typescript. Now, with the <this> tag, the group object passed in parameter is copied in the this class
+     * to obtain a stone object.
+     */
     private constructor(obj: Object3D, initialPosition: Vector3, stoneColor: StoneColor) {
         super();
         this.copy(<this>obj, true);
         this.scale.set(Stone.SCALE.x, Stone.SCALE.y, Stone.SCALE.z);
         //Set position
+        this._material = new MeshPhongMaterial(Stone.MATERIAL_PROPERTIES);
         this.position.set(initialPosition.x, initialPosition.y, initialPosition.z);
         this._lastPosition = initialPosition.clone();
         //Set bounding sphere
@@ -147,8 +156,8 @@ export class Stone extends Group implements GameComponent {
 
     public changeStoneOpacity() {
         this.traverse((child) => {
-            (<THREE.Mesh>child).material.transparent = true;
-            (<THREE.Mesh>child).material.opacity = 1;
+            (<Mesh>child).material.transparent = true;
+            (<Mesh>child).material.opacity = 1;
         });
 
         let observable = new Observable(() => {
@@ -156,8 +165,8 @@ export class Stone extends Group implements GameComponent {
             let id = setInterval(() => {
 
                 this.traverse((child) => {
-                    if ((<THREE.Mesh>child).material.opacity > 0) {
-                        (<THREE.Mesh>child).material.opacity -= 0.01;
+                    if ((<Mesh>child).material.opacity > 0) {
+                        (<Mesh>child).material.opacity -= 0.01;
                     }
                 });
                 millisecond += Stone.TEN_MILLISECONDS;
@@ -179,7 +188,7 @@ export class Stone extends Group implements GameComponent {
         let lowerBound = 0;
 
         let observer = {
-            next: (v: number) => {
+            next: (v: number) => { // Do not remove unused parameter
                 if (this.position.y > upperBound) {
                     incrementBounce = -incrementBounce;
                 } else if (this.position.y < lowerBound) {

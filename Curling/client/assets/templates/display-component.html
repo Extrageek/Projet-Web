@@ -1,4 +1,3 @@
-
 <div class="menu-nav">
     <button #hamburger (mousedown)="toggleOverlay($event)" class="hamburger hamburger--elastic pull-right" type="button">
         <span class="hamburger-box">
@@ -7,9 +6,32 @@
     </button>
 </div>
 
-<div *ngIf="!_gameStatus.isShooting" class="hide-cursor">&nbsp;</div>
+<div class="textNextShot" *ngIf="renderService._angularInfo.showText">
+    {{_textToShow}}
+</div>
 
-<my-gl class="col-sm-12"> </my-gl>
+<div *ngIf="!gameStatusService.isShooting" class="hide-cursor">&nbsp;</div>
+
+<div class="col-sm-12">
+    <modifier [container]="container"> </modifier>
+    <md-progress-bar *ngIf="renderService._angularInfo.isSelectingPower" class="power-bar" color="primary" mode="determinate"
+        [value]="renderService._angularInfo.powerBar">
+    </md-progress-bar>
+
+    <div *ngIf="renderService._angularInfo.isSelectingPower
+        && renderService._angularInfo !== null
+        && renderService._angularInfo.spin === 1" class="clockwiseArrow">
+        <img src=" ../../assets/images/clockwise-arrow.png" alt="Sens horaire" height="30vw" width="30vw">
+    </div>
+
+    <div *ngIf="renderService._angularInfo.isSelectingPower
+        && renderService._angularInfo.spin !== null
+        && renderService._angularInfo.spin === 0" class="counterclockwiseArrow">
+        <img src=" ../../assets/images/counterclockwise-arrow.png" alt="Sens anti-horaire" height="30vw" width="30vw">
+    </div>
+
+    <div #container id="threejs"> </div>
+</div>
 
 <div id="display-component">
     <div class="col-sm-12">
@@ -20,21 +42,21 @@
         </div>
         <div id="gameInfo" class="col-sm-4">
             <div id="score" class="col-sm-12">
-                {{_gameStatus.scorePlayer}} - {{_gameStatus.scoreComputer}}
+                {{gameStatusService.scorePlayer}} - {{gameStatusService.scoreComputer}}
             </div>
             <div id="gameSet" class="col-sm-12">
-               <!--TODO : METTRE NG-FOR-->
+                <!--TODO : METTRE NG-FOR-->
                 <div class="col-sm-5">
-                    <div *ngIf="_gameStatus.currentSet < 1" id="firstSetToDo" class="pull-right"></div>
-                    <div *ngIf="_gameStatus.currentSet >= 1" id="firstSetDone" class="pull-right"></div>
+                    <div *ngIf="gameStatusService.currentSet < 1" id="firstSetToDo" class="pull-right"></div>
+                    <div *ngIf="gameStatusService.currentSet >= 1" id="firstSetDone" class="pull-right"></div>
                 </div>
                 <div class="col-sm-2 ">
-                    <div *ngIf="_gameStatus.currentSet < 2" id="secondSetToDo" class="pull-center"></div>
-                    <div *ngIf="_gameStatus.currentSet >= 2" id="secondSetDone" class="pull-center"></div>
+                    <div *ngIf="gameStatusService.currentSet < 2" id="secondSetToDo" class="pull-center"></div>
+                    <div *ngIf="gameStatusService.currentSet >= 2" id="secondSetDone" class="pull-center"></div>
                 </div>
                 <div class="col-sm-5 ">
-                    <div *ngIf="_gameStatus.currentSet < 3" id="thirdSetToDo" class="pull-left"></div>
-                    <div *ngIf="_gameStatus.currentSet >= 3" id="thirdSetDone" class="pull-left"></div>
+                    <div *ngIf="gameStatusService.currentSet < 3" id="thirdSetToDo" class="pull-left"></div>
+                    <div *ngIf="gameStatusService.currentSet >= 3" id="thirdSetDone" class="pull-left"></div>
                 </div>
             </div>
         </div>
@@ -48,54 +70,54 @@
         <!--TODO : METTRE NG-FOR-->
         <div class="col-sm-12">
             <div id="playerStones" class="pull-left col-sm-3">
-                <div *ngIf="_gameStatus.currentStonesPlayer > 0">
+                <div *ngIf="gameStatusService.currentStonesPlayer > 0">
                     <img src=" ../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
                 </div>
-                <div *ngIf="_gameStatus.currentStonesPlayer > 1">
+                <div *ngIf="gameStatusService.currentStonesPlayer > 1">
                     <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
                 </div>
-                <div *ngIf="_gameStatus.currentStonesPlayer > 2">
+                <div *ngIf="gameStatusService.currentStonesPlayer > 2">
                     <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
                 </div>
-                <div *ngIf="_gameStatus.currentStonesPlayer > 3">
+                <div *ngIf="gameStatusService.currentStonesPlayer > 3">
                     <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
                 </div>
-                <div *ngIf="_gameStatus.currentStonesPlayer > 4">
+                <div *ngIf="gameStatusService.currentStonesPlayer > 4">
                     <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
                 </div>
-                <div *ngIf="_gameStatus.currentStonesPlayer > 5">
+                <div *ngIf="gameStatusService.currentStonesPlayer > 5">
                     <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
                 </div>
-                <div *ngIf="_gameStatus.currentStonesPlayer > 6">
+                <div *ngIf="gameStatusService.currentStonesPlayer > 6">
                     <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
                 </div>
-                <div *ngIf="_gameStatus.currentStonesPlayer > 7">
+                <div *ngIf="gameStatusService.currentStonesPlayer > 7">
                     <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
                 </div>
             </div>
             <div id="computerStones" class="pull-right col-sm-3">
-                <div *ngIf="_gameStatus.currentStonesComputer > 0" class="col-sm-12">
+                <div *ngIf="gameStatusService.currentStonesComputer > 0" class="col-sm-12">
                     <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
                 </div>
-                <div *ngIf="_gameStatus.currentStonesComputer > 1" class="col-sm-12">
+                <div *ngIf="gameStatusService.currentStonesComputer > 1" class="col-sm-12">
                     <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
                 </div>
-                <div *ngIf="_gameStatus.currentStonesComputer > 2" class="col-sm-12">
+                <div *ngIf="gameStatusService.currentStonesComputer > 2" class="col-sm-12">
                     <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
                 </div>
-                <div *ngIf="_gameStatus.currentStonesComputer > 3" class="col-sm-12">
+                <div *ngIf="gameStatusService.currentStonesComputer > 3" class="col-sm-12">
                     <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
                 </div>
-                <div *ngIf="_gameStatus.currentStonesComputer > 4" class="col-sm-12">
+                <div *ngIf="gameStatusService.currentStonesComputer > 4" class="col-sm-12">
                     <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
                 </div>
-                <div *ngIf="_gameStatus.currentStonesComputer > 5" class="col-sm-12">
+                <div *ngIf="gameStatusService.currentStonesComputer > 5" class="col-sm-12">
                     <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
                 </div>
-                <div *ngIf="_gameStatus.currentStonesComputer > 6" class="col-sm-12">
+                <div *ngIf="gameStatusService.currentStonesComputer > 6" class="col-sm-12">
                     <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
                 </div>
-                <div *ngIf="_gameStatus.currentStonesComputer > 7" class="col-sm-12">
+                <div *ngIf="gameStatusService.currentStonesComputer > 7" class="col-sm-12">
                     <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
                 </div>
             </div>
@@ -107,6 +129,6 @@
 <div #overlay id="myNav" class="overlay">
     <div class="overlay-content">
         <p (click)="gameOver()"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Abandonner</p>
-        <p (click)="_gameStatus.resetGameStatus()"><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span> Recommencer</p>
+        <p (click)="restartGame()"><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span> Recommencer</p>
     </div>
 </div>

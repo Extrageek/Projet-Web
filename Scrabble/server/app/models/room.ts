@@ -171,13 +171,13 @@ export class Room {
     }
 
     public getInitialsLetters(username: String): Array<string> {
-        let lettersStr = this.letterBankHandler.initializeEasel();
+        let letters = this.letterBankHandler.initializeEasel();
         this._playersQueue.forEach((player: Player) => {
             if (player.username === username) {
-                player.easel.letters = this.letterBankHandler.parseFromListOfStringToListOfLetter(lettersStr);
+                player.easel.letters = letters;
             }
         });
-        return lettersStr;
+        return this.letterBankHandler.parseFromListOfLetterToListOfString(letters);
     }
 
     public placeWordInTheBoard(response: IPlaceWordResponse, username: string): boolean {

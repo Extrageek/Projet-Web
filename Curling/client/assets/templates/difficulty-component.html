@@ -1,16 +1,22 @@
-<form #f="ngForm" class="full-height user-setting">
-    <div id="difficulty" class="form-group user-setting-content">
-        <div> Bonjour {{_username}}, veuillez choisir le niveau de difficulte :</div>
-        <div class="radio">
-            <label>
-                <input type="radio" value= "0" name="difficulty" [(ngModel)]="_difficulty"> Normal
-            </label>
+<div class="user-setting">
+
+    <div class="card mdl-card mdl-shadow--2dp">
+        <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text"> Bonjour {{_username}}, </h2>
         </div>
-        <div class="radio">
-            <label>
-                <input type="radio" value= "1" name="difficulty" [(ngModel)]="_difficulty"> Difficile
-            </label>
+        <div class="mdl-card__supporting-text">
+            <p> Veuillez choisir le niveau de difficulté :</p>
+
+            <md-radio-group [(ngModel)]="_difficulty">
+                <md-radio-button value="0"> <p> Normal </p> </md-radio-button>
+                <br>
+                <md-radio-button value="1"> <p> Difficile </p> </md-radio-button>
+            </md-radio-group>
+
         </div>
-        <button type="submit" class="btn btn-primary btn-lg" (click)="launchGame()">Commencer la partie !</button>
+        <div class="mdl-card__actions mdl-card--border">
+            <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"
+                    (click)="launchGame()">Commencer la partie !</button>
+        </div>
     </div>
-</form>
+</div>

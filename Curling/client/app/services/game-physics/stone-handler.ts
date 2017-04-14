@@ -1,9 +1,9 @@
 import { ObjectLoader, Vector3, Box3, Scene } from 'three';
-import { RinkInfo } from '../../models/scenery/rink-info.interface';
+import { IRinkInfo } from '../../models/scenery/rink-info.interface';
 import { Stone, StoneColor } from '../../models/stone';
-import { GameComponent } from '../../models/game-component.interface';
+import { IGameState } from '../../models/game-state.interface';
 import { SoundManager } from "../sound-manager";
-import { ShotParameters } from "../../models/shot-parameters.interface";
+import { IShotParameters } from "../../models/shot-parameters.interface";
 import { IntervalObservable } from "rxjs/observable/IntervalObservable";
 import { Subject } from "rxjs/Subject";
 import { Subscription } from "rxjs";
@@ -16,19 +16,15 @@ export interface Points {
     computer: number;
 }
 
-export class StoneHandler implements GameComponent {
-
-    public static readonly SHOT_POWER_MINIMUM = 0.2;
-    public static readonly SHOT_POWER_MAXIMUM = 4;
-    public static readonly SHOT_POWER_OFFSET = 1;
-
+export class StoneHandler implements IGameState {
     public static readonly COLLISION_SPEED_KEEP_PERCENT = 0.85;
     public static readonly COLLISION_SPEED_TRANSFERED_PERCENT = 0.85;
 
     private static readonly FIVE_SECOND = 5000;
     private static readonly FIFTY_MILLISECONDS = 50;
 
-    private _rinkInfo: RinkInfo;
+    private _rinkInfo: IRinkInfo;
+    private _scene: Scene;
     private _currentPlayer: StoneColor;
     private _objectLoader: ObjectLoader;
     private _stoneOnTheGame: Stone[];
@@ -39,12 +35,14 @@ export class StoneHandler implements GameComponent {
     private _invalidAreaForStonesToBeIn: Box3;
     private _stonesGivingPoints: Stone[];
 
-    constructor(objectLoader: ObjectLoader, rinkInfo: RinkInfo, firstPlayer: StoneColor) {
+    constructor(objectLoader: ObjectLoader, rinkInfo: IRinkInfo, scene: Scene, firstPlayer: StoneColor) {
         this._rinkInfo = rinkInfo;
+        this._scene = scene;
         this._currentPlayer = firstPlayer - 1;
         this._objectLoader = objectLoader;
         this._stoneOnTheGame = new Array<Stone>();
         this._stonesToBeRemoved = new Array<Stone>();
+        this._stonesGivingPoints = new Array<Stone>();
         this._callbackAfterShotFinished = null;
         this._outOfBoundsRink = new Box3(new Vector3(-2.15, -15, -22.5), new Vector3(2.15, 15, 22.5));
 
@@ -59,14 +57,14 @@ export class StoneHandler implements GameComponent {
         return this._stoneOnTheGame;
     }
 
-    public removeOutOfBoundsStones(scene: Scene) {
+    public removeOutOfBoundsStones() {
         for (let stone of this._stonesToBeRemoved) {
-            scene.remove(stone);
+            this._scene.remove(stone);
         }
     }
 
     public performShot(
-        shotParameters: ShotParameters,
+        shotParameters: IShotParameters,
         callbackWhenShotFinished: Function = () => {/*Do nothing by default*/ }
     ) {
         if (this._stoneOnTheGame.length === 0) {
@@ -88,6 +86,7 @@ export class StoneHandler implements GameComponent {
         return Stone.createStone(this._objectLoader, this._currentPlayer, this._rinkInfo.initialStonePosition)
             .then((stone: Stone) => {
                 this._stoneOnTheGame.push(stone);
+                this._scene.add(stone);
                 return stone;
             });
     }
@@ -111,11 +110,13 @@ export class StoneHandler implements GameComponent {
         }
     }
 
-    public cleanAllStones(scene: Scene) {
+    public cleanAllStones() {
         this._stoneOnTheGame.forEach((stone: Stone) => {
-            scene.remove(stone);
+            this._scene.remove(stone);
         });
-        this._stoneOnTheGame.splice(0, this._stoneOnTheGame.length);
+        this._callbackAfterShotFinished = null;
+        this._stonesGivingPoints.length = 0;
+        this._stoneOnTheGame.length = 0;
     }
 
     public update(timePerFrame: number) {
@@ -180,7 +181,7 @@ export class StoneHandler implements GameComponent {
         this._stoneOnTheGame.map((stone: Stone) => {
             if (stoneToVerify !== stone) {
                 if (stoneToVerify.boundingSphere.intersectsSphere(stone.boundingSphere)) {
-                    SoundManager.getInstance().collisionSound;
+                    SoundManager.getInstance().playCollisionSound();
                     stonesHit.push(stone);
                 }
             }
@@ -299,18 +300,25 @@ export class StoneHandler implements GameComponent {
         return startingPoint.clone().sub(endingPoint).length();
     }
 
-    public bounceWinningPlayerStones() {
+    public bounceWinningPlayerStones(stoneColor: StoneColor) {
         let source = new IntervalObservable(StoneHandler.FIFTY_MILLISECONDS);
         let subject = new Subject();
-        let subscriptions = new Array <Subscription>();
+        let subscriptions = new Array<Subscription>();
         let multicast = source.multicast(subject);
-        this.stoneOnTheGame.forEach((stone: Stone) => {
-            multicast.subscribe(stone.bounce());
+
+        this._stoneOnTheGame.forEach((stone: Stone) => {
+            if (stone.stoneColor === stoneColor) {
+                subscriptions.push(multicast.subscribe(stone.bounce()));
+            }
         });
+
         multicast.connect();
 
         let timerID = setTimeout(() => {
             subject.complete();
+            subscriptions.forEach((subscription: Subscription) => {
+                subscription.unsubscribe();
+            });
             clearTimeout(timerID);
         }, StoneHandler.FIVE_SECOND);
     }

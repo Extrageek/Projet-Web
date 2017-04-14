@@ -3,8 +3,8 @@ import { ObjectLoader, Vector3, Scene } from "three";
 import { StoneHandler } from "./../game-physics/stone-handler";
 import { Stone, StoneColor, StoneSpin } from "./../../models/stone";
 import { CameraType } from "./../game-physics/camera-type";
-import { RinkInfo } from "./../../models/scenery/rink-info.interface";
-import { ShotParameters } from "../../models/shot-parameters.interface";
+import { IRinkInfo } from "./../../models/scenery/rink-info.interface";
+import { IShotParameters } from "../../models/shot-parameters.interface";
 
 function do60Updates(stoneHandler: StoneHandler) {
     for (let i = 0; i < 60; ++i) {
@@ -15,9 +15,11 @@ function do60Updates(stoneHandler: StoneHandler) {
 describe("StoneHandler tests should", () => {
 
     let objectLoader: ObjectLoader;
-    let rinkInfo: RinkInfo;
+    let rinkInfo: IRinkInfo;
+    let scene: Scene;
 
     before(() => {
+        scene = new Scene();
         objectLoader = new ObjectLoader();
         rinkInfo = {
             targetCenter: new Vector3(0, 0, -15),
@@ -27,7 +29,7 @@ describe("StoneHandler tests should", () => {
     });
 
     it("create a StoneHandler and generate a red stone", done => {
-        let stoneHandler = new StoneHandler(objectLoader, rinkInfo, StoneColor.Red);
+        let stoneHandler = new StoneHandler(objectLoader, rinkInfo, scene, StoneColor.Red);
         stoneHandler.generateNewStone().then((stone: Stone) => {
             expect(stone.stoneColor).to.equals(StoneColor.Red);
             done();
@@ -35,7 +37,7 @@ describe("StoneHandler tests should", () => {
     });
 
     it("create a StoneHandler and generate a blue stone", done => {
-        let stoneHandler = new StoneHandler(objectLoader, rinkInfo, StoneColor.Blue);
+        let stoneHandler = new StoneHandler(objectLoader, rinkInfo, scene, StoneColor.Blue);
         stoneHandler.generateNewStone().then((stone: Stone) => {
             expect(stone.stoneColor).to.equals(StoneColor.Blue);
             done();
@@ -45,14 +47,16 @@ describe("StoneHandler tests should", () => {
 
 describe("StoneHandler tests should", () => {
 
+    let scene: Scene;
     let objectLoader: ObjectLoader;
-    let rinkInfo: RinkInfo;
+    let rinkInfo: IRinkInfo;
     let stoneHandler: StoneHandler;
     let timeoutId: NodeJS.Timer;
-    let shotParameters1: ShotParameters;
-    let shotParameters2: ShotParameters;
+    let shotParameters1: IShotParameters;
+    let shotParameters2: IShotParameters;
 
     before(() => {
+        scene = new Scene();
         objectLoader = new ObjectLoader();
         rinkInfo = {
             targetCenter: new Vector3(0, 0, -15),
@@ -62,7 +66,7 @@ describe("StoneHandler tests should", () => {
     });
 
     beforeEach(() => {
-        stoneHandler = new StoneHandler(objectLoader, rinkInfo, StoneColor.Blue);
+        stoneHandler = new StoneHandler(objectLoader, rinkInfo, scene, StoneColor.Blue);
         shotParameters1 =
             {
                 power: 1,
@@ -87,7 +91,7 @@ describe("StoneHandler tests should", () => {
 
     it("clean all stones generated", done => {
         stoneHandler.generateNewStone().then((stone: Stone) => {
-            stoneHandler.cleanAllStones(new Scene());
+            stoneHandler.cleanAllStones();
             expect(() => { stoneHandler.performShot(shotParameters1); }).to.throw(Error);
             done();
         });

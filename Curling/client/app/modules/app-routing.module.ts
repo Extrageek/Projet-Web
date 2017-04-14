@@ -9,13 +9,13 @@ import { DisplayComponent } from "../components/display.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "user", pathMatch: "full" },
-  { path: "user", component: UsernameComponent},
-  { path: "difficulty", component: DifficultyComponent},
-  { path: "leaderboard", component: LeaderboardComponent},
+  { path: "user", component: UsernameComponent },
+  { path: "difficulty", component: DifficultyComponent },
+  { path: "leaderboard", component: LeaderboardComponent },
   { path: "game", component: DisplayComponent }
 ];
 @NgModule({
-  imports: [ RouterModule.forRoot(routes) ],
-  exports: [ RouterModule ]
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

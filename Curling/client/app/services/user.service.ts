@@ -1,24 +1,21 @@
 import { Injectable } from "@angular/core";
 import { RestApiProxyService } from "./rest-api-proxy.service";
-import { Difficulty } from "./../models/difficulty";
+import { Difficulty } from "../models/difficulty";
 
 @Injectable()
 export class UserService {
     private _name: string;
-    private _difficulty: Difficulty;
-
     public get name(): string {
         return this._name;
     }
-
     public set name(value: string) {
         this._name = value;
     }
 
+    private _difficulty: Difficulty;
     public get difficulty(): Difficulty {
         return this._difficulty;
     }
-
     public set difficulty(value: Difficulty) {
         this._difficulty = value;
     }
