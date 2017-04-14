@@ -1,8 +1,7 @@
 import { Vector3 } from "three";
 import { StoneSpin } from "../stone";
 import { IGameInfo } from "../../services/game-handler/game-info.interface";
-import { IGameServices } from ".
-./../services/game-handler/games-services.interface";
+import { IGameServices } from "../../services/game-handler/games-services.interface";
 import { IShotParameters } from "../shot-parameters.interface";
 import { IGameState } from "../game-state.interface";
 
