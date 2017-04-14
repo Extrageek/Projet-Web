@@ -50,7 +50,7 @@ export class SoundManager {
         return this._collisionSound.play();
     }
 
-    get listener(): THREE.AudioListener {
+    get listener(): AudioListener {
         return this._listener;
     }
 

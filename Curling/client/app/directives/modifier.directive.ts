@@ -11,7 +11,6 @@ export class ModifierDirective {
 
     @Input()
     public set container(value: HTMLElement) {
-        console.log("directive called");
         if (value) {
             this._renderService.putCanvasIntoHTMLElement(value);
         }

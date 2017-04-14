@@ -1,5 +1,5 @@
-import { Geometry, Vector3, Scene, PointsMaterial, Points } from "three";
-import { IGameInfo } from "./../game-handler/game-info.interface";
+import { Geometry, Vector3, Scene, PointsMaterial, Points, Color } from "three";
+import { IGameInfo } from "../game-handler/game-info.interface";
 
 export class ParticlesService {
 
@@ -11,8 +11,8 @@ export class ParticlesService {
 
     constructor(scene: Scene) {
         this._scene = scene;
-        this._geometry = new THREE.Geometry();
-        this._material = new THREE.PointsMaterial({
+        this._geometry = new Geometry();
+        this._material = new PointsMaterial({
             size: 0.5,
             color: 0x00AAFF
         });
@@ -25,16 +25,16 @@ export class ParticlesService {
             //this._particleSystem.children
             this.setConffetiPosition();
         }
-        this._particleSystem = new THREE.Points(this._geometry, this._material);
+        this._particleSystem = new Points(this._geometry, this._material);
     }
 
     private setConffetiColors() {
         this._geometry.colors = [
-            new THREE.Color(this.randomColor()),
-            new THREE.Color(this.randomColor()),
-            new THREE.Color(this.randomColor()),
-            new THREE.Color(this.randomColor()),
-            new THREE.Color(this.randomColor())
+            new Color(this.randomColor()),
+            new Color(this.randomColor()),
+            new Color(this.randomColor()),
+            new Color(this.randomColor()),
+            new Color(this.randomColor())
         ];
 
         //setHSL(Math.random() * 360, 100, 50);

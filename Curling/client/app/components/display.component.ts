@@ -1,8 +1,8 @@
 import { Component, OnInit, HostListener, ViewChild, ElementRef } from "@angular/core";
 import { Router } from "@angular/router";
 
-import { RestApiProxyService } from "./../services/rest-api-proxy.service";
-import { UserService } from "./../services/user.service";
+import { RestApiProxyService } from "../services/rest-api-proxy.service";
+import { UserService } from "../services/user.service";
 import { GameStatusService } from "./../services/game-status.service";
 import { RenderService } from "../services/game-handler/render.service";
 
@@ -44,19 +44,17 @@ export class DisplayComponent implements OnInit {
         private router: Router,
         private api: RestApiProxyService,
         private userService: UserService,
-        private gameStatusService: GameStatusService,
-        private renderService: RenderService) {
+        public gameStatusService: GameStatusService,
+        public renderService: RenderService) {
             this._textToShow = "Cliquez pour continuer.";
         }
 
     ngOnInit() {
-        console.log("ngOnInit called");
         this._userSetting = this.userService;
         if (this._userSetting.name === "") {
             this.router.navigate(["/"]);
         } else {
             this.getComputerName();
-            console.log("starting game");
             this.renderService.initAndStart();
         }
     }

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { Router } from "@angular/router";
 
-import { RestApiProxyService } from "./../services/rest-api-proxy.service";
+import { RestApiProxyService } from "../services/rest-api-proxy.service";
 import { Record } from "../models/record";
 
 @Component({

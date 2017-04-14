@@ -1,11 +1,13 @@
 import { Vector3 } from "three";
 import { ComputerAI } from "./computerAI";
-import { IRinkInfo } from "./../scenery/rink-info.interface";
-import { RandomHelper } from "./../random-helper";
-import { IShotParameters } from "./../shot-parameters.interface";
+import { IRinkInfo } from "../scenery/rink-info.interface";
+import { RandomHelper } from "../random-helper";
+import { IShotParameters } from "../shot-parameters.interface";
 
 export class HardAI extends ComputerAI {
 
+    //WARNING : If the physic or the arena dimension change, these numbers must change to be able
+    //to shot in the center.
     private static readonly MIN_SHOT_POWER = 4.1;
     private static readonly MAX_SHOT_POWER = 4.3;
     private static readonly MIN_SHOT_TO_PUSH_STONE = 5.2;
@@ -37,7 +39,7 @@ export class HardAI extends ComputerAI {
                 RandomHelper.getNumberInRangeIncluded(HardAI.MIN_PUSH_DIRECTION_MODIFIER,
                     HardAI.MAX_PUSH_DIRECTION_MODIFIER));
         } else {
-            //If the powers specified in the constants are enough, we never should pass here.
+            //If the powers specified in the constants are not enough, we shot in the center.
             shotParameters = this.determineShotParametersOnCenter();
         }
 
