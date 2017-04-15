@@ -14,7 +14,6 @@ import { UserService } from "../user.service";
 
 import { StoneHandler } from "../game-physics/stone-handler";
 import { TextureHandler } from "../views/texture-handler";
-import { CameraType } from "../game-physics/camera-type";
 import { StatesHandler } from "./states-handler";
 
 import { Rink } from "../../models/scenery/rink";

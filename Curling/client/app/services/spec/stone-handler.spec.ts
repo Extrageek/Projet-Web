@@ -2,7 +2,6 @@ import { expect } from "chai";
 import { ObjectLoader, Vector3, Scene } from "three";
 import { StoneHandler } from "./../game-physics/stone-handler";
 import { Stone, StoneColor, StoneSpin } from "./../../models/stone";
-import { CameraType } from "./../game-physics/camera-type";
 import { IRinkInfo } from "./../../models/scenery/rink-info.interface";
 import { IShotParameters } from "../../models/shot-parameters.interface";
 
