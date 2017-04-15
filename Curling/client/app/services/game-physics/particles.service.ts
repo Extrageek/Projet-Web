@@ -1,4 +1,5 @@
 import { Geometry, Scene, Vector3, Color, PointsMaterial, Points } from "three";
+import { RandomHelper } from "../../models/random-helper";
 
  export class ParticlesService {
 
@@ -37,9 +38,9 @@ import { Geometry, Scene, Vector3, Color, PointsMaterial, Points } from "three";
         this._geometry.colors.push(new Color(Math.random(), Math.random(), Math.random()));
     }
     private assignRandomPosition() : Vector3{
-        let positionAxisX = (Math.random() * (15 - -15)) + -15; // Between -15 and 15
-        let positionAxisY = (Math.random() * (10 - 6)) + 6; // Between 10 and 6
-        let positionAxisZ = (Math.random() * (5 - 40)) + 40; // Between 5 and 40
+        let positionAxisX = RandomHelper.getNumberInRangeIncluded(15, -15);
+        let positionAxisY = RandomHelper.getNumberInRangeIncluded(10, 6);
+        let positionAxisZ = RandomHelper.getNumberInRangeIncluded(40, 5);
         return new Vector3(positionAxisX, positionAxisY, positionAxisZ);
     }
     public update() {
