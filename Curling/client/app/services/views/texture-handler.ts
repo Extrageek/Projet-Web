@@ -72,12 +72,12 @@ export class TextureHandler {
         //Store the informations for future modifications.
         Object.defineProperty(this._allTexts, this._textNumber.toString(),
             { value: { "textGeometry": textGeometry, "textMaterial": textMaterial, "textMesh": textMesh } });
-        console.log(this._allTexts);
         //Return the identifier to permit future modifications.
         let identifier = this._textNumber;
         ++this._textNumber;
         return identifier;
     }
+
     public removeText(identifier: number) {
         this._scene.remove(this._allTexts[identifier].textMesh);
         delete this._allTexts[identifier];

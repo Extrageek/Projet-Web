@@ -1,6 +1,7 @@
 import { expect } from "chai";
-import { ObjectLoader, Vector3 } from "three";
+import { ObjectLoader, Vector3, Mesh } from "three";
 import { Stone, StoneColor, StoneSpin } from "./../stone";
+import { Subject } from "rxjs/Subject";
 
 describe("Stone tester should", function () {
     this.timeout(15000);
@@ -49,9 +50,29 @@ describe("Stone tester should", function () {
             done();
         });
     });
+
+    it("Make a stone bounce up and down", done => {
+        let subject = new Subject();
+
+        Stone.createStone(objectLoader, StoneColor.Blue, new Vector3(0, 0, 0)).then((stone: Stone) => {
+            let observer = stone.bounce();
+            subject.subscribe(observer);
+            expect(stone.position.y === 0);
+            subject.next();
+            expect(stone.position.y > 0);
+            subject.complete();
+            setTimeout(() => {
+                stone.traverse((child) => {
+                    expect((<Mesh>child).material.transparent).to.equal(true);
+                    expect((<Mesh>child).material.opacity).to.not.equal(1);
+                });
+                done();
+            }, 1000);
+        });
+    });
 });
 
-describe("Stone tester should", () => {
+describe("Stone tester physics should", () => {
 
     let objectLoader: ObjectLoader;
     let stone: Stone;
