@@ -1,9 +1,15 @@
-import { Geometry, Vector3, Scene, PointsMaterial, Points, Color } from "three";
-import { IGameInfo } from "../game-handler/game-info.interface";
+import { Geometry, Scene, Vector3, Color, PointsMaterial, Points } from "three";
 
 export class ParticlesService {
 
-    private readonly PARTICLES_COUNT = 1800;
+    private readonly RINK_X_BOUND = 3.80;
+    private readonly RINK_Y_BOUND = -100;
+    private readonly RINK_Z_UPPER_BOUND = 23.5;
+    private readonly RINK_Z_LOWER_BOUND = 10;
+    private readonly PARTICLE_SPEED = 0.04;
+
+    private readonly PARTICLES_COUNT = 1600;
+
     private _geometry: Geometry;
     private _material: PointsMaterial;
     private _particleSystem: Points;
@@ -13,71 +19,44 @@ export class ParticlesService {
         this._scene = scene;
         this._geometry = new Geometry();
         this._material = new PointsMaterial({
-            size: 0.5,
-            color: 0x00AAFF
+            size: 0.2,
+            vertexColors: THREE.VertexColors
         });
         this.createParticles();
     }
 
     private createParticles() {
         for (let count = 0; count < this.PARTICLES_COUNT; ++count) {
-            this.setConffetiColors();
-            //this._particleSystem.children
-            this.setConffetiPosition();
+            this.createConfetti();
         }
         this._particleSystem = new Points(this._geometry, this._material);
     }
 
-    private setConffetiColors() {
-        this._geometry.colors = [
-            new Color(this.randomColor()),
-            new Color(this.randomColor()),
-            new Color(this.randomColor()),
-            new Color(this.randomColor()),
-            new Color(this.randomColor())
-        ];
-
-        //setHSL(Math.random() * 360, 100, 50);
-        // let hexColor = Number('0x' + ("000000" + Math.random().toString(16).slice(2, 8).toUpperCase()).slice(-6));
-        // this._material = new PointsMaterial({
-        //     color: hexColor
-        // });
+    private createConfetti() {
+        this._geometry.vertices.push(this.assignRandomPosition());
+        this._geometry.colors.push(new Color(Math.random(), Math.random(), Math.random()));
     }
-
-    private randomColor(): number {
-        return Math.floor(Math.random() * 16777215);
+    private assignRandomPosition() : Vector3{
+        let positionAxisX = (Math.random() * (15 - -15)) + -15; // Between -15 and 15
+        let positionAxisY = (Math.random() * (10 - 6)) + 6; // Between 10 and 6
+        let positionAxisZ = (Math.random() * (5 - 40)) + 40; // Between 5 and 40
+        return new Vector3(positionAxisX, positionAxisY, positionAxisZ);
     }
-
-    private setConffetiPosition() {
-        let positionAxisX = Math.random() * 100 - 50;
-        let positionAxisY = Math.random() * 8 - 5;
-        let positionAxisZ = Math.random() * 100 - 50;
-        this._geometry.vertices.push(new THREE.Vector3(positionAxisX, positionAxisY, positionAxisZ));
-    }
-
     public update() {
-        //this._particleSystem.rotation.x += 0.01;
-
-        this._particleSystem.children.map((particle) => {
-            if (particle.position.y >= 5) {
-                particle.translateY(-0.01);
+        this._geometry.vertices.forEach((particle) => {
+            if (particle.y < 0 ) {
+                if (particle.x < this.RINK_X_BOUND && particle.x > -this.RINK_X_BOUND
+                    && particle.z > this.RINK_Z_LOWER_BOUND && particle.z < this.RINK_Z_UPPER_BOUND ) {
+                        particle.y = 0;
+                } else {
+                    particle.y = this.RINK_Y_BOUND;
+                }
+            } else {
+                particle.y -= this.PARTICLE_SPEED;
             }
         });
+        this._geometry.verticesNeedUpdate = true;
 
-        //this._particleSystem.rotation.y += 0.01;
-        //this._particleSystem.rotation.z += 0.01;
-
-        // if (this._particleSystem.position.y > 0) {
-        //     this._particleSystem.position.set(
-        //         this._particleSystem.position.x,
-        //         this._particleSystem.position.y -= 0.1,
-        //         this._particleSystem.position.z);
-        // } else {
-        //     this._particleSystem.position.set(
-        //         this._particleSystem.position.x,
-        //         0,
-        //         this._particleSystem.position.z);
-        // }
     }
 
     public addParticulesToScene() {
