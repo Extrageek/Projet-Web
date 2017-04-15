@@ -17,7 +17,6 @@ import { RenderService } from "../services/game-handler/render.service";
 import { RestApiProxyService } from "./../services/rest-api-proxy.service";
 import { UserService } from "./../services/user.service";
 import { GameStatusService } from "./../services/game-status.service";
-import { CameraService } from "./../services/views/cameras.service";
 import { LightingService } from "./../services/views/ligthing.service";
 
 @NgModule({
@@ -25,7 +24,7 @@ import { LightingService } from "./../services/views/ligthing.service";
   declarations: [AppComponent, LeaderboardComponent, ModifierDirective,
     UsernameComponent, DifficultyComponent, DisplayComponent],
   providers: [RenderService, RestApiProxyService, UserService,
-    GameStatusService, CameraService, LightingService],
+    GameStatusService, LightingService],
   bootstrap: [AppComponent]
 })
 

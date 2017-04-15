@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import { CameraService } from "./../views/cameras.service";
+import { SoundManager } from "../sound-manager";
 import { PerspectiveCamera, Object3D, Vector3 } from "three";
 
 //The setTimeout function was used instead of the requestAnimationFrame because the
@@ -8,8 +9,11 @@ describe("Camera service should", () => {
 
     let cameraService: CameraService;
 
-    beforeEach(() => {
-        cameraService = new CameraService();
+    beforeEach(done => {
+        SoundManager.createSoundManager().then((soundManager: SoundManager) => {
+            cameraService = new CameraService(soundManager);
+            done();
+        });
     });
 
     it("get perspective camera than topView camera", () => {

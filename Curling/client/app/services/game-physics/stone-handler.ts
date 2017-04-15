@@ -25,6 +25,7 @@ export class StoneHandler implements IGameState {
 
     private _rinkInfo: IRinkInfo;
     private _scene: Scene;
+    private _soundManager: SoundManager;
     private _currentPlayer: StoneColor;
     private _objectLoader: ObjectLoader;
     private _stoneOnTheGame: Stone[];
@@ -35,9 +36,10 @@ export class StoneHandler implements IGameState {
     private _invalidAreaForStonesToBeIn: Box3;
     private _stonesGivingPoints: Stone[];
 
-    constructor(objectLoader: ObjectLoader, rinkInfo: IRinkInfo, scene: Scene, firstPlayer: StoneColor) {
+    constructor(soundManager: SoundManager, objectLoader: ObjectLoader, rinkInfo: IRinkInfo, scene: Scene, firstPlayer: StoneColor) {
         this._rinkInfo = rinkInfo;
         this._scene = scene;
+        this._soundManager = soundManager;
         this._currentPlayer = firstPlayer - 1;
         this._objectLoader = objectLoader;
         this._stoneOnTheGame = new Array<Stone>();
@@ -181,7 +183,7 @@ export class StoneHandler implements IGameState {
         this._stoneOnTheGame.map((stone: Stone) => {
             if (stoneToVerify !== stone) {
                 if (stoneToVerify.boundingSphere.intersectsSphere(stone.boundingSphere)) {
-                    SoundManager.getInstance().collisionSound;
+                    this._soundManager.collisionSound;
                     stonesHit.push(stone);
                 }
             }

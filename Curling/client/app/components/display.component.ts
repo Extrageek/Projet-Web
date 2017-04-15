@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 
 import { RestApiProxyService } from "../services/rest-api-proxy.service";
 import { UserService } from "../services/user.service";
-import { GameStatusService } from "./../services/game-status.service";
+import { GameStatusService } from "../services/game-status.service";
 import { RenderService } from "../services/game-handler/render.service";
 
 @Component({

@@ -1,37 +1,47 @@
 import { Audio, AudioListener, AudioLoader, AudioBuffer } from "three";
 
 export class SoundManager {
-    private static _instance: SoundManager;
+
+    private static readonly SOUNDS_PATH = [
+        "../assets/sounds/broomIn.wav",
+        "../assets/sounds/broomOut.wav",
+        "../assets/sounds/collisionHit.wav"
+    ];
+
+    private _audioLoader: AudioLoader;
     private _listener: AudioListener;
     // Cannot put audio in vector because of promises
     private _broomInSound: Audio;
     private _broomOutSound: Audio;
     private _collisionSound: Audio;
 
-    private _audioLoader: AudioLoader;
-
-    public static getInstance(): SoundManager {
-        if (SoundManager._instance === null || SoundManager._instance === undefined) {
-            SoundManager._instance = new SoundManager();
-        }
-        return SoundManager._instance;
+    public static createSoundManager(): Promise<SoundManager> {
+        let soundManager = new SoundManager();
+        return soundManager.loadAllSounds();
     }
 
-    constructor() {
-        this._listener = new AudioListener();
+    private constructor() {
         this._audioLoader = new AudioLoader();
+        this._listener = new AudioListener();
+        let monArray = new Array<Audio>();
+    }
 
-
-        this.addSound("../assets/sounds/collisionHit.wav").then((retrievedSound: Audio) => {
-            this._collisionSound = retrievedSound;
-        });
-
-        this.addSound("../assets/sounds/broomIn.wav").then((retrievedSound: Audio) => {
-            this._broomInSound = retrievedSound;
-        });
-
-        this.addSound("../assets/sounds/broomOut.wav").then((retrievedSound: Audio) => {
-            this._broomOutSound = retrievedSound;
+    private loadAllSounds(): Promise<SoundManager> {
+        let remainingAudioToLoad = 0;
+        let allSounds = new Array<Audio>(SoundManager.SOUNDS_PATH.length);
+        return new Promise<SoundManager>((resolve, reject) => {
+            SoundManager.SOUNDS_PATH.forEach((path: string, index: number) => {
+                ++remainingAudioToLoad;
+                this.addSound(path).then((retrievedAudio: Audio) => {
+                    console.log(index);
+                    allSounds[index] = retrievedAudio;
+                    --remainingAudioToLoad;
+                    if (remainingAudioToLoad === 0) {
+                        [this._broomInSound, this._broomOutSound, this._collisionSound] = allSounds;
+                        resolve(this);
+                    }
+                });
+            });
         });
     }
 
@@ -56,20 +66,18 @@ export class SoundManager {
 
     private addSound(soundPath: string): Promise<Audio> {
         return new Promise<Audio>((resolve, reject) => {
-            this._audioLoader.load(soundPath, (buffer: AudioBuffer) => { // On load
-                let newSound = new Audio(this._listener);
-                newSound.setBuffer(buffer);
-                newSound.setLoop(false);
-                resolve(newSound);
-            }, () => {
-                // On progress
-            },
-                () => { // On error
+            this._audioLoader.load(soundPath,
+                (buffer: AudioBuffer) => { // On load
+                    let newSound = new Audio(this._listener);
+                    newSound.setBuffer(buffer);
+                    newSound.setLoop(false);
+                    resolve(newSound);
+                }, () => {
+                    // On progress
+                }, (error: string) => { // On error
                     console.error("Sound not found, unable to load");
+                    reject(error);
                 });
         });
-
     }
 }
-
-

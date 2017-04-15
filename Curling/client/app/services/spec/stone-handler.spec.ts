@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { ObjectLoader, Vector3, Scene } from "three";
 import { StoneHandler } from "./../game-physics/stone-handler";
 import { Stone, StoneColor, StoneSpin } from "./../../models/stone";
-import { CameraType } from "./../game-physics/camera-type";
+import { SoundManager } from "../sound-manager";
 import { IRinkInfo } from "./../../models/scenery/rink-info.interface";
 import { IShotParameters } from "../../models/shot-parameters.interface";
 
@@ -15,10 +15,11 @@ function do60Updates(stoneHandler: StoneHandler) {
 describe("StoneHandler tests should", () => {
 
     let objectLoader: ObjectLoader;
+    let soundManager: SoundManager;
     let rinkInfo: IRinkInfo;
     let scene: Scene;
 
-    before(() => {
+    before(done => {
         scene = new Scene();
         objectLoader = new ObjectLoader();
         rinkInfo = {
@@ -26,10 +27,14 @@ describe("StoneHandler tests should", () => {
             targetRadius: 3,
             initialStonePosition: new Vector3(0, 0, 0)
         };
+        SoundManager.createSoundManager().then((soundManagerLoaded: SoundManager) => {
+            soundManager = soundManagerLoaded;
+            done();
+        });
     });
 
     it("create a StoneHandler and generate a red stone", done => {
-        let stoneHandler = new StoneHandler(objectLoader, rinkInfo, scene, StoneColor.Red);
+        let stoneHandler = new StoneHandler(soundManager, objectLoader, rinkInfo, scene, StoneColor.Red);
         stoneHandler.generateNewStone().then((stone: Stone) => {
             expect(stone.stoneColor).to.equals(StoneColor.Red);
             done();
@@ -37,7 +42,7 @@ describe("StoneHandler tests should", () => {
     });
 
     it("create a StoneHandler and generate a blue stone", done => {
-        let stoneHandler = new StoneHandler(objectLoader, rinkInfo, scene, StoneColor.Blue);
+        let stoneHandler = new StoneHandler(soundManager, objectLoader, rinkInfo, scene, StoneColor.Blue);
         stoneHandler.generateNewStone().then((stone: Stone) => {
             expect(stone.stoneColor).to.equals(StoneColor.Blue);
             done();
@@ -51,11 +56,12 @@ describe("StoneHandler tests should", () => {
     let objectLoader: ObjectLoader;
     let rinkInfo: IRinkInfo;
     let stoneHandler: StoneHandler;
+    let soundManager: SoundManager;
     let timeoutId: NodeJS.Timer;
     let shotParameters1: IShotParameters;
     let shotParameters2: IShotParameters;
 
-    before(() => {
+    before(done => {
         scene = new Scene();
         objectLoader = new ObjectLoader();
         rinkInfo = {
@@ -63,10 +69,14 @@ describe("StoneHandler tests should", () => {
             targetRadius: 3,
             initialStonePosition: new Vector3(0, 0, 0)
         };
+        SoundManager.createSoundManager().then((soundManagerLoaded: SoundManager) => {
+            soundManager = soundManagerLoaded;
+            done();
+        });
     });
 
     beforeEach(() => {
-        stoneHandler = new StoneHandler(objectLoader, rinkInfo, scene, StoneColor.Blue);
+        stoneHandler = new StoneHandler(soundManager, objectLoader, rinkInfo, scene, StoneColor.Blue);
         shotParameters1 =
             {
                 power: 1,
@@ -138,9 +148,9 @@ describe("StoneHandler tests should", () => {
 
     it("clean bottom out of bound stone", done => {
         shotParameters1.direction.set(0, 0, -1);
-        shotParameters1.power = 0.001;
+        shotParameters1.power = 0.01;
         stoneHandler.generateNewStone().then((stone: Stone) => {
-            stone.position.set(0, 0, 1);
+            stone.position.copy(rinkInfo.initialStonePosition);
             stoneHandler.performShot(shotParameters1, () => {
                 expect(() => { stoneHandler.performShot(shotParameters2); }).to.throw(Error);
                 done();

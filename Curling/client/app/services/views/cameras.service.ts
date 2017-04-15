@@ -1,4 +1,3 @@
-import { Injectable } from "@angular/core";
 import { Object3D, PerspectiveCamera, Vector3 } from "three";
 import { IGameState } from "../../models/game-state.interface";
 import { SoundManager } from "../sound-manager";
@@ -14,7 +13,6 @@ interface IFollowUpdate {
     functionToApply: Function;
 }
 
-@Injectable()
 export class CameraService implements IGameState {
     private static readonly FIELD_OF_VIEW = 65;
     public static readonly INITIAL_POSITION_P = { x: 0, y: 6, z: -24 };
@@ -28,13 +26,15 @@ export class CameraService implements IGameState {
     private _currentCamera: PerspectiveCamera;
     private _lastCameraUsedIndex: number;
     private _updateInfo: IFollowUpdate;
+    private _soundManager: SoundManager;
 
     get currentCamera() {
         return this._currentCamera;
     }
 
-    constructor() {
+    constructor(soundManager: SoundManager) {
         this._updateInfo = null;
+        this._soundManager = soundManager;
         this._perspectiveCamera = this.createNewPerspectiveCamera(CameraService.INITIAL_POSITION_P,
             CameraService.POINT_TO_P);
         this._topViewCamera = this.createNewPerspectiveCamera(CameraService.INITIAL_POSITION_T,
@@ -55,7 +55,7 @@ export class CameraService implements IGameState {
             camera.rotateY(rotation.y);
             camera.rotateZ(rotation.z);
         }
-        camera.add(SoundManager.getInstance().listener); // Ajout un ecouteur a la camera
+        camera.add(this._soundManager.listener); // Ajoute un ecouteur a la camera
         return camera;
     }
 
