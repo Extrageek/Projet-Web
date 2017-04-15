@@ -24,7 +24,6 @@ describe("Texture handler tests should ", () => {
 
     });
 
-
     it("add a text to the scene", () => {
         let position = new Vector3 (0, 0, 0);
         let textIdentifier = textureInstance.addText(position, "test text", 0xFFFFFF);
@@ -33,7 +32,7 @@ describe("Texture handler tests should ", () => {
         expect(scene.children[0]).to.equal(textureInstance.allTexts[textIdentifier].textMesh);
     });
 
-    it("add a text to the scene", () => {
+    it("remove text  the scene", () => {
         let position = new Vector3 (0, 0, 0);
         let textIdentifier = textureInstance.addText(position, "test text", 0xFFFFFF);
         textureInstance.removeText(textIdentifier);
