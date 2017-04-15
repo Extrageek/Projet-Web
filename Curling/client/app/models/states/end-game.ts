@@ -35,7 +35,7 @@ export class EndGame extends AbstractGameState {
         this._gameServices.cameraService.setPerspectiveCameraCurrent();
         this._gameServices.cameraService.movePCameraEndRink();
         this._gameServices.particlesService.createParticles();
-        this._gameServices.particlesService.addParticulesToScene();
+        this._gameServices.particlesService.addParticlesToScene();
         this._animationStopped = false;
         this.addAppropriateEndGameText();
         this._gameInfo.gameStatus.gameIsFinished();
@@ -60,7 +60,7 @@ export class EndGame extends AbstractGameState {
 
     protected performLeavingState(): Promise<void> {
         this.removeEndGameText();
-        this._gameServices.particlesService.removeParticulesFromScene();
+        this._gameServices.particlesService.removeParticlesFromScene();
         return Promise.resolve();
     }
 

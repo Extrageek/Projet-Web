@@ -59,11 +59,11 @@ import { Geometry, Scene, Vector3, Color, PointsMaterial, Points } from "three";
 
     }
 
-    public addParticulesToScene() {
+    public addParticlesToScene() {
         this._scene.add(this._particleSystem);
     }
 
-    public removeParticulesFromScene() {
+    public removeParticlesFromScene() {
         this._scene.remove(this._particleSystem);
         this._geometry.vertices.splice(0, this._geometry.vertices.length);
         this._geometry.colors.splice(0, this._geometry.colors.length);
