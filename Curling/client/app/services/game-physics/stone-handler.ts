@@ -248,16 +248,21 @@ export class StoneHandler implements IGameState {
             closestStone = this.findClosestStone(this._rinkInfo.targetCenter);
             if (closestStone !== undefined) {
                 let opponentColor = (closestStone.stoneColor === StoneColor.Blue) ? StoneColor.Red : StoneColor.Blue;
-                let opponentClosestStone = this.findClosestStone(closestStone.position, opponentColor);
-                let distanceBetweenRedAndBlue = this._rinkInfo.targetRadius;
+                let opponentClosestStone = this.findClosestStone(this._rinkInfo.targetCenter, opponentColor);
+                let distanceHouseAndOpponent = this._rinkInfo.targetRadius;
                 if (opponentClosestStone !== undefined) {
-                    distanceBetweenRedAndBlue = this.obtainDistance(closestStone.position,
-                        opponentClosestStone.position);
-                }
+                    // Verifiy if the stone is inside the house
+                    if (this.obtainDistance(this._rinkInfo.targetCenter, opponentClosestStone.position)
+                        < this._rinkInfo.targetRadius) {
+                        distanceHouseAndOpponent = this.obtainDistance(this._rinkInfo.targetCenter,
+                            opponentClosestStone.position);
+                    }
+                 }
+
                 this._stoneOnTheGame.forEach((stone: Stone) => {
                     if (stone.stoneColor === closestStone.stoneColor) {
-                        let distanceBetweenSameStone = this.obtainDistance(closestStone.position, stone.position);
-                        if (distanceBetweenSameStone < distanceBetweenRedAndBlue
+                        let distanceBetweenSameStone = this.obtainDistance(this._rinkInfo.targetCenter, stone.position);
+                        if (distanceBetweenSameStone < distanceHouseAndOpponent
                             && distanceBetweenSameStone < this._rinkInfo.targetRadius) {
                             stonesThatGivesPoints.push(stone);
                         }
