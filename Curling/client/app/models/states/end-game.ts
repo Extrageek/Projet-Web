@@ -16,7 +16,7 @@ export class EndGame extends AbstractGameState {
     private static _instance: AbstractGameState = null;
     private readonly FIVE_SECONDS = 5000;
 
-    private _animationStopped = false;
+    private _animationStopped : boolean;
     private _endGameTextIdentifier: number;
 
     public static createInstance(gameServices: IGameServices, gameInfo: IGameInfo) {
@@ -34,7 +34,9 @@ export class EndGame extends AbstractGameState {
     protected performEnteringState() {
         this._gameServices.cameraService.setPerspectiveCameraCurrent();
         this._gameServices.cameraService.movePCameraEndRink();
+        this._gameServices.particlesService.createParticles();
         this._gameServices.particlesService.addParticulesToScene();
+        this._animationStopped = false;
         this.addAppropriateEndGameText();
         this._gameInfo.gameStatus.gameIsFinished();
         setTimeout(() => {
@@ -58,7 +60,7 @@ export class EndGame extends AbstractGameState {
 
     protected performLeavingState(): Promise<void> {
         this.removeEndGameText();
-        delete this._gameInfo.gameComponentsToUpdate["particleService"];
+        this._gameServices.particlesService.removeParticulesFromScene();
         return Promise.resolve();
     }
 

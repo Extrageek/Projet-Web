@@ -1,6 +1,6 @@
 import { Geometry, Scene, Vector3, Color, PointsMaterial, Points } from "three";
 
-export class ParticlesService {
+ export class ParticlesService {
 
     private readonly RINK_X_BOUND = 3.80;
     private readonly RINK_Y_BOUND = -100;
@@ -17,15 +17,15 @@ export class ParticlesService {
 
     constructor(scene: Scene) {
         this._scene = scene;
+        this.createParticles();
+    }
+
+    public createParticles() {
         this._geometry = new Geometry();
         this._material = new PointsMaterial({
             size: 0.2,
             vertexColors: THREE.VertexColors
         });
-        this.createParticles();
-    }
-
-    private createParticles() {
         for (let count = 0; count < this.PARTICLES_COUNT; ++count) {
             this.createConfetti();
         }
@@ -65,5 +65,7 @@ export class ParticlesService {
 
     public removeParticulesFromScene() {
         this._scene.remove(this._particleSystem);
+        this._geometry.vertices.splice(0, this._geometry.vertices.length);
+        this._geometry.colors.splice(0, this._geometry.colors.length);
     }
 }
