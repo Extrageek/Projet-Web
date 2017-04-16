@@ -27,6 +27,10 @@ export class PlayerShooting extends AbstractGameState {
     }
 
     protected performEnteringState() {
+
+        // Stop the illumination of the stones that give points
+        this._gameServices.stoneHandler.stopStonesIllumination();
+
         this._gameInfo.broom.showBroom();
         this._gameServices.stoneHandler.performShot(
             AbstractGameState.shotParameters,

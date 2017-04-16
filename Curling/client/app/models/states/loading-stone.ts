@@ -41,6 +41,7 @@ export class LoadingStone extends AbstractGameState {
                     else {
                         newState = ComputerTurn.getInstance();
                     }
+
                     this.leaveState(newState);
                     resolve();
                 });

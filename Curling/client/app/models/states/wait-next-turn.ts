@@ -34,10 +34,13 @@ export class WaitNextTurn extends AbstractGameState {
         this._gameServices.cameraService.movePCameraEndRink();
         if (this._gameInfo.gameStatus.currentStonesPlayer.length === 0
             && this._gameInfo.gameStatus.currentStonesComputer.length === 0) {
-                this.leaveState(EndSet.getInstance());
+            this.leaveState(EndSet.getInstance());
         } else {
             this._angularInfo.showText = true;
         }
+
+        // Start the illumination of the stone that give points when waiting for the next turn
+        this._gameServices.stoneHandler.startStonesIllumination();
     }
 
     protected performMouseButtonReleased(): AbstractGameState {

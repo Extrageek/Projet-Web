@@ -1,3 +1,4 @@
+import { LightingService } from './../services/views/ligthing.service';
 import { ObjectLoader, Group, MeshPhongMaterial, Object3D, Sphere, Vector3, Mesh } from "three";
 import { IGameState } from "./game-state.interface";
 import { PhysicEngine } from "../services/game-physics/physic-engine";
@@ -31,6 +32,8 @@ export class Stone extends Group implements IGameState {
     private static readonly LOWER_BOUNCE_BOUND = 3;
     private static readonly UPPER_BOUNCE_INCREMENT_BOUND = 0.1;
     private static readonly LOWER_BOUNCE_INCREMENT_BOUND = 0.05;
+
+    private readonly ILLUMINATION_GROUP_NAME = "StoneGlow";
 
     private _stoneColor: StoneColor;
     private _physicEngine: PhysicEngine;
@@ -118,6 +121,7 @@ export class Stone extends Group implements IGameState {
         //Set other parameters
         this._stoneColor = stoneColor;
         this._physicEngine = new PhysicEngine(this.position, new Vector3(0, 0, 1), 0);
+        this._lightingService = new LightingService();
     }
 
     public revertToLastPosition() {
@@ -157,8 +161,11 @@ export class Stone extends Group implements IGameState {
 
     public changeStoneOpacity() {
         this.traverse((child) => {
-            (<Mesh>child).material.transparent = true;
-            (<Mesh>child).material.opacity = 1;
+
+            if (!this.isGlowObject(child)) {
+                (<Mesh>child).material.transparent = true;
+                (<Mesh>child).material.opacity = 1;
+            }
         });
 
         let observable = new Observable(() => {
@@ -166,8 +173,10 @@ export class Stone extends Group implements IGameState {
             let id = setInterval(() => {
 
                 this.traverse((child) => {
-                    if ((<Mesh>child).material.opacity > 0) {
-                        (<Mesh>child).material.opacity -= 0.01;
+                    if (!this.isGlowObject(child)) {
+                        if ((<Mesh>child).material.opacity > 0) {
+                            (<Mesh>child).material.opacity -= 0.01;
+                        }
                     }
                 });
                 millisecond += Stone.TEN_MILLISECONDS;
@@ -181,10 +190,13 @@ export class Stone extends Group implements IGameState {
 
     public bounce() {
 
-        let incrementBounce = RandomHelper.getNumberInRangeIncluded(Stone.UPPER_BOUNCE_INCREMENT_BOUND,
+        let incrementBounce = RandomHelper.getNumberInRangeIncluded(
+            Stone.UPPER_BOUNCE_INCREMENT_BOUND,
             Stone.LOWER_BOUNCE_INCREMENT_BOUND);
 
-        let upperBound = RandomHelper.getNumberInRangeIncluded(Stone.UPPER_BOUNCE_BOUND, Stone.LOWER_BOUNCE_BOUND);
+        let upperBound = RandomHelper.getNumberInRangeIncluded(
+            Stone.UPPER_BOUNCE_BOUND,
+            Stone.LOWER_BOUNCE_BOUND);
         let lowerBound = 0;
 
         let observer = {
@@ -201,5 +213,30 @@ export class Stone extends Group implements IGameState {
             }
         };
         return observer;
+    }
+
+    // Set the stone illumnation
+    public setStoneIllumination(visible: boolean): void {
+        // TODO: A best way is to create the glow dynamically instead
+        // We can fix it soon
+        let glowGroup = this.getObjectByName(this.ILLUMINATION_GROUP_NAME);
+        if (glowGroup) {
+            glowGroup.visible = visible;
+        }
+    }
+
+    // Check if an object is a glow object in the current stone
+    public isGlowObject(object: THREE.Object3D): boolean {
+        let glowGroup = this.getObjectByName(this.ILLUMINATION_GROUP_NAME);
+        let exist = false;
+
+        glowGroup.traverse((child) => {
+            if (child.name === object.name) {
+                exist = true;
+            }
+        });
+
+        // console.log(object.name);
+        return exist;
     }
 }
