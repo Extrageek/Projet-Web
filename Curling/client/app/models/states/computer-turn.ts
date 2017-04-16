@@ -1,7 +1,10 @@
 import { AbstractGameState } from "./abstract-game-state";
 import { ComputerShooting } from "./computer-shooting";
 import { ComputerAI } from "../../models/AI/computerAI";
+import { NormalAI } from "../../models/AI/normalAI";
+import { HardAI } from "../../models/AI/hardAI";
 import { StoneColor } from "../../models/stone";
+import { Difficulty } from "../difficulty";
 import { IGameInfo } from "../../services/game-handler/game-info.interface";
 import { IGameServices } from "../../services/game-handler/games-services.interface";
 
@@ -10,32 +13,30 @@ import { IGameServices } from "../../services/game-handler/games-services.interf
  */
 export class ComputerTurn extends AbstractGameState {
 
-    private static _instance: AbstractGameState = null;
+    private static _instance: ComputerTurn = null;
 
     private _computerAI: ComputerAI;
 
-    /**
-     * Use this property to change the intelligence of the computer.
-     * @param computerAI The new computerAI used to determine the shot parameters.
-     */
-    public set computerAI(computerAI: ComputerAI) {
-        if (computerAI === undefined || computerAI === null) {
-            throw new Error("The computerAI cannot be null.");
-        }
-        this._computerAI = computerAI;
+    public static createInstance(gameServices: IGameServices, gameInfo: IGameInfo) {
+        ComputerTurn._instance = new ComputerTurn(gameServices, gameInfo);
     }
 
-    public static createInstance(gameServices: IGameServices, gameInfo: IGameInfo, computerAI: ComputerAI) {
-        ComputerTurn._instance = new ComputerTurn(gameServices, gameInfo, computerAI);
-    }
-
-    public static getInstance(): AbstractGameState {
+    public static getInstance(): ComputerTurn {
         return ComputerTurn._instance;
     }
 
-    private constructor(gameServices: IGameServices, gameInfo: IGameInfo, computerAI: ComputerAI) {
+    private constructor(gameServices: IGameServices, gameInfo: IGameInfo) {
         super(gameServices, gameInfo);
-        this._computerAI = computerAI;
+        this.determineComputerAI();
+    }
+
+    public determineComputerAI() {
+        let computerAI: ComputerAI;
+        if (this._gameServices.userService.difficulty === Difficulty.NORMAL) {
+            this._computerAI = new NormalAI(this._gameInfo.rink);
+        } else if (this._gameServices.userService.difficulty === Difficulty.HARD) {
+            this._computerAI = new HardAI(this._gameInfo.rink);
+        }
     }
 
     protected performEnteringState(): void {

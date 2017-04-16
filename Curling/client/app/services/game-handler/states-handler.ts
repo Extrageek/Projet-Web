@@ -9,9 +9,6 @@ import { PlayerTurn } from "../../models/states/player-turn";
 import { Starting } from "../../models/states/starting";
 import { WaitNextTurn } from "../../models/states/wait-next-turn";
 import { IGameInfo } from "../../services/game-handler/game-info.interface";
-import { ComputerAI } from "../../models/AI/ComputerAI";
-import { NormalAI } from "../../models/AI/normalAI";
-import { HardAI } from "../../models/AI/hardAI";
 import { Difficulty } from "../../models/difficulty";
 import { IRinkInfo } from "../../models/scenery/rink-info.interface";
 import { IGameState } from "../../models/game-state.interface";
@@ -48,8 +45,7 @@ export class StatesHandler implements IGameState {
     private constructor(gameServices: IGameServices, gameInfo: IGameInfo, angularInfo: IAngularInfo) {
         this._activeState = null;
         ComputerShooting.createInstance(gameServices, gameInfo);
-        ComputerTurn.createInstance(gameServices, gameInfo,
-            this.createComputerAI(gameServices.userService.difficulty, gameInfo.rink));
+        ComputerTurn.createInstance(gameServices, gameInfo);
         EndGame.createInstance(gameServices, gameInfo);
         EndSet.createInstance(gameServices, gameInfo);
         LoadingStone.createInstance(gameServices, gameInfo);
@@ -75,16 +71,6 @@ export class StatesHandler implements IGameState {
         return this._activeState.forceExitState().then(() => {
             this._activeState = null;
         });
-    }
-
-    public createComputerAI(difficulty: Difficulty, rinkInfo: IRinkInfo): ComputerAI {
-        let computerAI: ComputerAI;
-        if (difficulty === Difficulty.NORMAL) {
-            computerAI = new NormalAI(rinkInfo);
-        } else if (difficulty === Difficulty.HARD) {
-            computerAI = new HardAI(rinkInfo);
-        }
-        return computerAI;
     }
 
     private onStateChange(abstractGameState: AbstractGameState) {
