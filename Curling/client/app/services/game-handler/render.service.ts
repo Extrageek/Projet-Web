@@ -17,6 +17,7 @@ import { TextureHandler } from "../views/texture-handler";
 import { StatesHandler } from "./states-handler";
 
 import { Rink } from "../../models/scenery/rink";
+import { DashedLine } from "../../models/scenery/dashed-line";
 import { Broom } from "../../models/broom";
 
 import { StoneColor } from "../../models/stone";
@@ -57,10 +58,10 @@ export class RenderService {
 
         this._gameInfo = {
             gameStatus: gameStatusService,
+            dashedLine: null,
             broom: null,
             rink: null,
             gameComponentsToUpdate: new Object(),
-            line: { lineGeometry: null, lineDashedMaterial: null, lineMesh: null, lineAnimationSlower: null }
         };
 
         this._angularInfo = {
@@ -106,7 +107,7 @@ export class RenderService {
 
     private initializeObjectsAndServices() {
         this._gameServices.particlesService = new ParticlesService(this._scene);
-        this.loadLine();
+        this._gameInfo.dashedLine = new DashedLine(this._scene);
         let initialisator = new Initialisator();
         initialisator.addObjectToInitialize<SoundManager>(SoundManager.createSoundManager)
             .then((soundManager: SoundManager) => {
@@ -173,27 +174,6 @@ export class RenderService {
             promise = Promise.reject("The game is already stopped.");
         }
         return promise;
-    }
-
-    public loadLine() {
-        let geometry = new Geometry();
-        geometry.vertices.push(new Vector3(0, 0.1, -18)); // First HogLine
-        geometry.vertices.push(new Vector3(0, 0.1, 22.4)); // EndPoint
-        geometry.computeLineDistances();
-
-        let material = new LineDashedMaterial({
-            color: RenderService.MEDIUM_BLUE,
-            linewidth: 5,
-            dashSize: 1,
-            gapSize: 1,
-            visible: false
-        });
-
-        this._gameInfo.line.lineGeometry = geometry;
-        this._gameInfo.line.lineDashedMaterial = material;
-        this._gameInfo.line.lineMesh = new Line(geometry, material);
-        this._gameInfo.line.lineAnimationSlower = 0;
-        this._scene.add(this._gameInfo.line.lineMesh);
     }
 
     /**

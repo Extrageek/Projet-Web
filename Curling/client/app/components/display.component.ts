@@ -52,7 +52,6 @@ export class DisplayComponent implements OnInit {
 
     @HostListener("window:mousemove", ["$event"])
     public mouseMove(event: MouseEvent) {
-        console.log("mousemove");
         this.renderService.onMouseMove(event);
     }
 

@@ -19,7 +19,9 @@ export class PlayerTurn extends AbstractGameState {
     private static readonly SHOT_POWER_OFFSET = 1;
     private static readonly MAX_PROGRESS_BAR_PERCENT = 100;
     private static readonly ONE_SECOND = 1000;
-    private static readonly LINE_WAIT = 2;
+    private static readonly HEIGTH_FOR_LINE = 0.1;
+    private static readonly MIN_LINE_DEPT = -18;
+    private static readonly MAX_LINE_DEPT = 22.4
 
     private static _instance: AbstractGameState = null;
 
@@ -30,7 +32,6 @@ export class PlayerTurn extends AbstractGameState {
     //performMouseButtonReleased(). Even if the user pull his mouse out of the window and release the button
     //out of the window, it will not pass two times in the same function.
     private _mouseIsPressed: boolean;
-    private _mousePosition: Vector3;
 
     public static createInstance(gameServices: IGameServices, gameInfo: IGameInfo, angularInfo: IAngularInfo) {
         PlayerTurn._instance = new PlayerTurn(gameServices, gameInfo, angularInfo);
@@ -42,23 +43,24 @@ export class PlayerTurn extends AbstractGameState {
 
     private constructor(gameServices: IGameServices, gameInfo: IGameInfo, angularInfo: IAngularInfo) {
         super(gameServices, gameInfo);
+        this._gameInfo.dashedLine.beginPoint = new Vector3(0, PlayerTurn.HEIGTH_FOR_LINE, PlayerTurn.MIN_LINE_DEPT);
+        this._gameInfo.dashedLine.endPoint = new Vector3(0, PlayerTurn.HEIGTH_FOR_LINE, PlayerTurn.MAX_LINE_DEPT);
         this._angularInfo = angularInfo;
         this._powerTimer = new Clock(false);
         this._mouseIsPressed = false;
-        this._mousePosition = new Vector3();
         this._spinParameter = 0;
     }
 
     public performEnteringState() {
         this._angularInfo.isSelectingPower = true;
         this._angularInfo.powerBar = 0;
-        this._gameInfo.line.lineDashedMaterial.visible = true;
+        this._gameInfo.dashedLine.show();
         this._gameInfo.gameStatus.currentPlayer = CurrentPlayer.BLUE;
     }
 
     public performLeavingState(): Promise<void> {
-        this._gameInfo.line.lineDashedMaterial.visible = false;
         this._angularInfo.isSelectingPower = false;
+        this._gameInfo.dashedLine.hide();
         return Promise.resolve();
     }
 
@@ -71,13 +73,15 @@ export class PlayerTurn extends AbstractGameState {
     public performMouseMove(event: MouseEvent): AbstractGameState {
         let mousePosition = calculateMousePositionOnXZPlane(event, this._gameServices.cameraService.currentCamera);
         if (mousePosition) {
-            this._mousePosition = mousePosition;
+            mousePosition.setY(PlayerTurn.HEIGTH_FOR_LINE);
+            mousePosition.setZ(PlayerTurn.MAX_LINE_DEPT);
             // Clamp to angle range if the mouse is farther than the angle minimum or maximum.
-            if (this._mousePosition.x < PlayerTurn.SHOT_ANGLE_MINIMUM) {
-                this._mousePosition.x = PlayerTurn.SHOT_ANGLE_MINIMUM;
-            } else if (this._mousePosition.x > PlayerTurn.SHOT_ANGLE_MAXIMUM) {
-                this._mousePosition.x = PlayerTurn.SHOT_ANGLE_MAXIMUM;
+            if (mousePosition.x < PlayerTurn.SHOT_ANGLE_MINIMUM) {
+                mousePosition.x = PlayerTurn.SHOT_ANGLE_MINIMUM;
+            } else if (mousePosition.x > PlayerTurn.SHOT_ANGLE_MAXIMUM) {
+                mousePosition.x = PlayerTurn.SHOT_ANGLE_MAXIMUM;
             }
+            this._gameInfo.dashedLine.endPoint = mousePosition;
         }
         return null;
     }
@@ -103,11 +107,7 @@ export class PlayerTurn extends AbstractGameState {
                 AbstractGameState.shotParameters.power = PlayerTurn.SHOT_POWER_OFFSET;
                 AbstractGameState.shotParameters.power += (timeDelta > PlayerTurn.SHOT_POWER_MAXIMUM) ?
                     PlayerTurn.SHOT_POWER_MAXIMUM : timeDelta;
-                AbstractGameState.shotParameters.direction = this._gameInfo.line.lineGeometry.vertices[1]
-                    .clone()
-                    .normalize();
-                //Set the y value to zero because the line geometry is not exactly at y = 0.
-                AbstractGameState.shotParameters.direction.setY(0);
+                AbstractGameState.shotParameters.direction = this._gameInfo.dashedLine.lineDirection.normalize();
                 newState = PlayerShooting.getInstance();
             }
         }
@@ -123,18 +123,6 @@ export class PlayerTurn extends AbstractGameState {
                 PlayerTurn.MAX_PROGRESS_BAR_PERCENT
             );
         }
-        this.updateLine();
-    }
-
-    private updateLine() {
-        if (this._gameInfo.line.lineAnimationSlower > PlayerTurn.LINE_WAIT) {
-            this._gameInfo.line.lineDashedMaterial.gapSize = ++this._gameInfo.line.lineDashedMaterial.gapSize % 3 + 1;
-            this._gameInfo.line.lineAnimationSlower = 0;
-        }
-        ++this._gameInfo.line.lineAnimationSlower;
-        this._gameInfo.line.lineGeometry.vertices.pop();
-        this._gameInfo.line.lineGeometry.vertices.push(new Vector3(this._mousePosition.x, 0.1, 22.4));
-        this._gameInfo.line.lineGeometry.computeLineDistances();
-        this._gameInfo.line.lineGeometry.verticesNeedUpdate = true;
+        this._gameInfo.dashedLine.update(timePerFrame);
     }
 }
