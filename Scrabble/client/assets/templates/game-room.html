@@ -13,7 +13,11 @@
                         Loading easel...
                     </easel-selector>
                 </div>
-
+                <button type="button" class="btn btn-danger btn-block" 
+                    (click)="quitGame()">
+                    <span *ngIf="_isOver">Quitter</span>
+                    <span *ngIf="!_isOver">Annuler</span>
+                </button>
             </div>
 
             <div class="col-md-6 board-wrapper">
@@ -34,8 +38,6 @@
                             (keydown)="onKeyPressEventHandler($event)" 
                             placeholder="Entrer votre message ici...">
                             </textarea>
-
-
                         </div>
                     </div>
 

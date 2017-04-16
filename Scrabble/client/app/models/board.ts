@@ -12,7 +12,7 @@ export class Board {
             let rowSquares = new Array<ISquare>();
             row.forEach((square: any) => {
 
-                console.log("img source", square._letter._imageSource);
+
 
                 let squareModified = {
                     _squareValue: square._squareValue,

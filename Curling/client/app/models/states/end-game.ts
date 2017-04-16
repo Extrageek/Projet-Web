@@ -14,7 +14,9 @@ export class EndGame extends AbstractGameState {
     private static readonly BLUE = 0x0000ff;
     private static readonly YELLOW = 0xffff00;
     private static _instance: AbstractGameState = null;
+    private readonly FIVE_SECONDS = 5000;
 
+    private _animationStopped : boolean;
     private _endGameTextIdentifier: number;
 
     public static createInstance(gameServices: IGameServices, gameInfo: IGameInfo) {
@@ -32,11 +34,14 @@ export class EndGame extends AbstractGameState {
     protected performEnteringState() {
         this._gameServices.cameraService.setPerspectiveCameraCurrent();
         this._gameServices.cameraService.movePCameraEndRink();
-        Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "particleService",
-            { value: this._gameServices.particlesService });
-        this._gameServices.particlesService.addParticulesToScene();
+        this._gameServices.particlesService.createParticles();
+        this._gameServices.particlesService.addParticlesToScene();
+        this._animationStopped = false;
         this.addAppropriateEndGameText();
         this._gameInfo.gameStatus.gameIsFinished();
+        setTimeout(() => {
+           this._animationStopped = true;
+        }, this.FIVE_SECONDS);
     }
 
     private addAppropriateEndGameText() {
@@ -55,7 +60,7 @@ export class EndGame extends AbstractGameState {
 
     protected performLeavingState(): Promise<void> {
         this.removeEndGameText();
-        delete this._gameInfo.gameComponentsToUpdate["particleService"];
+        this._gameServices.particlesService.removeParticlesFromScene();
         return Promise.resolve();
     }
 
@@ -72,5 +77,11 @@ export class EndGame extends AbstractGameState {
      */
     protected performCameraToggle(): AbstractGameState {
         return null;
+    }
+    public update(timePerFrame: number) {
+        if (!this._animationStopped) {
+            this._gameServices.particlesService.update();
+        }
+        //Do nothing by default. The children classes can override this method.
     }
 }

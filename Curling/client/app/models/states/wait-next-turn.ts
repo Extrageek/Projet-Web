@@ -32,8 +32,8 @@ export class WaitNextTurn extends AbstractGameState {
 
     protected performEnteringState() {
         this._gameServices.cameraService.movePCameraEndRink();
-        if (this._gameInfo.gameStatus.currentStonesPlayer === 0
-            && this._gameInfo.gameStatus.currentStonesComputer === 0) {
+        if (this._gameInfo.gameStatus.currentStonesPlayer.length === 0
+            && this._gameInfo.gameStatus.currentStonesComputer.length === 0) {
                 this.leaveState(EndSet.getInstance());
         } else {
             this._angularInfo.showText = true;

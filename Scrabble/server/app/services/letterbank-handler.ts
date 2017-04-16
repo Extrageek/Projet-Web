@@ -47,7 +47,6 @@ export class LetterBankHandler {
 
         for (let index = 0; index < numberOfLetters; index++) {
             randomNumber = this.getRandomLetter();
-            // console.log("final Number", randomNumber);
             randomLetter = this.bank.bank[randomNumber];
             if (this.bank.numberOfLettersInBank === 0) {
                 break;
@@ -71,7 +70,6 @@ export class LetterBankHandler {
 
     private getRandomLetter(): number {
         let randomNumber = (Math.random() * (1 - Math.random()) / (1 - Math.random()));
-        // console.log("randomNumber: ", randomNumber);
         let offset = MAX_LETTER_POSITION - MIN_LETTER_POSITION; //this._bank.numberOfLettersInBank;
         return Math.floor((randomNumber * offset) % offset);
     }
@@ -81,7 +79,7 @@ export class LetterBankHandler {
         if (alphabets === null) {
             throw new Error("Null argument error: the letters cannot be null");
         }
-        console.log("parseFromListtoLetter");
+
         let letters = new Array<Letter>();
         alphabets.forEach((element: string) => {
             let alphabet =

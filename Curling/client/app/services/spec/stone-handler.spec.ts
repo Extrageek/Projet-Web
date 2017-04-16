@@ -19,7 +19,7 @@ describe("StoneHandler tests should", () => {
     let rinkInfo: IRinkInfo;
     let scene: Scene;
 
-    before(done => {
+    before(() => {
         scene = new Scene();
         objectLoader = new ObjectLoader();
         rinkInfo = {
@@ -27,6 +27,10 @@ describe("StoneHandler tests should", () => {
             targetRadius: 3,
             initialStonePosition: new Vector3(0, 0, 0)
         };
+
+    });
+
+    beforeEach(done => {
         SoundManager.createSoundManager().then((soundManagerLoaded: SoundManager) => {
             soundManager = soundManagerLoaded;
             done();
@@ -61,7 +65,7 @@ describe("StoneHandler tests should", () => {
     let shotParameters1: IShotParameters;
     let shotParameters2: IShotParameters;
 
-    before(done => {
+    before(() => {
         scene = new Scene();
         objectLoader = new ObjectLoader();
         rinkInfo = {
@@ -69,26 +73,24 @@ describe("StoneHandler tests should", () => {
             targetRadius: 3,
             initialStonePosition: new Vector3(0, 0, 0)
         };
+    });
+
+    beforeEach(done => {
+        stoneHandler = new StoneHandler(soundManager, objectLoader, rinkInfo, scene, StoneColor.Blue);
+        shotParameters1 = {
+            power: 1,
+            direction: new Vector3(0, 0, 1),
+            spin: StoneSpin.Clockwise
+        };
+        shotParameters2 = {
+            power: 1,
+            direction: new Vector3(0, 0, 1),
+            spin: StoneSpin.Clockwise
+        };
         SoundManager.createSoundManager().then((soundManagerLoaded: SoundManager) => {
             soundManager = soundManagerLoaded;
             done();
         });
-    });
-
-    beforeEach(() => {
-        stoneHandler = new StoneHandler(soundManager, objectLoader, rinkInfo, scene, StoneColor.Blue);
-        shotParameters1 =
-            {
-                power: 1,
-                direction: new Vector3(0, 0, 1),
-                spin: StoneSpin.Clockwise
-            };
-        shotParameters2 =
-            {
-                power: 1,
-                direction: new Vector3(0, 0, 1),
-                spin: StoneSpin.Clockwise
-            };
     });
 
     afterEach(() => {

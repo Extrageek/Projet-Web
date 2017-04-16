@@ -3,9 +3,9 @@ import { CurrentPlayer } from "../models/current-player";
 
 @Injectable()
 export class GameStatusService {
-    public static readonly INITIAL_NUMBER_OF_STONES = 1;
+    public static readonly INITIAL_NUMBER_OF_STONES = 8;
     public static readonly DEFAULT_SCORE = 0;
-    public static readonly DEFAULT_SET = 2;
+    public static readonly DEFAULT_SET = 1;
 
     private _scorePlayer: number;
     public get scorePlayer(): number {
@@ -31,19 +31,19 @@ export class GameStatusService {
         this._currentSet = set;
     }
 
-    private _currentStonesPlayer: number;
-    public get currentStonesPlayer(): number {
+    private _currentStonesPlayer: Array<number>;
+    public get currentStonesPlayer(): Array<number> {
         return this._currentStonesPlayer;
     }
-    public set currentStonesPlayer(count: number) {
+    public set currentStonesPlayer(count: Array<number>) {
         this._currentStonesPlayer = count;
     }
 
-    private _currentStonesComputer: number;
-    public get currentStonesComputer(): number {
+    private _currentStonesComputer: Array<number>;
+    public get currentStonesComputer(): Array<number> {
         return this._currentStonesComputer;
     }
-    public set currentStonesComputer(count: number) {
+    public set currentStonesComputer(count: Array<number>) {
         this._currentStonesComputer = count;
     }
 
@@ -75,8 +75,8 @@ export class GameStatusService {
         this.scorePlayer = GameStatusService.DEFAULT_SCORE;
         this.scoreComputer = GameStatusService.DEFAULT_SCORE;
         this.currentSet = GameStatusService.DEFAULT_SET;
-        this.currentStonesPlayer = GameStatusService.INITIAL_NUMBER_OF_STONES;
-        this.currentStonesComputer = GameStatusService.INITIAL_NUMBER_OF_STONES;
+        this.currentStonesPlayer = new Array<number> (GameStatusService.INITIAL_NUMBER_OF_STONES);
+        this.currentStonesComputer = new Array<number> (GameStatusService.INITIAL_NUMBER_OF_STONES);
         this.isLaunched = false;
         this.isFinished = false;
         this.currentPlayer = CurrentPlayer.INVALID;
@@ -93,9 +93,9 @@ export class GameStatusService {
 
     public usedStone(): void {
         if (this.currentPlayer === CurrentPlayer.BLUE) {
-            this.currentStonesPlayer = this.currentStonesPlayer - 1;
+            this.currentStonesPlayer.pop();
         } else if (this.currentPlayer === CurrentPlayer.RED) {
-            this.currentStonesComputer = this.currentStonesComputer - 1;
+            this.currentStonesComputer.pop();
         }
     }
 
@@ -112,16 +112,15 @@ export class GameStatusService {
     }
 
     public resetStones(): void {
-        this.currentStonesComputer = GameStatusService.INITIAL_NUMBER_OF_STONES;
-        this.currentStonesPlayer = GameStatusService.INITIAL_NUMBER_OF_STONES;
+        this.currentStonesPlayer = new Array<number>(GameStatusService.INITIAL_NUMBER_OF_STONES);
+        this.currentStonesComputer = new Array<number>(GameStatusService.INITIAL_NUMBER_OF_STONES);
     }
 
     public resetGameStatus(): void {
         this.scorePlayer = GameStatusService.DEFAULT_SCORE;
         this.scoreComputer = GameStatusService.DEFAULT_SCORE;
         this.currentSet = GameStatusService.DEFAULT_SET;
-        this.currentStonesPlayer = GameStatusService.INITIAL_NUMBER_OF_STONES;
-        this.currentStonesComputer = GameStatusService.INITIAL_NUMBER_OF_STONES;
+        this.resetStones();
         this.isLaunched = true;
         this.currentPlayer = CurrentPlayer.INVALID;
     }

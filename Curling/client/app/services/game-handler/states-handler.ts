@@ -77,7 +77,7 @@ export class StatesHandler implements IGameState {
         });
     }
 
-    private createComputerAI(difficulty: Difficulty, rinkInfo: IRinkInfo): ComputerAI {
+    public createComputerAI(difficulty: Difficulty, rinkInfo: IRinkInfo): ComputerAI {
         let computerAI: ComputerAI;
         if (difficulty === Difficulty.NORMAL) {
             computerAI = new NormalAI(rinkInfo);

@@ -30,6 +30,8 @@ import { Initialisator } from "./initialisator";
 @Injectable()
 export class RenderService {
 
+    private static readonly MEDIUM_BLUE = 0x0000E0;
+
     private _objectLoader: ObjectLoader;
     private _mesh: Mesh;
     private _scene: Scene;
@@ -176,7 +178,7 @@ export class RenderService {
         geometry.computeLineDistances();
 
         let material = new LineDashedMaterial({
-            color: 0x0000e0,
+            color: RenderService.MEDIUM_BLUE,
             linewidth: 5,
             dashSize: 1,
             gapSize: 1,

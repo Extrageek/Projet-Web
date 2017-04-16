@@ -33,7 +33,6 @@ export class SoundManager {
             SoundManager.SOUNDS_PATH.forEach((path: string, index: number) => {
                 ++remainingAudioToLoad;
                 this.addSound(path).then((retrievedAudio: Audio) => {
-                    console.log(index);
                     allSounds[index] = retrievedAudio;
                     --remainingAudioToLoad;
                     if (remainingAudioToLoad === 0) {
@@ -45,17 +44,17 @@ export class SoundManager {
         });
     }
 
-    get broomOutSound(): Audio {
+    public playBroomOutSound(): THREE.Audio {
         this._broomOutSound.isPlaying = false;
         return this._broomOutSound.play();
     }
 
-    get broomInSound(): Audio {
+    public playBroomInSound(): THREE.Audio {
         this._broomInSound.isPlaying = false;
         return this._broomInSound.play();
     }
 
-    get collisionSound(): Audio {
+    public playCollisionSound(): THREE.Audio {
         this._collisionSound.isPlaying = false;
         return this._collisionSound.play();
     }

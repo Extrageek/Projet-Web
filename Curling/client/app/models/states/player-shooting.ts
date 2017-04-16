@@ -45,7 +45,9 @@ export class PlayerShooting extends AbstractGameState {
     }
 
     protected performMouseMove(event: MouseEvent): AbstractGameState {
-        let intersections = calculateMousePositionOnObject(event, this._gameInfo.rink,
+        let intersections = calculateMousePositionOnObject(
+            event,
+            this._gameInfo.rink,
             this._gameServices.cameraService.currentCamera);
         if (intersections.length > 0) {
             this._gameInfo.broom.position.copy(intersections[0].point);
@@ -56,7 +58,7 @@ export class PlayerShooting extends AbstractGameState {
     protected performMouseButtonPress(): AbstractGameState {
         if (!this._gameInfo.broom.isRed()) {
             this._gameInfo.broom.position.add(new THREE.Vector3(0.2, 0, 0));
-            this._gameServices.soundService.broomInSound;
+            this._gameServices.soundService.playBroomInSound();
             if (!this._isHoldingMouseButton) {
                 this._isHoldingMouseButton = true;
                 this._gameInfo.broom.verifyBroomCollision(this._gameServices.stoneHandler.stoneOnTheGame);
@@ -69,7 +71,7 @@ export class PlayerShooting extends AbstractGameState {
         if (!this._gameInfo.broom.isRed()) {
             this._gameInfo.broom.translateZ(0.3);
             this._isHoldingMouseButton = false;
-            this._gameServices.soundService.broomOutSound;
+            this._gameServices.soundService.playBroomOutSound();
         }
         return null;
     }

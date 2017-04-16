@@ -70,56 +70,19 @@
         <!--TODO : METTRE NG-FOR-->
         <div class="col-sm-12">
             <div id="playerStones" class="pull-left col-sm-3">
-                <div *ngIf="gameStatusService.currentStonesPlayer > 0">
-                    <img src=" ../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
-                </div>
-                <div *ngIf="gameStatusService.currentStonesPlayer > 1">
-                    <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
-                </div>
-                <div *ngIf="gameStatusService.currentStonesPlayer > 2">
-                    <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
-                </div>
-                <div *ngIf="gameStatusService.currentStonesPlayer > 3">
-                    <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
-                </div>
-                <div *ngIf="gameStatusService.currentStonesPlayer > 4">
-                    <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
-                </div>
-                <div *ngIf="gameStatusService.currentStonesPlayer > 5">
-                    <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
-                </div>
-                <div *ngIf="gameStatusService.currentStonesPlayer > 6">
-                    <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
-                </div>
-                <div *ngIf="gameStatusService.currentStonesPlayer > 7">
-                    <img src="../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
+                <div *ngFor="let stone of gameStatusService.currentStonesPlayer">
+                    <div>
+                        <img src=" ../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
+                    </div>
                 </div>
             </div>
             <div id="computerStones" class="pull-right col-sm-3">
-                <div *ngIf="gameStatusService.currentStonesComputer > 0" class="col-sm-12">
-                    <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
+                <div *ngFor="let stone of gameStatusService.currentStonesComputer">
+                    <div class="col-sm-12">
+                        <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
+                    </div>
                 </div>
-                <div *ngIf="gameStatusService.currentStonesComputer > 1" class="col-sm-12">
-                    <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
-                </div>
-                <div *ngIf="gameStatusService.currentStonesComputer > 2" class="col-sm-12">
-                    <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
-                </div>
-                <div *ngIf="gameStatusService.currentStonesComputer > 3" class="col-sm-12">
-                    <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
-                </div>
-                <div *ngIf="gameStatusService.currentStonesComputer > 4" class="col-sm-12">
-                    <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
-                </div>
-                <div *ngIf="gameStatusService.currentStonesComputer > 5" class="col-sm-12">
-                    <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
-                </div>
-                <div *ngIf="gameStatusService.currentStonesComputer > 6" class="col-sm-12">
-                    <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
-                </div>
-                <div *ngIf="gameStatusService.currentStonesComputer > 7" class="col-sm-12">
-                    <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
-                </div>
+
             </div>
         </div>
     </div>

@@ -55,7 +55,7 @@ export class GuideCommand implements ICommand {
             _date: new Date()
         };
 
-        console.log("guide", request._username);
+
 
         this.chatroomComponent.print(request);
     }

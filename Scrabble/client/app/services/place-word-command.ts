@@ -105,7 +105,6 @@ export class PlaceWordCommand implements ICommand {
         let rowIndex = wordPosition[CommandsHelper.FIRST_INDEX];
         let colIndex = Number(wordPosition[CommandsHelper.SECOND_INDEX]);
 
-        // console.log(rowIndex, colIndex);
         if (wordPosition.length === CommandsHelper.MAX_POSITION_VALUE) {
             colIndex = Number(
                 [wordPosition[CommandsHelper.SECOND_INDEX],

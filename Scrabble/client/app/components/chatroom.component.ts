@@ -56,7 +56,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
                 if (response !== undefined && response._message !== null) {
                     this._messageArray.push(response);
                     this._hasNewMessages = (this._username !== response._username);
-                    console.log("CommandRequest Chatroom", response);
+
                 }
             });
     }
@@ -68,7 +68,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
                 if (response !== undefined && response._message !== null) {
                     this._messageArray.push(response);
                     this._hasNewMessages = (this._username !== response._username);
-                    console.log("Chat room:Joined ", response._message);
+
                 }
             });
     }
@@ -80,7 +80,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
                 if (response !== undefined && response._message !== null) {
                     this._messageArray.push(response);
                     this._hasNewMessages = true;
-                    console.log("Chat room: Leave ", response._message);
+
                 }
             });
     }
@@ -93,7 +93,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
                     this._username = this.socketService.player.username;
                     this._messageArray.push(response as IRoomMessage);
                     this._hasNewMessages = (this._username !== response._username);
-                    console.log("Chat room: ", response._message, response._date);
+
                 }
             });
     }
@@ -123,6 +123,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
             this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
         } catch (err) {
             console.log(err);
+
         }
     }
 

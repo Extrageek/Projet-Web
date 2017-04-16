@@ -2,6 +2,7 @@ import { ObjectLoader, Group, MeshPhongMaterial, Object3D, Sphere, Vector3, Mesh
 import { IGameState } from "./game-state.interface";
 import { PhysicEngine } from "../services/game-physics/physic-engine";
 import { Observable } from "rxjs/Observable";
+import { RandomHelper } from "./random-helper";
 
 export enum StoneSpin {
     CounterClockwise = 0,
@@ -27,7 +28,7 @@ export class Stone extends Group implements IGameState {
     private static readonly MATERIAL_PROPERTIES = { wireframe: false, shininess: 0.7 };
     private static readonly SECONDS_PER_FULL_ROTATION = 4;
     private static readonly UPPER_BOUNCE_BOUND = 5;
-    private static readonly LOWER_BOUNCE_BOUND = 1;
+    private static readonly LOWER_BOUNCE_BOUND = 3;
     private static readonly UPPER_BOUNCE_INCREMENT_BOUND = 0.1;
     private static readonly LOWER_BOUNCE_INCREMENT_BOUND = 0.05;
 
@@ -180,11 +181,10 @@ export class Stone extends Group implements IGameState {
 
     public bounce() {
 
-        let incrementBounce = (Math.random() * (Stone.UPPER_BOUNCE_INCREMENT_BOUND
-            - Stone.LOWER_BOUNCE_INCREMENT_BOUND)) + Stone.LOWER_BOUNCE_INCREMENT_BOUND;
+        let incrementBounce = RandomHelper.getNumberInRangeIncluded(Stone.UPPER_BOUNCE_INCREMENT_BOUND,
+            Stone.LOWER_BOUNCE_INCREMENT_BOUND);
 
-        let upperBound = Math.floor(Math.random() * (Stone.UPPER_BOUNCE_BOUND
-            - Stone.LOWER_BOUNCE_BOUND)) + Stone.LOWER_BOUNCE_BOUND;
+        let upperBound = RandomHelper.getNumberInRangeIncluded(Stone.UPPER_BOUNCE_BOUND, Stone.LOWER_BOUNCE_BOUND);
         let lowerBound = 0;
 
         let observer = {

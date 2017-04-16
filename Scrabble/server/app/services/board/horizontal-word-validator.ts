@@ -47,6 +47,7 @@ export class HorizontalWordValidator {
 
             let letterToBePlaced = request._letters[index];
 
+
             if (!BoardHelper.isValidColumnPosition(nextColumnIndex)) {
                 isWordFit = false;
                 break;
