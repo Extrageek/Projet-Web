@@ -1,4 +1,3 @@
-import { LightingService } from './../services/views/ligthing.service';
 import { ObjectLoader, Group, MeshPhongMaterial, Object3D, Sphere, Vector3, Mesh } from "three";
 import { IGameState } from "./game-state.interface";
 import { PhysicEngine } from "../services/game-physics/physic-engine";
@@ -121,7 +120,6 @@ export class Stone extends Group implements IGameState {
         //Set other parameters
         this._stoneColor = stoneColor;
         this._physicEngine = new PhysicEngine(this.position, new Vector3(0, 0, 1), 0);
-        this._lightingService = new LightingService();
     }
 
     public revertToLastPosition() {
@@ -165,6 +163,8 @@ export class Stone extends Group implements IGameState {
             if (!this.isGlowObject(child)) {
                 (<Mesh>child).material.transparent = true;
                 (<Mesh>child).material.opacity = 1;
+            } else if (this.ILLUMINATION_GROUP_NAME === child.name) {
+                child.visible = false;
             }
         });
 
@@ -177,8 +177,11 @@ export class Stone extends Group implements IGameState {
                         if ((<Mesh>child).material.opacity > 0) {
                             (<Mesh>child).material.opacity -= 0.01;
                         }
+                    } else if (this.ILLUMINATION_GROUP_NAME === child.name) {
+                        child.visible = false;
                     }
                 });
+
                 millisecond += Stone.TEN_MILLISECONDS;
                 if (millisecond === Stone.ONE_SECOND) {
                     clearTimeout(id);
