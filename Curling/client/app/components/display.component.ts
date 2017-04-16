@@ -30,14 +30,40 @@ export class DisplayComponent implements OnInit {
         await this.api.createGameRecord(this._userSetting.name, this._userSetting.difficulty, this.gameStatusService);
     }
 
+    @HostListener("window:resize", ["$event"])
+    public resizeWindow(event: Event) {
+        this.renderService.onResize();
+    }
+
     @HostListener("window:keydown.space", ["$event"])
     public disableScrollingWithSpace(event: KeyboardEvent) {
         event.preventDefault();
     }
 
+    @HostListener("window:keydown", ["$event"])
+    public keyDown(event: KeyboardEvent) {
+        this.renderService.switchSpin(event);
+    }
+
     @HostListener("window:keyup.space", ["$event"])
     public spaceKeyPressed(event: KeyboardEvent) {
         this.renderService.switchCamera();
+    }
+
+    @HostListener("window:mousemove", ["$event"])
+    public mouseMove(event: MouseEvent) {
+        console.log("mousemove");
+        this.renderService.onMouseMove(event);
+    }
+
+    @HostListener("window:mousedown", ["$event"])
+    public mouseDown(event: MouseEvent) {
+        this.renderService.onMousePressed();
+    }
+
+    @HostListener("window:mouseup", ["$event"])
+    public mouseUp(event: MouseEvent) {
+        this.renderService.onMouseReleased();
     }
 
     constructor(

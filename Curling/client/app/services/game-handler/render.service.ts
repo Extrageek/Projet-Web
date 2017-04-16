@@ -17,7 +17,6 @@ import { TextureHandler } from "../views/texture-handler";
 import { StatesHandler } from "./states-handler";
 
 import { Rink } from "../../models/scenery/rink";
-import { Arena } from "../../models/scenery/arena";
 import { Broom } from "../../models/broom";
 
 import { StoneColor } from "../../models/stone";
@@ -33,7 +32,6 @@ export class RenderService {
     private static readonly MEDIUM_BLUE = 0x0000E0;
 
     private _objectLoader: ObjectLoader;
-    private _mesh: Mesh;
     private _scene: Scene;
     private _clock: Clock;
     private _renderer: Renderer;
@@ -80,56 +78,6 @@ export class RenderService {
         lightingService.setUpLighting(this._scene);
     }
 
-    public initAndStart() {
-        if (!this._animationID && this._initialisationComplete) {
-            this.startGame();
-        } else {
-            //Clock for the time per frame.
-            this._clock = new Clock(false);
-
-            this._renderer = new WebGLRenderer({ antialias: true, devicePixelRatio: window.devicePixelRatio });
-
-            //Part 2: Scenery
-            this.generateSkybox();
-
-            //Part 3: Components
-            this._gameServices.particlesService = new ParticlesService(this._scene);
-            this.loadLine();
-            let initialisator = new Initialisator();
-            initialisator.addObjectToInitialize<SoundManager>(SoundManager.createSoundManager)
-                .then((soundManager: SoundManager) => {
-                    this._gameServices.cameraService = new CameraService(soundManager);
-                    this._gameServices.soundService = soundManager;
-            });
-            initialisator.addObjectToInitialize<TextureHandler>(TextureHandler.createTextureHandler, [this._scene])
-                .then((textureHandler: TextureHandler) => {
-                    this._gameServices.textureHandler = textureHandler;
-            });
-            initialisator.addObjectToInitialize<Rink>(Rink.createRink, [this._objectLoader]).then((rink: Rink) => {
-                this._mesh.add(rink);
-                this._gameInfo.rink = rink;
-            });
-            initialisator.addObjectToInitialize<Arena>(Arena.createArena, [this._objectLoader])
-                .then((arena: Arena) => {
-                    //this._mesh.add(arena);
-            });
-            initialisator.addObjectToInitialize<Broom>(
-                Broom.createBroom,
-                [this._objectLoader, this._scene, new Vector3(0, 0, -11.4)])
-                    .then((broom: Broom) => {
-                        this._gameInfo.broom = broom;
-            });
-            initialisator.adviseWhenAllObjectsInitalized().then(() => {
-                this.loadStoneHandler(this._gameServices.soundService, this._gameInfo.rink);
-                this.doFinalInitAndStartGame();
-            });
-
-            //Part 5: Events
-            // bind to window resizes
-            window.addEventListener("resize", _ => this.onResize());
-        }
-    }
-
     public putCanvasIntoHTMLElement(container: HTMLElement) {
         if (this._renderer !== undefined) {
             container.appendChild(this._renderer.domElement);
@@ -142,8 +90,60 @@ export class RenderService {
         }
     }
 
-    get gameInfo(): IGameInfo {
-        return this._gameInfo;
+    public initAndStart() {
+        if (this._animationID) {
+            throw new Error("Cannot start the game now. The game is still running.");
+        } else if (!this._animationID && this._initialisationComplete) {
+            this.startGame();
+        } else {
+            //Clock for the time per frame.
+            this._clock = new Clock(false);
+            this._renderer = new WebGLRenderer({ antialias: true, devicePixelRatio: window.devicePixelRatio });
+            this.generateSkybox();
+            this.initializeObjectsAndServices();
+        }
+    }
+
+    private initializeObjectsAndServices() {
+        this._gameServices.particlesService = new ParticlesService(this._scene);
+        this.loadLine();
+        let initialisator = new Initialisator();
+        initialisator.addObjectToInitialize<SoundManager>(SoundManager.createSoundManager)
+            .then((soundManager: SoundManager) => {
+                this._gameServices.cameraService = new CameraService(soundManager);
+                this._gameServices.soundService = soundManager;
+        });
+        initialisator.addObjectToInitialize<TextureHandler>(TextureHandler.createTextureHandler, [this._scene])
+            .then((textureHandler: TextureHandler) => {
+                this._gameServices.textureHandler = textureHandler;
+        });
+        initialisator.addObjectToInitialize<Rink>(Rink.createRink, [this._objectLoader]).then((rink: Rink) => {
+            this._scene.add(rink);
+            this._gameInfo.rink = rink;
+        });
+        /*
+        This model was commented because it is too heavy to reader for the CPU and makes the game lag.
+        initialisator.addObjectToInitialize<Arena>(Arena.createArena, [this._objectLoader])
+            .then((arena: Arena) => {
+                this._scene.add(arena);
+        });
+        */
+        initialisator.addObjectToInitialize<Broom>(
+            Broom.createBroom,
+            [this._objectLoader, this._scene, new Vector3(0, 0, -11.4)])
+                .then((broom: Broom) => {
+                    this._gameInfo.broom = broom;
+        });
+        initialisator.adviseWhenAllObjectsInitalized().then(() => {
+            this.loadStoneHandler(this._gameServices.soundService, this._gameInfo.rink);
+            this.doFinalInitAndStartGame();
+        });
+    }
+
+    private doFinalInitAndStartGame() {
+        StatesHandler.createInstance(this._gameServices, this._gameInfo, this._angularInfo);
+        this._initialisationComplete = true;
+        this.startGame();
     }
 
     private startGame() {
@@ -161,14 +161,18 @@ export class RenderService {
      * @return Promise<void> A promise that will resolve when the game is really stoped.
      */
     public stopGame(): Promise<void> {
+        let promise: Promise<void>;
         if (this._animationID) {
             window.cancelAnimationFrame(this._animationID);
             this._clock.stop();
-            return StatesHandler.getInstance().stopGame()
+            promise = StatesHandler.getInstance().stopGame()
                 .then(() => {
                     this._animationID = null;
                 });
+        } else {
+            promise = Promise.reject("The game is already stopped.");
         }
+        return promise;
     }
 
     public loadLine() {
@@ -208,30 +212,19 @@ export class RenderService {
         }
         let material = new MultiMaterial(materialArray);
         let geometry = new CubeGeometry(200, 200, 200);
-        this._mesh = new Mesh(geometry, material);
-        this._scene.add(this._mesh);
+        this._scene.add(new Mesh(geometry, material));
     }
 
     //Must be called after the rinkinfo and soundManager are initialised.
     private loadStoneHandler(soundManager: SoundManager, rinkInfo: IRinkInfo) {
         let stoneColor: StoneColor;
         stoneColor = this._gameInfo.gameStatus.currentPlayer === 0 ? StoneColor.Blue : StoneColor.Red;
-        this._gameServices.stoneHandler = new StoneHandler(soundManager, this._objectLoader, rinkInfo, this._scene, stoneColor);
+        this._gameServices.stoneHandler = new StoneHandler(soundManager, this._objectLoader, rinkInfo, this._scene,
+            stoneColor);
         Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "stoneHandler",
             { value: this._gameServices.stoneHandler });
         Object.defineProperty(this._gameInfo.gameComponentsToUpdate, "cameraService",
             { value: this._gameServices.cameraService });
-    }
-
-    private doFinalInitAndStartGame() {
-        StatesHandler.createInstance(this._gameServices, this._gameInfo, this._angularInfo);
-        this._initialisationComplete = true;
-        this.startGame();
-        // Add events here to be sure they won"t encounter undefined property
-        window.addEventListener("mousemove", (event: MouseEvent) => this.onMouseMove(event));
-        window.addEventListener("keydown", (event: KeyboardEvent) => this.switchSpin(event));
-        window.addEventListener("mousedown", _ => this.onMousePressed());
-        window.addEventListener("mouseup", _ => this.onMouseReleased());
     }
 
     private animate() {
@@ -248,15 +241,6 @@ export class RenderService {
             });
         }
         this._renderer.render(this._scene, this._gameServices.cameraService.currentCamera);
-    }
-
-    public toogleFocus(toogle: boolean) {
-        if (toogle === true) {
-            this._clock.start();
-        }
-        else {
-            this._clock.stop();
-        }
     }
 
     public onResize() {
