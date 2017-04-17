@@ -3,13 +3,15 @@ import { RandomHelper } from "../../models/random-helper";
 
  export class ParticlesService {
 
+    private readonly RINK_FLOOR = 0;
     private readonly RINK_X_BOUND = 3.80;
     private readonly RINK_Y_BOUND = -100;
     private readonly RINK_Z_UPPER_BOUND = 23.5;
     private readonly RINK_Z_LOWER_BOUND = 10;
     private readonly PARTICLE_SPEED = 0.04;
+    private readonly PARTICLE_SIZE = 0.2;
 
-    private readonly PARTICLES_COUNT = 1600;
+    private readonly PARTICLES_COUNT = 2500;
 
     private _geometry: Geometry;
     private _material: PointsMaterial;
@@ -24,7 +26,7 @@ import { RandomHelper } from "../../models/random-helper";
     public createParticles() {
         this._geometry = new Geometry();
         this._material = new PointsMaterial({
-            size: 0.2,
+            size: this.PARTICLE_SIZE,
             vertexColors: THREE.VertexColors
         });
         for (let count = 0; count < this.PARTICLES_COUNT; ++count) {
@@ -43,12 +45,12 @@ import { RandomHelper } from "../../models/random-helper";
         let positionAxisZ = RandomHelper.getNumberInRangeIncluded(40, 5);
         return new Vector3(positionAxisX, positionAxisY, positionAxisZ);
     }
+
     public update() {
         this._geometry.vertices.forEach((particle) => {
-            if (particle.y < 0 ) {
-                if (particle.x < this.RINK_X_BOUND && particle.x > -this.RINK_X_BOUND
-                    && particle.z > this.RINK_Z_LOWER_BOUND && particle.z < this.RINK_Z_UPPER_BOUND ) {
-                        particle.y = 0;
+            if (particle.y < this.RINK_FLOOR ) {
+                if (this.particleIsOverRink(particle)) {
+                        particle.y = this.RINK_FLOOR;
                 } else {
                     particle.y = this.RINK_Y_BOUND;
                 }
@@ -57,7 +59,11 @@ import { RandomHelper } from "../../models/random-helper";
             }
         });
         this._geometry.verticesNeedUpdate = true;
+    }
 
+    private particleIsOverRink(particle: Vector3): boolean {
+        return particle.x < this.RINK_X_BOUND && particle.x > -this.RINK_X_BOUND
+                && particle.z > this.RINK_Z_LOWER_BOUND && particle.z < this.RINK_Z_UPPER_BOUND;
     }
 
     public addParticlesToScene() {
