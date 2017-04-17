@@ -1,10 +1,7 @@
- 
-  /*
+ /*
  *  MENU OVERLAY
  */
- 
 .overlay {
-       
     height: 0;
     width: 100%;
     position: fixed; 
@@ -16,8 +13,6 @@
     overflow-y: hidden; 
     transition: 0.5s; 
 }
-
-
 .overlay-content {
     position: relative;
     top: 25%; 
@@ -25,8 +20,6 @@
     text-align: center; 
     margin-top: 30px; 
 }
-
-
 .overlay p {
     padding: 8px;
     text-decoration: none;
@@ -35,12 +28,9 @@
     display: block; 
     transition: 0.3s; 
 }
-
-
 .overlay p:hover, .overlay p:focus {
     color: #f1f1f1;
 }
-
 .is-open-menu{
     height: 100%; 
 }
@@ -48,7 +38,6 @@
 @media screen and (max-height: 450px) {
     .overlay p {font-size: 20px}
 }
-
 
 /*
 * MENU HAMBURGER ICON
@@ -103,8 +92,6 @@
 .hamburger-inner::after {
     bottom: -10px;
 }
-
-
 .hamburger--elastic .hamburger-inner {
     top: 2px;
     transition-duration: 0.4s;
@@ -118,7 +105,6 @@
     top: 20px;
     transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
-
 .hamburger--elastic.is-active .hamburger-inner {
     transform: translate3d(0, 10px, 0) rotate(135deg);
     transition-delay: 0.1s;
@@ -133,7 +119,6 @@
     transition-delay: 0.1s;
     background-color: white;
 }
-
 
 /*
 * Spin
