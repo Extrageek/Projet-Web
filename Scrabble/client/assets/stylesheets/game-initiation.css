@@ -4,6 +4,13 @@
     background-color: white;
 }
 
+.logo {
+    padding-top: 2vh;
+    padding-left: 2vh;
+    height: 20vh;
+    min-height: 75px;
+}
+
 .vertical-center {
     /*height: 90%;   Fallback for browsers do NOT support vh unit */
     /*min-height: 100vh;  These two lines are counted as one :-)       */
