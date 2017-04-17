@@ -1,7 +1,12 @@
 .container {
     width: 30%;
-    margin-top: 9%;
-    border: 2px solid #d3d3d3;
-    border-radius: 10px;
+    border: 0px solid #d3d3d3;
     background-color: white;
+}
+
+.vertical-center {
+    /*height: 90%;   Fallback for browsers do NOT support vh unit */
+    /*min-height: 100vh;  These two lines are counted as one :-)       */
+    display: flex;
+    align-items: center;
 }
