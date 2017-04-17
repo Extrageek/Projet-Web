@@ -11,7 +11,7 @@ export class DashedLine implements IGameState {
         dashSize: 1,
         gapSize: 1,
         visible: true
-    }
+    };
 
     private _lineAnimationLastUpdate: number;
     private _geometry: Geometry;
