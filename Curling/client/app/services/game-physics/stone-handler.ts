@@ -351,14 +351,14 @@ export class StoneHandler implements IGameState {
 
         // Go through every stone and set up the illumination
         stonesThatGivesPoints.forEach(stone => {
-            stone.setStoneIllumination(true);
+            stone.setIllumination(true);
         });
     }
 
     // Go through every loaded stone in the rink and set off thee illumination
     public stopStonesIllumination(): void {
         this.stoneOnTheGame.forEach(stone => {
-            stone.setStoneIllumination(false);
+            stone.setIllumination(false);
         });
     }
 }

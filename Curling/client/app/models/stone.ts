@@ -46,6 +46,9 @@ export class Stone extends Group implements IGameState {
     private _lastBoundingSphere: Sphere;
     private _lastPosition: Vector3;
 
+    public get glowObjectName(): string {
+        return this.ILLUMINATION_GROUP_NAME;
+    }
     public get stoneGlow(): Group {
         return Stone._stoneGlow;
     }
@@ -118,7 +121,7 @@ export class Stone extends Group implements IGameState {
         });
     }
 
-    private static createStoneGlow(objectLoader: ObjectLoader): Promise<THREE.Group> {
+    public static createStoneGlow(objectLoader: ObjectLoader): Promise<THREE.Group> {
         return new Promise<THREE.Group>((resolve, reject) => {
             objectLoader.load(
                 Stone.GLOW_PATH,
@@ -257,7 +260,7 @@ export class Stone extends Group implements IGameState {
     }
 
     // Set the stone illumnation
-    public setStoneIllumination(setVisible: boolean): void {
+    public setIllumination(setVisible: boolean): void {
 
         // Get the current stone name according to it color
         let stoneGroup = (this._stoneColor === StoneColor.Blue) ?
@@ -281,7 +284,7 @@ export class Stone extends Group implements IGameState {
     }
 
     // Check if an object is a glow object in the current stone
-    public isGlowObject(object: THREE.Object3D): boolean {
+    private isGlowObject(object: THREE.Object3D): boolean {
         let exist = false;
         Stone._stoneGlow.traverse((child) => {
             if (child.name === object.name) {
