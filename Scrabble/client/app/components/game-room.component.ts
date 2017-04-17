@@ -1,6 +1,7 @@
-import { Subscription } from 'rxjs/Subscription';
 import { Component, OnInit, OnDestroy, Output, ViewChild, EventEmitter, HostListener } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
+
+import { Subscription } from 'rxjs/Subscription';
 
 import { SocketService } from "../services/socket-service";
 import { EaselManagerService } from "../services/easel-manager.service";
@@ -44,6 +45,8 @@ export class GameComponent implements OnInit, OnDestroy {
 
     private _inputMessage: string;
     private _isOver: boolean;
+    private _connectErrorSubscription: Subscription;
+    private _leavingRoomSubscription: Subscription;
     private _gameOverSubscription: Subscription;
 
     constructor(
@@ -62,8 +65,8 @@ export class GameComponent implements OnInit, OnDestroy {
             this.router.navigate(["/"]);
         }
         // TODO: unsubscribe all the event in the ngOnDestroy
-        this.socketService.subscribeToChannelEvent(SocketEventType.CONNECT_ERROR)
-            .subscribe(this.onConnectionError);
+        this._connectErrorSubscription = this.onConnectionError();
+        this._leavingRoomSubscription = this.onLeaveRoom();
         this._gameOverSubscription = this.onGameOver();
         this.socketService.emitMessage(SocketEventType.INITIALIZE_EASEL, this.socketService.player.username);
     }
@@ -74,17 +77,24 @@ export class GameComponent implements OnInit, OnDestroy {
     }
 
     // A callback function when the server is not reachable.
-    public onConnectionError() {
-        // TODO: message derreur a afficher\
+    public onConnectionError(): Subscription {
+        // TODO: message derreur a afficher
+        return this.socketService.subscribeToChannelEvent(SocketEventType.CONNECT_ERROR)
+            .subscribe((error) => {
+                console.log(error);
+        });
     }
 
     // A callback when the player leave a room
-    public onLeaveRoom(roomMessage: IRoomMessage): void {
+    public onLeaveRoom(): Subscription {
         // For debug
-        console.log("In Room", roomMessage);
-        if (roomMessage._username === this.socketService.player.username) {
-            this.router.navigate(["/"]);
-        }
+        return this.socketService.subscribeToChannelEvent(SocketEventType.LEAVE_ROOM)
+            .subscribe((roomMessage: IRoomMessage) => {
+                console.log("In Room", roomMessage);
+                if (roomMessage._username === this.socketService.player.username) {
+                    this.router.navigate(["/"]);
+                }
+        });
     }
 
     // A callback function when in case of invalid request.
