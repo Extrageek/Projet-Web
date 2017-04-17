@@ -117,7 +117,9 @@ display-component {
     color: #818181;
 }
 
-.overlay-content p a:hover {
-    color: #fff;
-    text-decoration: none;
+.overlay-box button {
+    font-size: 20px;
+    margin-bottom: 10px;
+    border-radius: 24px 24px;
+    padding: 13px;
 }

@@ -37,7 +37,7 @@
     <div class="col-sm-12">
         <div class="col-sm-4 pull-left">
             <div id="playerName" class="pull-left">
-                {{_userSetting._name}}
+                {{_userSettingService.username}}
             </div>
         </div>
         <div id="gameInfo" class="col-sm-4">
@@ -91,7 +91,14 @@
 <!-- The overlay -->
 <div #overlay id="myNav" class="overlay">
     <div class="overlay-content">
-        <p (click)="gameOver()"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Abandonner</p>
-        <p (click)="restartGame()"><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span> Recommencer</p>
+        <div class="overlay-box col-md-2 col-md-offset-5">
+            <button (click)="gameOver()" type="button" class="btn btn-lg btn-block btn-danger">
+                <span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Abandonner
+            </button>
+
+            <button (click)="restartGame()" type="button" class="btn btn-lg btn-block btn-success">
+                <span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span> Recommencer
+            </button>
+        </div>
     </div>
 </div>
