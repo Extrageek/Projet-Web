@@ -1,3 +1,4 @@
+import { LightingService } from './../views/ligthing.service';
 import { ObjectLoader, Vector3, Box3, Scene } from 'three';
 import { IRinkInfo } from '../../models/scenery/rink-info.interface';
 import { Stone, StoneColor } from '../../models/stone';
@@ -35,8 +36,11 @@ export class StoneHandler implements IGameState {
     private _boxBetweenLinesForBroom: Box3;
     private _invalidAreaForStonesToBeIn: Box3;
     private _stonesGivingPoints: Stone[];
+    private _lightingService: LightingService;
 
-    constructor(soundManager: SoundManager, objectLoader: ObjectLoader, rinkInfo: IRinkInfo, scene: Scene, firstPlayer: StoneColor) {
+    constructor(soundManager: SoundManager, objectLoader: ObjectLoader,
+        rinkInfo: IRinkInfo, scene: Scene, firstPlayer: StoneColor) {
+
         this._rinkInfo = rinkInfo;
         this._scene = scene;
         this._soundManager = soundManager;
@@ -53,6 +57,8 @@ export class StoneHandler implements IGameState {
 
         this._invalidAreaForStonesToBeIn = new Box3(new Vector3(-2.15, 0, -17.75), new Vector3(2.15, 0, 17.75));
         this._invalidAreaForStonesToBeIn.translate(new Vector3(0, 0, -7.15));
+
+        this._lightingService = new LightingService();
     }
 
     public get stoneOnTheGame(): Stone[] {
@@ -137,7 +143,7 @@ export class StoneHandler implements IGameState {
             });
             this.verifyOutOfBounds();
             if (!aStoneIsMoving && !isCollision) {
-                this.calculatePoints();
+                this.getStonesThatGivesPoints();
                 this._callbackAfterShotFinished();
                 this._callbackAfterShotFinished = null;
             }
@@ -242,7 +248,7 @@ export class StoneHandler implements IGameState {
         });
     }
 
-    public calculatePoints() {
+    public getStonesThatGivesPoints(): Array<Stone> {
         let closestStone: Stone;
         let stonesThatGivesPoints = Array<Stone>();
 
@@ -259,7 +265,7 @@ export class StoneHandler implements IGameState {
                         distanceHouseAndOpponent = this.obtainDistance(this._rinkInfo.targetCenter,
                             opponentClosestStone.position);
                     }
-                 }
+                }
 
                 this._stoneOnTheGame.forEach((stone: Stone) => {
                     if (stone.stoneColor === closestStone.stoneColor) {
@@ -276,7 +282,11 @@ export class StoneHandler implements IGameState {
                 stonesThatGivesPoints = new Array<Stone>();
             }
         }
+
+        // TODO: Check if we can just return the list of stones here
         this._stonesGivingPoints = stonesThatGivesPoints;
+
+        return stonesThatGivesPoints;
     }
 
     private findClosestStone(startingPoint: Vector3, stoneColor?: StoneColor): Stone {
@@ -328,5 +338,26 @@ export class StoneHandler implements IGameState {
             });
             clearTimeout(timerID);
         }, StoneHandler.FIVE_SECOND);
+    }
+
+
+    // Start the illumination of all the stones that give points
+    public startStonesIllumination(): void {
+        this.stopStonesIllumination();
+
+        // Get all the stones that give points
+        let stonesThatGivesPoints = this.getStonesThatGivesPoints();
+
+        // Go through every stone and set up the illumination
+        stonesThatGivesPoints.forEach(stone => {
+            stone.setStoneIllumination(true);
+        });
+    }
+
+    // Go through every loaded stone in the rink and set off thee illumination
+    public stopStonesIllumination(): void {
+        this.stoneOnTheGame.forEach(stone => {
+            stone.setStoneIllumination(false);
+        });
     }
 }

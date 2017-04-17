@@ -21,7 +21,7 @@ export class PlayerTurn extends AbstractGameState {
     private static readonly ONE_SECOND = 1000;
     private static readonly HEIGTH_FOR_LINE = 0.1;
     private static readonly MIN_LINE_DEPT = -18;
-    private static readonly MAX_LINE_DEPT = 22.4
+    private static readonly MAX_LINE_DEPT = 22.4;
 
     private static _instance: AbstractGameState = null;
 
