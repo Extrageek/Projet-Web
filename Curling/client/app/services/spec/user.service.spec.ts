@@ -37,7 +37,7 @@ describe("UserSettingService should", () => {
     it("initialize the user setting service correctly",
         inject([UserService, RestApiProxyService],
             fakeAsync((_userSettingService: UserService, api: RestApiProxyService) => {
-                expect(_userSettingService.name).to.be.equal("");
+                expect(_userSettingService.username).to.be.equal("");
                 expect(_userSettingService.difficulty).to.be.equal(Difficulty.NORMAL);
             })));
 

@@ -31,7 +31,7 @@ export class UsernameComponent implements OnInit {
         await this.restApiProxyService.verifyUsername(username)
             .then(result => {
                 this.alertBox.nativeElement.classList.add("fade");
-                this.userSettingService.name = username;
+                this.userSettingService.username = username;
                 this.router.navigate(["/difficulty"]);
             })
             .catch(error => {

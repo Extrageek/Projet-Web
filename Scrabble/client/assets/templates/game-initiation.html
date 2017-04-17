@@ -1,15 +1,21 @@
 <div class="col-xs-12 header">
-    <img class="logo" src="../assets/images/Scrabble_Logo.png" alt="logo" />
+    <div class="col-xs-12 col-sm-6">
+        <img src="../assets/images/Scrabble_Logo.png" alt="logo" />
+    </div>
+    <div *ngIf="_username !== ''" class="col-xs-12 col-sm-6">
+        <i class="material-icons">account_circle</i> {{ _username }}
+    </div>
 </div>
 <div class="col-xs-12 content vertical-center">
-    <md-card class="container center-block">
-        <md-card-header>
-            <div md-card-avatar class="example-header-image"></div>
-            <md-card-title>LOGIN</md-card-title>
-        </md-card-header>
-        <!--<img md-card-image src="assets/img/examples/shiba2.jpg">-->
-        <md-card-content>
-            <form (submit)="sendNewGameRequest(username.value, numberOfPlayers.value)">
+    <form class="center-block" (submit)="sendNewGameRequest(username.value, numberOfPlayers.value)">
+        <md-card>
+            <md-card-header>
+                <div md-card-avatar></div>
+                <i class="material-icons">account_circle</i>
+                <md-card-title>LOGIN</md-card-title>
+            </md-card-header>
+            <!--<img md-card-image src="assets/img/examples/shiba2.jpg">-->
+            <md-card-content>
                 <div class="form-group has-danger">
                     <label for="name">Username</label>
                     <input #username
@@ -33,14 +39,11 @@
             </select>
                     <br>
                 </div>
+            </md-card-content>
+            <md-card-actions>
                 <button type="submit" class="btn btn-default">Submit</button>
-            </form>
-        </md-card-content>
-        <md-card-actions>
-            <!--<button md-button>LIKE</button>-->
-        </md-card-actions>
-    </md-card>
-
-
-
+                <!--<button md-button>LIKE</button>-->
+            </md-card-actions>
+        </md-card>
+    </form>
 </div>
