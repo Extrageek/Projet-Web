@@ -203,77 +203,11 @@
 			"depthWrite": true,
 			"skinning": false,
 			"morphTargets": false
-		},
-		{
-			"uuid": "8CD7249C-30A1-4593-AD7A-7C6319990F27",
-			"type": "MeshBasicMaterial",
-			"name": "BottomMaterial",
-			"color": 65280,
-			"side": 1,
-			"depthFunc": 3,
-			"depthTest": true,
-			"depthWrite": true,
-			"skinning": false,
-			"morphTargets": false
-		},
-		{
-			"uuid": "B6C7FEC1-E281-497A-9F95-4E7612040118",
-			"type": "MeshBasicMaterial",
-			"color": 65280,
-			"side": 1,
-			"depthFunc": 3,
-			"depthTest": true,
-			"depthWrite": true,
-			"skinning": false,
-			"morphTargets": false
-		},
-		{
-			"uuid": "0877FFDA-1E9C-48B7-BA62-87F99B4A77A9",
-			"type": "MeshBasicMaterial",
-			"color": 65280,
-			"side": 1,
-			"depthFunc": 3,
-			"depthTest": true,
-			"depthWrite": true,
-			"skinning": false,
-			"morphTargets": false
-		},
-		{
-			"uuid": "0AF54B2D-BCEA-4360-8E22-3CD8A83EEBBC",
-			"type": "MeshBasicMaterial",
-			"color": 65280,
-			"side": 1,
-			"depthFunc": 3,
-			"depthTest": true,
-			"depthWrite": true,
-			"skinning": false,
-			"morphTargets": false
-		},
-		{
-			"uuid": "0445D93A-18F5-47DF-8564-BDA8D2F2238B",
-			"type": "MeshBasicMaterial",
-			"color": 65280,
-			"depthFunc": 3,
-			"depthTest": true,
-			"depthWrite": true,
-			"skinning": false,
-			"morphTargets": false
-		},
-		{
-			"uuid": "26CAEF96-02E6-4084-BF1C-F66D9F890B6F",
-			"type": "MeshBasicMaterial",
-			"color": 65280,
-			"side": 1,
-			"depthFunc": 3,
-			"depthTest": true,
-			"depthWrite": true,
-			"skinning": false,
-			"morphTargets": false
 		}],
 	"object": {
 		"uuid": "D635E064-4F47-4DEF-96F2-2C2A7E842FE5",
 		"type": "Group",
-		"name": "curling-stone-red",
+		"name": "curling-stone-blue",
 		"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
 		"children": [
 			{
@@ -347,62 +281,6 @@
 				"matrix": [1,0,0,0,0,-0.32,0,0,0,0,-1,0,0,0.067222,0,1],
 				"geometry": "877ACC5D-6968-40C3-9DCA-A2D3942FB9B0",
 				"material": "13D72A7C-7E14-414F-BCFA-00A7622DED4F"
-			},
-			{
-				"uuid": "38171CB0-D389-46BB-8E2B-93DC2EBC1672",
-				"type": "Group",
-				"name": "StoneGlow",
-				"visible": false,
-				"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
-				"children": [
-					{
-						"uuid": "EDFBA737-7BD8-4D42-B166-20A7C0F15BE0",
-						"type": "Mesh",
-						"name": "BottomSectionGlow",
-						"matrix": [1.04,0,0,0,0,-0.3328,0,0,0,0,-1.04,0,0,0.067222,0,1],
-						"geometry": "877ACC5D-6968-40C3-9DCA-A2D3942FB9B0",
-						"material": "8CD7249C-30A1-4593-AD7A-7C6319990F27"
-					},
-					{
-						"uuid": "8FE037EE-5230-4459-B5EB-9D63B43ECB61",
-						"type": "Mesh",
-						"name": "TopSectionColorGlow",
-						"matrix": [1.15,0,0,0,0,0.23,0,0,0,0,1.15,0,0,0.235986,0,1],
-						"geometry": "2654EAA3-1C9F-42A9-916C-0B108C6237F2",
-						"material": "B6C7FEC1-E281-497A-9F95-4E7612040118"
-					},
-					{
-						"uuid": "95309A7A-55C8-41C6-AF1D-DB7B9C9E0EAB",
-						"type": "Mesh",
-						"name": "MidSectionTopGlow",
-						"matrix": [1.04,0,0,0,0,1.04,0,0,0,0,1.04,0,0,0.171228,0,1],
-						"geometry": "D03E6B22-1CAE-4CF1-B160-0D89EBC1E6E7",
-						"material": "0877FFDA-1E9C-48B7-BA62-87F99B4A77A9"
-					},
-					{
-						"uuid": "D8921FF5-B735-47CD-A1D6-FCC8C3E91864",
-						"type": "Mesh",
-						"name": "MidSectionBottomGlow",
-						"matrix": [1.04,0,0,0,0,1.04,0,0,0,0,1.04,0,0,0.086376,0,1],
-						"geometry": "14427A57-C33A-4E9C-828B-E81F83A695F6",
-						"material": "0AF54B2D-BCEA-4360-8E22-3CD8A83EEBBC"
-					},
-					{
-						"uuid": "2DA3E0AD-5BB5-4448-A377-12845CB40576",
-						"type": "Mesh",
-						"name": "MidSectionWhiteGlow",
-						"matrix": [1.04,0,0,0,0,1.04,0,0,0,0,1.04,0,0,0.125558,0,1],
-						"geometry": "0FDF9A1A-24EA-400C-9587-36964D297733",
-						"material": "0445D93A-18F5-47DF-8564-BDA8D2F2238B"
-					},
-					{
-						"uuid": "0738E68A-15C4-4B8D-9FC3-DB317A2D2C7D",
-						"type": "Mesh",
-						"name": "TopNeturalGlow",
-						"matrix": [1.04,0,0,0,0,0.3328,0,0,0,0,1.04,0,0,0.184799,0,1],
-						"geometry": "75488230-9261-407A-A89C-AFF172802D9C",
-						"material": "26CAEF96-02E6-4084-BF1C-F66D9F890B6F"
-					}]
 			}]
 	}
 }
