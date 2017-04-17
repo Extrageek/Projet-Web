@@ -100,8 +100,11 @@ export class Stone extends Group implements IGameState {
         Stone.createStoneGlow(objectLoader)
             .then((glow: Group) => {
                 Stone._stoneGlow = glow;
-                Stone._stoneGlow.visible = false;
-                console.log("glow", glow);
+
+                // TOOD: To be removed after a clean debug
+                // Can be used to customize the Glow color
+
+                // Stone.setGlowColor(Stone._stoneGlow, greenCode);
             });
 
 
@@ -124,6 +127,18 @@ export class Stone extends Group implements IGameState {
                 }
             );
         });
+    }
+
+    private static setGlowColor(glowGroup: Group, color: number): void {
+        glowGroup.traverse((child) => {
+            let mesh = <THREE.Mesh>(child);
+            let material = <THREE.MeshBasicMaterial>(mesh.material);
+            if (material) {
+                material.color = new THREE.Color(color);
+            }
+        });
+
+        glowGroup.visible = true;
     }
 
     /**
@@ -252,11 +267,10 @@ export class Stone extends Group implements IGameState {
         // Turn On or Off the illumination according to the given boolean
         if (setVisible) {
             let glow = Stone._stoneGlow.clone();
-            glow.visible = true;
             stoneGroup.add(glow);
 
         } else {
-            // The illumination group has a unique name
+            // The illumination glow element has a unique name
             // We have to hide and remove it from the stone
             let glowGroup = stoneGroup.getObjectByName(this.ILLUMINATION_GROUP_NAME);
             if (glowGroup) {
