@@ -1,6 +1,7 @@
 import { Component, OnInit, HostListener, ViewChild, ElementRef } from "@angular/core";
 import { Router } from "@angular/router";
 
+import { LeaderBoardService } from "../services/leaderboard.service";
 import { RestApiProxyService } from "../services/rest-api-proxy.service";
 import { UserService } from "../services/user.service";
 import { GameStatusService } from "../services/game-status.service";
@@ -69,10 +70,11 @@ export class DisplayComponent implements OnInit {
         private router: Router,
         private api: RestApiProxyService,
         private userService: UserService,
+        public leaderboardService: LeaderBoardService,
         public gameStatusService: GameStatusService,
         public renderService: RenderService) {
-            this._textToShow = "Cliquez pour continuer.";
-        }
+        this._textToShow = "Cliquez pour continuer.";
+    }
 
     ngOnInit() {
         this._userSetting = this.userService;
@@ -107,5 +109,9 @@ export class DisplayComponent implements OnInit {
         this.renderService.stopGame().then(() => {
             this.renderService.initAndStart();
         });
+    }
+
+    public returnHomePage() {
+        this.router.navigate(["/"]);
     }
 }
