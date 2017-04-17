@@ -20,7 +20,7 @@ export class DifficultyComponent implements OnInit {
         private api: RestApiProxyService) { }
 
     ngOnInit() {
-        this._username = UserService.name;
+        this._username = UserService._username;
 
         console.log("diff username", UserService._username);
 
