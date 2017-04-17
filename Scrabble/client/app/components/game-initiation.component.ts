@@ -19,8 +19,9 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
     private _onUsernameAlreadyExistSubscription: Subscription;
     private _onInvalidRequestEventSubscription: Subscription;
     private _onConnectionErrorSubscription: Subscription;
+    public _username: String;
 
-    constructor(private router: Router, private socketService: SocketService) {
+    constructor(private router: Router, public socketService: SocketService) {
         // Default constructor
     }
 
@@ -34,6 +35,8 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
         if (this.socketService._socket !== null && this.socketService._socket.disconnected) {
             this.socketService._socket.connect();
         }
+        this._username = "JULIEN"; 
+        //  this.socketService.player.username;
     }
 
     ngOnDestroy() {

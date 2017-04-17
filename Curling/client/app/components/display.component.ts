@@ -17,7 +17,7 @@ import { RenderService } from "../services/game-handler/render.service";
     ]
 })
 export class DisplayComponent implements OnInit {
-    _userSetting: UserService;
+    _userSettingService: UserService;
     _computerName: string;
     _textToShow: string;
 
@@ -26,8 +26,9 @@ export class DisplayComponent implements OnInit {
 
     @HostListener("window:beforeunload")
     public async saveAndLogout() {
-        await this.api.removeUsername(this._userSetting.name);
-        await this.api.createGameRecord(this._userSetting.name, this._userSetting.difficulty, this.gameStatusService);
+        await this.api.removeUsername(this._userSettingService.username);
+        await this.api.createGameRecord(this._userSettingService.username,
+            this._userSettingService.difficulty, this.gameStatusService);
     }
 
     @HostListener("window:resize", ["$event"])
@@ -71,12 +72,12 @@ export class DisplayComponent implements OnInit {
         private userService: UserService,
         public gameStatusService: GameStatusService,
         public renderService: RenderService) {
-            this._textToShow = "Cliquez pour continuer.";
-        }
+        this._textToShow = "Cliquez pour continuer.";
+    }
 
     ngOnInit() {
-        this._userSetting = this.userService;
-        if (this._userSetting.name === "") {
+        this._userSettingService = this.userService;
+        if (this._userSettingService.username === "") {
             this.router.navigate(["/"]);
         } else {
             this.getComputerName();
@@ -95,17 +96,22 @@ export class DisplayComponent implements OnInit {
     }
 
     public gameOver(): void {
-        this.api.createGameRecord(this._userSetting.name, this._userSetting.difficulty, this.gameStatusService);
-        this.api.removeUsername(this._userSetting.name);
+        this.api.createGameRecord(this._userSettingService.username,
+            this._userSettingService.difficulty, this.gameStatusService);
+
+        this.api.removeUsername(this._userSettingService.username);
         this.renderService.removeCanvasElement();
         this.renderService.stopGame();
         this.router.navigate(["/"]);
     }
 
     public restartGame() {
-        this.api.createGameRecord(this._userSetting.name, this._userSetting.difficulty, this.gameStatusService);
+
+        this.api.createGameRecord(this._userSettingService.username,
+            this._userSettingService.difficulty, this.gameStatusService);
+
         this.renderService.stopGame().then(() => {
-            this.renderService.initAndStart();
+            this.router.navigate(["/difficulty"]);
         });
     }
 }

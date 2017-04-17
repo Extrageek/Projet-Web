@@ -6,7 +6,7 @@ export class BlinkDirective implements OnInit {
 
     constructor(private element: ElementRef, private renderer: Renderer) {}
 
-    ngOnInit() {
+    ngOnInit() {
         setInterval((() => {
             let style = "0";
             if (this.element.nativeElement.style.opacity

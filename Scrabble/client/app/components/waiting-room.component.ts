@@ -76,7 +76,7 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
             });
     }
 
-    private cancelGame() {
+    public cancelGame() {
         this.socketService.emitMessage(SocketEventType.CANCEL, {
             username: this.socketService.player.username
         });

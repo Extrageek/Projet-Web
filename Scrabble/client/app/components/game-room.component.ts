@@ -50,9 +50,9 @@ export class GameComponent implements OnInit, OnDestroy {
     private _gameOverSubscription: Subscription;
 
     constructor(
+        private socketService: SocketService,
         private router: Router,
         private activatedRoute: ActivatedRoute,
-        private socketService: SocketService,
         private gameRoomEventManagerService: GameRoomManagerService,
         private commandsService: CommandsService) {
 
@@ -74,6 +74,18 @@ export class GameComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         // TODO: unsubscribe to all the event in the ngOnDestroy
         this._gameOverSubscription.unsubscribe();
+    }
+
+    public set inputMessage(s: string) {
+        this._inputMessage = s;
+    }
+
+    public get inputMessage(): string {
+        return this._inputMessage;
+    }
+
+    public get isOver(): boolean {
+        return this._isOver;
     }
 
     // A callback function when the server is not reachable.
@@ -206,7 +218,7 @@ export class GameComponent implements OnInit, OnDestroy {
         }
     }
 
-    private quitGame() {
+    public quitGame() {
         this.socketService.emitMessage(SocketEventType.LEAVE_ROOM, {
             'username': this.socketService.player.username
         });
