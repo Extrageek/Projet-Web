@@ -14,7 +14,7 @@ export class Initialisator {
         this._promiseCalledAfterAllInit = new Promise<void>((resolve, reject) => {
             this._resolveToCallAfterAllInit = resolve;
         }).then(() => {
-            this.initializeNewPromise()
+            this.initializeNewPromise();
         });
     }
 
