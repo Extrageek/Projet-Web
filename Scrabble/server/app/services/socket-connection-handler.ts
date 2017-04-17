@@ -51,6 +51,7 @@ export class SocketConnectionHandler {
             this.subscribeToPassEvent(socket);
             this.subscribeToInvalidCommandEvent(socket);
             this.subscribeToCancelEvent(socket);
+            this.subscribeToLeavingEvent(socket);
             this.subscribeToDisconnectEvent(socket);
 
         });
@@ -315,56 +316,67 @@ export class SocketConnectionHandler {
     }
 
     // On player disconnect event
-    private subscribeToDisconnectEvent(socket: SocketIO.Socket) {
+    private subscribeToLeavingEvent(socket: SocketIO.Socket) {
 
-
-
-        socket.on(SocketEventType.disconnect, () => {
+        socket.on((SocketEventType.leaveRoom), () => {
             let leavingPlayer = this._roomHandler.getPlayerBySocketId(socket.id);
 
-            if (leavingPlayer !== null) {
+            if (leavingPlayer) {
 
                 let playerRoom = this._roomHandler.getRoomByUsername(leavingPlayer.username);
 
-                // TOOD: We must wait after 5 seconds before removing the player
-                if (leavingPlayer !== null
-                    && leavingPlayer !== undefined
-                    && playerRoom !== null
-                    && playerRoom !== undefined) {
-
+                if (playerRoom) {
                     this._roomHandler.handleTheALeavingEvent(socket.id);
-
-                    // If the room is empty, remove it
-                    if (playerRoom.players.count === 0) {
-                        this._roomHandler.removeRoom(playerRoom);
-                    } else {
-                        let message = `${leavingPlayer.username}` + ` left the room`;
-
-                        // Create a response for the other members of the room
-                        let roomMessage = this._messageHandler.createRoomMessageResponse(
-                            leavingPlayer.username,
-                            playerRoom,
-                            message);
-
-                        // If the leaving player has the turn in the game, this state should be released,
-                        // we should give the turn to the next one
-                        if (leavingPlayer.username === playerRoom.players.peek().username) {
-                            // Update the players queue for everyone in the room
-                            let playersQueues = playerRoom.getAndUpdatePlayersQueue();
-                            this._socket.to(playerRoom.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
-                        }
-
-                        this._socket.to(playerRoom.roomId).emit(
-                            SocketEventType.updateLetterInBank,
-                            playerRoom.letterBankHandler.bank.numberOfLettersInBank);
-
-                        // Emit a message for the other players in the room.
-                        this._socket.to(playerRoom.roomId).emit(SocketEventType.leaveRoom, roomMessage);
-                    }
-
-
+                    this.handlePlayerRemoval(leavingPlayer, playerRoom);
                 }
             }
         });
     }
+
+    // On player disconnect event
+    private subscribeToDisconnectEvent(socket: SocketIO.Socket) {
+
+        socket.on((SocketEventType.disconnect), () => {
+            let leavingPlayer = this._roomHandler.getPlayerBySocketId(socket.id);
+
+            if (leavingPlayer) {
+
+                let playerRoom = this._roomHandler.getRoomByUsername(leavingPlayer.username);
+
+                if (playerRoom) {
+                    this._roomHandler.handleTheALeavingEvent(socket.id);
+                    this.handlePlayerRemoval(leavingPlayer, playerRoom);
+                }
+            }
+        });
+    }
+
+    private handlePlayerRemoval(leavingPlayer: Player, playerRoom: Room) {
+
+        let message = `${leavingPlayer.username}` + ` left the room`;
+
+        // Create a response for the other members of the room
+        let roomMessage = this._messageHandler.createRoomMessageResponse(
+            leavingPlayer.username,
+            playerRoom,
+            message);
+
+        // Emit a message for the other players in the room.
+        this._socket.to(playerRoom.roomId).emit(SocketEventType.leaveRoom, roomMessage);
+
+        // If the room is empty, remove it
+        if (playerRoom.players.count === 0) {
+            this._roomHandler.removeRoom(playerRoom);
+        } else {
+            // Update the players queue for everyone in the room
+            let playersQueues = playerRoom.getAndUpdatePlayersQueue();
+
+            this._socket.to(playerRoom.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
+
+            this._socket.to(playerRoom.roomId).emit(
+                SocketEventType.updateLetterInBank,
+                playerRoom.letterBankHandler.bank.numberOfLettersInBank);
+        }
+    }
+
 }

@@ -24,3 +24,7 @@ body {
 .content {
     height: 90%;
 }
+
+md-card {
+    background-color: white;
+}

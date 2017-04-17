@@ -1,13 +1,33 @@
 <div class="container">
     <h1 class="centered">Scrabble - 23</h1>
-    <div *ngIf="this !== undefined" class="info centered">
-        <h3>Nombre de joueurs manquant : {{ numberOfPlayerMissing }} </h3>
+
+</div>
+<div class="col-xs-12 header">
+    <div class="col-xs-12 col-sm-6 header">
+        <img src="../assets/images/Scrabble_Logo.png" alt="logo" />
     </div>
-    <div class="col-lg-1 centered">
-        <md-spinner color="warm" class="centered"></md-spinner>
+    <div class="col-xs-12 col-sm-6 header">
+        <!--player info here-->
     </div>
-    <button type="button" class="btn btn-danger btn-block" 
-        (click)="cancelGame()">
+</div>
+<div class="col-xs-12 content vertical-center">
+    <md-card class="container">
+        <md-card-header>
+            <div md-card-avatar class="example-header-image"></div>
+            <md-card-title>LOGIN</md-card-title>
+        </md-card-header>
+        <md-card-content>
+            <div *ngIf="this !== undefined" class="info centered">
+                <h3>Nombre de joueurs manquant : {{ numberOfPlayerMissing }} </h3>
+            </div>
+            <div class="centered">
+                <md-spinner color="warm" class="centered"></md-spinner>
+            </div>
+        </md-card-content>
+        <md-card-actions>
+            <button md-button class="btn btn-danger btn-block" (click)="cancelGame()">
             Annuler
-    </button>
+            </button>
+        </md-card-actions>
+    </md-card>
 </div>
