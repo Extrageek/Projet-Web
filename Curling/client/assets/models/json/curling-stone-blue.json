@@ -273,7 +273,7 @@
 	"object": {
 		"uuid": "D635E064-4F47-4DEF-96F2-2C2A7E842FE5",
 		"type": "Group",
-		"name": "curling-stone-red",
+		"name": "curling-stone-blue",
 		"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
 		"children": [
 			{

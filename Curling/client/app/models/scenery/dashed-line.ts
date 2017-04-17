@@ -11,7 +11,7 @@ export class DashedLine implements IGameState {
         dashSize: 1,
         gapSize: 1,
         visible: true
-    }
+    };
 
     private _lineAnimationLastUpdate: number;
     private _geometry: Geometry;
@@ -37,7 +37,7 @@ export class DashedLine implements IGameState {
     constructor(scene: Scene, beginPoint = new Vector3(), endPoint = new Vector3()) {
         this._lineAnimationLastUpdate = 0;
         this._scene = scene;
-        this._geometry  = new Geometry();
+        this._geometry = new Geometry();
         this._geometry.vertices.push(beginPoint);
         this._geometry.vertices.push(endPoint);
         this._geometry.computeLineDistances();

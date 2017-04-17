@@ -63,8 +63,10 @@ describe("Stone tester should", function () {
             subject.complete();
             setTimeout(() => {
                 stone.traverse((child) => {
-                    expect((<Mesh>child).material.transparent).to.equal(true);
-                    expect((<Mesh>child).material.opacity).to.not.equal(1);
+                    if (child.type !== stone.stoneGlow.type) {
+                        expect((<Mesh>child).material.transparent).to.equal(true);
+                        expect((<Mesh>child).material.opacity).to.not.equal(1);
+                    }
                 });
                 done();
             }, 1000);

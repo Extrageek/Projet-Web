@@ -21,6 +21,7 @@ export class Stone extends Group implements IGameState {
         "/assets/models/json/curling-stone-blue.json",
         "/assets/models/json/curling-stone-red.json"
     ];
+    private static GLOW_PATH = "/assets/models/json/stone-glow.json";
     private static readonly ONE_SECOND = 1000;
     private static readonly TEN_MILLISECONDS = 10;
     public static readonly BOUNDING_SPHERE_RADIUS = 0.26;
@@ -31,8 +32,11 @@ export class Stone extends Group implements IGameState {
     private static readonly LOWER_BOUNCE_BOUND = 3;
     private static readonly UPPER_BOUNCE_INCREMENT_BOUND = 0.1;
     private static readonly LOWER_BOUNCE_INCREMENT_BOUND = 0.05;
+    private static _stoneGlow: Group;
 
     private readonly ILLUMINATION_GROUP_NAME = "StoneGlow";
+    private _blueStoneGroupName = "curling-stone-blue";
+    private _redStoneGroupName = "curling-stone-red";
 
     private _stoneColor: StoneColor;
     private _physicEngine: PhysicEngine;
@@ -42,6 +46,9 @@ export class Stone extends Group implements IGameState {
     private _lastBoundingSphere: Sphere;
     private _lastPosition: Vector3;
 
+    public get stoneGlow(): Group {
+        return Stone._stoneGlow;
+    }
     public get boundingSphere(): Sphere {
         return this._boundingSphere;
     }
@@ -89,11 +96,31 @@ export class Stone extends Group implements IGameState {
 
     public static createStone(objectLoader: ObjectLoader, stoneColor: StoneColor, initialPosition: Vector3)
         : Promise<Stone> {
+
+        Stone.createStoneGlow(objectLoader)
+            .then((glow: Group) => {
+                Stone._stoneGlow = glow;
+                Stone._stoneGlow.visible = false;
+                console.log("glow", glow);
+            });
+
+
         return new Promise<Stone>((resolve, reject) => {
             objectLoader.load(
                 Stone.STONES_PATH[stoneColor],
                 (obj: Object3D) => {
                     resolve(new Stone(obj, initialPosition, stoneColor));
+                }
+            );
+        });
+    }
+
+    private static createStoneGlow(objectLoader: ObjectLoader): Promise<THREE.Group> {
+        return new Promise<THREE.Group>((resolve, reject) => {
+            objectLoader.load(
+                Stone.GLOW_PATH,
+                (obj: Object3D) => {
+                    resolve(obj);
                 }
             );
         });
@@ -160,11 +187,9 @@ export class Stone extends Group implements IGameState {
     public changeStoneOpacity() {
         this.traverse((child) => {
 
-            if (!this.isGlowObject(child)) {
+            if (child.type !== Stone._stoneGlow.type) {
                 (<Mesh>child).material.transparent = true;
                 (<Mesh>child).material.opacity = 1;
-            } else if (this.ILLUMINATION_GROUP_NAME === child.name) {
-                child.visible = false;
             }
         });
 
@@ -173,12 +198,10 @@ export class Stone extends Group implements IGameState {
             let id = setInterval(() => {
 
                 this.traverse((child) => {
-                    if (!this.isGlowObject(child)) {
+                    if (child.type !== Stone._stoneGlow.type) {
                         if ((<Mesh>child).material.opacity > 0) {
                             (<Mesh>child).material.opacity -= 0.01;
                         }
-                    } else if (this.ILLUMINATION_GROUP_NAME === child.name) {
-                        child.visible = false;
                     }
                 });
 
@@ -219,27 +242,39 @@ export class Stone extends Group implements IGameState {
     }
 
     // Set the stone illumnation
-    public setStoneIllumination(visible: boolean): void {
-        // TODO: A best way is to create the glow dynamically instead
-        // We can fix it soon
-        let glowGroup = this.getObjectByName(this.ILLUMINATION_GROUP_NAME);
-        if (glowGroup) {
-            glowGroup.visible = visible;
+    public setStoneIllumination(setVisible: boolean): void {
+
+        // Get the current stone name according to it color
+        let stoneGroup = (this._stoneColor === StoneColor.Blue) ?
+            this.getObjectByName(this._blueStoneGroupName) :
+            this.getObjectByName(this._redStoneGroupName);
+
+        // Turn On or Off the illumination according to the given boolean
+        if (setVisible) {
+            let glow = Stone._stoneGlow.clone();
+            glow.visible = true;
+            stoneGroup.add(glow);
+
+        } else {
+            // The illumination group has a unique name
+            // We have to hide and remove it from the stone
+            let glowGroup = stoneGroup.getObjectByName(this.ILLUMINATION_GROUP_NAME);
+            if (glowGroup) {
+                glowGroup.visible = false;
+                stoneGroup.remove(glowGroup);
+            }
         }
     }
 
     // Check if an object is a glow object in the current stone
     public isGlowObject(object: THREE.Object3D): boolean {
-        let glowGroup = this.getObjectByName(this.ILLUMINATION_GROUP_NAME);
         let exist = false;
-
-        glowGroup.traverse((child) => {
+        Stone._stoneGlow.traverse((child) => {
             if (child.name === object.name) {
                 exist = true;
             }
         });
 
-        // console.log(object.name);
         return exist;
     }
 }
