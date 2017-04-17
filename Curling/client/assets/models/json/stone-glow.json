@@ -69,23 +69,23 @@
 			"thetaLength": 3.141593
 		},
 		{
-			"uuid": "BA175B21-3BBB-4E39-8268-22321EDF525D",
+			"uuid": "68EB9400-C045-4DFC-83F2-E037AAEFC668",
 			"type": "CylinderBufferGeometry",
 			"radiusTop": 0.02,
 			"radiusBottom": 0.02,
-			"height": 0.17,
+			"height": 0.12,
 			"radialSegments": 32,
 			"heightSegments": 1,
 			"openEnded": false
 		},
 		{
-			"uuid": "7B4DCDBA-B995-4098-ABB2-EBFE3127A626",
+			"uuid": "A2C62BCA-1C35-469F-B600-153864740687",
 			"type": "CylinderBufferGeometry",
 			"radiusTop": 0.02,
 			"radiusBottom": 0.02,
-			"height": 0.1,
+			"height": 0.08,
 			"radialSegments": 32,
-			"heightSegments": 1,
+			"heightSegments": 0,
 			"openEnded": false
 		},
 		{
@@ -201,14 +201,13 @@
 		"uuid": "465ED73B-09DD-460F-95E4-C8F2D60C2FF0",
 		"type": "Group",
 		"name": "StoneGlow",
-		"visible": false,
 		"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
 		"children": [
 			{
 				"uuid": "547A48AD-318C-42B7-8D33-C6D06FBED182",
 				"type": "Mesh",
 				"name": "MidSectionGlow",
-				"matrix": [1.03,0,0,0,0,1.025048,0,0,0,0,1.025048,0,0,0.171228,0,1],
+				"matrix": [1.05,0,0,0,0,1.044952,0,0,0,0,1.044952,0,0,0.171228,0,1],
 				"geometry": "D03E6B22-1CAE-4CF1-B160-0D89EBC1E6E7",
 				"material": "43292983-1781-4131-B47C-B2B9844C72E1"
 			},
@@ -256,23 +255,23 @@
 				"uuid": "FF57302B-8DB9-48B6-A840-46FFDD791218",
 				"type": "Mesh",
 				"name": "handle-2-redGlow",
-				"matrix": [1.2,0,0,0,0,-0.073676,1.197736,0,0,-1.197736,-0.073676,0,0.00028,0.350167,-0.019574,1],
-				"geometry": "BA175B21-3BBB-4E39-8268-22321EDF525D",
+				"matrix": [1.7,0,0,0,0,-0.104374,1.696793,0,0,-1.696793,-0.104374,0,0.00028,0.350167,-0.03,1],
+				"geometry": "68EB9400-C045-4DFC-83F2-E037AAEFC668",
 				"material": "11E2C03C-002F-44E9-9DF0-5CF7117C5B06"
 			},
 			{
 				"uuid": "78CD98A8-F75B-4F15-963F-678CA5D1AB0B",
 				"type": "Mesh",
 				"name": "handle-1-redGlow",
-				"matrix": [1.25,0,0,0,0,1.186095,-0.394561,0,0,0.394561,1.186095,0,0,0.291936,0.099916,1],
-				"geometry": "7B4DCDBA-B995-4098-ABB2-EBFE3127A626",
+				"matrix": [1.7,0,0,0,0,1.613089,-0.536603,0,0,0.536603,1.613089,0,0,0.291936,0.099916,1],
+				"geometry": "A2C62BCA-1C35-469F-B600-153864740687",
 				"material": "6694434C-996B-4DB0-9C4D-7FC020C14F0D"
 			},
 			{
 				"uuid": "4A4A7855-7232-47F5-B5E4-DACC910C62A4",
 				"type": "Mesh",
 				"name": "HandleJointGlow",
-				"matrix": [1.25,0,0,0,0,1.25,0,0,0,0,1.25,0,0,0.343148,0.082152,1],
+				"matrix": [1.8,0,0,0,0,1.8,0,0,0,0,1.8,0,0,0.343148,0.082152,1],
 				"geometry": "1CADAD18-FCE7-4698-88B7-E21338CB2EBB",
 				"material": "68506EB3-59DB-4106-B09F-BAEADC51A14D"
 			}]
