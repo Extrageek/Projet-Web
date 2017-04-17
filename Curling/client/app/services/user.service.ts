@@ -4,29 +4,30 @@ import { Difficulty } from "../models/difficulty";
 
 @Injectable()
 export class UserService {
-    private _name: string;
-    public get name(): string {
-        return this._name;
+    public static _username: string;
+    public static _difficulty: Difficulty;
+
+    public get username(): string {
+        return UserService._username;
     }
-    public set name(value: string) {
-        this._name = value;
+    public set username(value: string) {
+        UserService._username = value;
     }
 
-    private _difficulty: Difficulty;
     public get difficulty(): Difficulty {
-        return this._difficulty;
+        return UserService._difficulty;
     }
     public set difficulty(value: Difficulty) {
-        this._difficulty = value;
+        UserService._difficulty = value;
     }
 
     constructor(private api: RestApiProxyService) {
-        this._name = "";
-        this._difficulty = Difficulty.NORMAL;
+        UserService._username = "";
+        UserService._difficulty = Difficulty.NORMAL;
     }
 
     public getComputerName(): string {
-        if (this.difficulty === Difficulty.NORMAL) {
+        if (UserService._difficulty === Difficulty.NORMAL) {
             return "CPU Normal";
         } else {
             return "CPU Difficile";
@@ -41,7 +42,7 @@ export class UserService {
         if (username !== "") {
             return await this.api.verifyUsername(username)
                 .then(isValid => {
-                    this.name = isValid ? username : "";
+                    this.username = isValid ? username : "";
                     return isValid;
                 })
                 .catch(error => {
