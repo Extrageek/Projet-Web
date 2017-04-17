@@ -1,4 +1,3 @@
-import { LightingService } from './../views/ligthing.service';
 import { ObjectLoader, Vector3, Box3, Scene } from 'three';
 import { IRinkInfo } from '../../models/scenery/rink-info.interface';
 import { Stone, StoneColor } from '../../models/stone';
@@ -36,7 +35,6 @@ export class StoneHandler implements IGameState {
     private _boxBetweenLinesForBroom: Box3;
     private _invalidAreaForStonesToBeIn: Box3;
     private _stonesGivingPoints: Stone[];
-    private _lightingService: LightingService;
 
     constructor(soundManager: SoundManager, objectLoader: ObjectLoader,
         rinkInfo: IRinkInfo, scene: Scene, firstPlayer: StoneColor) {
@@ -57,8 +55,6 @@ export class StoneHandler implements IGameState {
 
         this._invalidAreaForStonesToBeIn = new Box3(new Vector3(-2.15, 0, -17.75), new Vector3(2.15, 0, 17.75));
         this._invalidAreaForStonesToBeIn.translate(new Vector3(0, 0, -7.15));
-
-        this._lightingService = new LightingService();
     }
 
     public get stoneOnTheGame(): Stone[] {
@@ -340,7 +336,6 @@ export class StoneHandler implements IGameState {
         }, StoneHandler.FIVE_SECOND);
     }
 
-
     // Start the illumination of all the stones that give points
     public startStonesIllumination(): void {
         this.stopStonesIllumination();
@@ -351,14 +346,14 @@ export class StoneHandler implements IGameState {
 
         // Go through every stone and set up the illumination
         stonesThatGivesPoints.forEach(stone => {
-            stone.setStoneIllumination(true);
+            stone.setIllumination(true);
         });
     }
 
     // Go through every loaded stone in the rink and set off thee illumination
     public stopStonesIllumination(): void {
         this.stoneOnTheGame.forEach(stone => {
-            stone.setStoneIllumination(false);
+            stone.setIllumination(false);
         });
     }
 }

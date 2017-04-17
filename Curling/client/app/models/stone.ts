@@ -46,6 +46,9 @@ export class Stone extends Group implements IGameState {
     private _lastBoundingSphere: Sphere;
     private _lastPosition: Vector3;
 
+    public get glowObjectName(): string {
+        return this.ILLUMINATION_GROUP_NAME;
+    }
     public get stoneGlow(): Group {
         return Stone._stoneGlow;
     }
@@ -100,8 +103,11 @@ export class Stone extends Group implements IGameState {
         Stone.createStoneGlow(objectLoader)
             .then((glow: Group) => {
                 Stone._stoneGlow = glow;
-                Stone._stoneGlow.visible = false;
-                console.log("glow", glow);
+
+                // TOOD: To be removed after a clean debug
+                // Can be used to customize the Glow color
+
+                // Stone.setGlowColor(Stone._stoneGlow, greenCode);
             });
 
 
@@ -115,7 +121,7 @@ export class Stone extends Group implements IGameState {
         });
     }
 
-    private static createStoneGlow(objectLoader: ObjectLoader): Promise<THREE.Group> {
+    public static createStoneGlow(objectLoader: ObjectLoader): Promise<THREE.Group> {
         return new Promise<THREE.Group>((resolve, reject) => {
             objectLoader.load(
                 Stone.GLOW_PATH,
@@ -124,6 +130,18 @@ export class Stone extends Group implements IGameState {
                 }
             );
         });
+    }
+
+    private static setGlowColor(glowGroup: Group, color: number): void {
+        glowGroup.traverse((child) => {
+            let mesh = <THREE.Mesh>(child);
+            let material = <THREE.MeshBasicMaterial>(mesh.material);
+            if (material) {
+                material.color = new THREE.Color(color);
+            }
+        });
+
+        glowGroup.visible = true;
     }
 
     /**
@@ -242,7 +260,7 @@ export class Stone extends Group implements IGameState {
     }
 
     // Set the stone illumnation
-    public setStoneIllumination(setVisible: boolean): void {
+    public setIllumination(setVisible: boolean): void {
 
         // Get the current stone name according to it color
         let stoneGroup = (this._stoneColor === StoneColor.Blue) ?
@@ -252,11 +270,10 @@ export class Stone extends Group implements IGameState {
         // Turn On or Off the illumination according to the given boolean
         if (setVisible) {
             let glow = Stone._stoneGlow.clone();
-            glow.visible = true;
             stoneGroup.add(glow);
 
         } else {
-            // The illumination group has a unique name
+            // The illumination glow element has a unique name
             // We have to hide and remove it from the stone
             let glowGroup = stoneGroup.getObjectByName(this.ILLUMINATION_GROUP_NAME);
             if (glowGroup) {
@@ -267,7 +284,7 @@ export class Stone extends Group implements IGameState {
     }
 
     // Check if an object is a glow object in the current stone
-    public isGlowObject(object: THREE.Object3D): boolean {
+    private isGlowObject(object: THREE.Object3D): boolean {
         let exist = false;
         Stone._stoneGlow.traverse((child) => {
             if (child.name === object.name) {

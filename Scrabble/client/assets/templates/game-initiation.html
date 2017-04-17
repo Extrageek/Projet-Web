@@ -18,8 +18,16 @@
             <md-card-content>
                 <div class="form-group has-danger">
                     <label for="name">Username</label>
-                    <input #username pattern="[A-Za-z0-9]*" value="fakename" type="text" class="form-control" placeholder="Please enter a username"
-                        id="name" required>
+                    <input #username
+                        pattern="[A-Za-z0-9]*"
+                        value="{{socketService.player.username || ''}}"
+                        type="text"
+                        class="form-control"
+                        placeholder="Please enter a username"
+                        [disabled]="socketService.player.username !== ''"
+                        id="name"
+                        autocomplete="off"
+                        required>
                 </div>
                 <div class="form-group">
                     <label for="numberOfPlayers">Number of players</label>

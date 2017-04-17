@@ -21,7 +21,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
     private _onConnectionErrorSubscription: Subscription;
     public _username: String;
 
-    constructor(private router: Router, private socketService: SocketService) {
+    constructor(private router: Router, public socketService: SocketService) {
         // Default constructor
     }
 

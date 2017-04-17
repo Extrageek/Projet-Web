@@ -4,6 +4,13 @@
     background-color: white;
 }
 
+.logo {
+    padding-top: 2vh;
+    padding-left: 2vh;
+    height: 20vh;
+    min-height: 75px;
+}
+
 .vertical-center {
     display: flex;
     align-items: center;

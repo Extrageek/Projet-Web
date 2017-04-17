@@ -1,4 +1,4 @@
-import { expect } from "chai";
+import { expect, assert } from "chai";
 import { ObjectLoader, Vector3, Mesh } from "three";
 import { Stone, StoneColor, StoneSpin } from "./../stone";
 import { Subject } from "rxjs/Subject";
@@ -72,6 +72,31 @@ describe("Stone tester should", function () {
             }, 1000);
         });
     });
+
+    it('contains a group of Glow component in a Blue Stone', (done) => {
+        Stone.createStone(objectLoader, StoneColor.Blue, new Vector3(0, 0, 0)).then((stone: Stone) => {
+            stone.setIllumination(true);
+
+            // Should contains the glow object
+            let glow = <THREE.Object3D>stone.getObjectByName(stone.glowObjectName);
+            assert(glow.type === stone.stoneGlow.type);
+
+            done();
+        });
+    });
+
+    it('contains a group of Glow component in a Red Stone', (done) => {
+        Stone.createStone(objectLoader, StoneColor.Blue, new Vector3(0, 0, 0)).then((stone: Stone) => {
+            stone.setIllumination(true);
+
+            // Should contains the glow object
+            let glow = <THREE.Object3D>stone.getObjectByName(stone.glowObjectName);
+            assert(glow.type === stone.stoneGlow.type);
+
+            done();
+        });
+    });
+    // TODO: Test the light off case
 });
 
 describe("Stone tester physics should", () => {
