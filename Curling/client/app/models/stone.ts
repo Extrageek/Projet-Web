@@ -46,6 +46,9 @@ export class Stone extends Group implements IGameState {
     private _lastBoundingSphere: Sphere;
     private _lastPosition: Vector3;
 
+    public get stoneGlow(): Group {
+        return Stone._stoneGlow;
+    }
     public get boundingSphere(): Sphere {
         return this._boundingSphere;
     }
