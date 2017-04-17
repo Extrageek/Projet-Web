@@ -14,12 +14,13 @@
                     <label for="name">Username</label>
                     <input #username
                         pattern="[A-Za-z0-9]*"
-                        value="fakename"
+                        value="{{socketService.player.username || ''}}"
                         type="text"
                         class="form-control"
                         placeholder="Please enter a username"
                         [disabled]="socketService.player.username !== ''"
                         id="name"
+                        autocomplete="off"
                         required>
                 </div>
                 <div class="form-group">
