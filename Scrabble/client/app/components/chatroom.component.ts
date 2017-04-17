@@ -50,6 +50,14 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
         // Unsubscribe all the event listeners here
     }
 
+    public get wasClicked(): boolean {
+        return this._wasClicked;
+    }
+
+    public get hasNewMessages(): boolean {
+        return this._hasNewMessages;
+    }
+
     private onCommandRequest(): Subscription {
         return this.socketService.subscribeToChannelEvent(SocketEventType.COMMAND_REQUEST)
             .subscribe((response: ICommandMessage<any>) => {

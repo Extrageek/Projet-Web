@@ -20,7 +20,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
     private _onInvalidRequestEventSubscription: Subscription;
     private _onConnectionErrorSubscription: Subscription;
 
-    constructor(private router: Router, private socketService: SocketService) {
+    constructor(private router: Router, public socketService: SocketService) {
         // Default constructor
     }
 

@@ -15,8 +15,8 @@
                 </div>
                 <button type="button" class="btn btn-danger btn-block" 
                     (click)="quitGame()">
-                    <span *ngIf="_isOver">Quitter</span>
-                    <span *ngIf="!_isOver">Annuler</span>
+                    <span *ngIf="isOver">Quitter</span>
+                    <span *ngIf="!isOver">Annuler</span>
                 </button>
             </div>
 
@@ -32,7 +32,7 @@
                     <div class="input-box col-md-8">
                         <div class="form-group">
                             <textarea #message id="inputMessage" 
-                            [(ngModel)]="_inputMessage" 
+                            [(ngModel)]="inputMessage" 
                             autofocus class="form-control" rows="2" 
                             (keydown.enter)="submitMessage();false" 
                             (keydown)="onKeyPressEventHandler($event)" 
