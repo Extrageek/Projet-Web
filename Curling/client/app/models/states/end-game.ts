@@ -39,6 +39,7 @@ export class EndGame extends AbstractGameState {
         this.addAppropriateEndGameText();
         setTimeout(() => {
             this._animationStopped = true;
+            this._gameInfo.gameStatus.gameIsFinished();
         }, this.FIVE_SECONDS);
     }
 
@@ -59,7 +60,6 @@ export class EndGame extends AbstractGameState {
     protected performLeavingState(): Promise<void> {
         this.removeEndGameText();
         this._gameServices.particlesService.removeParticlesFromScene();
-        this._gameInfo.gameStatus.gameIsFinished();
         return Promise.resolve();
     }
 
