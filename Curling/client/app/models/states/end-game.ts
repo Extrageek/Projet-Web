@@ -9,14 +9,13 @@ import { StoneColor } from "../stone";
  */
 export class EndGame extends AbstractGameState {
 
-    private static readonly TEXT_POSITION = new Vector3(6, 3, 20);
-    private static readonly RED = 0xff0000;
-    private static readonly BLUE = 0x0000ff;
-    private static readonly YELLOW = 0xffff00;
     private static _instance: AbstractGameState = null;
+    private readonly TEXT_POSITION = new Vector3(6, 3, 20);
+    private readonly RED = 0xff0000;
+    private readonly BLUE = 0x0000ff;
+    private readonly YELLOW = 0xffff00;
     private readonly FIVE_SECONDS = 5000;
-
-    private _animationStopped : boolean;
+    private _animationStopped: boolean;
     private _endGameTextIdentifier: number;
 
     public static createInstance(gameServices: IGameServices, gameInfo: IGameInfo) {
@@ -38,29 +37,29 @@ export class EndGame extends AbstractGameState {
         this._gameServices.particlesService.addParticlesToScene();
         this._animationStopped = false;
         this.addAppropriateEndGameText();
-        this._gameInfo.gameStatus.gameIsFinished();
         setTimeout(() => {
-           this._animationStopped = true;
+            this._animationStopped = true;
         }, this.FIVE_SECONDS);
     }
 
     private addAppropriateEndGameText() {
         if (this._gameInfo.gameStatus.scorePlayer > this._gameInfo.gameStatus.scoreComputer) {
             this._gameServices.stoneHandler.bounceWinningPlayerStones(StoneColor.Blue);
-            this.addEndGameText(EndGame.TEXT_POSITION, "Vous avez gagne!", EndGame.BLUE);
+            this.addEndGameText(this.TEXT_POSITION, "Vous avez gagne!", this.BLUE);
         }
         else if (this._gameInfo.gameStatus.scorePlayer < this._gameInfo.gameStatus.scoreComputer) {
             this._gameServices.stoneHandler.bounceWinningPlayerStones(StoneColor.Red);
-            this.addEndGameText(EndGame.TEXT_POSITION, "Vous avez perdu!", EndGame.RED);
+            this.addEndGameText(this.TEXT_POSITION, "Vous avez perdu!", this.RED);
         }
         else {
-            this.addEndGameText(EndGame.TEXT_POSITION, "C'est une partie nulle", EndGame.YELLOW);
+            this.addEndGameText(this.TEXT_POSITION, "C'est une partie nulle", this.YELLOW);
         }
     }
 
     protected performLeavingState(): Promise<void> {
         this.removeEndGameText();
         this._gameServices.particlesService.removeParticlesFromScene();
+        this._gameInfo.gameStatus.gameIsFinished();
         return Promise.resolve();
     }
 
