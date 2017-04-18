@@ -124,6 +124,7 @@ export class DisplayComponent implements OnInit {
         this.renderService.stopGame().then(() => {
             this.router.navigate(["/user"]);
         });
+        this.api.removeUsername(this._userSettingService.username);
     }
 
     public startNewGame() {
