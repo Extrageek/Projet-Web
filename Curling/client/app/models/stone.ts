@@ -247,8 +247,10 @@ export class Stone extends Group implements IGameState {
             next: (v: number) => { // Do not remove unused parameter
                 if (this.position.y > upperBound) {
                     incrementBounce = -incrementBounce;
+                    this.position.y += incrementBounce;
                 } else if (this.position.y < lowerBound) {
                     incrementBounce = -incrementBounce;
+                    this.position.y += incrementBounce;
                 }
                 this.position.y += incrementBounce;
             },

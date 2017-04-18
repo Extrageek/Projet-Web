@@ -3,7 +3,6 @@ interface Connection {
     "socketId": string;
 }
 
-
 export class NameHandler {
     private _activePlayers: Connection[];
 
@@ -33,7 +32,6 @@ export class NameHandler {
         let tempName = this.getNameBySocketId(socketId);
         let tempSocketId = this.getSocketIdByName(socketId);
 
-        console.log(tempName===null && tempSocketId===null);
         if (tempName === null && tempSocketId === null) {
             let item: Connection = {name, socketId};
             this._activePlayers.push(item);
@@ -43,9 +41,8 @@ export class NameHandler {
 
     public removeConnection(socketId: string) {
         let name: string = this.getNameBySocketId(socketId);
-        console.log("name", name);
         let index = this._activePlayers.indexOf({"name": name, "socketId": socketId});
-        console.log("id", index);
+
         if (index !== -1) {
             this._activePlayers.splice(index, 1);
         }
