@@ -17,12 +17,11 @@ export class DifficultyComponent implements OnInit {
 
     constructor(
         private router: Router,
+        private userSettingService : UserService,
         private api: RestApiProxyService) { }
 
     ngOnInit() {
-        this._username = UserService.name;
-
-        console.log("diff username", UserService._username);
+        this._username = this.userSettingService.username;
 
         if (this._username === "") {
             this.router.navigate(["/"]);
