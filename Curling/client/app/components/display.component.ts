@@ -1,6 +1,7 @@
 import { Component, OnInit, HostListener, ViewChild, ElementRef } from "@angular/core";
 import { Router } from "@angular/router";
 
+import { LeaderboardService } from "../services/leaderboard.service";
 import { RestApiProxyService } from "../services/rest-api-proxy.service";
 import { UserService } from "../services/user.service";
 import { GameStatusService } from "../services/game-status.service";
@@ -13,7 +14,8 @@ import { RenderService } from "../services/game-handler/render.service";
     styleUrls: [
         "../../assets/stylesheets/display-component.css",
         "../../assets/stylesheets/menu-hamburger.css",
-        "../../assets/stylesheets/gl-component.css"
+        "../../assets/stylesheets/gl-component.css",
+        "../../assets/stylesheets/leaderboard-component.css"
     ]
 })
 export class DisplayComponent implements OnInit {
@@ -70,12 +72,14 @@ export class DisplayComponent implements OnInit {
         private router: Router,
         private api: RestApiProxyService,
         private userService: UserService,
+        public leaderboardService: LeaderboardService,
         public gameStatusService: GameStatusService,
         public renderService: RenderService) {
         this._textToShow = "Cliquez pour continuer.";
     }
 
     ngOnInit() {
+        this.leaderboardService.fetchRecords();
         this._userSettingService = this.userService;
         if (this._userSettingService.username === "") {
             this.router.navigate(["/"]);
@@ -96,9 +100,10 @@ export class DisplayComponent implements OnInit {
     }
 
     public gameOver(): void {
-        this.api.createGameRecord(this._userSettingService.username,
-            this._userSettingService.difficulty, this.gameStatusService);
-
+        this.api.createGameRecord(
+            this._userSettingService.username,
+            this._userSettingService.difficulty,
+            this.gameStatusService);
         this.api.removeUsername(this._userSettingService.username);
         this.renderService.removeCanvasElement();
         this.renderService.stopGame();
@@ -106,12 +111,26 @@ export class DisplayComponent implements OnInit {
     }
 
     public restartGame() {
-
         this.api.createGameRecord(this._userSettingService.username,
             this._userSettingService.difficulty, this.gameStatusService);
 
         this.renderService.stopGame().then(() => {
             this.router.navigate(["/difficulty"]);
+        });
+    }
+
+    public returnHomePage() {
+        this.gameStatusService.resetGameStatus();
+        this.renderService.stopGame().then(() => {
+            this.router.navigate(["/user"]);
+        });
+    }
+
+    public startNewGame() {
+        this.gameStatusService.resetGameStatus();
+        this.renderService.stopGame().then(() => {
+            this.router.navigate(["/game"]);
+            this.renderService.initAndStart();
         });
     }
 }

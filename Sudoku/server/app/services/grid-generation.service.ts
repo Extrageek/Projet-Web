@@ -1,8 +1,8 @@
 import { Puzzle } from "./../models/puzzle/puzzle";
 import { Difficulty } from "./../models/puzzle/difficulty";
 import { GridSolver } from "./grid-solver.service";
-import {Dashboard} from "../models/dashboard/dashboard";
-import {Type, Activity} from "../models/dashboard/activity";
+import { Dashboard } from "../models/dashboard/dashboard";
+import { Type, Activity } from "../models/dashboard/activity";
 
 // Used to generate the type of transformation and to give a number of holes to dig in sudoku
 function getRandomNumberInRange(min: number, max: number): number {

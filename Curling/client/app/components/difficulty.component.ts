@@ -20,10 +20,7 @@ export class DifficultyComponent implements OnInit {
         private api: RestApiProxyService) { }
 
     ngOnInit() {
-        this._username = UserService.name;
-
-        console.log("diff username", UserService._username);
-
+        this._username = UserService._username;
         if (this._username === "") {
             this.router.navigate(["/"]);
         }
