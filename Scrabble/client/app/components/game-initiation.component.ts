@@ -14,12 +14,14 @@ import { Player } from "../models/player";
 })
 
 export class GameInitiationComponent implements OnInit, OnDestroy {
+    public static readonly MAX_PLAYERS = 4;
     private _onConnectedSubscription: Subscription;
     private _onJoinedRoomSubscription: Subscription;
     private _onUsernameAlreadyExistSubscription: Subscription;
     private _onInvalidRequestEventSubscription: Subscription;
     private _onConnectionErrorSubscription: Subscription;
     public _username: String;
+    public _sortsOfGame: Array<number>;
 
     constructor(private router: Router, public socketService: SocketService) {
         // Default constructor
@@ -35,8 +37,8 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
         if (this.socketService._socket !== null && this.socketService._socket.disconnected) {
             this.socketService._socket.connect();
         }
-        this._username = "JULIEN"; 
-        //  this.socketService.player.username;
+        this.socketService.player.username;
+        this._sortsOfGame = Array(GameInitiationComponent.MAX_PLAYERS).fill(0).map((x, i) => i + 1);
     }
 
     ngOnDestroy() {

@@ -14,17 +14,95 @@ body {
 
 .header {
     padding-top: 1%;
-    height: 9%;        
+    height: 14%;
+    max-height: 200px;     
+}
+
+.header > * {
+    height: 100%;
 }
 
 .header img{
-    height: 100%;        
+    width: auto;
+    max-height: 100%;
 }
 
 .content {
-    height: 90%;
+    height: 85%;
 }
 
 md-card {
     background-color: white;
+}
+
+.vertical-center {
+    display: flex;
+    align-items: center;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.icon-medium-size {
+    font-size: 40px !important;
+}
+
+.icon-large-size {
+    font-size: 60px !important;
+}
+
+.brown {
+    color: #4d3300;
+}
+
+.btn-form {
+    border: 1px solid #4d3300 !important;
+    background-color: white !important;
+    color: #4d3300 !important;
+}
+
+.btn-form:hover {
+    border: 1px solid #4d3300 !important;
+    background-color: #4d3300 !important;
+    color: white !important;
+}
+
+.btn-form:disabled:hover {
+    border: 1px solid orangered !important;
+    cursor: not-allowed;
+    color: orangered !important;
+    background-color: white !important;    
+}
+
+.btn-form-cancel {
+    border: 1px solid red !important;
+    background-color: white !important;
+    color: red !important;
+}
+
+.btn-form-cancel:hover {
+    border: 1px solid red !important;
+    background-color: red !important;
+    color: white !important;
+}
+
+.btn-cancel {
+    border: 1px solid red !important;
+    background-color: red !important;
+    color: white !important;
+}
+
+.btn-cancel:hover {
+    border: 1px solid red !important;
+    background-color: white !important;
+    color: red !important;
+}
+
+#login-info {
+    border: 1px solid white !important;
+    background-color: transparent !important;
+    color: white !important;
+    text-align: center;
+    display: inline-block;
 }

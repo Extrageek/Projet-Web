@@ -362,7 +362,7 @@ describe("SocketConnectionHandler, should create a socket connection handler", (
 
             client1.once("connect", function () {
                 client1.emit(SocketEventType.newGameRequest, { username: "252004", gameType: 2 });
-                client1.on(SocketEventType.leaveRoom, () => { /*do nothing*/ });
+                client1.on(SocketEventType.playerLeftRoom, () => { /*do nothing*/ });
 
                 client2 = ioClient.connect(fakeServerUrl, options);
                 client2.once("connect", function () {

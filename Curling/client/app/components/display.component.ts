@@ -18,6 +18,7 @@ import { RenderService } from "../services/game-handler/render.service";
         "../../assets/stylesheets/leaderboard-component.css"
     ]
 })
+
 export class DisplayComponent implements OnInit {
     _userSettingService: UserService;
     _computerName: string;
@@ -124,13 +125,13 @@ export class DisplayComponent implements OnInit {
         this.renderService.stopGame().then(() => {
             this.router.navigate(["/user"]);
         });
+        this.api.removeUsername(this._userSettingService.username);
     }
 
     public startNewGame() {
         this.gameStatusService.resetGameStatus();
         this.renderService.stopGame().then(() => {
-            this.router.navigate(["/game"]);
-            this.renderService.initAndStart();
+            this.router.navigate(["/difficulty"]);
         });
     }
 }
