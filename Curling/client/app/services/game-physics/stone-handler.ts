@@ -99,7 +99,6 @@ export class StoneHandler implements IGameState {
         this._stoneOnTheGame[this._stoneOnTheGame.length - 1].sweeping = isSweeping;
     }
 
-    //TODO: Count the points by looking at the RinkInfo and the position of the array of stones.
     public countPoints(): Points {
 
         if (this._stonesGivingPoints.length !== 0) {

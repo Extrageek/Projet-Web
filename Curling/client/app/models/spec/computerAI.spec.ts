@@ -59,12 +59,10 @@ describe("computerAI should", () => {
         Stone.createStone(objectLoader, StoneColor.Red, rinkInfo.initialStonePosition)
             .then((stone: Stone) => {
                 let shotParameters = computerAI.determineShotParametersOnCenter();
-                console.log(shotParameters);
                 stone.direction = shotParameters.direction;
                 stone.speed = shotParameters.power;
                 stone.spin = shotParameters.spin;
                 updateLoopAndVerifyPosition(1000, stone, rinkInfo.targetCenter, done);
-                console.log(stone.position);
             });
     });
 });

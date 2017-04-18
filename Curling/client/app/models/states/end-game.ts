@@ -81,6 +81,5 @@ export class EndGame extends AbstractGameState {
         if (!this._animationStopped) {
             this._gameServices.particlesService.update();
         }
-        //Do nothing by default. The children classes can override this method.
     }
 }
