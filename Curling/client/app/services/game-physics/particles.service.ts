@@ -11,7 +11,7 @@ import { RandomHelper } from "../../models/random-helper";
     private readonly PARTICLE_SPEED = 0.04;
     private readonly PARTICLE_SIZE = 0.2;
 
-    private readonly PARTICLES_COUNT = 2500;
+    private readonly PARTICLES_COUNT = 5000;
 
     private _geometry: Geometry;
     private _material: PointsMaterial;

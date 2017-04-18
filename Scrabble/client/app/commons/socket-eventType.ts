@@ -24,9 +24,6 @@ export class SocketEventType {
     // A joined room event.
     static JOIN_ROOM = "joinedRoom";
 
-    // A joined room event.
-    static LEAVE_ROOM = "leaveRoom";
-
     // A ready state event for a room.
     static ROOM_READY = "roomReady";
     static MESSAGE = "message";

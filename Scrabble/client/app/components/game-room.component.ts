@@ -48,6 +48,7 @@ export class GameComponent implements OnInit, OnDestroy {
     private _connectErrorSubscription: Subscription;
     private _leavingRoomSubscription: Subscription;
     private _gameOverSubscription: Subscription;
+    public _username: string;
 
     constructor(
         private socketService: SocketService,
@@ -55,16 +56,14 @@ export class GameComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private gameRoomEventManagerService: GameRoomManagerService,
         private commandsService: CommandsService) {
-
-            // Constructor
-            this._inputMessage = '';
+        this._inputMessage = '';
     }
 
     ngOnInit() {
         if (this.socketService.player.username === "") {
             this.router.navigate(["/"]);
         }
-        // TODO: unsubscribe all the event in the ngOnDestroy
+        this._username = this.socketService.player.username;
         this._connectErrorSubscription = this.onConnectionError();
         this._leavingRoomSubscription = this.onLeaveRoom();
         this._gameOverSubscription = this.onGameOver();
@@ -94,19 +93,19 @@ export class GameComponent implements OnInit, OnDestroy {
         return this.socketService.subscribeToChannelEvent(SocketEventType.CONNECT_ERROR)
             .subscribe((error) => {
                 console.log(error);
-        });
+            });
     }
 
     // A callback when the player leave a room
     public onLeaveRoom(): Subscription {
         // For debug
-        return this.socketService.subscribeToChannelEvent(SocketEventType.LEAVE_ROOM)
+        return this.socketService.subscribeToChannelEvent(SocketEventType.PLAYER_LEFT_ROOM)
             .subscribe((roomMessage: IRoomMessage) => {
                 console.log("In Room", roomMessage);
                 if (roomMessage._username === this.socketService.player.username) {
                     this.router.navigate(["/"]);
                 }
-        });
+            });
     }
 
     // A callback function when in case of invalid request.
@@ -219,7 +218,7 @@ export class GameComponent implements OnInit, OnDestroy {
     }
 
     public quitGame() {
-        this.socketService.emitMessage(SocketEventType.LEAVE_ROOM, {
+        this.socketService.emitMessage(SocketEventType.PLAYER_LEFT_ROOM, {
             'username': this.socketService.player.username
         });
     }
