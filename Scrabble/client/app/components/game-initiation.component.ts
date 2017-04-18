@@ -21,6 +21,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
     private _onInvalidRequestEventSubscription: Subscription;
     private _onConnectionErrorSubscription: Subscription;
     public _username: String;
+    public _numberOfPlayers: number;
     public _sortsOfGame: Array<number>;
 
     constructor(private router: Router, public socketService: SocketService) {
@@ -99,17 +100,16 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
         if (username === null || numberOfPlayersStr === null) {
             throw new Error("Null argument error: All the parameters are required");
         }
-        let numberOfPlayers = Number(numberOfPlayersStr);
         if (this.socketService.player.username === "") {
             this.socketService.player.username = username;
         } else {
             username = this.socketService.player.username;
         }
 
-        this.socketService.player.numberOfPlayers = numberOfPlayers;
+        this.socketService.player.numberOfPlayers = this._numberOfPlayers;
         this.socketService.emitMessage(
             SocketEventType.NEW_GAME_REQUEST,
-            { 'username': username, 'gameType': numberOfPlayers });
+            { 'username': username, 'gameType': this._numberOfPlayers });
     }
 
     private unsubscribeToChannelEvent() {

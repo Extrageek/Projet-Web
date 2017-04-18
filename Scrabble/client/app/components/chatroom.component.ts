@@ -1,3 +1,4 @@
+import { IGameMessage } from './../commons/messages/game-message.interface';
 import { Component, OnInit, OnDestroy, AfterViewChecked, ElementRef, ViewChild } from "@angular/core";
 import { Subscription } from "rxjs/Subscription";
 
@@ -56,6 +57,10 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
 
     public get hasNewMessages(): boolean {
         return this._hasNewMessages;
+    }
+
+    public get messageArray(): Array<IGameMessage> {
+        return this._messageArray.slice(0);
     }
 
     private onCommandRequest(): Subscription {

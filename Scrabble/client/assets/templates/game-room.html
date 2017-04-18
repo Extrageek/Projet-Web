@@ -5,7 +5,7 @@
     </div>
     <div *ngIf="_username !== '' && _username !== undefined" class="col-sm-6">
         <div class="pull-right">
-            <button md-fab class="btn-cancel" (click)="cancelGame()">
+            <button md-fab class="btn-cancel" (click)="quitGame()">
                 <i class="material-icons icon-medium-size">exit_to_app</i>
             </button>
         </div>
@@ -29,7 +29,7 @@
             <md-card-content>
                 <div class="col-xs-8">
                     <md-input-container class="full-width">
-                        <input mdInput mdInput #message id="inputMessage" [(ngModel)]="_inputMessage" autofocus (keydown.enter)="submitMessage();false"
+                        <input mdInput mdInput #message id="inputMessage" [(ngModel)]="inputMessage" autofocus (keydown.enter)="submitMessage();false"
                             (keydown)="onKeyPressEventHandler($event)" placeholder="Message">
                     </md-input-container>
                 </div>
