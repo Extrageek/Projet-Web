@@ -18,6 +18,7 @@ import { RenderService } from "../services/game-handler/render.service";
         "../../assets/stylesheets/leaderboard-component.css"
     ]
 })
+
 export class DisplayComponent implements OnInit {
     _userSettingService: UserService;
     _computerName: string;
@@ -129,7 +130,7 @@ export class DisplayComponent implements OnInit {
     public startNewGame() {
         this.gameStatusService.resetGameStatus();
         this.renderService.stopGame().then(() => {
-            this.router.navigate(["/game"]);
+            this.router.navigate(["/difficulty"]);
             this.renderService.initAndStart();
         });
     }
