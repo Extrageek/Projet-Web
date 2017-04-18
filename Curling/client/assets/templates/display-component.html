@@ -1,11 +1,12 @@
-<div class="menu-nav">
-    <button #hamburger (mousedown)="toggleOverlay($event)" class="hamburger hamburger--elastic pull-right" type="button">
-        <span class="hamburger-box">
-            <span class="hamburger-inner"></span>
-        </span>
-    </button>
+<div *ngIf="!gameStatusService.isFinished">
+    <div class="menu-nav">
+        <button #hamburger (mousedown)="toggleOverlay($event)" class="hamburger hamburger--elastic pull-right" type="button">
+            <span class="hamburger-box">
+                <span class="hamburger-inner"></span>
+            </span>
+        </button>
+    </div>
 </div>
-
 <div class="textNextShot" *ngIf="renderService._angularInfo.showText">
     {{_textToShow}}
 </div>
@@ -88,16 +89,18 @@
 </div>
 
 <!-- The overlay -->
-<div #overlay id="myNav" class="overlay">
-    <div class="overlay-content">
-        <div class="overlay-box col-md-2 col-md-offset-5">
-            <button (click)="gameOver()" type="button" class="btn btn-lg btn-block btn-danger">
-                <span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Abandonner
-            </button>
+<div *ngIf="!gameStatusService.isFinished">
+    <div #overlay id="myNav" class="overlay">
+        <div class="overlay-content">
+            <div class="overlay-box col-md-2 col-md-offset-5">
+                <button (click)="gameOver()" type="button" class="btn btn-lg btn-block btn-danger">
+                    <span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Abandonner
+                </button>
 
-            <button (click)="restartGame()" type="button" class="btn btn-lg btn-block btn-success">
-                <span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span> Recommencer
-            </button>
+                <button (click)="restartGame()" type="button" class="btn btn-lg btn-block btn-success">
+                    <span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span> Recommencer
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -127,12 +130,15 @@
             </div>
 
             <div class="endGame-buttons">
-                <p (click)="restartGame()">
+                <button id="restartButton" (click)="restartGame()">
                     <span class="glyphicons glyphicons-roundabout" aria-hidden="true"></span> Commencer une nouvelle partie
-                </p>
-                <p (click)="returnHomePage()">
+                </button>
+                <button id="backButton" (click)="returnHomePage()">
                     <span class="glyphicons glyphicons-home" aria-hidden="true"></span> Retourner à la page d'acceuil
-                </p>
+                </button>
+                <button id="toggleButton" (click)="toggle()">
+                    <span class="glyphicons glyphicons-home" aria-hidden="true"></span> Retourner à la page d'acceuil
+                </button>
             </div>
         </div>
     </div>
