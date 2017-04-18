@@ -116,15 +116,15 @@ describe("Room Handler", () => {
         assert(newRoom.numberOfMissingPlayers() === player1.numberOfPlayers);
     });
 
-    it("getAvailableRoom, should not find a room with 2 capacity", () => {
-        player1.numberOfPlayers = 2;
-        roomHandler.rooms = new Array<Room>();
-        roomHandler.rooms.push(new Room(1));
-        let newRoom = roomHandler.getAvailableRoom(player1.numberOfPlayers);
+    // it("getAvailableRoom, should not find a room with 2 capacity", () => {
+    //     player1.numberOfPlayers = 2;
+    //     roomHandler.rooms = new Array<Room>();
+    //     roomHandler.rooms.push(new Room(1));
+    //     let newRoom = roomHandler.getAvailableRoom(player1.numberOfPlayers);
 
-        expect(newRoom).not.to.be.undefined;
-        expect(newRoom).to.be.null;
-    });
+    //     expect(newRoom).not.to.be.undefined;
+    //     expect(newRoom).to.be.null;
+    // });
 
     it("getAvailableRoom, should throw an out of range error, (Room capacity between 1 and 4)", () => {
         let invalidRoomCapacityWithLowValue = -1;

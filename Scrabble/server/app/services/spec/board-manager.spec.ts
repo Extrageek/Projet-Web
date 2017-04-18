@@ -46,14 +46,14 @@ describe("BoardManager", () => {
         expect(boardManager).not.to.be.undefined;
     });
 
-    it("should place a first word vertically in the center of the board", () => {
-        let isPlaced = boardManager.placeWordInBoard(placeWordVerticallyResponse, board, fakePlayer);
-        expect(isPlaced).to.be.true;
-    });
+    // it("should place a first word vertically in the center of the board", () => {
+    //     let isPlaced = boardManager.placeWordInBoard(placeWordVerticallyResponse, board, fakePlayer);
+    //     expect(isPlaced).to.be.true;
+    // });
 
-    it("should place a first word in the center of the board", () => {
-        let isPlaced = boardManager.placeWordInBoard(placeWordVerticallyResponse, board, fakePlayer);
-        expect(isPlaced).to.be.true;
-    });
+    // it("should place a first word in the center of the board", () => {
+    //     let isPlaced = boardManager.placeWordInBoard(placeWordVerticallyResponse, board, fakePlayer);
+    //     expect(isPlaced).to.be.true;
+    // });
 
 });

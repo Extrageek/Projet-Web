@@ -174,6 +174,8 @@ export class SocketConnectionHandler {
                         newEasel = room.letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
                         if (room.isGameOver) {
                             let winnerUsername = room.getWinnerUsername();
+                            console.log("GAME OVER");
+
                             this._socket.to(room.roomId).emit(SocketEventType.gameOver, winnerUsername);
                         }
                         else {
@@ -306,7 +308,7 @@ export class SocketConnectionHandler {
                             message);
 
                         // Emit a message for the other players in the room.
-                        this._socket.to(playerRoom.roomId).emit(SocketEventType.playerCanceled, roomMessage);
+                        this._socket.to(playerRoom.roomId).emit(SocketEventType.playerLeftRoom, roomMessage);
                     }
 
 
@@ -318,7 +320,7 @@ export class SocketConnectionHandler {
     // On player disconnect event
     private subscribeToLeavingEvent(socket: SocketIO.Socket) {
 
-        socket.on((SocketEventType.leaveRoom), () => {
+        socket.on((SocketEventType.playerLeftRoom), () => {
             let leavingPlayer = this._roomHandler.getPlayerBySocketId(socket.id);
 
             if (leavingPlayer) {
@@ -362,7 +364,7 @@ export class SocketConnectionHandler {
             message);
 
         // Emit a message for the other players in the room.
-        this._socket.to(playerRoom.roomId).emit(SocketEventType.leaveRoom, roomMessage);
+        this._socket.to(playerRoom.roomId).emit(SocketEventType.playerLeftRoom, roomMessage);
 
         // If the room is empty, remove it
         if (playerRoom.players.count === 0) {

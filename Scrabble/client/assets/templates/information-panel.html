@@ -1,35 +1,31 @@
 <p class="info-title">
-    Information panel</p>
+<i class="material-icons">info_outline</i> INFORMATIONS
+</p>
 
 <div class="info-elements">
     <div>
-        <div>Temps restant <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-        </div>
-        <div>{{ printMinutes() }}: {{ printSeconds() }}</div>
+        <span>TEMPS RESTANT - </span>
+        <span>{{ printMinutes() }}: {{ printSeconds() }}</span>
     </div>
     <div>
-        <div>Actif
-            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-        </div>
-        <div>{{ getCurrentPlayer() }}</div>
+        <span>VOUS - </span>
+        <span>{{ _username }}</span>
     </div>
     <div>
-        <div>Score
-            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-        </div>
-        <div>{{ getScore() }}</div>
+        <span>JOUEUR ACTIF - </span>
+        <span>{{ getCurrentPlayer() }}</span>
+    </div>
+    <div>
+        <span>SCORE - </span>
+        <span>{{ getScore() }}</span>
     </div>
     <div *ngIf="_lettersOnEasel < 7">
-        <div>Chevalet
-            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-        </div>
-        <div>{{ _lettersOnEasel }}</div>
+        <span>LETTRES SUR LE CHEVALET - </span>
+        <span>{{ _lettersOnEasel }}</span>
     </div>
     <div>
-        <div>En banque
-            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-        </div>
-        <div>{{ _lettersInBank }}</div>
+        <span>LETTRES EN BANQUE - </span>
+        <span>{{ _lettersInBank }}</span>
     </div>
     <div *ngIf="_winner !== ''">
         <div *ngIf="_isWinner" class="alert alert-success" role="alert">
