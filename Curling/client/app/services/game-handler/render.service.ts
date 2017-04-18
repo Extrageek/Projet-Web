@@ -11,6 +11,7 @@ import { LightingService } from "../views/ligthing.service";
 import { ParticlesService } from "../game-physics/particles.service";
 import { SoundManager } from "../sound-manager";
 import { UserService } from "../user.service";
+import { RestApiProxyService } from "../rest-api-proxy.service";
 
 import { StoneHandler } from "../game-physics/stone-handler";
 import { TextureHandler } from "../views/texture-handler";
@@ -45,7 +46,8 @@ export class RenderService {
 
     constructor(gameStatusService: GameStatusService,
         lightingService: LightingService,
-        userService: UserService) {
+        userService: UserService,
+        restApiProxyService: RestApiProxyService) {
 
         this._gameServices = {
             cameraService: null,
@@ -53,7 +55,8 @@ export class RenderService {
             soundService: null,
             stoneHandler: null,
             textureHandler: null,
-            userService: userService
+            userService: userService,
+            proxyService: restApiProxyService
         };
 
         this._gameInfo = {

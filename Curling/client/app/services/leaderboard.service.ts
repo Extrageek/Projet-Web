@@ -17,10 +17,6 @@ export class LeaderboardService {
         this.records = new Array<Record>();
     }
 
-    public addRecord(record: Record): void {
-        this.records.push(record);
-    }
-
     public async fetchRecords() {
         await this.api.getAllRecords()
             .then(results => {

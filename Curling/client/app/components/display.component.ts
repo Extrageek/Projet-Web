@@ -30,8 +30,6 @@ export class DisplayComponent implements OnInit {
     @HostListener("window:beforeunload")
     public async saveAndLogout() {
         await this.api.removeUsername(this._userSettingService.username);
-        await this.api.createGameRecord(this._userSettingService.username,
-            this._userSettingService.difficulty, this.gameStatusService);
     }
 
     @HostListener("window:resize", ["$event"])
@@ -101,10 +99,6 @@ export class DisplayComponent implements OnInit {
     }
 
     public gameOver(): void {
-        this.api.createGameRecord(
-            this._userSettingService.username,
-            this._userSettingService.difficulty,
-            this.gameStatusService);
         this.api.removeUsername(this._userSettingService.username);
         this.renderService.removeCanvasElement();
         this.renderService.stopGame();
@@ -112,9 +106,6 @@ export class DisplayComponent implements OnInit {
     }
 
     public restartGame() {
-        this.api.createGameRecord(this._userSettingService.username,
-            this._userSettingService.difficulty, this.gameStatusService);
-
         this.renderService.stopGame().then(() => {
             this.router.navigate(["/difficulty"]);
         });

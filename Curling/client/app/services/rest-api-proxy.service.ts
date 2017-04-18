@@ -17,31 +17,28 @@ export class RestApiProxyService {
         // Default
     }
 
-    public async createGameRecord(username: string,
-        computerDifficulty: Difficulty,
-        gameStatus: GameStatusService): Promise<boolean> {
-        return await this.http
-            .post(this._urlApi + "game-over", JSON.stringify({
-                username: username,
-                difficulty: computerDifficulty,
-                scorePlayer: gameStatus.scorePlayer,
-                scoreComputer: gameStatus.scoreComputer,
-                set: gameStatus.currentSet,
-                date: new Date()
-            }), { headers: this._headers })
-            .toPromise()
-            .then(response => {
-                if (response.status === 200) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            })
-            .catch(error => {
-                console.log("ERROR in RestApiProxyService - createGameRecord. ", error);
-                throw error;
-            });
+    public async createGameRecord(record: Record): Promise<boolean> {
+            return await this.http
+                .post(this._urlApi + "game-over", JSON.stringify({
+                    username: record.username,
+                    difficulty: record.difficulty,
+                    scorePlayer: record.scorePlayer,
+                    scoreComputer: record.scoreComputer,
+                    date: new Date()
+                }), { headers: this._headers })
+                .toPromise()
+                .then(response => {
+                    if (response.status === 200) {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                })
+                .catch(error => {
+                    console.log("ERROR in RestApiProxyService - createGameRecord. ", error);
+                    throw error;
+                });
     }
 
     public async verifyUsername(username: string): Promise<boolean> {
