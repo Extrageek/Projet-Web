@@ -79,6 +79,7 @@ export class DisplayComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.leaderboardService.fetchRecords(); 
         this._userSettingService = this.userService;
         if (this._userSettingService.username === "") {
             this.router.navigate(["/"]);
@@ -99,9 +100,10 @@ export class DisplayComponent implements OnInit {
     }
 
     public gameOver(): void {
-        this.api.createGameRecord(this._userSettingService.username,
-            this._userSettingService.difficulty, this.gameStatusService);
-
+        this.api.createGameRecord(
+            this._userSettingService.username,
+            this._userSettingService.difficulty,
+            this.gameStatusService);
         this.api.removeUsername(this._userSettingService.username);
         this.renderService.removeCanvasElement();
         this.renderService.stopGame();

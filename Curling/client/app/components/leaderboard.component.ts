@@ -18,6 +18,7 @@ export class LeaderboardComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.leaderboardService.fetchRecords();
         this.makeTableScroll();
     }
 

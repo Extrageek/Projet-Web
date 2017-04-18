@@ -14,7 +14,7 @@ export class LeaderboardService {
     }
 
     constructor(private api?: RestApiProxyService) {
-        this.fetchRecords();
+        this.records = new Array<Record>();
     }
 
     public addRecord(record: Record): void {
