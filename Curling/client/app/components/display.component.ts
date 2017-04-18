@@ -107,10 +107,10 @@ export class DisplayComponent implements OnInit {
     }
 
     public returnHomePage() {
+        this.api.removeUsername(this._userSettingService.username);
         this.gameStatusService.resetGameStatus();
         this.renderService.stopGame().then(() => {
             this.router.navigate(["/user"]);
         });
-        this.api.removeUsername(this._userSettingService.username);
     }
 }
