@@ -21,6 +21,7 @@ export class UsernameComponent implements OnInit {
         private router: Router,
         private restApiProxyService: RestApiProxyService,
         private userSettingService: UserService) {
+        // Default
     }
 
     ngOnInit() {

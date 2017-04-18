@@ -1,4 +1,4 @@
-import { GameStatusService } from './../game-status.service';
+import { GameStatusService } from "./../game-status.service";
 import { CurrentPlayer } from "./../../models/current-player";
 
 import { expect } from "chai";

@@ -3,7 +3,7 @@ import { Record } from "../models/record";
 import { RestApiProxyService } from "./rest-api-proxy.service";
 
 @Injectable()
-export class LeaderBoardService {
+export class LeaderboardService {
 
     private _records: Array<Record>;
     public get records(): Array<Record> {
@@ -13,8 +13,8 @@ export class LeaderBoardService {
         this._records = records;
     }
 
-    constructor(private api: RestApiProxyService) {
-        //Default
+    constructor(private api?: RestApiProxyService) {
+        this.records = new Array<Record>();
     }
 
     public addRecord(record: Record): void {

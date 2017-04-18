@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { Router } from "@angular/router";
 
-import { LeaderBoardService } from "../services/leaderboard.service";
+import { LeaderboardService } from "../services/leaderboard.service";
 
 @Component({
     selector: "leaderboard-component",
@@ -14,7 +14,7 @@ export class LeaderboardComponent implements OnInit {
 
     public constructor(
         private router: Router,
-        public leaderboardService: LeaderBoardService) {
+        public leaderboardService: LeaderboardService) {
     }
 
     public ngOnInit(): void {

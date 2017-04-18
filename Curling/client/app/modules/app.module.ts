@@ -18,14 +18,14 @@ import { RestApiProxyService } from "./../services/rest-api-proxy.service";
 import { UserService } from "./../services/user.service";
 import { GameStatusService } from "./../services/game-status.service";
 import { LightingService } from "./../services/views/ligthing.service";
-import { LeaderBoardService } from "./../services/leaderboard.service";
+import { LeaderboardService } from "./../services/leaderboard.service";
 
 @NgModule({
   imports: [BrowserModule, FormsModule, AppRoutingModule, MaterialModule],
   declarations: [AppComponent, LeaderboardComponent, ModifierDirective,
     UsernameComponent, DifficultyComponent, DisplayComponent],
   providers: [RenderService, RestApiProxyService, UserService,
-    GameStatusService, LightingService, LeaderBoardService],
+    GameStatusService, LightingService, LeaderboardService],
   bootstrap: [AppComponent]
 })
 
