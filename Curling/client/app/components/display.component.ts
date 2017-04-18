@@ -79,7 +79,7 @@ export class DisplayComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.leaderboardService.fetchRecords(); 
+        this.leaderboardService.fetchRecords();
         this._userSettingService = this.userService;
         if (this._userSettingService.username === "") {
             this.router.navigate(["/"]);
@@ -120,10 +120,17 @@ export class DisplayComponent implements OnInit {
     }
 
     public returnHomePage() {
-        this.router.navigate(["/"]);
+        this.gameStatusService.resetGameStatus();
+        this.renderService.stopGame().then(() => {
+            this.router.navigate(["/user"]);
+        });
     }
 
-    public toggle() {
-        this.gameStatusService.isFinished = false;
+    public startNewGame() {
+        this.gameStatusService.resetGameStatus();
+        this.renderService.stopGame().then(() => {
+            this.router.navigate(["/game"]);
+            this.renderService.initAndStart();
+        });
     }
 }
