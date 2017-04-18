@@ -105,6 +105,7 @@ export class DisplayComponent implements OnInit {
     }
 
     public restartGame() {
+        this.gameStatusService.resetGameStatus();
         this.renderService.stopGame().then(() => {
             this.router.navigate(["/difficulty"]);
         });
@@ -116,12 +117,5 @@ export class DisplayComponent implements OnInit {
             this.router.navigate(["/user"]);
         });
         this.api.removeUsername(this._userSettingService.username);
-    }
-
-    public startNewGame() {
-        this.gameStatusService.resetGameStatus();
-        this.renderService.stopGame().then(() => {
-            this.router.navigate(["/difficulty"]);
-        });
     }
 }
