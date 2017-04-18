@@ -1,11 +1,12 @@
-<div class="menu-nav">
-    <button #hamburger (mousedown)="toggleOverlay($event)" class="hamburger hamburger--elastic pull-right" type="button">
-        <span class="hamburger-box">
-            <span class="hamburger-inner"></span>
-        </span>
-    </button>
+<div *ngIf="!gameStatusService.isFinished">
+    <div class="menu-nav">
+        <button #hamburger (mousedown)="toggleOverlay($event)" class="hamburger hamburger--elastic pull-right" type="button">
+            <span class="hamburger-box">
+                <span class="hamburger-inner"></span>
+            </span>
+        </button>
+    </div>
 </div>
-
 <div class="textNextShot" *ngIf="renderService._angularInfo.showText">
     {{_textToShow}}
 </div>
@@ -37,7 +38,7 @@
     <div class="col-sm-12">
         <div class="col-sm-4 pull-left">
             <div id="playerName" class="pull-left">
-                {{_userSetting._name}}
+                {{_userSettingService.username}}
             </div>
         </div>
         <div id="gameInfo" class="col-sm-4">
@@ -45,7 +46,6 @@
                 {{gameStatusService.scorePlayer}} - {{gameStatusService.scoreComputer}}
             </div>
             <div id="gameSet" class="col-sm-12">
-                <!--TODO : METTRE NG-FOR-->
                 <div class="col-sm-5">
                     <div *ngIf="gameStatusService.currentSet < 1" id="firstSetToDo" class="pull-right"></div>
                     <div *ngIf="gameStatusService.currentSet >= 1" id="firstSetDone" class="pull-right"></div>
@@ -67,7 +67,7 @@
         </div>
         <div class="col-sm-1">
         </div>
-        <!--TODO : METTRE NG-FOR-->
+
         <div class="col-sm-12">
             <div id="playerStones" class="pull-left col-sm-3">
                 <div *ngFor="let stone of gameStatusService.currentStonesPlayer">
@@ -89,9 +89,54 @@
 </div>
 
 <!-- The overlay -->
-<div #overlay id="myNav" class="overlay">
-    <div class="overlay-content">
-        <p (click)="gameOver()"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Abandonner</p>
-        <p (click)="restartGame()"><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span> Recommencer</p>
+<div *ngIf="!gameStatusService.isFinished">
+    <div #overlay id="myNav" class="overlay">
+        <div class="overlay-content">
+            <div class="overlay-box col-md-2 col-md-offset-5">
+                <button (click)="gameOver()" type="button" class="btn btn-lg btn-block btn-danger">
+                    <span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Abandonner
+                </button>
+
+                <button (click)="restartGame()" type="button" class="btn btn-lg btn-block btn-success">
+                    <span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span> Recommencer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="gameStatusService.isFinished">
+    <div id="endGame-window" class="endGame-overlay">
+        <div class="endGame-window-content">
+            <div class="leaderboard-content">
+                <table id="lead-table" class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+                    <thead>
+                        <tr>
+                            <th class="mdl-data-table__cell--non-numeric ">Pseudonyme</th>
+                            <th>Score Joueur</th>
+                            <th>Score CPU</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let record of leaderboardService.records">
+                            <td>{{record._username}}</td>
+                            <td>{{record._scorePlayer}}</td>
+                            <td>{{record._scoreComputer}}</td>
+                            <td>{{record._date}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="endGame-buttons">
+                <button id="newGame-button" (click)="startNewGame()">
+                    <span class="glyphicons glyphicons-roundabout" aria-hidden="true"></span> Commencer une nouvelle partie
+                </button>
+                <button id="back-button" (click)="returnHomePage()">
+                    <span class="glyphicons glyphicons-home" aria-hidden="true"></span> Retourner à la page d'acceuil
+                </button>
+            </div>
+        </div>
     </div>
 </div>

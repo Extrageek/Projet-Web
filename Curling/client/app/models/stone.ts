@@ -30,8 +30,8 @@ export class Stone extends Group implements IGameState {
     private static readonly SECONDS_PER_FULL_ROTATION = 4;
     private static readonly UPPER_BOUNCE_BOUND = 5;
     private static readonly LOWER_BOUNCE_BOUND = 3;
-    private static readonly UPPER_BOUNCE_INCREMENT_BOUND = 0.1;
-    private static readonly LOWER_BOUNCE_INCREMENT_BOUND = 0.05;
+    private static readonly UPPER_BOUNCE_INCREMENT_BOUND = 0.5;
+    private static readonly LOWER_BOUNCE_INCREMENT_BOUND = 0.1;
     private static _stoneGlow: Group;
 
     private readonly ILLUMINATION_GROUP_NAME = "StoneGlow";

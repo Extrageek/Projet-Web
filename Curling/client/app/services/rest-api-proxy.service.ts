@@ -13,7 +13,9 @@ export class RestApiProxyService {
     private _urlApi = "http://localhost:3003/api/";
     private _headers = new Headers({ "Content-Type": "application/json" });
 
-    constructor(private http: Http) { }
+    constructor(private http: Http) {
+        // Default
+    }
 
     public async createGameRecord(username: string,
         computerDifficulty: Difficulty,

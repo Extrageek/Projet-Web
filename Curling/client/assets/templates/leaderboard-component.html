@@ -15,7 +15,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let record of _records">
+            <tr *ngFor="let record of leaderboardService.records">
                 <td>{{record._username}}</td>
                 <td>{{record._scorePlayer}}</td>
                 <td>{{record._scoreComputer}}</td>
