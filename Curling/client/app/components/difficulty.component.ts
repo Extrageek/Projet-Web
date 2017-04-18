@@ -21,9 +21,6 @@ export class DifficultyComponent implements OnInit {
 
     ngOnInit() {
         this._username = UserService._username;
-
-        console.log("diff username", UserService._username);
-
         if (this._username === "") {
             this.router.navigate(["/"]);
         }

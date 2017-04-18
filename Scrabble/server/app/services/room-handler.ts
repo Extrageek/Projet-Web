@@ -75,7 +75,7 @@ export class RoomHandler {
         }
 
         let room = this._rooms.find((element) => {
-            return !element.isFull() && element.roomCapacity === roomCapacity;
+            return !element.isFull() && element.roomCapacity === roomCapacity && element.board.isEmpty;
         });
         return room;
     }

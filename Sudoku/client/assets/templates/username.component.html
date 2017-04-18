@@ -7,7 +7,7 @@
             <strong>Pseudonyme déjà existant.</strong> Essayez-en un autre!
         </div>
         <md-input-container class="example-full-width">
-            <input mdInput #username (change)="activateLoginNext()" placeholder="Pseudonyme">
+            <input mdInput autofocus #username (change)="activateLoginNext()" placeholder="Entrez votre pseudo...">
         </md-input-container>
         <button id="loginNext" type="submit" class="btn btn-primary btn-lg" *ngIf="_isLoginNextActivated" (click)="verifyUsername(username.value)">
             <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
