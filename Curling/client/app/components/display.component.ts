@@ -14,7 +14,8 @@ import { RenderService } from "../services/game-handler/render.service";
     styleUrls: [
         "../../assets/stylesheets/display-component.css",
         "../../assets/stylesheets/menu-hamburger.css",
-        "../../assets/stylesheets/gl-component.css"
+        "../../assets/stylesheets/gl-component.css",
+        "../../assets/stylesheets/leaderboard-component.css"
     ]
 })
 export class DisplayComponent implements OnInit {
@@ -119,5 +120,9 @@ export class DisplayComponent implements OnInit {
 
     public returnHomePage() {
         this.router.navigate(["/"]);
+    }
+
+    public toggle() {
+        this.gameStatusService.isFinished = false;
     }
 }

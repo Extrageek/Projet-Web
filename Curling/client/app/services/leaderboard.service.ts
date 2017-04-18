@@ -14,20 +14,21 @@ export class LeaderBoardService {
     }
 
     constructor(private api: RestApiProxyService) {
-        //Default
+        this.fetchRecords();
     }
 
     public addRecord(record: Record): void {
         this.records.push(record);
     }
 
-    public async fetchRecords(): Promise<void> {
+    public async fetchRecords() {
         await this.api.getAllRecords()
             .then(results => {
                 this.records = results;
             })
             .catch(error => {
-                this.records = new Array<Record>();
+                // this.records = new Array<Record>();
+                console.log(error);
             });
     }
 }
