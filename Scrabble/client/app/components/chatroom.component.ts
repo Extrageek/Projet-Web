@@ -1,4 +1,3 @@
-import { IGameMessage } from './../commons/messages/game-message.interface';
 import { Component, OnInit, OnDestroy, AfterViewChecked, ElementRef, ViewChild } from "@angular/core";
 import { Subscription } from "rxjs/Subscription";
 
