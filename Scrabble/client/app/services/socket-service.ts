@@ -17,7 +17,7 @@ export class SocketService {
     _playersPriorityQueue: Array<string>;
     private _player: Player;
     private _missingPlayers: number;
-    private _serverUri: string = 'http://localhost:' + SERVER_PORT;
+    private _serverUri: string = window.location.hostname + ":" + SERVER_PORT;
 
     public get missingPlayers(): number {
         return this._missingPlayers;
