@@ -131,7 +131,6 @@ export class DisplayComponent implements OnInit {
         this.gameStatusService.resetGameStatus();
         this.renderService.stopGame().then(() => {
             this.router.navigate(["/difficulty"]);
-            this.renderService.initAndStart();
         });
     }
 }
