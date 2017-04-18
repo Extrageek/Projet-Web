@@ -17,10 +17,11 @@ export class DifficultyComponent implements OnInit {
 
     constructor(
         private router: Router,
-        private api: RestApiProxyService) { }
+        private api: RestApiProxyService,
+        private userService: UserService) { }
 
     ngOnInit() {
-        this._username = UserService._username;
+        this._username = this.userService.username;
         if (this._username === "") {
             this.router.navigate(["/"]);
         }
@@ -35,9 +36,9 @@ export class DifficultyComponent implements OnInit {
     public launchGame() {
         const RADIX = 10;
         if (parseInt(this._difficulty, RADIX) === 0) {
-            UserService._difficulty = Difficulty.NORMAL;
+            this.userService.difficulty = Difficulty.NORMAL;
         } else {
-            UserService._difficulty = Difficulty.HARD;
+            this.userService.difficulty = Difficulty.HARD;
         }
         this.router.navigate(["/game"]);
     }

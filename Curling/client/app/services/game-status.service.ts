@@ -122,6 +122,7 @@ export class GameStatusService {
         this.currentSet = GameStatusService.DEFAULT_SET;
         this.resetStones();
         this.isLaunched = true;
+        this.isFinished = false;
         this.currentPlayer = CurrentPlayer.INVALID;
     }
 

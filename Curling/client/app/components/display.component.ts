@@ -14,10 +14,10 @@ import { RenderService } from "../services/game-handler/render.service";
     styleUrls: [
         "../../assets/stylesheets/display-component.css",
         "../../assets/stylesheets/menu-hamburger.css",
-        "../../assets/stylesheets/gl-component.css",
-        "../../assets/stylesheets/leaderboard-component.css"
+        "../../assets/stylesheets/gl-component.css"
     ]
 })
+
 export class DisplayComponent implements OnInit {
     _userSettingService: UserService;
     _computerName: string;
@@ -29,8 +29,6 @@ export class DisplayComponent implements OnInit {
     @HostListener("window:beforeunload")
     public async saveAndLogout() {
         await this.api.removeUsername(this._userSettingService.username);
-        await this.api.createGameRecord(this._userSettingService.username,
-            this._userSettingService.difficulty, this.gameStatusService);
     }
 
     @HostListener("window:resize", ["$event"])
@@ -41,11 +39,6 @@ export class DisplayComponent implements OnInit {
     @HostListener("window:keydown.space", ["$event"])
     public disableScrollingWithSpace(event: KeyboardEvent) {
         event.preventDefault();
-    }
-
-    @HostListener("window:keydown", ["$event"])
-    public keyDown(event: KeyboardEvent) {
-        this.renderService.switchSpin(event);
     }
 
     @HostListener("window:keyup.space", ["$event"])
@@ -100,10 +93,6 @@ export class DisplayComponent implements OnInit {
     }
 
     public gameOver(): void {
-        this.api.createGameRecord(
-            this._userSettingService.username,
-            this._userSettingService.difficulty,
-            this.gameStatusService);
         this.api.removeUsername(this._userSettingService.username);
         this.renderService.removeCanvasElement();
         this.renderService.stopGame();
@@ -111,26 +100,17 @@ export class DisplayComponent implements OnInit {
     }
 
     public restartGame() {
-        this.api.createGameRecord(this._userSettingService.username,
-            this._userSettingService.difficulty, this.gameStatusService);
-
+        this.gameStatusService.resetGameStatus();
         this.renderService.stopGame().then(() => {
             this.router.navigate(["/difficulty"]);
         });
     }
 
     public returnHomePage() {
+        this.api.removeUsername(this._userSettingService.username);
         this.gameStatusService.resetGameStatus();
         this.renderService.stopGame().then(() => {
             this.router.navigate(["/user"]);
-        });
-    }
-
-    public startNewGame() {
-        this.gameStatusService.resetGameStatus();
-        this.renderService.stopGame().then(() => {
-            this.router.navigate(["/game"]);
-            this.renderService.initAndStart();
         });
     }
 }

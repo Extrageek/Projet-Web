@@ -11,6 +11,7 @@ const WORD_7_LETTERS = 7;
 const BONUS_DOUBLE = 2;
 const BONUS_TRIPLE = 3;
 const BONUS_WORD_7_LETTERS = 50;
+const INITIAL_SCORE = 0;
 
 export class VerificationService {
     private _score: number;
@@ -18,12 +19,12 @@ export class VerificationService {
     public get score(): number {
         return this._score;
     }
-    public set score(v: number) {
-        this._score = v;
+    public set score(score: number) {
+        this._score = score;
     }
 
     constructor() {
-        this._score = 0;
+        this._score = INITIAL_SCORE;
     }
 
     public verifyWordsCreated(response: IPlaceWordResponse, board: Board): boolean {
@@ -93,8 +94,7 @@ export class VerificationService {
             let isSquareNewLetter =
                 board.lastLettersAdded[indexLastLettersAdded] !== undefined
                 && board.lastLettersAdded[indexLastLettersAdded].column - 1 === firstColumnIndex + indexOffset
-                && BoardHelper.convertCharToIndex(board.lastLettersAdded[indexLastLettersAdded].row)
-                === rowIndex;
+                && BoardHelper.convertCharToIndex(board.lastLettersAdded[indexLastLettersAdded].row) === rowIndex;
             indexLastLettersAdded += (isSquareNewLetter) ? 1 : 0;
 
             scoreWord += this.calculateScoreLetterInSquare(square, isSquareNewLetter);

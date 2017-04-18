@@ -58,6 +58,10 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
         return this._hasNewMessages;
     }
 
+    public get messageArray(): Array<IGameMessage> {
+        return this._messageArray.slice(0);
+    }
+
     private onCommandRequest(): Subscription {
         return this.socketService.subscribeToChannelEvent(SocketEventType.COMMAND_REQUEST)
             .subscribe((response: ICommandMessage<any>) => {
