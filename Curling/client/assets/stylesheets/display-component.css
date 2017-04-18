@@ -123,16 +123,18 @@ display-component {
     border-radius: 24px 24px;
     padding: 13px;
 }
+
 table {
     width: 60%;
     margin-left: 18%;
 }
+
 #endGame-window {
     background-color: rgba(122, 133, 255, 0.9);
     height: 100%;
     width: 100%;
-    position: fixed; 
-    z-index: 3; 
+    position: fixed;
+    z-index: 3;
     left: 0;
     top: 0;
     overflow-y: auto;
@@ -145,6 +147,7 @@ table {
     text-align: center;
     margin-top: 30px;
 }
+
 #newGame-button {
     position: fixed;
     top: 30px;
@@ -155,4 +158,13 @@ table {
     position: fixed;
     top: 80px;
     right: 20px;
+}
+
+.counterclockwiseArrow {
+    width: 4vw !important;
+    height: 6vh !important;
+    position: absolute;
+    top: 87vh !important;
+    right: 48vw !important;
+    z-index: 4 !important;
 }

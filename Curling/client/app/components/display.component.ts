@@ -41,11 +41,6 @@ export class DisplayComponent implements OnInit {
         event.preventDefault();
     }
 
-    @HostListener("window:keydown", ["$event"])
-    public keyDown(event: KeyboardEvent) {
-        this.renderService.switchSpin(event);
-    }
-
     @HostListener("window:keyup.space", ["$event"])
     public spaceKeyPressed(event: KeyboardEvent) {
         this.renderService.switchCamera();

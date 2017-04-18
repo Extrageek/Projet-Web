@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit, Input } from "@angular/core";
+import { Component, ViewChild, ElementRef, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { RestApiProxyService } from "../services/rest-api-proxy.service";
@@ -21,7 +21,7 @@ export class UsernameComponent implements OnInit {
         private router: Router,
         private restApiProxyService: RestApiProxyService,
         private userSettingService: UserService) {
-        // Default
+        // Default constructor
     }
 
     ngOnInit() {
