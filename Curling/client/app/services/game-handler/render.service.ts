@@ -122,13 +122,6 @@ export class RenderService {
             this._scene.add(rink);
             this._gameInfo.rink = rink;
         });
-        /*
-        This model was commented because it is too heavy to reader for the CPU and makes the game lag.
-        initialisator.addObjectToInitialize<Arena>(Arena.createArena, [this._objectLoader])
-            .then((arena: Arena) => {
-                this._scene.add(arena);
-        });
-        */
         initialisator.addObjectToInitialize<Broom>(
             Broom.createBroom,
             [this._objectLoader, this._scene, new Vector3(0, 0, -11.4)])
