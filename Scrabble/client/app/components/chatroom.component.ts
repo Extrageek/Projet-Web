@@ -83,7 +83,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
 
     // A callback when the player leave a room
     private onLeaveRoom(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.LEAVE_ROOM)
+        return this.socketService.subscribeToChannelEvent(SocketEventType.PLAYER_LEFT_ROOM)
             .subscribe((response: IRoomMessage) => {
                 if (response !== undefined && response._message !== null) {
                     this._messageArray.push(response);

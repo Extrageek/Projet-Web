@@ -25,13 +25,11 @@ export class SocketEventType {
     static joinRoom = "joinedRoom";
 
     // A joined room event.
-    static leaveRoom = "leaveRoom";
+    static playerLeftRoom = "playerLeftRoom";
 
     // A ready state event for a room.
     static roomReady = "roomReady";
     static message = "message";
-
-    static playerCanceled = "playerCanceled";
 
     static initializeEasel = "initializeEasel";
     static updatePlayersQueue = "updatePlayersQueue";

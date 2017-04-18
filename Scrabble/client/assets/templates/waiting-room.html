@@ -1,31 +1,43 @@
-<div class="container">
-    <h1 class="centered">Scrabble - 23</h1>
-
-</div>
-<div class="col-xs-12 header">
-    <div class="col-xs-12 col-sm-6 header">
+<!-- HEADER -->
+<div class="header">
+    <div class="col-sm-6">
         <img src="../assets/images/Scrabble_Logo.png" alt="logo" />
     </div>
-    <div class="col-xs-12 col-sm-6 header">
-        <!--player info here-->
+    <div *ngIf="_username !== '' && _username !== undefined" class="col-sm-6">
+        <div class="pull-right">
+            <md-chip-list id="login-info">
+                <md-chip>
+                    <div><i class="material-icons">account_circle</i></div>
+                    <div class="vertical-center">{{ _username }}</div>
+                </md-chip>
+            </md-chip-list>
+            <button md-fab class="btn-cancel" (click)="cancelGame()">
+                <i class="material-icons icon-medium-size">exit_to_app</i>
+            </button>
+        </div>
     </div>
 </div>
+
+<!-- CONTENT -->
 <div class="col-xs-12 content vertical-center">
-    <md-card class="container">
+    <md-card class="center-block col-xs-10 col-sm-8 col-md-5 col-lg-3">
         <md-card-header>
-            <div md-card-avatar class="example-header-image"></div>
-            <md-card-title>LOGIN</md-card-title>
+            <md-card-title>RECHERCHE DE JOUEURS...</md-card-title>
         </md-card-header>
         <md-card-content>
-            <div *ngIf="this !== undefined" class="info centered">
-                <h3>Nombre de joueurs manquant : {{ numberOfPlayerMissing }} </h3>
+            <div *ngIf="this !== undefined" class="info center-block vertical-center">
+                <!--<h3>{{ numberOfPlayerMissing }} joueur<span *ngIf="numberOfPlayerMissing > 1">s</span> manquant<span *ngIf="numberOfPlayerMissing > 1">s</span></h3>-->
+                <span>Joueurs dans la partie : </span>
+                <span *ngFor="let player of _numberOfPlayerConnected"><i class="material-icons icon-medium-size brown">person</i></span>
+                <span *ngFor="let player of _numberOfPlayerMissing"><i class="material-icons icon-medium-size brown">person_outline</i></span>
             </div>
-            <div class="centered">
+            <br/>
+            <div class="center-block vertical-center">
                 <md-spinner color="warm" class="centered"></md-spinner>
             </div>
         </md-card-content>
         <md-card-actions>
-            <button md-button class="btn btn-danger btn-block" (click)="cancelGame()">
+            <button md-raised-button class="btn-form-cancel full-width" (click)="cancelGame()">
             Annuler
             </button>
         </md-card-actions>

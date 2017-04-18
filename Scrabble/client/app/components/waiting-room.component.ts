@@ -15,19 +15,20 @@ import { Player } from "../models/player";
     styleUrls: ["./../../assets/stylesheets/waiting-room.css"]
 })
 export class WaitingRoomComponent implements OnInit, OnDestroy {
-
-    private _numberOfPlayerMissing: number;
+    public _numberOfPlayerMissing: Array<number>;
+    public _numberOfPlayerConnected: Array<number>;
+    public _username: String;
     private _onJoinedRoomSubscription: Subscription;
     private _onCancelationSubscription: Subscription;
 
-    public get numberOfPlayerMissing(): number {
-        return this._numberOfPlayerMissing;
-    }
+    // public get numberOfPlayerMissing(): number {
+    //     return this._numberOfPlayerMissing;
+    // }
 
     constructor(
         private router: Router,
         private socketService: SocketService) {
-        this._numberOfPlayerMissing = this.socketService.missingPlayers;
+        this._numberOfPlayerMissing = Array(this.socketService.missingPlayers).fill(4);
     }
 
     ngOnInit() {
@@ -38,6 +39,9 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
             .subscribe(this.onConnectionError);
         this._onJoinedRoomSubscription = this.onJoinedRoom();
         this._onCancelationSubscription = this.onCancelation();
+        this._username = this.socketService.player.username;
+        this._numberOfPlayerConnected
+            = new Array<number>(this.socketService.player.numberOfPlayers - this.socketService.missingPlayers);
     }
 
     ngOnDestroy() {
@@ -60,18 +64,20 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
 
                     this.router.navigate(["/game-room"]);
                 } else {
-                    this._numberOfPlayerMissing = roomMessage._numberOfMissingPlayers;
+                    this._numberOfPlayerMissing.pop();
+                    this._numberOfPlayerConnected.push(1);
                 }
             });
     }
 
     // A callback when the player join a room
     private onCancelation(): Subscription {
-        return this.socketService.subscribeToChannelEvent(SocketEventType.PLAYER_CANCELED)
+        return this.socketService.subscribeToChannelEvent(SocketEventType.PLAYER_LEFT_ROOM)
             .subscribe((roomMessage: IRoomMessage) => {
 
                 if (!roomMessage._roomIsReady && roomMessage._username !== this.socketService.player.username) {
-                    this._numberOfPlayerMissing = roomMessage._numberOfMissingPlayers;
+                    this._numberOfPlayerMissing.push(1);
+                    this._numberOfPlayerConnected.pop();
                 }
             });
     }
@@ -88,4 +94,3 @@ export class WaitingRoomComponent implements OnInit, OnDestroy {
         this.cancelGame();
     }
 }
-

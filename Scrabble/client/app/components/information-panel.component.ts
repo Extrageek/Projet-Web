@@ -19,6 +19,7 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
     public _minutes: number;
     public _winner: string;
     public _isWinner: boolean;
+    public _username: string;
 
     constructor(private socketService: SocketService) {
         this._lettersOnEasel = 7;
@@ -34,6 +35,7 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
         this.onGameOver();
         this._isWinner = false;
         this._winner = "";
+        this._username = this.socketService.player.username;
     }
 
     ngAfterViewInit() {
