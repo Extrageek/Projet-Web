@@ -5,8 +5,6 @@ import { Difficulty } from "../models/difficulty";
 @Injectable()
 export class UserService {
     public static _username: string;
-    public static _difficulty: Difficulty;
-
     public get username(): string {
         return UserService._username;
     }
@@ -14,6 +12,7 @@ export class UserService {
         UserService._username = value;
     }
 
+    public static _difficulty: Difficulty;
     public get difficulty(): Difficulty {
         return UserService._difficulty;
     }
