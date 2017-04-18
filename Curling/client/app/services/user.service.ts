@@ -4,30 +4,30 @@ import { Difficulty } from "../models/difficulty";
 
 @Injectable()
 export class UserService {
-    public static _username: string;
-    public static _difficulty: Difficulty;
+    public _username: string;
+    public _difficulty: Difficulty;
 
     public get username(): string {
-        return UserService._username;
+        return this._username;
     }
     public set username(value: string) {
-        UserService._username = value;
+        this._username = value;
     }
 
     public get difficulty(): Difficulty {
-        return UserService._difficulty;
+        return this._difficulty;
     }
     public set difficulty(value: Difficulty) {
-        UserService._difficulty = value;
+        this._difficulty = value;
     }
 
     constructor(private api: RestApiProxyService) {
-        UserService._username = "";
-        UserService._difficulty = Difficulty.NORMAL;
+        this._username = "";
+        this._difficulty = Difficulty.NORMAL;
     }
 
     public getComputerName(): string {
-        if (UserService._difficulty === Difficulty.NORMAL) {
+        if (this._difficulty === Difficulty.NORMAL) {
             return "CPU Normal";
         } else {
             return "CPU Difficile";
