@@ -44,4 +44,26 @@ export class Record {
         this._scoreComputer = scoreComputer;
         this._date = (date) ? date : new Date();
     }
+
+    public generateRecord() {
+        let winningScore: number;
+        let loosingScore: number;
+        let playerWon = this._scorePlayer > this._scoreComputer;
+
+        if (playerWon) {
+            winningScore = this._scorePlayer;
+            loosingScore = this._scoreComputer;
+        } else {
+            winningScore = this._scoreComputer;
+            loosingScore = this._scorePlayer;
+        }
+
+        return {
+            username: this._username,
+            difficulty: this._difficulty,
+            winningScore: winningScore,
+            loosingScore: loosingScore,
+            winner: playerWon
+        };
+    }
 }
