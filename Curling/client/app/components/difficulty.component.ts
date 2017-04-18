@@ -36,9 +36,9 @@ export class DifficultyComponent implements OnInit {
     public launchGame() {
         const RADIX = 10;
         if (parseInt(this._difficulty, RADIX) === 0) {
-            this.userService._difficulty = Difficulty.NORMAL;
+            this.userService.difficulty = Difficulty.NORMAL;
         } else {
-            this.userService._difficulty = Difficulty.HARD;
+            this.userService.difficulty = Difficulty.HARD;
         }
         this.router.navigate(["/game"]);
     }
