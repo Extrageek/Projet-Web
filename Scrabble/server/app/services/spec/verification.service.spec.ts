@@ -389,33 +389,7 @@ describe("Word verification in verification services should ", () => {
         expect(wordTop).to.be.equals(true);
     });
 
-    it("verify created words and correctly calculate score dependant on orientation", () => {
-        let arrayStr = ["C", "A", "R"];
-        board.squares[7][6].letter = new Letter("C", 1, 0);
-        board.squares[7][6].isBusy = true;
-        board.squares[7][7].letter = new Letter("R", 1, 0);
-        board.squares[7][7].isBusy = true;
-
-        board.squares[6][7].letter = new Letter("C", 1, 0);
-        board.squares[7][7].letter = new Letter("A", 1, 0);
-        board.squares[8][7].letter = new Letter("R", 1, 0);
-        board.addLastLetterAdded(6, 7);
-        board.addLastLetterAdded(7, 7);
-        board.addLastLetterAdded(8, 7);
-        let response : IPlaceWordResponse = {
-            _squarePosition :{
-                _row : "H",
-                _column : 8,
-            },
-            _letters : arrayStr,
-            _wordOrientation : CommandsHelper.VERTICAL_ORIENTATION
-        }
-        verificationService.verifyWordsCreated(response, board);
-
-        expect(verificationService.score).to.be.equals(6);
-    })
-
-    it("verify created words and correctly calculate score dependant on orientation", () => {
+    it("HORIZONTAL verify created words and correctly calculate score dependant on orientation", () => {
         let arrayStr = ["C", "A", "R"];
         board.squares[6][7].letter = new Letter("C", 1, 0);
         board.squares[6][7].isBusy = true;
@@ -423,21 +397,53 @@ describe("Word verification in verification services should ", () => {
         board.squares[8][7].isBusy = true;
 
         board.squares[7][6].letter = new Letter("C", 1, 0);
+        board.squares[7][6].isBusy = true;
         board.squares[7][7].letter = new Letter("A", 1, 0);
+        board.squares[7][7].isBusy = true;
         board.squares[7][8].letter = new Letter("R", 1, 0);
-        board.addLastLetterAdded(7, 6);
+        board.squares[7][8].isBusy = true;
+        board.addLastLetterAdded(6, 7);
         board.addLastLetterAdded(7, 7);
-        board.addLastLetterAdded(7, 8);
+        board.addLastLetterAdded(8, 7);
         let response : IPlaceWordResponse = {
             _squarePosition :{
                 _row : "H",
-                _column : 6,
+                _column : 7,
             },
             _letters : arrayStr,
             _wordOrientation : CommandsHelper.HORIZONTAL_ORIENTATION
         }
         verificationService.verifyWordsCreated(response, board);
 
-        expect(verificationService.score).to.be.equals(6);
+        expect(verificationService.score).to.be.equals(undefined);
+    })
+
+    it("VERTICAL verify created words and correctly calculate score dependant on orientation", () => {
+        let arrayStr = ["C", "A", "R"];
+        board.squares[7][6].letter = new Letter("C", 1, 0);
+        board.squares[7][6].isBusy = true;
+        board.squares[7][8].letter = new Letter("R", 1, 0);
+        board.squares[7][8].isBusy = true;
+
+        board.squares[6][7].letter = new Letter("C", 1, 0);
+        board.squares[6][7].isBusy = true;
+        board.squares[7][7].letter = new Letter("A", 1, 0);
+        board.squares[7][7].isBusy = true;
+        board.squares[8][7].letter = new Letter("R", 1, 0);
+        board.squares[8][7].isBusy = true;
+        board.addLastLetterAdded(7, 6);
+        board.addLastLetterAdded(7, 7);
+        board.addLastLetterAdded(7, 8);
+        let response : IPlaceWordResponse = {
+            _squarePosition :{
+                _row : "G",
+                _column : 8,
+            },
+            _letters : arrayStr,
+            _wordOrientation : CommandsHelper.VERTICAL_ORIENTATION
+        }
+        verificationService.verifyWordsCreated(response, board);
+
+        expect(verificationService.score).to.be.equals(undefined);
     })
 });
