@@ -38,7 +38,6 @@ export class VerificationService {
         let initialWord = this.createStringFromArrayString(response._letters);
         let scoreWord = 0;
 
-
         if (wordOrientation === CommandsHelper.HORIZONTAL_ORIENTATION) {
             // verify the initial word
             let leftPartOfWord = this.discoverLeftPartOfWord(board, board.squares[firstRowIndex][firstColumnIndex]);
@@ -106,7 +105,7 @@ export class VerificationService {
             }
         }
         scoreWord = this.applyBonusDoubleOrTripleWord(scoreWord, isWordDouble, isWordTriple);
-        scoreWord = this.applyBonus7LettersWord(scoreWord, word);
+        scoreWord = this.applyBonus7LettersWord(scoreWord, board);
         return this.verifyIfWordExistAndSetScore(word, scoreWord);
     }
 
@@ -135,7 +134,7 @@ export class VerificationService {
             }
         }
         scoreWord = this.applyBonusDoubleOrTripleWord(scoreWord, isWordDouble, isWordTriple);
-        scoreWord = this.applyBonus7LettersWord(scoreWord, word);
+        scoreWord = this.applyBonus7LettersWord(scoreWord, board);
         return this.verifyIfWordExistAndSetScore(word, scoreWord);
     }
 
@@ -235,8 +234,8 @@ export class VerificationService {
         }
     }
 
-    public applyBonus7LettersWord(score: number, word: string): number {
-        if (word.length === WORD_7_LETTERS) {
+    public applyBonus7LettersWord(score: number, board: Board): number {
+        if (board.lastLettersAdded.length === WORD_7_LETTERS) {
             return score + BONUS_WORD_7_LETTERS;
         }
         return score;

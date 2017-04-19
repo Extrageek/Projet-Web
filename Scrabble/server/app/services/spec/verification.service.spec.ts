@@ -42,13 +42,13 @@ describe("VerificationService ", () => {
 
     it("should apply a bonus when a seven letters word is placed", () => {
         let word = "letters";
-        let newScore = verificationService.applyBonus7LettersWord(score, word);
+        let newScore = verificationService.applyBonus7LettersWord(score, board);
         expect(newScore).to.be.equals(score + BONUS_WORD_7_LETTERS);
     });
 
     it("should not apply a bonus when a word with less than 7 letters is placed", () => {
         let word = "word";
-        let newScore = verificationService.applyBonus7LettersWord(score, word);
+        let newScore = verificationService.applyBonus7LettersWord(score, board);
         expect(newScore).to.be.equals(score);
     });
 
