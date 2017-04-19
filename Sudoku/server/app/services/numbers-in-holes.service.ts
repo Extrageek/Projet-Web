@@ -1,4 +1,4 @@
-import { Puzzle } from "./../models/puzzle/puzzle";
+import { Puzzle } from "../models/puzzle/puzzle";
 
 export interface FittingNumbers {
     row: number;

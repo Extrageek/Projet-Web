@@ -1,13 +1,6 @@
-/**
- * puzzle-event-manager.service.ts - Manage all the events associated to the puzzle grids
- *
- * @authors ...
- * @date 2017/01/22
- */
-
 import { Injectable } from "@angular/core";
 import { GridManagerService } from "./grid-manager.service";
-import { PuzzleCommon } from "./../commons/puzzle-common";
+import { PuzzleCommon } from "../commons/puzzle-common";
 
 declare var jQuery: any;
 

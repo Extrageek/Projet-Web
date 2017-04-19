@@ -1,6 +1,6 @@
-import * as express from 'express';
+import * as express from "express";
 
-import { DatabaseManager } from '../database-management';
+import { DatabaseManager } from "../database-management";
 
 module Route {
     export class RouteManager {

@@ -1,6 +1,6 @@
 import { expect } from "chai";
-import { Dashboard } from "./../dashboard/dashboard";
-import { Activity, Type } from "./../dashboard/activity";
+import { Dashboard } from "../dashboard/dashboard";
+import { Activity, Type } from "../dashboard/activity";
 let dashboard = Dashboard.getInstance();
 
 describe("Dashboard tests should", () => {

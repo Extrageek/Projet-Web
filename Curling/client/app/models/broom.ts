@@ -1,5 +1,7 @@
-import { ObjectLoader, Group, MeshPhongMaterial, Sphere, Object3D, Vector3, Scene,
-ColorKeywords, MeshStandardMaterial, Mesh } from "three";
+import {
+    ColorKeywords, Group, Mesh, MeshPhongMaterial, MeshStandardMaterial,
+    Object3D, ObjectLoader, Scene, Sphere, Vector3
+} from "three";
 import { Stone } from "./stone";
 
 export class Broom extends Group {

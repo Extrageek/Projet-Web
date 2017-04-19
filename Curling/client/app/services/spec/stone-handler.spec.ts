@@ -1,4 +1,4 @@
-import { expect } from "chai";
+import { expect, assert } from "chai";
 import { ObjectLoader, Vector3, Scene } from "three";
 import { StoneHandler } from "./../game-physics/stone-handler";
 import { Stone, StoneColor, StoneSpin } from "./../../models/stone";
@@ -213,7 +213,7 @@ describe("StoneHandler tests should", () => {
         });
     });
 
-    it("Get all the stones that can give points.", () => {
+    it("get all the stones that can give points.", () => {
         expect(stoneHandler.getStonesThatGivesPoints().length).to.equal(0);
 
         stoneHandler.generateNewStone(StoneColor.Blue).then((stone1) => {
@@ -232,8 +232,8 @@ describe("StoneHandler tests should", () => {
         });
     });
 
-    it("Get the closest stone in the center.", () => {
-         stoneHandler.generateNewStone(StoneColor.Blue).then((stone1) => {
+    it("get the closest stone in the center.", () => {
+        stoneHandler.generateNewStone(StoneColor.Blue).then((stone1) => {
             stone1.position.copy(rinkInfo.initialStonePosition);
             stoneHandler.generateNewStone(StoneColor.Red).then((stone2) => {
                 stone2.position.copy(rinkInfo.initialStonePosition).addScalar(Stone.BOUNDING_SPHERE_RADIUS);
@@ -243,5 +243,105 @@ describe("StoneHandler tests should", () => {
                     .to.equal(true);
             });
         });
+    });
+
+    it("illuminate stones that give points.", () => {
+        // Generate a stone 1
+        stoneHandler.generateNewStone(StoneColor.Blue)
+            .then((stone1) => {
+                stone1.position.copy(rinkInfo.targetCenter);
+
+                // Generate stone 2
+                stoneHandler.generateNewStone(StoneColor.Blue)
+                    .then((stone2) => {
+                        stone2.position.copy(rinkInfo.targetCenter.addScalar(Stone.BOUNDING_SPHERE_RADIUS));
+
+                        // Generate stone 3
+                        stoneHandler.generateNewStone(StoneColor.Blue)
+                            .then((stone3) => {
+                                stone3.position.copy(rinkInfo.initialStonePosition
+                                    .addScalar(Stone.BOUNDING_SPHERE_RADIUS * 3));
+
+                                let assertMessage = "The illumination group object should have the name " +
+                                    Stone.ILLUMINATION_GROUP_NAME;
+
+                                // Stone1 and Stone2 sould give points
+                                let stoneThatGivePoints = stoneHandler.getStonesThatGivesPoints();
+
+                                stoneThatGivePoints.forEach(stone => {
+                                    let glow = stone.getStoneGlowObject();
+                                    expect(glow).to.not.be.undefined;
+                                    assert(glow.name === Stone.ILLUMINATION_GROUP_NAME, assertMessage);
+                                    assert(glow.visible === false, "The glow visibility should be false");
+                                });
+
+                                // Illuminate Stone 1 and 2
+                                stoneHandler.startStonesIllumination();
+
+                                stoneThatGivePoints.forEach(stone => {
+                                    let glow = stone.getStoneGlowObject();
+                                    expect(glow).to.not.be.undefined;
+                                    assert(glow.name === Stone.ILLUMINATION_GROUP_NAME, assertMessage);
+                                    assert(glow.visible === true, "The glow visibility should be true");
+                                });
+
+                            }).catch((error: any) => {
+                                //console.log("stone3 error", error);
+                            });
+                    });
+            });
+    });
+
+    it("stop illuminating stones that give points", () => {
+        // Generate a stone 1
+        stoneHandler.generateNewStone(StoneColor.Blue)
+            .then((stone1) => {
+                stone1.position.copy(rinkInfo.targetCenter);
+
+                // Generate stone 2
+                stoneHandler.generateNewStone(StoneColor.Blue)
+                    .then((stone2) => {
+                        stone2.position.copy(rinkInfo.targetCenter.addScalar(Stone.BOUNDING_SPHERE_RADIUS));
+
+                        // Generate stone 3
+                        stoneHandler.generateNewStone(StoneColor.Blue)
+                            .then((stone3) => {
+                                stone3.position.copy(rinkInfo.initialStonePosition
+                                    .addScalar(Stone.BOUNDING_SPHERE_RADIUS * 3));
+
+                                let assertMessage = "The illumination group object should have the name " +
+                                    Stone.ILLUMINATION_GROUP_NAME;
+
+                                let stoneThatGivePoints = stoneHandler.getStonesThatGivesPoints();
+
+                                // Illuminate Stone 1 and 2
+                                stoneHandler.startStonesIllumination();
+
+                                stoneThatGivePoints.forEach(stone => {
+                                    let glow = stone.getStoneGlowObject();
+                                    expect(glow).to.not.be.undefined;
+                                    assert(glow.name === Stone.ILLUMINATION_GROUP_NAME, assertMessage);
+                                    assert(glow.visible === true, "The glow visibility should be true");
+                                });
+
+                                // Move the stone2 to the initial position of the Rink
+                                stone2.position.copy(rinkInfo.initialStonePosition);
+
+                                // Illuminate Stone 1 and stop stone 2 illumination
+                                stoneHandler.startStonesIllumination();
+
+                                let glowStone1 = stone1.getStoneGlowObject();
+                                expect(glowStone1).to.not.be.undefined;
+                                assert(glowStone1.name === Stone.ILLUMINATION_GROUP_NAME, assertMessage);
+                                assert(glowStone1.visible === true, "The glow visibility should be true");
+
+                                let glowStone2 = stone2.getStoneGlowObject();
+                                expect(glowStone2).to.be.undefined;
+
+                            }).catch((error: any) => {
+                                console.log("stone3 error", error);
+                            });
+                    });
+            });
     });
 });

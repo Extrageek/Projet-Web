@@ -8,6 +8,7 @@ export class Player {
     private _socketId: string;
     private _easel: Easel;
     private _score : number;
+    private _online: boolean;
 
     // The constructor of a player
     constructor(username: string, numberOfPlayers: number, socketId: string) {
@@ -28,6 +29,7 @@ export class Player {
         this.socketId = socketId;
         this._easel = new Easel();
         this._score = 0;
+        this._online = true;
     }
 
     // The player's easel
@@ -69,6 +71,14 @@ export class Player {
     }
     public set socketId(value: string) {
         this._socketId = value;
+    }
+
+    public get online() : boolean {
+        return this._online;
+    }
+
+    public set online(status : boolean) {
+        this._online = status;
     }
 
     public updateScore(scoreToAdd: number){

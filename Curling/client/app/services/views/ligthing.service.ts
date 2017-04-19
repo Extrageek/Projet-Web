@@ -1,19 +1,6 @@
-import { Stone } from './../../models/stone';
 import { Injectable } from "@angular/core";
 import { Scene, SpotLight } from "three";
-
-// TODO: Find a way to avoid the duplicated code when creating spotlights below
-// export interface ISpotLightParameter {
-//     hex?: number | string;
-//     intensity?: number;
-//     distance?: number;
-//     angle?: number;
-//     exponent?: number;
-//     decay?: number;
-//     penumbra: number;
-//     position: { 'x': number, 'y': number, 'z': number };
-//     target: { 'x': number, 'y': number, 'z': number };
-// }
+import { Stone } from '../../models/stone';
 
 @Injectable()
 export class LightingService {

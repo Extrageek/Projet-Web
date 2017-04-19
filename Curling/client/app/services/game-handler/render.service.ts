@@ -1,33 +1,33 @@
 import { Injectable } from "@angular/core";
 import {
-    Scene, WebGLRenderer, Renderer, ObjectLoader, Geometry,
-    CubeGeometry, MeshBasicMaterial, MultiMaterial, Mesh, Line,
-    LineDashedMaterial, ImageUtils, BackSide, Vector3, Clock
+    BackSide, Clock, CubeGeometry, Geometry, ImageUtils, Line,
+    LineDashedMaterial, Mesh, MeshBasicMaterial, MultiMaterial,
+    ObjectLoader, Renderer, Scene, Vector3, WebGLRenderer
 } from "three";
 
-import { GameStatusService } from "../game-status.service";
 import { CameraService } from "../views/cameras.service";
+import { GameStatusService } from "../game-status.service";
+import { LeaderboardService } from "../leaderboard.service";
 import { LightingService } from "../views/ligthing.service";
 import { ParticlesService } from "../game-physics/particles.service";
+import { RestApiProxyService } from "../rest-api-proxy.service";
 import { SoundManager } from "../sound-manager";
 import { UserService } from "../user.service";
-import { RestApiProxyService } from "../rest-api-proxy.service";
 
+import { Initialisator } from "./initialisator";
+import { StatesHandler } from "./states-handler";
 import { StoneHandler } from "../game-physics/stone-handler";
 import { TextureHandler } from "../views/texture-handler";
-import { StatesHandler } from "./states-handler";
 
+import { Broom } from "../../models/broom";
 import { Rink } from "../../models/scenery/rink";
 import { DashedLine } from "../../models/scenery/dashed-line";
-import { Broom } from "../../models/broom";
-
 import { StoneColor } from "../../models/stone";
+
 import { IRinkInfo } from "../../models/scenery/rink-info.interface";
 import { IGameInfo } from "./game-info.interface";
 import { IGameServices } from "./games-services.interface";
 import { IAngularInfo } from "./angular-info.interface";
-import { Initialisator } from "./initialisator";
-import { LeaderboardService } from "../leaderboard.service";
 
 @Injectable()
 export class RenderService {
@@ -243,26 +243,26 @@ export class RenderService {
     }
 
     public switchCamera() {
-    if (this._animationID) {
-        StatesHandler.getInstance().onSpacebarPressed();
+        if (this._animationID) {
+            StatesHandler.getInstance().onSpacebarPressed();
+        }
     }
-}
 
     public onMouseMove(event: MouseEvent) {
-    if (this._animationID) {
-        StatesHandler.getInstance().onMouseMove(event);
+        if (this._animationID) {
+            StatesHandler.getInstance().onMouseMove(event);
+        }
     }
-}
 
     public onMousePressed() {
-    if (this._animationID) {
-        StatesHandler.getInstance().onMouseButtonPressed();
+        if (this._animationID) {
+            StatesHandler.getInstance().onMouseButtonPressed();
+        }
     }
-}
 
     public onMouseReleased() {
-    if (this._animationID) {
-        StatesHandler.getInstance().onMouseButtonReleased();
+        if (this._animationID) {
+            StatesHandler.getInstance().onMouseButtonReleased();
+        }
     }
-}
 }

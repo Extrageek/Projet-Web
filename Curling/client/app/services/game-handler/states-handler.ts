@@ -1,19 +1,22 @@
 import { AbstractGameState } from "../../models/states/abstract-game-state";
-import { ComputerShooting } from "../../models/states/computer-shooting";
-import { ComputerTurn } from "../../models/states/computer-turn";
+
 import { EndGame } from "../../models/states/end-game";
 import { EndSet } from "../../models/states/end-set";
+import { ComputerShooting } from "../../models/states/computer-shooting";
+import { ComputerTurn } from "../../models/states/computer-turn";
 import { LoadingStone } from "../../models/states/loading-stone";
 import { PlayerShooting } from "../../models/states/player-shooting";
 import { PlayerTurn } from "../../models/states/player-turn";
 import { Starting } from "../../models/states/starting";
 import { WaitNextTurn } from "../../models/states/wait-next-turn";
-import { IGameInfo } from "../../services/game-handler/game-info.interface";
-import { Difficulty } from "../../models/difficulty";
-import { IRinkInfo } from "../../models/scenery/rink-info.interface";
-import { IGameState } from "../../models/game-state.interface";
-import { IGameServices } from "../../services/game-handler/games-services.interface";
+
 import { IAngularInfo } from "../../services/game-handler/angular-info.interface";
+import { IGameInfo } from "../../services/game-handler/game-info.interface";
+import { IGameServices } from "../../services/game-handler/games-services.interface";
+import { IGameState } from "../../models/game-state.interface";
+import { IRinkInfo } from "../../models/scenery/rink-info.interface";
+
+import { Difficulty } from "../../models/difficulty";
 
 /**
  * Handle the lifecyle of the states

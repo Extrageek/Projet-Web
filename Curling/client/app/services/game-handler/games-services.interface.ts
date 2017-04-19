@@ -1,11 +1,11 @@
 import { CameraService } from "../views/cameras.service";
+import { LeaderboardService } from "../leaderboard.service";
 import { ParticlesService } from "../game-physics/particles.service";
+import { RestApiProxyService } from "../rest-api-proxy.service";
 import { SoundManager } from "../sound-manager";
 import { StoneHandler } from "../game-physics/stone-handler";
 import { TextureHandler } from "../views/texture-handler";
 import { UserService } from "../user.service";
-import { RestApiProxyService } from "../rest-api-proxy.service";
-import { LeaderboardService } from "../leaderboard.service";
 
 export interface IGameServices {
     cameraService: CameraService;

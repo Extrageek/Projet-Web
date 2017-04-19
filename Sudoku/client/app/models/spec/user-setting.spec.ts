@@ -1,6 +1,5 @@
 import { expect } from "chai";
-
-import { Difficulty, UserSetting } from "./user-setting";
+import { Difficulty, UserSetting } from "../user-setting";
 
 let _userSetting: UserSetting;
 

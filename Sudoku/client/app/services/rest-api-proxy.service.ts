@@ -1,10 +1,3 @@
-/**
- * rest-api-proxy.service.ts - Manage and execute all requests From/To the server.
- *
- * @authors ...
- * @date 2017/01/22
- */
-
 import { Injectable } from "@angular/core";
 import { Response, Http, Headers } from "@angular/http";
 
@@ -13,34 +6,20 @@ import "rxjs/add/operator/toPromise";
 import "rxjs/add/operator/catch";
 import "rxjs/add/observable/throw";
 
-import { Difficulty, UserSetting } from "./../models/user-setting";
-import { Puzzle } from "./../models/puzzle";
-import { Record } from "./../models/record";
-import { Time } from "./../models/time";
+import { Difficulty, UserSetting } from "../models/user-setting";
+import { Puzzle } from "../models/puzzle";
+import { Record } from "../models/record";
+import { Time } from "../models/time";
 
 @Injectable()
 export class RestApiProxyService {
 
     // API Url for new Puzzle request to the server
-    // Check how to manage cookies after
     protected _urlApi = "http://localhost:3002/api/";
     protected _headers = new Headers({ "Content-Type": "application/json" });
 
-    /**
-     * constructor.
-     *
-     * @class RestApiProxyService
-     */
     constructor(private http: Http) { }
 
-    /**
-     * Ask a request for a new Puzzle from the server.
-     *
-     * @class RestApiProxyService
-     * @method getNewSudokuPuzzle
-     * @returns an Observable with a newPuzzle json data
-     * An error will be thrown if the data received from the server is not valid.
-     */
     public getNewPuzzle(difficulty: Difficulty): Observable<Puzzle> {
         return this.http.get(this._urlApi + difficulty)
             .map(this.transformSudokuDataFromHttpResponse)
@@ -49,13 +28,6 @@ export class RestApiProxyService {
             });
     }
 
-    /**
-     * Retrieve the data from the HttpResponse body.
-     *
-     * @class RestApiProxyService
-     * @method retrieveDataFromHttpResponse
-     * @return Json data.
-     */
     private transformSudokuDataFromHttpResponse(res: Response) {
         let body = res.json();
         let result = Puzzle.convertObjectToPuzzle(body);
@@ -149,7 +121,6 @@ export class RestApiProxyService {
             .toPromise()
             .then(response => {
                 let body = response.json();
-                console.log(body);
                 if (body.validity === "valid") {
                     return true;
                 }

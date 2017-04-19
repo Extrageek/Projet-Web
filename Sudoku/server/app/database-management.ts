@@ -1,6 +1,4 @@
-//import * as express from 'express';
-
-import { MongoClient, InsertOneWriteOpResult, DeleteWriteOpResultObject, Db } from "mongodb";
+import { Db, DeleteWriteOpResultObject, InsertOneWriteOpResult, MongoClient } from "mongodb";
 import { Difficulty } from "./models/puzzle/difficulty";
 
 export class DatabaseManager {
@@ -41,10 +39,8 @@ export class DatabaseManager {
     }
 
     private reconnectToDatabase() {
-        console.log("Trying to reconnect to database server...");
         MongoClient.connect(DatabaseManager.url)
             .then((db: Db) => {
-                console.log("Reconnected succesfully.");
                 this._dbConnection = db;
                 this._dbConnection.on("close", this.reconnectToDatabase.bind(this));
             })

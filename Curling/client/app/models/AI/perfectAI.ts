@@ -1,8 +1,10 @@
 import { Vector3 } from "three";
+
 import { ComputerAI } from "./computerAI";
 import { IRinkInfo } from "./../scenery/rink-info.interface";
-import { RandomHelper } from "./../random-helper";
 import { IShotParameters } from "./../shot-parameters.interface";
+
+import { RandomHelper } from "./../random-helper";
 
 export class PerfectAI extends ComputerAI {
 

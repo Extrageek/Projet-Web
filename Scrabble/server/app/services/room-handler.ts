@@ -27,33 +27,26 @@ export class RoomHandler {
 
         try {
 
-            if (this.getPlayerByUsername(player.username) === null) {
+            // Find an available room
+            let room = this.getAvailableRoom(player.numberOfPlayers, player.username);
 
-                // Find an available room
-                let room = this.getAvailableRoom(player.numberOfPlayers);
-
-                if (room !== null && room !== undefined) {
-                    // Add the player to an existing room.
-                    room.addPlayer(player);
+            if (room && !room.isFull()) {
+                // Add the player to an existing room.
+                room.addPlayer(player);
+                if (room.isFull()) {
+                    room.randomizePlayersPriorities();
                 }
-                else {
-                    // Create a new room if a room is not available
-                    room = new Room(player.numberOfPlayers);
-                    room.addPlayer(player);
-                    this._rooms.push(room);
-
-                    if (room.isFull()) {
-                        room.randomizePlayersPriorities();
-                    }
-                }
-                return room;
-
-            } else {
-                return null;
             }
+            else {
+                // Create a new room if a room is not available
+                room = new Room(player.numberOfPlayers);
+                room.addPlayer(player);
+                this._rooms.push(room);
+            }
+            return room;
 
         } catch (error) {
-            throw new Error("An error occured when adding the player into the room");
+            throw error;
         }
     }
 
@@ -67,7 +60,7 @@ export class RoomHandler {
     }
 
     // Find an available room with the given capacity
-    public getAvailableRoom(roomCapacity: number): Room {
+    public getAvailableRoom(roomCapacity: number, username: string): Room {
 
         if (roomCapacity < Room.roomMinCapacity || roomCapacity > Room.roomMaxCapacity) {
             throw new RangeError("Out of range error: The capacity of the room should be between 1 and 4");

@@ -1,4 +1,4 @@
-import { Audio, AudioListener, AudioLoader, AudioBuffer } from "three";
+import { Audio, AudioBuffer, AudioLoader, AudioListener } from "three";
 
 export class SoundManager {
 

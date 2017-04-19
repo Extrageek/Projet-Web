@@ -1,5 +1,5 @@
-import { Puzzle } from "./../models/puzzle/puzzle";
 import { NumbersInHoles } from "./numbers-in-holes.service";
+import { Puzzle } from "../models/puzzle/puzzle";
 
 export class GridSolver {
 

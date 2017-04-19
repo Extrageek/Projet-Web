@@ -1,10 +1,10 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 
-import { LeaderboardComponent } from "../components/leaderboard.component";
-import { UsernameComponent } from "../components/username.component";
 import { DifficultyComponent } from "../components/difficulty.component";
 import { DisplayComponent } from "../components/display.component";
+import { LeaderboardComponent } from "../components/leaderboard.component";
+import { UsernameComponent } from "../components/username.component";
 
 
 const routes: Routes = [

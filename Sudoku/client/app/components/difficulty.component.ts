@@ -1,14 +1,14 @@
-import { Component, OnInit, HostListener } from "@angular/core";
+import { Component, HostListener, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 
-import { UserSettingService } from "./../services/user-setting.service";
-import { RestApiProxyService } from "./../services/rest-api-proxy.service";
+import { RestApiProxyService } from "../services/rest-api-proxy.service";
+import { UserSettingService } from "../services/user-setting.service";
 
 @Component({
     moduleId: module.id,
     selector: "difficulty-component",
-    templateUrl: "./../assets/templates/difficulty.component.html",
-    styleUrls: [ "./../../assets/stylesheets/difficulty.component.css" ],
+    templateUrl: "../assets/templates/difficulty.component.html",
+    styleUrls: [ "../../assets/stylesheets/difficulty.component.css" ],
     providers: [RestApiProxyService]
 })
 export class DifficultyComponent implements OnInit {

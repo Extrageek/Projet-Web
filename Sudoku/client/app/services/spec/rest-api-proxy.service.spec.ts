@@ -4,12 +4,12 @@ import { MockBackend, MockConnection } from "@angular/http/testing";
 
 import { expect, assert } from "chai";
 
-import { Puzzle } from "./../models/puzzle";
-import { PUZZLE_ITEMS_DATA, FAKE_PUZZLE_FEED } from "./mock-data";
-import { Record } from "./../models/record";
-import { RestApiProxyService } from "./../services/rest-api-proxy.service";
-import { Time } from "./../models/time";
-import { UserSetting } from "./../models/user-setting";
+import { Puzzle } from "../../models/puzzle";
+import { PUZZLE_ITEMS_DATA, FAKE_PUZZLE_FEED } from "../mock-data";
+import { Record } from "../../models/record";
+import { RestApiProxyService } from "../../services/rest-api-proxy.service";
+import { Time } from "../../models/time";
+import { UserSetting } from "../../models/user-setting";
 
 let userSetting: UserSetting;
 let time: Time;

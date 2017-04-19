@@ -1,7 +1,6 @@
 import { expect } from "chai";
-import { NumbersInHoles, FittingNumbers } from "./../numbers-in-holes.service";
-import { Puzzle } from "./../../models/puzzle/puzzle";
-
+import { NumbersInHoles, FittingNumbers } from "../numbers-in-holes.service";
+import { Puzzle } from "../../models/puzzle/puzzle";
 
 function setNoSolutionsConfiguration(puzzle: Puzzle) {
     puzzle.hideAllItemsInRange(Puzzle.MIN_ROW_INDEX, Puzzle.MAX_ROW_INDEX
