@@ -11,8 +11,10 @@
         <md-input-container class="example-full-width">
             <input mdInput 
                 autofocus
+                onblur="this.focus()"
                 #username
                 (input)="activateLoginNext()"
+                (keypress)="_isErrorMessageHidden = true;" 
                 placeholder="Entrez votre pseudo..."
                 autocomplete="off">
         </md-input-container>
