@@ -1,8 +1,8 @@
-import { expect } from 'chai';
+import { expect } from "chai";
 
-import { GridValidationManager } from './../grid-validation.service';
-import { Puzzle } from './../../models/puzzle/puzzle';
-import { IPuzzleItemData, PuzzleItem } from './../../models/puzzle/puzzle-item';
+import { GridValidationManager } from "../grid-validation.service";
+import { IPuzzleItemData, PuzzleItem } from "../../models/puzzle/puzzle-item";
+import { Puzzle } from "../../models/puzzle/puzzle";
 
 const BAD_GRID_1 = [
     [{ _value: 1, _hide: true }, { _value: 2, _hide: true }, { _value: 3, _hide: true }]

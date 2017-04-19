@@ -1,6 +1,6 @@
 import { expect } from "chai";
-import { Puzzle } from "./../puzzle/puzzle";
-import { IPuzzleItemData, PuzzleItem } from "./../puzzle/puzzle-item";
+import { Puzzle } from "../puzzle/puzzle";
+import { IPuzzleItemData, PuzzleItem } from "../puzzle/puzzle-item";
 
 const puzzleSeed = [
     [
