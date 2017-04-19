@@ -35,7 +35,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
         this._onUsernameAlreadyExistSubscription = this.onUsernameAlreadyExists();
         this._onInvalidRequestEventSubscription = this.onInvalidRequest();
         this._onConnectionErrorSubscription = this.onConnectionError();
-        if (this.socketService._socket !== null && this.socketService._socket.disconnected) {
+        if (this.socketService._socket && this.socketService._socket.disconnected) {
             this.socketService._socket.connect();
         }
         this.socketService.player.username;
