@@ -33,9 +33,13 @@ export class EndGame extends AbstractGameState {
 
     protected performEnteringState() {
         if (this._gameInfo.gameStatus.scorePlayer > this._gameInfo.gameStatus.scoreComputer) {
-            this.saveNewRecord();
+            this.saveNewRecord().then(() => {
+                this._gameServices.leaderboardService.fetchRecords();
+            });
+        } else {
+            this._gameServices.leaderboardService.fetchRecords();
         }
-        this._gameServices.leaderboardService.fetchRecords();
+
         this._gameServices.stoneHandler.stopStonesIllumination();
         this._gameServices.cameraService.setPerspectiveCameraCurrent();
         this._gameServices.cameraService.movePCameraEndRink();
