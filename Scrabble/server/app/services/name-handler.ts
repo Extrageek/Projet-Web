@@ -26,21 +26,19 @@ export class NameHandler {
 
     public addConnection(name: string, socketId: string) {
         let tempName = this.getNameBySocketId(socketId);
-        let tempSocketId = this.getSocketIdByName(socketId);
-
+        let tempSocketId = this.getSocketIdByName(name);
         if (tempName === null && tempSocketId === null) {
             let item: Connection = {name, socketId};
             this._activePlayers.push(item);
-            console.log(item);
         }
     }
 
     public removeConnection(socketId: string) {
         let name: string = this.getNameBySocketId(socketId);
-        let index = this._activePlayers.indexOf({"name": name, "socketId": socketId});
-
-        if (index !== -1) {
-            this._activePlayers.splice(index, 1);
-        }
+        let connection: Connection = {"name": name, "socketId": socketId};
+        this._activePlayers = this._activePlayers.filter((el: Connection) => {
+            return el.name !== connection.name
+                && el.socketId !== connection.socketId;
+        });
     }
 }
