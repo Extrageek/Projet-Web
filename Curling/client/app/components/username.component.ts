@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { RestApiProxyService } from "../services/rest-api-proxy.service";
