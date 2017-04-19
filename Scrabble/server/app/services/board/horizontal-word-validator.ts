@@ -120,7 +120,7 @@ export class HorizontalWordValidator {
         if (row === HorizontalWordValidator.CENTER_ROW
             && (firstColumn === HorizontalWordValidator.CENTER_COLUMN
                 || (firstColumn < HorizontalWordValidator.CENTER_COLUMN
-                    && firstColumn + wordLength >= HorizontalWordValidator.CENTER_COLUMN))) {
+                    && firstColumn + wordLength - 1 >= HorizontalWordValidator.CENTER_COLUMN))) {
             return true;
         }
         else {

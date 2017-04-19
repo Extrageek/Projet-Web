@@ -89,7 +89,7 @@ export class VerticalWordValidator {
         if (column === VerticalWordValidator.CENTER_COLUMN
             && (firstRow === VerticalWordValidator.CENTER_ROW
                 || (firstRow < VerticalWordValidator.CENTER_ROW
-                    && firstRow + wordLength >= VerticalWordValidator.CENTER_ROW))) {
+                    && firstRow + wordLength - 1 >= VerticalWordValidator.CENTER_ROW))) {
             return true;
         }
         else {
