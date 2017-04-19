@@ -1,10 +1,3 @@
-/**
- * puzzle.ts - Represent a Sudoku puzzle/grids
- *
- * @authors ...
- * @date 2017/01/22
- */
-
 export interface IPuzzleItemData {
     _value: number;
     _hide: boolean;

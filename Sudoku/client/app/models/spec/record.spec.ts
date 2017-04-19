@@ -1,6 +1,6 @@
-import { Difficulty } from "./user-setting";
-import { Record } from "./record";
-import { Time } from "./time";
+import { Difficulty } from "../user-setting";
+import { Record } from "../record";
+import { Time } from "../time";
 
 import { expect } from "chai";
 

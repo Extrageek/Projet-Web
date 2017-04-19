@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { Time } from "./time";
+import { Time } from "../time";
 
 describe("Time class tests", () => {
     let time: Time;

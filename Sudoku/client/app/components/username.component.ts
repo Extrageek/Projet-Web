@@ -1,14 +1,14 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 
-import { RestApiProxyService } from "./../services/rest-api-proxy.service";
-import { UserSettingService } from "./../services/user-setting.service";
+import { RestApiProxyService } from "../services/rest-api-proxy.service";
+import { UserSettingService } from "../services/user-setting.service";
 
 @Component({
     moduleId: module.id,
     selector: "username-component",
-    templateUrl: "./../../assets/templates/username.component.html",
-    styleUrls: [ "./../../assets/stylesheets/username.component.css" ]
+    templateUrl: "../../assets/templates/username.component.html",
+    styleUrls: [ "../../assets/stylesheets/username.component.css" ]
 })
 export class UsernameComponent {
     _isLoginNextActivated = false;

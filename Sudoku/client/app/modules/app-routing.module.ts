@@ -5,7 +5,6 @@ import { DifficultyComponent } from "./../components/difficulty.component";
 import { GridComponent } from "./../components/grid.component";
 import { UsernameComponent } from "./../components/username.component";
 
-
 const routes: Routes = [
   { path: "", redirectTo: "user", pathMatch: "full" },
   { path: "user", component: UsernameComponent },

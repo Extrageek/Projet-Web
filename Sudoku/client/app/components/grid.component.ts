@@ -1,11 +1,4 @@
-/**
- * grid.component.ts - Represents a component which display the grid of the Sudoku.
- *
- * @authors ...
- * @date 2017/01/22
- */
-
-import { Component, OnInit, HostListener } from "@angular/core";
+import { Component, HostListener, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { Observable } from "rxjs/Observable";
@@ -13,11 +6,11 @@ import "rxjs/add/operator/catch";
 import "rxjs/add/operator/map";
 import "rxjs/add/observable/timer";
 
-import { GridManagerService } from "./../services/grid-manager.service";
-import { PuzzleEventManagerService } from "./../services/puzzle-event-manager.service";
-import { RestApiProxyService } from "./../services/rest-api-proxy.service";
-import { StopwatchService } from "./../services/stopwatch.service";
-import { UserSettingService } from "./../services/user-setting.service";
+import { GridManagerService } from "../services/grid-manager.service";
+import { PuzzleEventManagerService } from "../services/puzzle-event-manager.service";
+import { RestApiProxyService } from "../services/rest-api-proxy.service";
+import { StopwatchService } from "../services/stopwatch.service";
+import { UserSettingService } from "../services/user-setting.service";
 
 import { Difficulty, UserSetting } from "../models/user-setting";
 import { PuzzleCommon } from "../commons/puzzle-common";
