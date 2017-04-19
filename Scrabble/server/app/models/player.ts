@@ -1,11 +1,6 @@
 import { Room } from "./room";
 import { Easel } from "./easel";
 
-export enum PlayerStatus {
-    "ONLINE" = 0,
-    "OFFLINE" = 1
-}
-
 export class Player {
 
     private _username: string;
@@ -13,7 +8,7 @@ export class Player {
     private _socketId: string;
     private _easel: Easel;
     private _score : number;
-    private _status: PlayerStatus;
+    private _online: boolean;
 
     // The constructor of a player
     constructor(username: string, numberOfPlayers: number, socketId: string) {
@@ -34,7 +29,7 @@ export class Player {
         this.socketId = socketId;
         this._easel = new Easel();
         this._score = 0;
-        this._status = PlayerStatus.ONLINE;
+        this._online = true;
     }
 
     // The player's easel
@@ -78,12 +73,12 @@ export class Player {
         this._socketId = value;
     }
 
-    public get status() : PlayerStatus {
-        return this._status;
+    public get online() : boolean {
+        return this._online;
     }
 
-    public set status(ps : PlayerStatus) {
-        this._status = ps;
+    public set online(status : boolean) {
+        this._online = status;
     }
 
     public updateScore(scoreToAdd: number){

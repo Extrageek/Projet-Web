@@ -2,7 +2,7 @@ import { expect, assert } from "chai";
 
 import { Room } from "../room";
 import { Letter } from "../letter";
-import { Player, PlayerStatus } from "../player";
+import { Player } from "../player";
 import { SquarePosition } from "../square/square-position";
 import { QueueCollection } from "../queue-collection";
 import { LetterBankHandler } from "../../services/letterbank-handler";
@@ -140,7 +140,7 @@ describe("Room", () => {
         assert(removedPlayer.numberOfPlayers === player1.numberOfPlayers);
         assert(room.players.count === 2, "The list of player should be empty");
 
-        expect(removedPlayer.status).to.equals(PlayerStatus.OFFLINE);
+        expect(removedPlayer.online).to.equals(false);
 
     });
 

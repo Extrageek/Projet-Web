@@ -1,4 +1,4 @@
-import { Player, PlayerStatus } from "./player";
+import { Player } from "./player";
 import { QueueCollection } from "./queue-collection";
 import { Board } from "./board/board";
 import { TimerService } from "../services/timer.service";
@@ -109,10 +109,10 @@ export class Room {
     public numberOfMissingPlayers(): number {
         let playersOnline = 0;
         this.players.forEach((player: Player) => {
-            if (player.status === PlayerStatus.ONLINE) {
+            if (player.online) {
                 ++playersOnline;
             }
-        })
+        });
         return this._roomCapacity - playersOnline;
     }
 
@@ -124,7 +124,7 @@ export class Room {
         }
 
         playerRemoved = this._playersQueue.find(player);
-        playerRemoved.status = PlayerStatus.OFFLINE;
+        playerRemoved.online = false;
         return playerRemoved;
     }
 
@@ -157,14 +157,12 @@ export class Room {
         return hasChanged;
     }
 
-
     public getAndUpdatePlayersQueue(): Array<string> {
         let newPlayerOrder = new Array<string>();
         let players: Player[];
         do {
             players = this._playersQueue.updateAndGetQueuePriorities();
-        } while (this.players.peek().status !== PlayerStatus.ONLINE
-            && this.numberOfMissingPlayers() < this.roomCapacity);
+        } while (!this.players.peek().online && this.numberOfMissingPlayers() < this.roomCapacity);
 
         for (let index = 0; index < players.length; ++index) {
             newPlayerOrder[index] = players[index].username;
