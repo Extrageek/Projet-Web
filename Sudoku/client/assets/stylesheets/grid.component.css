@@ -13,7 +13,10 @@
     width: 100px;
     height: 100px;
 }
-
+.buttons {
+    background-color: #3F51B5;
+    color: white;
+}
 .center-grid {
     position: absolute;
     margin-left: auto;
@@ -28,7 +31,9 @@
     padding: 1px 2px 0px 2px;
     background-color: #fff;
 }
-
+button > span {
+    font-size: 23px;
+}
 .table-responsive {
     padding: 10px;
 }
