@@ -32,9 +32,13 @@ export class EndGame extends AbstractGameState {
     }
 
     protected performEnteringState() {
-        if (this.isNewRecord()) {
-            this.saveNewRecord();
+        let newRecordSaved: Promise<boolean>;
+        if (this._gameInfo.gameStatus.scorePlayer > this._gameInfo.gameStatus.scoreComputer) {
+            newRecordSaved = this.saveNewRecord();
+        } else {
+            newRecordSaved = Promise.resolve(true);
         }
+        this._gameServices.stoneHandler.stopStonesIllumination();
         this._gameServices.cameraService.setPerspectiveCameraCurrent();
         this._gameServices.cameraService.movePCameraEndRink();
         this._gameServices.particlesService.createParticles();
@@ -43,16 +47,16 @@ export class EndGame extends AbstractGameState {
         this.addAppropriateEndGameText();
         setTimeout(() => {
             this._animationStopped = true;
-            this._gameInfo.gameStatus.gameIsFinished();
+            newRecordSaved.then((databaseResult: boolean) => {
+                this._gameServices.leaderboardService.fetchRecords().then(() => {
+                    this._gameInfo.gameStatus.gameIsFinished();
+                });
+            });
         }, this.FIVE_SECONDS);
     }
 
-    private isNewRecord(): boolean {
-        return this._gameInfo.gameStatus.scorePlayer !== this._gameInfo.gameStatus.scoreComputer;
-    }
-
-    private async saveNewRecord() {
-        await this._gameServices.proxyService.createGameRecord(
+    private saveNewRecord(): Promise<boolean> {
+        return this._gameServices.proxyService.createGameRecord(
             new Record(
                 this._gameServices.userService.username,
                 this._gameServices.userService.difficulty,

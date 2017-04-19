@@ -10,10 +10,6 @@ export class NameHandler {
         this._activePlayers = new Array<Connection>();
     }
 
-    public get acti(): Connection[] {
-        return this._activePlayers;
-    }
-
     public getNameBySocketId(socketId: string): string {
         let item = this._activePlayers.find((el: Connection) =>
             (el.socketId === socketId)

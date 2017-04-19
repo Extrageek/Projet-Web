@@ -23,7 +23,6 @@ export class LeaderboardService {
                 this.records = results;
             })
             .catch(error => {
-                // this.records = new Array<Record>();
                 console.log(error);
             });
     }

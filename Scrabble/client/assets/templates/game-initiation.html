@@ -21,7 +21,12 @@
         <md-card-content>
             <div>
                 <md-input-container class="full-width">
-                    <input mdInput #username pattern="[A-Za-z0-9]*" value="{{socketService.player.username || ''}}" placeholder="Pseudonyme" [disabled]="socketService.player.username !== ''"
+                    <input mdInput #username
+                        pattern="[A-Za-z0-9]*"
+                        value="{{socketService.player.username || ''}}"
+                        placeholder="Pseudonyme"
+                        autocomplete="off"
+                        [disabled]="socketService.player.username !== ''"
                         id="name" required/>
                 </md-input-container>
             </div>

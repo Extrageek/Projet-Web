@@ -255,7 +255,7 @@ export class Stone extends Group implements IGameState {
                 this.position.y += incrementBounce;
             },
             complete: () => {
-                this.changeStoneOpacity().subscribe();
+                this.position.y = 0;
             }
         };
         return observer;

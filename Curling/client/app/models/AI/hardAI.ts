@@ -10,7 +10,7 @@ export class HardAI extends ComputerAI {
     //to shot in the center.
     private static readonly MIN_SHOT_POWER = 4.1;
     private static readonly MAX_SHOT_POWER = 4.3;
-    private static readonly MIN_SHOT_TO_PUSH_STONE = 5.2;
+    private static readonly MIN_SHOT_TO_PUSH_STONE = 5.7;
     private static readonly MAX_SHOT_TO_PUSH_STONE = 5.8;
     private static readonly MIN_DIRECTION_MODIFIER = -0.02;
     private static readonly MAX_DIRECTION_MODIFIER = 0.02;
