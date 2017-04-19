@@ -14,7 +14,7 @@ let verificationService: VerificationService;
 
 describe("Point calculation in verification services should ", () => {
 
-    let board:Board;
+    let board: Board;
     let score: number;
     const BONUS_DOUBLE = 2;
     const BONUS_TRIPLE = 3;
@@ -58,7 +58,7 @@ describe("Point calculation in verification services should ", () => {
         board.addLastLetterAdded(7, 12);
         board.addLastLetterAdded(7, 13);
         let newScore = verificationService.applyBonus7LettersWord(score, board);
-        expect(newScore).to.be.equals(score +  BONUS_WORD_7_LETTERS);
+        expect(newScore).to.be.equals(score + BONUS_WORD_7_LETTERS);
     });
 
     it(" not apply a bonus when a word with less than 7 letters is placed", () => {
@@ -116,7 +116,7 @@ describe("Point calculation in verification services should ", () => {
 
 describe("Word discovery in verification services should ", () => {
 
-    let board:Board;
+    let board: Board;
     let score: number;
 
     before(() => {
@@ -219,7 +219,7 @@ describe("Word discovery in verification services should ", () => {
 
 describe("Word verification in verification services should ", () => {
 
-    let board:Board;
+    let board: Board;
     let score: number;
 
     const BONUS_DOUBLE = 2;
@@ -272,17 +272,18 @@ describe("Word verification in verification services should ", () => {
         expect(verificationService.verifyIfWordExistAndSetScore(wordTop + wordDown, 0)).to.be.false;
     });
 
-    it("--HORIZONTAL return points without multipliers on a double multiplier when it is not a newly placed word", () => {
-        board.squares[4][10].letter = new Letter("C", 1, 0);
-        board.squares[4][10].isBusy = true;
-        board.squares[4][11].letter = new Letter("A", 1, 0);
-        board.squares[4][11].isBusy = true;
-        board.squares[4][12].letter = new Letter("R", 1, 0);
-        board.squares[4][12].isBusy = true;
-        let wordTop = verificationService.verifyWordHorizontal(board, 4, 10, "CAR");
-        expect(verificationService.score).to.be.equals((board.squares[4][10].letter.point +
-            board.squares[4][11].letter.point + board.squares[4][12].letter.point));
-        expect(wordTop).to.be.equals(true);
+    it("--HORIZONTAL return points without multipliers on a double multiplier when it is not a newly placed word",
+        () => {
+            board.squares[4][10].letter = new Letter("C", 1, 0);
+            board.squares[4][10].isBusy = true;
+            board.squares[4][11].letter = new Letter("A", 1, 0);
+            board.squares[4][11].isBusy = true;
+            board.squares[4][12].letter = new Letter("R", 1, 0);
+            board.squares[4][12].isBusy = true;
+            let wordTop = verificationService.verifyWordHorizontal(board, 4, 10, "CAR");
+            expect(verificationService.score).to.be.equals((board.squares[4][10].letter.point +
+                board.squares[4][11].letter.point + board.squares[4][12].letter.point));
+            expect(wordTop).to.be.equals(true);
     });
 
 
@@ -406,17 +407,17 @@ describe("Word verification in verification services should ", () => {
         board.addLastLetterAdded(7, 7);
         board.addLastLetterAdded(8, 7);
         let response : IPlaceWordResponse = {
-            _squarePosition :{
+            _squarePosition : {
                 _row : "H",
                 _column : 7,
             },
             _letters : arrayStr,
             _wordOrientation : CommandsHelper.HORIZONTAL_ORIENTATION
-        }
+        };
         verificationService.verifyWordsCreated(response, board);
 
         expect(verificationService.score).to.be.equals(undefined);
-    })
+    });
 
     it("VERTICAL verify created words and correctly calculate score dependant on orientation", () => {
         let arrayStr = ["C", "A", "R"];
@@ -435,15 +436,15 @@ describe("Word verification in verification services should ", () => {
         board.addLastLetterAdded(7, 7);
         board.addLastLetterAdded(7, 8);
         let response : IPlaceWordResponse = {
-            _squarePosition :{
+            _squarePosition : {
                 _row : "G",
                 _column : 8,
             },
             _letters : arrayStr,
             _wordOrientation : CommandsHelper.VERTICAL_ORIENTATION
-        }
+        };
         verificationService.verifyWordsCreated(response, board);
 
         expect(verificationService.score).to.be.equals(undefined);
-    })
+    });
 });
