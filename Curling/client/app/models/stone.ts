@@ -261,7 +261,7 @@ export class Stone extends Group implements IGameState {
 
         } else {
             // The illumination glow element has a unique name
-            // We have to hide and remove it from the stone 
+            // We have to hide and remove it from the stone
             let glow = this.getObjectByName(Stone.ILLUMINATION_GROUP_NAME);
             if (glow) {
                 this.remove(glow);
