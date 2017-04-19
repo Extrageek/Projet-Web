@@ -21,16 +21,20 @@
 
     <div *ngIf="renderService._angularInfo.isSelectingPower
         && renderService._angularInfo !== null
-        && renderService._angularInfo.spin === 1" class="clockwiseArrow">
-        <img src=" ../../assets/images/clockwise-arrow.png" alt="Sens horaire" height="30vw" width="30vw">
+        && renderService._angularInfo.spin === 1" class="counterclockwiseArrow">
+        <button type="button" (click)="renderService.switchSpin()" class="btn btn-large btn-block btn-warning"> 
+            <img src=" ../../assets/images/clockwise-arrow.png" alt="Sens horaire" height="30vw" width="30vw">
+        </button>
     </div>
 
     <div *ngIf="renderService._angularInfo.isSelectingPower
         && renderService._angularInfo.spin !== null
         && renderService._angularInfo.spin === 0" class="counterclockwiseArrow">
-        <img src=" ../../assets/images/counterclockwise-arrow.png" alt="Sens anti-horaire" height="30vw" width="30vw">
+        <button type="button" (click)="renderService.switchSpin()" class="btn btn-large btn-block btn-warning"> 
+            <img src=" ../../assets/images/counterclockwise-arrow.png" alt="Sens anti-horaire" 
+            height="30vw" width="30vw">
+        </button>
     </div>
-
     <div #container id="threejs"> </div>
 </div>
 
@@ -109,7 +113,7 @@
     <div id="endGame-window" class="endGame-overlay">
         <div class="endGame-window-content">
             <div class="leaderboard-content">
-                <table id="lead-table" class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+                <table id="lead-table" class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--dp">
                     <thead>
                         <tr>
                             <th class="mdl-data-table__cell--non-numeric ">Pseudonyme</th>
@@ -130,10 +134,11 @@
             </div>
 
             <div class="endGame-buttons">
-                <button id="newGame-button" (click)="startNewGame()">
+                <button type="button" id="newGame-button" (click)="restartGame()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
                     <span class="glyphicons glyphicons-roundabout" aria-hidden="true"></span> Commencer une nouvelle partie
                 </button>
-                <button id="back-button" (click)="returnHomePage()">
+
+                <button type="button" id="back-button" (click)="returnHomePage()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
                     <span class="glyphicons glyphicons-home" aria-hidden="true"></span> Retourner à la page d'acceuil
                 </button>
             </div>

@@ -14,8 +14,7 @@ import { RenderService } from "../services/game-handler/render.service";
     styleUrls: [
         "../../assets/stylesheets/display-component.css",
         "../../assets/stylesheets/menu-hamburger.css",
-        "../../assets/stylesheets/gl-component.css",
-        "../../assets/stylesheets/leaderboard-component.css"
+        "../../assets/stylesheets/gl-component.css"
     ]
 })
 
@@ -40,11 +39,6 @@ export class DisplayComponent implements OnInit {
     @HostListener("window:keydown.space", ["$event"])
     public disableScrollingWithSpace(event: KeyboardEvent) {
         event.preventDefault();
-    }
-
-    @HostListener("window:keydown", ["$event"])
-    public keyDown(event: KeyboardEvent) {
-        this.renderService.switchSpin(event);
     }
 
     @HostListener("window:keyup.space", ["$event"])
@@ -78,7 +72,6 @@ export class DisplayComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.leaderboardService.fetchRecords();
         this._userSettingService = this.userService;
         if (this._userSettingService.username === "") {
             this.router.navigate(["/"]);
@@ -106,23 +99,17 @@ export class DisplayComponent implements OnInit {
     }
 
     public restartGame() {
+        this.gameStatusService.resetGameStatus();
         this.renderService.stopGame().then(() => {
             this.router.navigate(["/difficulty"]);
         });
     }
 
     public returnHomePage() {
+        this.api.removeUsername(this._userSettingService.username);
         this.gameStatusService.resetGameStatus();
         this.renderService.stopGame().then(() => {
             this.router.navigate(["/user"]);
-        });
-        this.api.removeUsername(this._userSettingService.username);
-    }
-
-    public startNewGame() {
-        this.gameStatusService.resetGameStatus();
-        this.renderService.stopGame().then(() => {
-            this.router.navigate(["/difficulty"]);
         });
     }
 }

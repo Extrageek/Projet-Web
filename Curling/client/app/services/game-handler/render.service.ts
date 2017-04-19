@@ -27,6 +27,7 @@ import { IGameInfo } from "./game-info.interface";
 import { IGameServices } from "./games-services.interface";
 import { IAngularInfo } from "./angular-info.interface";
 import { Initialisator } from "./initialisator";
+import { LeaderboardService } from "../leaderboard.service";
 
 @Injectable()
 export class RenderService {
@@ -47,7 +48,8 @@ export class RenderService {
     constructor(gameStatusService: GameStatusService,
         lightingService: LightingService,
         userService: UserService,
-        restApiProxyService: RestApiProxyService) {
+        restApiProxyService: RestApiProxyService,
+        leaderboardService: LeaderboardService) {
 
         this._gameServices = {
             cameraService: null,
@@ -56,7 +58,8 @@ export class RenderService {
             stoneHandler: null,
             textureHandler: null,
             userService: userService,
-            proxyService: restApiProxyService
+            proxyService: restApiProxyService,
+            leaderboardService: leaderboardService,
         };
 
         this._gameInfo = {
@@ -116,11 +119,11 @@ export class RenderService {
             .then((soundManager: SoundManager) => {
                 this._gameServices.cameraService = new CameraService(soundManager);
                 this._gameServices.soundService = soundManager;
-        });
+            });
         initialisator.addObjectToInitialize<TextureHandler>(TextureHandler.createTextureHandler, [this._scene])
             .then((textureHandler: TextureHandler) => {
                 this._gameServices.textureHandler = textureHandler;
-        });
+            });
         initialisator.addObjectToInitialize<Rink>(Rink.createRink, [this._objectLoader]).then((rink: Rink) => {
             this._scene.add(rink);
             this._gameInfo.rink = rink;
@@ -128,9 +131,9 @@ export class RenderService {
         initialisator.addObjectToInitialize<Broom>(
             Broom.createBroom,
             [this._objectLoader, this._scene, new Vector3(0, 0, -11.4)])
-                .then((broom: Broom) => {
-                    this._gameInfo.broom = broom;
-        });
+            .then((broom: Broom) => {
+                this._gameInfo.broom = broom;
+            });
         initialisator.adviseWhenAllObjectsInitalized().then(() => {
             this.loadStoneHandler(this._gameServices.soundService, this._gameInfo.rink);
             this.doFinalInitAndStartGame();
@@ -226,12 +229,9 @@ export class RenderService {
         }
     }
 
-    public switchSpin(event: KeyboardEvent) {
+    public switchSpin() {
         if (this._animationID) {
-            let sKeyCode = 83;
-            if (event.keyCode === sKeyCode) {
-                StatesHandler.getInstance().onSpinButtonPressed();
-            }
+            StatesHandler.getInstance().onSpinButtonPressed();
         }
     }
 

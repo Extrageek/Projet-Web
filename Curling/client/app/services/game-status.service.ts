@@ -35,6 +35,7 @@ export class GameStatusService {
     public get currentStonesPlayer(): Array<number> {
         return this._currentStonesPlayer;
     }
+
     public set currentStonesPlayer(count: Array<number>) {
         this._currentStonesPlayer = count;
     }
