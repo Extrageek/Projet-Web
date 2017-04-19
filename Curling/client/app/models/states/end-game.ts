@@ -1,7 +1,9 @@
 import { Vector3 } from "three";
+
 import { AbstractGameState } from "./abstract-game-state";
 import { IGameInfo } from "../../services/game-handler/game-info.interface";
 import { IGameServices } from "../../services/game-handler/games-services.interface";
+
 import { StoneColor } from "../stone";
 import { Record } from "../record";
 

@@ -1,7 +1,8 @@
 import { expect } from "chai";
-import { ObjectLoader, Group, MeshPhongMaterial, Object3D, BoxGeometry, Vector3, Scene } from "three";
-import { Broom } from "./../broom";
-import { Stone, StoneColor, StoneSpin } from "./../stone";
+import { BoxGeometry, Group, Object3D, ObjectLoader, MeshPhongMaterial, Scene, Vector3 } from "three";
+
+import { Broom } from "../broom";
+import { Stone, StoneColor, StoneSpin } from "../stone";
 
 describe("Broom class should", () => {
 

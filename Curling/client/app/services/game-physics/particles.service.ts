@@ -1,7 +1,7 @@
-import { Geometry, Scene, Vector3, Color, PointsMaterial, Points } from "three";
+import { Color, Geometry, Points, PointsMaterial, Scene, Vector3 } from "three";
 import { RandomHelper } from "../../models/random-helper";
 
- export class ParticlesService {
+export class ParticlesService {
 
     private readonly RINK_FLOOR = 0;
     private readonly RINK_X_BOUND = 3.80;
@@ -39,7 +39,7 @@ import { RandomHelper } from "../../models/random-helper";
         this._geometry.vertices.push(this.assignRandomPosition());
         this._geometry.colors.push(new Color(Math.random(), Math.random(), Math.random()));
     }
-    private assignRandomPosition() : Vector3{
+    private assignRandomPosition(): Vector3 {
         let positionAxisX = RandomHelper.getNumberInRangeIncluded(15, -15);
         let positionAxisY = RandomHelper.getNumberInRangeIncluded(10, 6);
         let positionAxisZ = RandomHelper.getNumberInRangeIncluded(40, 5);
@@ -48,9 +48,9 @@ import { RandomHelper } from "../../models/random-helper";
 
     public update() {
         this._geometry.vertices.forEach((particle) => {
-            if (particle.y < this.RINK_FLOOR ) {
+            if (particle.y < this.RINK_FLOOR) {
                 if (this.particleIsOverRink(particle)) {
-                        particle.y = this.RINK_FLOOR;
+                    particle.y = this.RINK_FLOOR;
                 } else {
                     particle.y = this.RINK_Y_BOUND;
                 }
@@ -63,7 +63,7 @@ import { RandomHelper } from "../../models/random-helper";
 
     private particleIsOverRink(particle: Vector3): boolean {
         return particle.x < this.RINK_X_BOUND && particle.x > -this.RINK_X_BOUND
-                && particle.z > this.RINK_Z_LOWER_BOUND && particle.z < this.RINK_Z_UPPER_BOUND;
+            && particle.z > this.RINK_Z_LOWER_BOUND && particle.z < this.RINK_Z_UPPER_BOUND;
     }
 
     public addParticlesToScene() {

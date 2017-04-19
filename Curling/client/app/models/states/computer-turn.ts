@@ -1,12 +1,14 @@
 import { AbstractGameState } from "./abstract-game-state";
 import { ComputerShooting } from "./computer-shooting";
+
 import { ComputerAI } from "../../models/AI/computerAI";
+import { Difficulty } from "../difficulty";
 import { NormalAI } from "../../models/AI/normalAI";
 import { HardAI } from "../../models/AI/hardAI";
-import { StoneColor } from "../../models/stone";
-import { Difficulty } from "../difficulty";
+
 import { IGameInfo } from "../../services/game-handler/game-info.interface";
 import { IGameServices } from "../../services/game-handler/games-services.interface";
+import { StoneColor } from "../../models/stone";
 
 /**
  * This state is used when the computer is calculating the next shot parameters.

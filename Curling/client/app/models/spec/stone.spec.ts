@@ -1,7 +1,8 @@
 import { expect, assert } from "chai";
-import { ObjectLoader, Vector3, Mesh } from "three";
-import { Stone, StoneColor, StoneSpin } from "./../stone";
 import { Subject } from "rxjs/Subject";
+import { ObjectLoader, Vector3, Mesh } from "three";
+
+import { Stone, StoneColor, StoneSpin } from "../stone";
 
 describe("Stone tester should", function () {
     this.timeout(15000);

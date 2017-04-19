@@ -1,6 +1,6 @@
 import {
-    Scene, FontLoader, TextGeometry, MultiMaterial,
-    Mesh, Group, TextGeometryParameters, Font, Vector3, MeshBasicMaterial
+    Font, FontLoader, Group, Mesh, MeshBasicMaterial, MultiMaterial,
+    Scene, TextGeometry, TextGeometryParameters, Vector3,
 } from "three";
 
 export class TextureHandler {

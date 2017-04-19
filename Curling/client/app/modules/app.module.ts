@@ -1,31 +1,30 @@
-import { NgModule } from "@angular/core";
+import { AppRoutingModule } from "./app-routing.module";
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
 import { MaterialModule } from "@angular/material";
-
-import { AppRoutingModule } from "./app-routing.module";
+import { NgModule } from "@angular/core";
 
 import { AppComponent } from "../components/app.component";
-import { LeaderboardComponent } from "../components/leaderboard.component";
-import { UsernameComponent } from "../components/username.component";
 import { DifficultyComponent } from "../components/difficulty.component";
+import { LeaderboardComponent } from "../components/leaderboard.component";
 import { DisplayComponent } from "../components/display.component";
+import { UsernameComponent } from "../components/username.component";
 
 import { ModifierDirective } from "../directives/modifier.directive";
 
+import { GameStatusService } from "./../services/game-status.service";
+import { LeaderboardService } from "./../services/leaderboard.service";
+import { LightingService } from "./../services/views/ligthing.service";
 import { RenderService } from "../services/game-handler/render.service";
 import { RestApiProxyService } from "./../services/rest-api-proxy.service";
 import { UserService } from "./../services/user.service";
-import { GameStatusService } from "./../services/game-status.service";
-import { LightingService } from "./../services/views/ligthing.service";
-import { LeaderboardService } from "./../services/leaderboard.service";
 
 @NgModule({
-  imports: [BrowserModule, FormsModule, AppRoutingModule, MaterialModule],
-  declarations: [AppComponent, LeaderboardComponent, ModifierDirective,
-    UsernameComponent, DifficultyComponent, DisplayComponent],
-  providers: [RenderService, RestApiProxyService, UserService,
-    GameStatusService, LightingService, LeaderboardService],
+  imports: [AppRoutingModule, BrowserModule, FormsModule, MaterialModule],
+  declarations: [ModifierDirective, AppComponent, DifficultyComponent,
+    DisplayComponent, LeaderboardComponent, UsernameComponent],
+  providers: [GameStatusService, LeaderboardService, LightingService,
+    RenderService, RestApiProxyService, UserService],
   bootstrap: [AppComponent]
 })
 

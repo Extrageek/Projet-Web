@@ -1,6 +1,8 @@
 import { Vector3 } from "three";
+
 import { IRinkInfo } from "../scenery/rink-info.interface";
 import { IShotParameters } from "../shot-parameters.interface";
+
 import { PhysicEngine } from "../../services/game-physics/physic-engine";
 
 export abstract class ComputerAI {

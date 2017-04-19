@@ -1,4 +1,4 @@
-import { Line, Geometry, LineDashedMaterial, LineDashedMaterialParameters, Scene, Vector3 } from "three";
+import { Geometry, Line, LineDashedMaterial, LineDashedMaterialParameters, Scene, Vector3 } from "three";
 import { IGameState } from "../game-state.interface";
 
 export class DashedLine implements IGameState {

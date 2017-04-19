@@ -1,11 +1,13 @@
 import { expect } from "chai";
 import { Vector3, ObjectLoader, Object3D } from "three";
-import { PerfectAI } from "../AI/perfectAI";
-import { Rink } from "../scenery/rink";
+
 import { IRinkInfo } from "../scenery/rink-info.interface";
-import { Stone, StoneColor } from "../stone";
 import { IShotParameters } from "../shot-parameters.interface";
 import { IGameState } from "../game-state.interface";
+
+import { PerfectAI } from "../AI/perfectAI";
+import { Rink } from "../scenery/rink";
+import { Stone, StoneColor } from "../stone";
 
 function updateLoopAndVerifyPosition(numberOfUpdates: number,
     gameState: IGameState & Object3D,

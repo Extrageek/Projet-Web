@@ -1,6 +1,7 @@
 import { expect } from "chai";
+import { MeshPhongMaterial, ObjectLoader } from "three";
+
 import { Rink } from "./../scenery/rink";
-import { ObjectLoader, MeshPhongMaterial } from "three";
 
 describe("Rink class should", () => {
 
