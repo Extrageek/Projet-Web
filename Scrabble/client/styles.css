@@ -100,9 +100,9 @@ md-card {
 }
 
 #login-info {
-    border: 1px solid white !important;
     background-color: transparent !important;
     color: white !important;
     text-align: center;
     display: inline-block;
+    margin-right: 1vw;
 }

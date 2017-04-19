@@ -24,6 +24,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
 
     private _hasNewMessages: boolean;
     private _wasClicked: boolean;
+    private _scrollOnce: boolean;
 
     @ViewChild("scroll") private myScrollContainer: ElementRef;
 
@@ -31,6 +32,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
         this._messageArray = new Array<IRoomMessage>();
         this._hasNewMessages = false;
         this._wasClicked = false;
+        this._scrollOnce = false;
     }
 
     ngOnInit(): void {
@@ -52,6 +54,10 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
 
     public get wasClicked(): boolean {
         return this._wasClicked;
+    }
+
+    public set wasClicked(b: boolean) {
+        this._wasClicked = b;
     }
 
     public get hasNewMessages(): boolean {
@@ -105,7 +111,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
                     this._username = this.socketService.player.username;
                     this._messageArray.push(response as IRoomMessage);
                     this._hasNewMessages = (this._username !== response._username);
-
+                    this._scrollOnce = true;
                 }
             });
     }
@@ -126,6 +132,7 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
         if (message._commandType === CommandType.GuideCmd) {
             this._messageArray.push(message);
             this._hasNewMessages = true;
+            this._scrollOnce = true;
         }
     }
 
@@ -141,8 +148,9 @@ export class ChatroomComponent implements AfterViewChecked, OnInit, OnDestroy {
 
     // Use to help the user when scrolling
     ngAfterViewChecked() {
-        if (this._hasNewMessages && !this._wasClicked) {
+        if (!this._wasClicked && this._scrollOnce) {
             this.scrollToBottom();
+            this._scrollOnce = false;
         }
         if (this._wasClicked) {
             setTimeout(() => {

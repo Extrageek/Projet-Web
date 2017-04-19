@@ -42,6 +42,7 @@ export class UsernameComponent implements OnInit {
     }
 
     public activateLoginNext(username: string) {
+        this.alertBox.nativeElement.classList.add("fade");
         this._isLoginNextActivated = this.userSettingService.activateButtonNextLogin(username);
     }
 

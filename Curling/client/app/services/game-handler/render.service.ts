@@ -229,33 +229,40 @@ export class RenderService {
         }
     }
 
-    public switchSpin() {
+    public switchSpin(event?: KeyboardEvent) {
         if (this._animationID) {
-            StatesHandler.getInstance().onSpinButtonPressed();
+            if (!event) {
+                StatesHandler.getInstance().onSpinButtonPressed();
+            } else {
+                let sKeyCode = 83;
+                if (event.keyCode === sKeyCode) {
+                    StatesHandler.getInstance().onSpinButtonPressed();
+                }
+            }
         }
     }
 
     public switchCamera() {
-        if (this._animationID) {
-            StatesHandler.getInstance().onSpacebarPressed();
-        }
+    if (this._animationID) {
+        StatesHandler.getInstance().onSpacebarPressed();
     }
+}
 
     public onMouseMove(event: MouseEvent) {
-        if (this._animationID) {
-            StatesHandler.getInstance().onMouseMove(event);
-        }
+    if (this._animationID) {
+        StatesHandler.getInstance().onMouseMove(event);
     }
+}
 
     public onMousePressed() {
-        if (this._animationID) {
-            StatesHandler.getInstance().onMouseButtonPressed();
-        }
+    if (this._animationID) {
+        StatesHandler.getInstance().onMouseButtonPressed();
     }
+}
 
     public onMouseReleased() {
-        if (this._animationID) {
-            StatesHandler.getInstance().onMouseButtonReleased();
-        }
+    if (this._animationID) {
+        StatesHandler.getInstance().onMouseButtonReleased();
     }
+}
 }

@@ -1,7 +1,6 @@
 import * as http from "http";
 import * as io from "socket.io";
 
-import { RoomHandler } from "./room-handler";
 import { Room } from "../models/room";
 import { Player } from "../models/player";
 import { Letter } from "../models/letter";
@@ -13,9 +12,11 @@ import { CommandStatus } from "./commons/command/command-status";
 import { ICommandRequest } from "./commons/command/command-request";
 import { IPlaceWordResponse } from "./commons/command/place-word-response.interface";
 import { ICommandMessage } from "./commons/message/command-message.interface";
-
 import { IRoomMessage } from "./commons/message/room-message.interface";
+
 import { MessageHandler } from "./message-handler";
+import { NameHandler } from './name-handler';
+import { RoomHandler } from "./room-handler";
 
 const THREE_SECONDS = 3000;
 
@@ -23,6 +24,7 @@ export class SocketConnectionHandler {
 
     private _roomHandler: RoomHandler;
     private _messageHandler: MessageHandler;
+    private _nameHandler: NameHandler;
     private _socket: SocketIO.Server;
 
     public get roomHandler(): RoomHandler {
@@ -37,6 +39,8 @@ export class SocketConnectionHandler {
 
         this._roomHandler = new RoomHandler();
         this._messageHandler = new MessageHandler();
+        this._nameHandler = new NameHandler();
+
         this._socket = io.listen(server);
         this.initializeListeners();
     }
@@ -61,28 +65,34 @@ export class SocketConnectionHandler {
 
         socket.on(SocketEventType.newGameRequest,
             (connectionInfos: { username: string, gameType: number }) => {
-                if (connectionInfos !== null) {
-                    if (this._roomHandler.getPlayerByUsername(connectionInfos.username) === null) {
+                if (connectionInfos.username && connectionInfos.gameType) {
+                    let name = this._nameHandler.getNameBySocketId(socket.id);
+                    if ((name === null && this._nameHandler.getSocketIdByName(connectionInfos.username) === null)
+                        || this._nameHandler.getSocketIdByName(name) === socket.id) {
 
-                        // Create a new player and get his room id
-                        let player = new Player(connectionInfos.username, connectionInfos.gameType, socket.id);
-                        let room = this._roomHandler.addPlayer(player);
-                        let message = `${player.username}` + ` joined the room`;
-                        // Create the response to send
-                        let response = this._messageHandler.createRoomMessageResponse(player.username, room, message);
-                        socket.join(response._roomId);
+                            name = (name === null) ? connectionInfos.username : name;
 
-                        // Emit to all the player in the room.
-                        this._socket.to(response._roomId).emit(SocketEventType.joinRoom, response);
+                            // Create a new player and get his room id
+                            let player = new Player(name, connectionInfos.gameType, socket.id);
+                            this._nameHandler.addConnection(name, socket.id);
+                            let room = this._roomHandler.addPlayer(player);
+                            let message = `${player.username}` + ` joined the room`;
+                            // Create the response to send
+                            let response = this._messageHandler
+                                .createRoomMessageResponse(player.username, room, message);
+                            socket.join(response._roomId);
 
-                        // Subscribe to the timer in the room if the room is ready
-                        if (room.isFull()) {
-                            this._socket.to(response._roomId).emit(SocketEventType.updateBoard, room.board);
-                            let test = room.timerService.timer().subscribe(
-                                (counter: { minutes: number, seconds: number }) => {
-                                    // Send the counter value to the members of the room
-                                    this._socket.to(response._roomId).emit(SocketEventType.timerEvent, counter);
-                                });
+                            // Emit to all the player in the room.
+                            this._socket.to(response._roomId).emit(SocketEventType.joinRoom, response);
+
+                            // Subscribe to the timer in the room if the room is ready
+                            if (room.isFull()) {
+                                this._socket.to(response._roomId).emit(SocketEventType.updateBoard, room.board);
+                                let test = room.timerService.timer().subscribe(
+                                    (counter: { minutes: number, seconds: number }) => {
+                                        // Send the counter value to the members of the room
+                                        this._socket.to(response._roomId).emit(SocketEventType.timerEvent, counter);
+                                    });
                         }
 
                     } else {
@@ -174,7 +184,6 @@ export class SocketConnectionHandler {
                         newEasel = room.letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
                         if (room.isGameOver) {
                             let winnerUsername = room.getWinnerUsername();
-                            console.log("GAME OVER");
 
                             this._socket.to(room.roomId).emit(SocketEventType.gameOver, winnerUsername);
                         }
@@ -321,17 +330,18 @@ export class SocketConnectionHandler {
     private subscribeToLeavingEvent(socket: SocketIO.Socket) {
 
         socket.on((SocketEventType.playerLeftRoom), () => {
-            let leavingPlayer = this._roomHandler.getPlayerBySocketId(socket.id);
+            let leavingPlayer = this._nameHandler.getNameBySocketId(socket.id);
 
             if (leavingPlayer) {
 
-                let playerRoom = this._roomHandler.getRoomByUsername(leavingPlayer.username);
+                let playerRoom = this._roomHandler.getRoomByUsername(leavingPlayer);
 
                 if (playerRoom) {
                     this._roomHandler.handleTheALeavingEvent(socket.id);
                     this.handlePlayerRemoval(leavingPlayer, playerRoom);
                 }
             }
+            console.log(leavingPlayer, " left room");
         });
     }
 
@@ -339,27 +349,27 @@ export class SocketConnectionHandler {
     private subscribeToDisconnectEvent(socket: SocketIO.Socket) {
 
         socket.on((SocketEventType.disconnect), () => {
-            let leavingPlayer = this._roomHandler.getPlayerBySocketId(socket.id);
-
+            let leavingPlayer = this._nameHandler.getNameBySocketId(socket.id);
             if (leavingPlayer) {
 
-                let playerRoom = this._roomHandler.getRoomByUsername(leavingPlayer.username);
-
+                let playerRoom = this._roomHandler.getRoomByUsername(leavingPlayer);
                 if (playerRoom) {
                     this._roomHandler.handleTheALeavingEvent(socket.id);
                     this.handlePlayerRemoval(leavingPlayer, playerRoom);
                 }
+                this._nameHandler.removeConnection(socket.id);
             }
+            console.log(leavingPlayer, " disconnected");
         });
     }
 
-    private handlePlayerRemoval(leavingPlayer: Player, playerRoom: Room) {
+    private handlePlayerRemoval(leavingPlayer: string, playerRoom: Room) {
 
-        let message = `${leavingPlayer.username}` + ` left the room`;
+        let message = `${leavingPlayer}` + ` left the room`;
 
         // Create a response for the other members of the room
         let roomMessage = this._messageHandler.createRoomMessageResponse(
-            leavingPlayer.username,
+            leavingPlayer,
             playerRoom,
             message);
 
