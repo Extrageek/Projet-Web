@@ -35,16 +35,15 @@ export class RoomHandler {
                 if (room !== null && room !== undefined) {
                     // Add the player to an existing room.
                     room.addPlayer(player);
+                    if (room.isFull()) {
+                        room.randomizePlayersPriorities();
+                    }
                 }
                 else {
                     // Create a new room if a room is not available
                     room = new Room(player.numberOfPlayers);
                     room.addPlayer(player);
                     this._rooms.push(room);
-
-                    if (room.isFull()) {
-                        room.randomizePlayersPriorities();
-                    }
                 }
                 return room;
 
