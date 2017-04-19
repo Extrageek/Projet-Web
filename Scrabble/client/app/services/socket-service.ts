@@ -65,10 +65,6 @@ export class SocketService {
             this._socket.on(socketEventType.toString(), (data: any) => {
                 observer.next(data);
             });
-
-            return () => {
-                this._socket.disconnect();
-            };
         });
         return observable;
     }
