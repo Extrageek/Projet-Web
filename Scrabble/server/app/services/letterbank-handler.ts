@@ -43,7 +43,6 @@ export class LetterBankHandler {
         let newEasel = new Array<Letter>();
         let randomLetter: Letter;
         let randomNumber: number;
-        let chosenLetter: Letter;
 
         for (let index = 0; index < numberOfLetters; index++) {
             randomNumber = this.getRandomLetter();

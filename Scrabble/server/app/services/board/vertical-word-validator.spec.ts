@@ -1,15 +1,8 @@
-import { expect, assert } from "chai";
+import { expect } from "chai";
 
-import { BoardHelper } from "./board-helper";
 import { VerticalWordValidator } from "./vertical-word-validator";
-import { LetterHelper } from "../../models/commons/letter-helper";
-import { CommandsHelper } from "../commons/command/command-helper";
 
-import { ExceptionHelper } from "../commons/exception-helper";
-import { WordDirection } from "../commons/word-direction";
 import { Letter } from "../../models/letter";
-import { Easel } from "../../models/easel";
-import { SquareType } from "../../models/square/square-type";
 import { Player } from "../../models/player";
 import { Board } from "../../models/board/board";
 import { IValidationRequest } from "./validation-request.interface";

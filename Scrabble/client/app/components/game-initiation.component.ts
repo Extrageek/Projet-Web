@@ -4,7 +4,6 @@ import { Subscription } from "rxjs/Subscription";
 import { SocketService } from "../services/socket-service";
 import { SocketEventType } from "../commons/socket-eventType";
 import { IRoomMessage } from "../commons/messages/room-message.interface";
-import { Player } from "../models/player";
 
 @Component({
     moduleId: module.id,
@@ -41,7 +40,6 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
         if (this.socketService._socket && this.socketService._socket.disconnected) {
             this.socketService._socket.connect();
         }
-        this.socketService.player.username;
         this._sortsOfGame = Array(GameInitiationComponent.MAX_PLAYERS).fill(0).map((x, i) => i + 1);
     }
 
@@ -114,13 +112,5 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
         this.socketService.emitMessage(
             SocketEventType.NEW_GAME_REQUEST,
             { 'username': username, 'gameType': this._numberOfPlayers });
-    }
-
-    private unsubscribeToChannelEvent() {
-        this._onConnectedSubscription.unsubscribe();
-        this._onJoinedRoomSubscription.unsubscribe();
-        this._onUsernameAlreadyExistSubscription.unsubscribe();
-        this._onInvalidRequestEventSubscription.unsubscribe();
-        this._onConnectionErrorSubscription.unsubscribe();
     }
 }

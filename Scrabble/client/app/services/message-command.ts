@@ -1,10 +1,7 @@
-import { SocketService } from './socket-service';
 import { ICommand } from "./commons/command.interface";
 import { ICommandRequest } from "./commons/command-request.interface";
 import { CommandStatus } from './commons/command-status';
 import { CommandType } from './commons/command-type';
-import { CommandsHelper } from "./commons/commands-helper";
-import { SocketEventType } from "../commons/socket-eventType";
 import { ChatroomComponent } from "../components/chatroom.component";
 
 export class MessageCommand implements ICommand {

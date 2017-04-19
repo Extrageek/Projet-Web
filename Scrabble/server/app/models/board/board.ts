@@ -6,7 +6,6 @@ import { SquarePosition } from "../square/square-position";
 import { SquareType } from "../square/square-type";
 import { LetterHelper } from "../commons/letter-helper";
 import { BoardHelper } from "../../services/board/board-helper";
-import { DictionnaryManager } from "../dictionnary-manager";
 import { VerificationService } from "../../services/verification.service";
 
 const BOARD_SIZE = 15;

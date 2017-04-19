@@ -36,7 +36,6 @@ export class VerificationService {
         let firstRowIndex = BoardHelper.convertCharToIndex(response._squarePosition._row);
         let firstColumnIndex = response._squarePosition._column - 1;
         let initialWord = this.createStringFromArrayString(response._letters);
-        let scoreWord = 0;
 
         if (wordOrientation === CommandsHelper.HORIZONTAL_ORIENTATION) {
             // verify the initial word

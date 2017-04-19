@@ -1,4 +1,4 @@
-import { expect, assert } from "chai";
+import { expect } from "chai";
 import { ExceptionHelper } from "../commons/exception-helper";
 
 describe("ExceptionHelper", () => {

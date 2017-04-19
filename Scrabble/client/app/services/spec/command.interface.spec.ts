@@ -1,5 +1,5 @@
-import { expect, assert } from "chai";
-import { ICommand } from "./commons/command.interface";
+import { expect } from "chai";
+import { ICommand } from "./.././commons/command.interface";
 
 let mockCommand: ICommand = {
     execute: () => { /**/ }

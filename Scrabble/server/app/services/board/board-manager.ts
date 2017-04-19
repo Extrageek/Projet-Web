@@ -1,14 +1,11 @@
 import { CommandsHelper } from "../commons/command/command-helper";
 import { ExceptionHelper } from "../commons/exception-helper";
 import { BoardHelper } from "./board-helper";
-import { WordDirection } from "../commons/word-direction";
-import { LetterHelper } from "../../models/commons/letter-helper";
 
 import { Player } from "../../models/player";
 import { Board } from "../../models/board/board";
 import { Letter } from "../../models/letter";
 import { Alphabet } from "../../models/commons/alphabet";
-import { SquareType } from "../../models/square/square-type";
 import { IPlaceWordResponse } from "../commons/command/place-word-response.interface";
 import { LetterBankHandler } from "../letterbank-handler";
 import { VerticalWordValidator } from "./vertical-word-validator";

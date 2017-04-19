@@ -61,7 +61,6 @@ export class QueueCollection<AnyType> {
         }
 
         let foundItem: AnyType;
-        let index: number;
 
         foundItem = this._list.find((element) => {
             return (element === item);

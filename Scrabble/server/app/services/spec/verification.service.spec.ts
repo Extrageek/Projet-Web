@@ -1,12 +1,7 @@
 import { expect } from "chai";
 import { VerificationService } from '../verification.service';
 import { Board } from '../../models/board/board';
-import { DictionnaryManager } from "../../models/dictionnary-manager";
 import { CommandsHelper } from "../commons/command/command-helper";
-import { BoardHelper } from "../board/board-helper";
-import { SquareType } from "../../models/square/square-type";
-import { SquarePosition } from "../../models/square/square-position";
-import { Square } from "../../models/square/square";
 import { Letter } from "../../models/letter";
 import { IPlaceWordResponse } from "../commons/command/place-word-response.interface";
 

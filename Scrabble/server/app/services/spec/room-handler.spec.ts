@@ -274,7 +274,7 @@ describe("Room Handler", () => {
         let roomCapacity = 1;
         let room = new Room(roomCapacity);
         let numberOfPlayersLoc = 1;
-        let player = new Player(fakename1, numberOfPlayersLoc, fakeSocketId1);
+        player1 = new Player(fakename1, numberOfPlayersLoc, fakeSocketId1);
         room.addPlayer(player1);
 
         // initialize the players easels
@@ -300,6 +300,7 @@ describe("Room Handler", () => {
         let room = new Room(roomCapacity);
         roomHandler.addPlayer(player1);
         let fakeNewLetters = () => roomHandler.exchangeLetterOfCurrentPlayer(player1.socketId, null);
+        roomHandler.removeRoom(room);
         expect(fakeNewLetters).to.be.throw(Error);
     });
 
@@ -312,6 +313,7 @@ describe("Room Handler", () => {
         let notExistingPlayerSocketId = "@sfsffsf@fgsggs";
 
         let isExchanged = roomHandler.exchangeLetterOfCurrentPlayer(notExistingPlayerSocketId, fakeLettersToBeChanged);
+        roomHandler.removeRoom(room);
         assert(isExchanged === false);
     });
 
