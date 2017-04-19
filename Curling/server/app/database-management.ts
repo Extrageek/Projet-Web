@@ -55,7 +55,7 @@ export class DatabaseManager {
             let docs: Array<any>;
             try {
                 let collection = db.collection('leaderboard');
-                docs = (await collection.find().sort({scorePlayer: -1, scoreComputer: 1}).toArray());
+                docs = (await collection.find().sort({scorePlayer: -1, scoreComputer: 1, date: 1}).toArray());
             } finally {
                 db.close();
             }
