@@ -72,7 +72,6 @@ export class DisplayComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.leaderboardService.fetchRecords();
         this._userSettingService = this.userService;
         if (this._userSettingService.username === "") {
             this.router.navigate(["/"]);

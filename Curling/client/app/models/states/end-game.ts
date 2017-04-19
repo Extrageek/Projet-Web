@@ -32,9 +32,11 @@ export class EndGame extends AbstractGameState {
     }
 
     protected performEnteringState() {
-        if (this.isNewRecord()) {
+        if (this._gameInfo.gameStatus.scorePlayer > this._gameInfo.gameStatus.scoreComputer) {
             this.saveNewRecord();
         }
+        this._gameServices.leaderboardService.fetchRecords();
+        this._gameServices.stoneHandler.stopStonesIllumination();
         this._gameServices.cameraService.setPerspectiveCameraCurrent();
         this._gameServices.cameraService.movePCameraEndRink();
         this._gameServices.particlesService.createParticles();
@@ -45,10 +47,6 @@ export class EndGame extends AbstractGameState {
             this._animationStopped = true;
             this._gameInfo.gameStatus.gameIsFinished();
         }, this.FIVE_SECONDS);
-    }
-
-    private isNewRecord(): boolean {
-        return this._gameInfo.gameStatus.scorePlayer !== this._gameInfo.gameStatus.scoreComputer;
     }
 
     private async saveNewRecord() {
