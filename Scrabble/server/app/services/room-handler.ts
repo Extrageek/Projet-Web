@@ -1,5 +1,4 @@
 import { Room } from "../models/room";
-import { Letter } from "../models/letter";
 import { Player } from "../models/player";
 
 export class RoomHandler {
@@ -162,7 +161,6 @@ export class RoomHandler {
     }
 
     public exchangeLetterOfCurrentPlayer(socketId: string, lettersToBeExchange: Array<string>): boolean {
-        let letters = new Array<string>();
         if (socketId === null) {
             throw new Error("The socket value cannot be null.");
         }
@@ -188,13 +186,7 @@ export class RoomHandler {
             // Get the leaving player by his/her socket id
             let leavingPlayer = this.getPlayerBySocketId(socketId);
 
-
-
             let easelLetter = leavingPlayer.easel.letters;
-
-
-            let testroom = this.getRoomBySocketId(socketId);
-
 
             let room = this.getRoomBySocketId(socketId);
 
@@ -203,8 +195,6 @@ export class RoomHandler {
 
             // Remove the player from the room
             room.removePlayer(leavingPlayer);
-
-
 
             return true;
         } catch (error) {

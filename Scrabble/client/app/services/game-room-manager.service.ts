@@ -5,7 +5,6 @@
  */
 
 import { Injectable } from "@angular/core";
-import { IScrabbleLetter } from "../models/scrabble-letter";
 import { LetterHelper } from "../commons/letter-helper";
 
 declare var jQuery: any;

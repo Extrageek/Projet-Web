@@ -1,6 +1,3 @@
-import { BoardRows } from "../board/board-rows";
-import { BoardColumn } from "../board/board-column";
-
 export class SquarePosition {
     private _row: string;
     private _column: number;

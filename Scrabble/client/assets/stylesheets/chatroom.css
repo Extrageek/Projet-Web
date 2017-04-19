@@ -68,7 +68,7 @@
 .self-message p.msg{
     float: right;
     margin: 10px 0px;
-    width: 90%;
+    max-width: 90%;
 }
 
 .other-message p.msg{

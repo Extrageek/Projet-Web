@@ -7,9 +7,6 @@ import { LetterHelper } from "../commons/letter-helper";
 import { ExceptionHelperService } from "./exception-helper.service";
 
 import { Board } from '../models/board';
-import { IScrabbleLetter } from "../models/scrabble-letter";
-import { IPlaceWordResponse } from "./commons/place-command-response.interface";
-import { ICommandRequest } from './commons/command-request.interface';
 
 export const INPUT_ID_PREFIX = '#';
 export const CSS_BACKGROUND_IMAGE = 'background-image';

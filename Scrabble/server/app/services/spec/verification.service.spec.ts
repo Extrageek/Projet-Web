@@ -1,12 +1,7 @@
 import { expect } from "chai";
 import { VerificationService } from '../verification.service';
 import { Board } from '../../models/board/board';
-import { DictionnaryManager } from "../../models/dictionnary-manager";
 import { CommandsHelper } from "../commons/command/command-helper";
-import { BoardHelper } from "../board/board-helper";
-import { SquareType } from "../../models/square/square-type";
-import { SquarePosition } from "../../models/square/square-position";
-import { Square } from "../../models/square/square";
 import { Letter } from "../../models/letter";
 import { IPlaceWordResponse } from "../commons/command/place-word-response.interface";
 
@@ -284,7 +279,7 @@ describe("Word verification in verification services should ", () => {
             expect(verificationService.score).to.be.equals((board.squares[4][10].letter.point +
                 board.squares[4][11].letter.point + board.squares[4][12].letter.point));
             expect(wordTop).to.be.equals(true);
-    });
+        });
 
 
     it("--HORIZONTAL return points with multipliers on a double word", () => {
@@ -341,7 +336,7 @@ describe("Word verification in verification services should ", () => {
         board.squares[6][10].isBusy = true;
         let wordTop = verificationService.verifyWordVertical(board, 4, 10, "CAR");
         expect(verificationService.score).to.be.equals((board.squares[4][10].letter.point +
-        board.squares[5][10].letter.point + board.squares[6][10].letter.point));
+            board.squares[5][10].letter.point + board.squares[6][10].letter.point));
         expect(wordTop).to.be.equals(true);
     });
 
@@ -357,7 +352,7 @@ describe("Word verification in verification services should ", () => {
         board.addLastLetterAdded(6, 10);
         let wordTop = verificationService.verifyWordVertical(board, 4, 10, "CAR");
         expect(verificationService.score).to.be.equals((board.squares[4][10].letter.point +
-        board.squares[5][10].letter.point + board.squares[6][10].letter.point) * BONUS_DOUBLE);
+            board.squares[5][10].letter.point + board.squares[6][10].letter.point) * BONUS_DOUBLE);
         expect(wordTop).to.be.equals(true);
     });
 
@@ -370,7 +365,7 @@ describe("Word verification in verification services should ", () => {
         board.squares[2][7].isBusy = true;
         let wordTop = verificationService.verifyWordVertical(board, 0, 7, "CAR");
         expect(verificationService.score).to.be.equals((board.squares[0][7].letter.point +
-        board.squares[1][7].letter.point + board.squares[2][7].letter.point));
+            board.squares[1][7].letter.point + board.squares[2][7].letter.point));
         expect(wordTop).to.be.equals(true);
     });
 
@@ -403,20 +398,20 @@ describe("Word verification in verification services should ", () => {
         board.squares[7][7].isBusy = true;
         board.squares[7][8].letter = new Letter("R", 1, 0);
         board.squares[7][8].isBusy = true;
-        board.addLastLetterAdded(6, 7);
+        board.addLastLetterAdded(7, 6);
         board.addLastLetterAdded(7, 7);
-        board.addLastLetterAdded(8, 7);
-        let response : IPlaceWordResponse = {
-            _squarePosition : {
-                _row : "H",
-                _column : 7,
+        board.addLastLetterAdded(7, 8);
+        let response: IPlaceWordResponse = {
+            _squarePosition: {
+                _row: "H",
+                _column: 7,
             },
-            _letters : arrayStr,
-            _wordOrientation : CommandsHelper.HORIZONTAL_ORIENTATION
+            _letters: arrayStr,
+            _wordOrientation: CommandsHelper.HORIZONTAL_ORIENTATION
         };
         verificationService.verifyWordsCreated(response, board);
 
-        expect(verificationService.score).to.be.equals(undefined);
+        expect(verificationService.score).to.be.equals(15);
     });
 
     it("VERTICAL verify created words and correctly calculate score dependant on orientation", () => {
@@ -432,19 +427,20 @@ describe("Word verification in verification services should ", () => {
         board.squares[7][7].isBusy = true;
         board.squares[8][7].letter = new Letter("R", 1, 0);
         board.squares[8][7].isBusy = true;
-        board.addLastLetterAdded(7, 6);
+        board.addLastLetterAdded(6, 7);
         board.addLastLetterAdded(7, 7);
-        board.addLastLetterAdded(7, 8);
-        let response : IPlaceWordResponse = {
-            _squarePosition : {
-                _row : "G",
-                _column : 8,
+        board.addLastLetterAdded(8, 7);
+
+        let response: IPlaceWordResponse = {
+            _squarePosition: {
+                _row: "G",
+                _column: 8,
             },
-            _letters : arrayStr,
-            _wordOrientation : CommandsHelper.VERTICAL_ORIENTATION
+            _letters: arrayStr,
+            _wordOrientation: CommandsHelper.VERTICAL_ORIENTATION
         };
         verificationService.verifyWordsCreated(response, board);
 
-        expect(verificationService.score).to.be.equals(undefined);
+        expect(verificationService.score).to.be.equals(15);
     });
 });

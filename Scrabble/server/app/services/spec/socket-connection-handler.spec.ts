@@ -1,27 +1,19 @@
-import { expect, assert } from "chai";
+import { expect } from "chai";
 import * as http from "http";
 let ioClient = require('socket.io-client');
 
 import { SocketConnectionHandler } from "../socket-connection-handler";
-import { RoomHandler } from "../room-handler";
 import { SocketEventType } from "../commons/socket-eventType";
 import { CommandType } from "../commons/command/command-type";
 import { CommandStatus } from "../commons/command/command-status";
 import { IPlaceWordResponse } from "../commons/command/place-word-response.interface";
 import { ICommandRequest } from "../commons/command/command-request";
-import { IRoomMessage } from "../commons/message/room-message.interface";
-import { ICommandMessage } from "../commons/message/command-message.interface";
 
 import { SquarePosition } from "../../models/square/square-position";
 
 const fakePortNumber = 8080;
 const fakeServerUrl = "http://127.0.0.1:" + `${fakePortNumber}`;
 let httpServer: http.Server;
-
-let chai = require('chai'),
-    mocha = require('mocha'),
-    sinon = require('sinon'),
-    should = chai.should();
 
 let socketHandler: SocketConnectionHandler;
 let client1: SocketIO.Socket;
@@ -32,9 +24,7 @@ let options = {
     forceNew: true
 };
 
-let userCounter = 0;
 const playerName1 = "Marie";
-const playerName2 = "Helene";
 class RoomMessage {
     username: string;
     roomId: string;
@@ -308,11 +298,6 @@ describe("SocketConnectionHandler, should create a socket connection handler", (
 
         client2 = ioClient.connect(fakeServerUrl, options);
         client2.once("connect", function () {
-            let request = {
-                commandType: CommandType.InvalidCmd,
-                commandStatus: CommandStatus.Ok,
-                data: ""
-            };
             client2.emit(SocketEventType.initializeEasel, null);
         });
 
@@ -332,12 +317,6 @@ describe("SocketConnectionHandler, should create a socket connection handler", (
                 // console.log("Joined", response);
                 expect(response).to.not.be.null;
             });
-
-            let request = {
-                commandType: CommandType.InvalidCmd,
-                commandStatus: CommandStatus.Ok,
-                data: ""
-            };
 
             client2.emit(SocketEventType.newGameRequest, { username: "mhgmfd", gameType: 2 });
             client2.emit(SocketEventType.initializeEasel, playerName1);

@@ -1,6 +1,5 @@
 import { Player } from "./player";
 import { QueueCollection } from "./queue-collection";
-import { Letter } from "./letter";
 import { Board } from "./board/board";
 import { TimerService } from "../services/timer.service";
 import { LetterBankHandler } from "../services/letterbank-handler";

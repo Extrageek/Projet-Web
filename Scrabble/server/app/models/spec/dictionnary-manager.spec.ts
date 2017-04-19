@@ -1,7 +1,5 @@
 import { expect } from "chai";
 
-import { DICTIONNARY } from "../../data/dictionnary-data";
-import { ExceptionHelper } from "../../services/commons/exception-helper";
 import { DictionnaryManager } from "../dictionnary-manager";
 
 describe("DictionnaryManager should", () => {

@@ -7,9 +7,11 @@ export class Player {
     private _socketId: string;
     private _score: number;
     private _letters: Array<IScrabbleLetter>;
+    private _isOnline: boolean;
+
+
     // The constructor of a player
     constructor(username: string) {
-
         if (username === null) {
             throw new Error("Argument error: The username cannot be null");
         }
@@ -17,6 +19,7 @@ export class Player {
         this._score = 0;
         this.letters = new Array<IScrabbleLetter>();
         this._numberOfPlayers = 1;
+        this._isOnline = true;
     }
 
     public get letters(): Array<IScrabbleLetter> {
@@ -57,5 +60,12 @@ export class Player {
     }
     public set score(score: number) {
         this._score = score;
+    }
+
+    public get isOnline(): boolean {
+        return this._isOnline;
+    }
+    public set isOnline(v: boolean) {
+        this._isOnline = v;
     }
 }

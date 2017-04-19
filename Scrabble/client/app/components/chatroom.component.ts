@@ -1,15 +1,13 @@
 import { Component, OnInit, OnDestroy, AfterViewChecked, ElementRef, ViewChild } from "@angular/core";
 import { Subscription } from "rxjs/Subscription";
 
-import { Route, ActivatedRoute } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { SocketService } from "../services/socket-service";
 import { SocketEventType } from "../commons/socket-eventType";
 import { IGameMessage } from "../commons/messages/game-message.interface";
 import { IRoomMessage } from "../commons/messages/room-message.interface";
 import { ICommandMessage } from "../commons/messages/command-message.interface";
 import { CommandType } from '../services/commons/command-type';
-
-import { BlinkDirective } from "../directive/blink.directive";
 
 @Component({
     moduleId: module.id,

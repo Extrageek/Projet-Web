@@ -1,50 +1,29 @@
 import { NO_ERRORS_SCHEMA, } from "@angular/core";
 import { APP_BASE_HREF } from "@angular/common";
-import { RouterTestingModule, } from "@angular/router/testing";
-import { Router, ActivatedRoute } from "@angular/router";
 import { GameStartModule } from '../../modules/game-start.module';
 import {
-    fakeAsync,
-    inject,
     ComponentFixture,
     TestBed,
     async,
 } from '@angular/core/testing';
 
-import { expect, assert } from "chai";
+import { expect } from "chai";
 
 import { EaselComponent } from "../../components/easel.component";
 import { ChatroomComponent } from "../../components/chatroom.component";
 import { GameComponent } from "../../components/game-room.component";
-import { GameInitiationComponent } from "../../components/game-initiation.component";
 import { BoardComponent } from "../../components/board.component";
 
-import { IScrabbleLetter } from "../../models/scrabble-letter";
 import { Alphabet } from "../../models/commons/alphabet";
-import { SocketEventType } from '../../commons/socket-eventType';
 
-import { CommandStatus } from "../commons/command-status";
 import { CommandType } from "../commons/command-type";
-import { ICommandRequest } from "../commons/command-request.interface";
 
-import { MessageCommand } from '../message-command';
-import { ChangeLettersCommand } from '../change-letters-command';
-import { PlaceWordCommand } from '../place-word-command';
-import { PassCommand } from '../pass-command';
-
-import { SocketService } from "../../services/socket-service";
 import { EaselManagerService } from "../easel-manager.service";
 import { CommandsService } from "../../services/commands.service";
-
-import { Observable } from "rxjs/Observable";
 
 describe("CommandService", function () {
 
     let commandsService: CommandsService;
-    let messageCommand: MessageCommand;
-    let changeLettersCommand: ChangeLettersCommand;
-    let placeWordCommand: PlaceWordCommand;
-    let passCommand: PassCommand;
 
     let easelComponent: EaselComponent;
     let chatroomComponent: ChatroomComponent;
@@ -107,7 +86,6 @@ describe("CommandService", function () {
     });
 
     it("extractCommandParameters, throw an exception when an input command is empty", () => {
-        let input = "";
         let verification = () => commandsService.extractCommandParameters(null);
         expect(verification).to.throw(Error);
     });

@@ -1,10 +1,3 @@
-
-import { ExceptionHelper } from "../commons/exception-helper";
-import { WordDirection } from "../commons/word-direction";
-import { CommandsHelper } from "../commons/command/command-helper";
-import { Letter } from "../../models/letter";
-import { LetterHelper } from "../../models/commons/letter-helper";
-import { SquareType } from "../../models/square/square-type";
 import { Player } from "../../models/player";
 import { Easel } from "../../models/easel";
 import { Board } from "../../models/board/board";

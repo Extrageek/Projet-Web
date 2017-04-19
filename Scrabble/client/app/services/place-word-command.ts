@@ -15,7 +15,6 @@ import { ICommandRequest } from "./commons/command-request.interface";
 import { CommandStatus } from './commons/command-status';
 import { CommandType } from './commons/command-type';
 import { CommandsHelper } from "./commons/commands-helper";
-import { WordOrientation } from "./commons/word-orientation";
 
 export class PlaceWordCommand implements ICommand {
 

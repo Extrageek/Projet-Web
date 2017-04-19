@@ -1,6 +1,5 @@
 import { SquarePosition } from "./square-position";
 import { Letter } from "./../letter";
-import { SquareType } from "./square-type";
 
 export class Square {
 

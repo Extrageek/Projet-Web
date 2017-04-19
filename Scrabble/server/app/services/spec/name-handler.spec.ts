@@ -18,6 +18,9 @@ describe("NameHandler", () => {
 
         expect(nameHandler.getNameBySocketId(socketId)).to.be.equal(name);
         expect(nameHandler.getSocketIdByName(name)).to.be.equal(socketId);
+
+        expect(nameHandler.getNameBySocketId(fakeSocketId)).to.be.equal(null);
+        expect(nameHandler.getSocketIdByName(fakeName)).to.be.equal(null);
     });
 
     it("should not enter an existing connection", () => {
