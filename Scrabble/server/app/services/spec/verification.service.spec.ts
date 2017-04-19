@@ -130,15 +130,15 @@ describe("Word discovery in verification services should ", () => {
     });
 
     it("discover the right part of a word", () => {
-        board.squares[7][7].letter = new Letter("J", 1, 0);
+        board.squares[7][7].letter = new Letter("J", 8, 0);
         board.squares[7][7].isBusy = true;
         board.squares[7][8].letter = new Letter("U", 1, 0);
         board.squares[7][8].isBusy = true;
-        board.squares[7][9].letter = new Letter("M", 1, 0);
+        board.squares[7][9].letter = new Letter("M", 2, 0);
         board.squares[7][9].isBusy = true;
-        board.squares[7][10].letter = new Letter("P", 1, 0);
+        board.squares[7][10].letter = new Letter("P", 3, 0);
         board.squares[7][10].isBusy = true;
-        board.squares[7][11].letter = new Letter("M", 1, 0);
+        board.squares[7][11].letter = new Letter("M", 2, 0);
         board.squares[7][11].isBusy = true;
         board.squares[7][12].letter = new Letter("A", 1, 0);
         board.squares[7][12].isBusy = true;
@@ -149,15 +149,15 @@ describe("Word discovery in verification services should ", () => {
     });
 
     it("discover left part of a word", () => {
-        board.squares[7][3].letter = new Letter("Y", 1, 0);
+        board.squares[7][3].letter = new Letter("Y", 10, 0);
         board.squares[7][3].isBusy = true;
         board.squares[7][4].letter = new Letter("E", 1, 0);
         board.squares[7][4].isBusy = true;
         board.squares[7][5].letter = new Letter("E", 1, 0);
         board.squares[7][5].isBusy = true;
-        board.squares[7][6].letter = new Letter("Z", 1, 0);
+        board.squares[7][6].letter = new Letter("Z", 10, 0);
         board.squares[7][6].isBusy = true;
-        board.squares[7][7].letter = new Letter("Y", 1, 0);
+        board.squares[7][7].letter = new Letter("Y", 10, 0);
         board.squares[7][7].isBusy = true;
         let word = verificationService.discoverLeftPartOfWord(board, board.squares[7][8]);
         expect(word).to.be.equals("YEEZY");
@@ -166,20 +166,20 @@ describe("Word discovery in verification services should ", () => {
     it("discover top part of a word", () => {
         board.squares[4][7].letter = new Letter("S", 1, 0);
         board.squares[4][7].isBusy = true;
-        board.squares[5][7].letter = new Letter("P", 1, 0);
+        board.squares[5][7].letter = new Letter("P", 3, 0);
         board.squares[5][7].isBusy = true;
         board.squares[6][7].letter = new Letter("L", 1, 0);
         board.squares[6][7].isBusy = true;
-        board.squares[7][7].letter = new Letter("Y", 1, 0);
+        board.squares[7][7].letter = new Letter("Y", 10, 0);
         board.squares[7][7].isBusy = true;
         let word = verificationService.discoverTopPartOfWord(board, board.squares[8][7]);
         expect(word).to.be.equals("SPLY");
     });
 
     it("discover down part of a word", () => {
-        board.squares[7][7].letter = new Letter("K", 1, 0);
+        board.squares[7][7].letter = new Letter("K", 10, 0);
         board.squares[7][7].isBusy = true;
-        board.squares[8][7].letter = new Letter("D", 1, 0);
+        board.squares[8][7].letter = new Letter("D", 2, 0);
         board.squares[8][7].isBusy = true;
         board.squares[9][7].letter = new Letter("O", 1, 0);
         board.squares[9][7].isBusy = true;
@@ -190,18 +190,18 @@ describe("Word discovery in verification services should ", () => {
     });
 
     it("return false on a fake word", () => {
-        board.squares[3][7].letter = new Letter("K", 1, 0);
+        board.squares[3][7].letter = new Letter("K", 10, 0);
         board.squares[3][7].isBusy = true;
         board.squares[4][7].letter = new Letter("A", 1, 0);
         board.squares[4][7].isBusy = true;
         board.squares[5][7].letter = new Letter("N", 1, 0);
         board.squares[5][7].isBusy = true;
-        board.squares[6][7].letter = new Letter("Y", 1, 0);
+        board.squares[6][7].letter = new Letter("Y", 10, 0);
         board.squares[6][7].isBusy = true;
         board.squares[7][7].letter = new Letter("E", 1, 0);
         board.squares[7][7].isBusy = true;
         let wordTop = verificationService.discoverTopPartOfWord(board, board.squares[8][7]);
-        board.squares[8][7].letter = new Letter("W", 1, 0);
+        board.squares[8][7].letter = new Letter("W", 10, 0);
         board.squares[8][7].isBusy = true;
         board.squares[9][7].letter = new Letter("E", 1, 0);
         board.squares[9][7].isBusy = true;
@@ -237,7 +237,7 @@ describe("Word verification in verification services should ", () => {
     });
 
     it("return true on a real word", () => {
-        board.squares[5][7].letter = new Letter("C", 1, 0);
+        board.squares[5][7].letter = new Letter("C", 3, 0);
         board.squares[5][7].isBusy = true;
         board.squares[6][7].letter = new Letter("A", 1, 0);
         board.squares[6][7].isBusy = true;
@@ -248,18 +248,18 @@ describe("Word verification in verification services should ", () => {
     });
 
     it("return false on a fake word", () => {
-        board.squares[3][7].letter = new Letter("K", 1, 0);
+        board.squares[3][7].letter = new Letter("K", 10, 0);
         board.squares[3][7].isBusy = true;
         board.squares[4][7].letter = new Letter("A", 1, 0);
         board.squares[4][7].isBusy = true;
         board.squares[5][7].letter = new Letter("N", 1, 0);
         board.squares[5][7].isBusy = true;
-        board.squares[6][7].letter = new Letter("Y", 1, 0);
+        board.squares[6][7].letter = new Letter("Y", 10, 0);
         board.squares[6][7].isBusy = true;
         board.squares[7][7].letter = new Letter("E", 1, 0);
         board.squares[7][7].isBusy = true;
         let wordTop = verificationService.discoverTopPartOfWord(board, board.squares[8][7]);
-        board.squares[8][7].letter = new Letter("W", 1, 0);
+        board.squares[8][7].letter = new Letter("W", 10, 0);
         board.squares[8][7].isBusy = true;
         board.squares[9][7].letter = new Letter("E", 1, 0);
         board.squares[9][7].isBusy = true;
@@ -274,7 +274,7 @@ describe("Word verification in verification services should ", () => {
 
     it("--HORIZONTAL return points without multipliers on a double multiplier when it is not a newly placed word",
         () => {
-            board.squares[4][10].letter = new Letter("C", 1, 0);
+            board.squares[4][10].letter = new Letter("C", 3, 0);
             board.squares[4][10].isBusy = true;
             board.squares[4][11].letter = new Letter("A", 1, 0);
             board.squares[4][11].isBusy = true;
@@ -288,7 +288,7 @@ describe("Word verification in verification services should ", () => {
 
 
     it("--HORIZONTAL return points with multipliers on a double word", () => {
-        board.squares[4][10].letter = new Letter("C", 1, 0);
+        board.squares[4][10].letter = new Letter("C", 3, 0);
         board.squares[4][10].isBusy = true;
         board.addLastLetterAdded(4, 10);
         board.squares[4][11].letter = new Letter("A", 1, 0);
@@ -304,7 +304,7 @@ describe("Word verification in verification services should ", () => {
     });
 
     it("--HORIZONTAL return points without multipliers on a triple word when it is not a newly placed word", () => {
-        board.squares[0][6].letter = new Letter("C", 1, 0);
+        board.squares[0][6].letter = new Letter("C", 3, 0);
         board.squares[0][6].isBusy = true;
         board.squares[0][7].letter = new Letter("A", 1, 0);
         board.squares[0][7].isBusy = true;
@@ -317,7 +317,7 @@ describe("Word verification in verification services should ", () => {
     });
 
     it("--HORIZONTAL return points with multipliers on a triple word", () => {
-        board.squares[0][6].letter = new Letter("C", 1, 0);
+        board.squares[0][6].letter = new Letter("C", 3, 0);
         board.squares[0][6].isBusy = true;
         board.addLastLetterAdded(0, 6);
         board.squares[0][7].letter = new Letter("A", 1, 0);
@@ -333,7 +333,7 @@ describe("Word verification in verification services should ", () => {
     });
 
     it("--VERTICAL return points without multipliers on a triple word when it is not a newly placed word", () => {
-        board.squares[4][10].letter = new Letter("C", 1, 0);
+        board.squares[4][10].letter = new Letter("C", 3, 0);
         board.squares[4][10].isBusy = true;
         board.squares[5][10].letter = new Letter("A", 1, 0);
         board.squares[5][10].isBusy = true;
@@ -346,7 +346,7 @@ describe("Word verification in verification services should ", () => {
     });
 
     it("--VERTICAL return points with multipliers on a double word", () => {
-        board.squares[4][10].letter = new Letter("C", 1, 0);
+        board.squares[4][10].letter = new Letter("C", 3, 0);
         board.squares[4][10].isBusy = true;
         board.addLastLetterAdded(4, 10);
         board.squares[5][10].letter = new Letter("A", 1, 0);
@@ -362,7 +362,7 @@ describe("Word verification in verification services should ", () => {
     });
 
     it("--VERTICAL return points without multipliers on a triple word when it is not a newly placed word", () => {
-        board.squares[0][7].letter = new Letter("C", 1, 0);
+        board.squares[0][7].letter = new Letter("C", 3, 0);
         board.squares[0][7].isBusy = true;
         board.squares[1][7].letter = new Letter("A", 1, 0);
         board.squares[1][7].isBusy = true;
@@ -375,7 +375,7 @@ describe("Word verification in verification services should ", () => {
     });
 
     it("--VERTICAL return points with multipliers on a triple word", () => {
-        board.squares[0][7].letter = new Letter("C", 1, 0);
+        board.squares[0][7].letter = new Letter("C", 3, 0);
         board.squares[0][7].isBusy = true;
         board.addLastLetterAdded(0, 7);
         board.squares[1][7].letter = new Letter("A", 1, 0);
@@ -392,12 +392,12 @@ describe("Word verification in verification services should ", () => {
 
     it("HORIZONTAL verify created words and correctly calculate score dependant on orientation", () => {
         let arrayStr = ["C", "A", "R"];
-        board.squares[6][7].letter = new Letter("C", 1, 0);
+        board.squares[6][7].letter = new Letter("C", 3, 0);
         board.squares[6][7].isBusy = true;
         board.squares[8][7].letter = new Letter("R", 1, 0);
         board.squares[8][7].isBusy = true;
 
-        board.squares[7][6].letter = new Letter("C", 1, 0);
+        board.squares[7][6].letter = new Letter("C", 3, 0);
         board.squares[7][6].isBusy = true;
         board.squares[7][7].letter = new Letter("A", 1, 0);
         board.squares[7][7].isBusy = true;
@@ -421,12 +421,12 @@ describe("Word verification in verification services should ", () => {
 
     it("VERTICAL verify created words and correctly calculate score dependant on orientation", () => {
         let arrayStr = ["C", "A", "R"];
-        board.squares[7][6].letter = new Letter("C", 1, 0);
+        board.squares[7][6].letter = new Letter("C", 3, 0);
         board.squares[7][6].isBusy = true;
         board.squares[7][8].letter = new Letter("R", 1, 0);
         board.squares[7][8].isBusy = true;
 
-        board.squares[6][7].letter = new Letter("C", 1, 0);
+        board.squares[6][7].letter = new Letter("C", 3, 0);
         board.squares[6][7].isBusy = true;
         board.squares[7][7].letter = new Letter("A", 1, 0);
         board.squares[7][7].isBusy = true;
