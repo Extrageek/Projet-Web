@@ -1,6 +1,4 @@
-
 import { Room } from "../models/room";
-import { Player } from "../models/player";
 import { CommandType } from "./commons/command/command-type";
 import { CommandStatus } from "./commons/command/command-status";
 import { IPlaceWordResponse } from "./commons/command/place-word-response.interface";

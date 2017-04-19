@@ -12,7 +12,6 @@ import { CommandType } from "../services/commons/command-type";
 
 import { IRoomMessage } from "../commons/messages/room-message.interface";
 import { SocketEventType } from "../commons/socket-eventType";
-import { Player } from "../models/player";
 
 import { EaselComponent } from "./easel.component";
 import { ChatroomComponent } from "./chatroom.component";
@@ -109,10 +108,10 @@ export class GameComponent implements OnInit, OnDestroy {
             });
     }
 
-    // A callback function when in case of invalid request.
-    private onInvalidRequest() {
-        // TODO: message derreur a afficher
-    }
+    // // A callback function when in case of invalid request.
+    // private onInvalidRequest() {
+    //     // TODO: message derreur a afficher
+    // }
 
     private onGameOver(): Subscription {
         return this.socketService.subscribeToChannelEvent(SocketEventType.GAME_OVER)

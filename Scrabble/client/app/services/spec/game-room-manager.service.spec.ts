@@ -1,5 +1,3 @@
-import { Injectable } from "@angular/core";
-import { IScrabbleLetter } from "../../models/scrabble-letter";
 import { LetterHelper } from "../../commons/letter-helper";
 import { GameRoomManagerService } from "../game-room-manager.service";
 

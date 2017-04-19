@@ -1,5 +1,3 @@
-import { Alphabet } from "./commons/alphabet";
-
 export class Letter {
     private _alphabetLetter: string;
     private _point: number;

@@ -56,7 +56,7 @@ describe("LetterBank should", () => {
         // The Letterbank try to exchange and send null letters, and decrement even if the quantity is 0.
         // This must be fixed to return the same letter in this case
         let letterY = new Letter(Alphabet.letterY.letter, Alphabet.letterY.point, AlphabetQuantity.letterY);
-        let letterYFromBank1 = _letterBank.getLetterFromBank(letterY);
+        letterY = _letterBank.getLetterFromBank(letterY);
         assert(_letterBank.letterIsAvailable(null) === false);
     });
 });

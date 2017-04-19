@@ -1,5 +1,4 @@
 import { Room } from "./room";
-import { Letter } from "./letter";
 import { Easel } from "./easel";
 
 export class Player {

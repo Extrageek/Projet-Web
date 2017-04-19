@@ -1,32 +1,20 @@
 import { NO_ERRORS_SCHEMA, } from "@angular/core";
 import { APP_BASE_HREF } from "@angular/common";
-import { RouterTestingModule, } from "@angular/router/testing";
-import { Router, ActivatedRoute } from "@angular/router";
 import { GameStartModule } from '../../modules/game-start.module';
 import {
-    fakeAsync,
-    inject,
     ComponentFixture,
     TestBed,
     async,
 } from '@angular/core/testing';
 
-import { expect, assert } from "chai";
+import { expect } from "chai";
 
-import { EaselComponent } from "../../components/easel.component";
 import { ChatroomComponent } from "../../components/chatroom.component";
-import { GameComponent } from "../../components/game-room.component";
-import { GameInitiationComponent } from "../../components/game-initiation.component";
-import { BoardComponent } from "../../components/board.component";
 import { CommandStatus } from "../commons/command-status";
 import { CommandType } from "../commons/command-type";
-import { SocketEventType } from '../../commons/socket-eventType';
 import { GuideCommand } from "../guide-command";
 
 import { EaselManagerService } from "../easel-manager.service";
-
-import { Observable } from "rxjs/Observable";
-
 
 describe("GuideCommand", function () {
 

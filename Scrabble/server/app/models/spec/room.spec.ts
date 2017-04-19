@@ -89,8 +89,6 @@ describe("Room", () => {
         let roomCapacity = 2;
         let room = new Room(roomCapacity);
 
-        let fakeName = "fakename";
-
         room.addPlayer(playerOne);
         playerTwo.username = playerOne.username;
         let playerWithDuplicatedUsername = () => room.addPlayer(playerTwo);

@@ -3,7 +3,6 @@ import * as io from "socket.io";
 
 import { Room } from "../models/room";
 import { Player } from "../models/player";
-import { Letter } from "../models/letter";
 
 import { SocketEventType } from "./commons/socket-eventType";
 
@@ -11,8 +10,6 @@ import { CommandType } from "./commons/command/command-type";
 import { CommandStatus } from "./commons/command/command-status";
 import { ICommandRequest } from "./commons/command/command-request";
 import { IPlaceWordResponse } from "./commons/command/place-word-response.interface";
-import { ICommandMessage } from "./commons/message/command-message.interface";
-import { IRoomMessage } from "./commons/message/room-message.interface";
 
 import { MessageHandler } from "./message-handler";
 import { NameHandler } from './name-handler';
@@ -88,7 +85,7 @@ export class SocketConnectionHandler {
                             // Subscribe to the timer in the room if the room is ready
                             if (room.isFull()) {
                                 this._socket.to(response._roomId).emit(SocketEventType.updateBoard, room.board);
-                                let test = room.timerService.timer().subscribe(
+                                room.timerService.timer().subscribe(
                                     (counter: { minutes: number, seconds: number }) => {
                                         // Send the counter value to the members of the room
                                         this._socket.to(response._roomId).emit(SocketEventType.timerEvent, counter);

@@ -1,10 +1,9 @@
-import { expect, assert } from "chai";
+import { assert } from "chai";
 import { BoardHelper } from '../board/board-helper';
 import { LetterHelper } from '../../models/commons/letter-helper';
 import { CommandsHelper } from '../commons/command/command-helper';
 
 describe("BoardHelper", () => {
-    let boardHelper: BoardHelper;
 
     it("should detect values between A and O as a valid row position", () => {
         for (let row = LetterHelper.LETTER_A_KEY_CODE; row <= LetterHelper.LETTER_O_KEY_CODE; ++row) {

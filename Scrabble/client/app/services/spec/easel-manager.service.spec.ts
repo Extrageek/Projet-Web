@@ -1,14 +1,9 @@
-import { Injectable } from "@angular/core";
 import { IScrabbleLetter } from "../../models/scrabble-letter";
 import { Alphabet } from "../../models/commons/alphabet";
 import { LetterHelper } from "../../commons/letter-helper";
 import { EaselManagerService } from "../easel-manager.service";
-import { EaselComponent } from "../../components/easel.component";
-import { SocketService } from "../socket-service";
 
 import { expect } from "chai";
-
-import { async, TestBed } from "@angular/core/testing";
 
 const MIN_POSITION_INDEX = 0;
 const MAX_POSITION_INDEX = 6;

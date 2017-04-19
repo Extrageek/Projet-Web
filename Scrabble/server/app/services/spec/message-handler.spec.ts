@@ -1,11 +1,9 @@
 import { expect, assert } from "chai";
 
 import { Room } from "../../models/room";
-import { Player } from "../../models/player";
 import { CommandType } from "../commons/command/command-type";
 import { CommandStatus } from "../commons/command/command-status";
 import { IPlaceWordResponse } from "../commons/command/place-word-response.interface";
-import { ICommandMessage } from "../commons/message/command-message.interface";
 import { IRoomMessage } from "../commons/message/room-message.interface";
 import { MessageHandler } from "../message-handler";
 
@@ -18,7 +16,6 @@ describe("MessageHandler", () => {
     let fakeMessage = "a fake message to not send to a user";
 
     let fakeLetters = ['A', 'B', 'C'];
-    let fakeLettersToSend = ['A', 'Z', 'K'];
 
     beforeEach(() => {
         messageHandler = new MessageHandler();
