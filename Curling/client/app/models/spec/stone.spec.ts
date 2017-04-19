@@ -63,7 +63,11 @@ describe("Stone tester should", function () {
             subject.complete();
             setTimeout(() => {
                 stone.traverse((child) => {
-                    if (child.type !== stone.stoneGlow.type) {
+                    console.log();
+
+                    if (!stone.isGlowObject(<Mesh>child) && child.type !== "Group") {
+                        console.log(child);
+
                         expect((<Mesh>child).material.transparent).to.equal(true);
                         expect((<Mesh>child).material.opacity).to.not.equal(1);
                     }
@@ -74,29 +78,55 @@ describe("Stone tester should", function () {
     });
 
     it('contains a group of Glow component in a Blue Stone', (done) => {
-        Stone.createStone(objectLoader, StoneColor.Blue, new Vector3(0, 0, 0)).then((stone: Stone) => {
-            stone.setIllumination(true);
+        Stone.createStone(objectLoader, StoneColor.Blue, new Vector3(0, 0, 0))
+            .then((stone: Stone) => {
+                stone.setIllumination(true);
 
-            // Should contains the glow object
-            let glow = <THREE.Object3D>stone.getObjectByName(stone.glowObjectName);
-            assert(glow.type === stone.stoneGlow.type);
+                // Should contains the glow object
+                let glow = stone.getStoneGlowObject();
 
-            done();
-        });
+                assert(glow.visible === true);
+
+                stone.setIllumination(false);
+
+                done();
+            })
+            .catch((error: any) => {
+                console.log("error", error);
+            });
     });
 
     it('contains a group of Glow component in a Red Stone', (done) => {
-        Stone.createStone(objectLoader, StoneColor.Blue, new Vector3(0, 0, 0)).then((stone: Stone) => {
-            stone.setIllumination(true);
-
-            // Should contains the glow object
-            let glow = <THREE.Object3D>stone.getObjectByName(stone.glowObjectName);
-            assert(glow.type === stone.stoneGlow.type);
-
-            done();
-        });
+        Stone.createStone(objectLoader, StoneColor.Blue, new Vector3(0, 0, 0))
+            .then((stone: Stone) => {
+                stone.setIllumination(true);
+                let glow = stone.getStoneGlowObject();
+                assert(glow.visible === true);
+                done();
+            })
+            .catch((error: any) => {
+                console.log("error", error);
+            });
     });
-    // TODO: Test the light off case
+
+    it('remove a group of Glow component in a Stone', (done) => {
+        Stone.createStone(objectLoader, StoneColor.Blue, new Vector3(0, 0, 0))
+            .then((stone: Stone) => {
+                stone.setIllumination(true);
+
+                let glow = stone.getStoneGlowObject();
+                assert(glow.visible === true);
+
+                stone.setIllumination(false);
+                let glowOff = stone.getStoneGlowObject();
+                // expect(glowOff).to.be.undefined;
+
+                done();
+            })
+            .catch((error: any) => {
+                console.log("error when stopping the illumination", error);
+            });
+    });
 });
 
 describe("Stone tester physics should", () => {

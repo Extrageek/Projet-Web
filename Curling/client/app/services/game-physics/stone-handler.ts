@@ -341,7 +341,6 @@ export class StoneHandler implements IGameState {
 
         // Get all the stones that give points
         let stonesThatGivesPoints = this.getStonesThatGivesPoints();
-        console.log("point", stonesThatGivesPoints);
 
         // Go through every stone and set up the illumination
         stonesThatGivesPoints.forEach(stone => {

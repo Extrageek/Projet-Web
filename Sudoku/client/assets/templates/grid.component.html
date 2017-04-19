@@ -28,32 +28,27 @@
     <div class="col-md-4 col-sm-5">
         <md-card>
             <md-card-content>
-                <h2>
-                    <span [ngClass]="{hidden: _hiddenClock}" class="glyphicon glyphicon-time" aria-hidden="true"> </span> 
-                    <span *ngIf="!_hiddenClock">{{_time.printHours()}} : {{_time.printMinutes()}} : {{_time.printSeconds()}}</span>
-                    <span *ngIf="!_hiddenClock" (click)="toggleClock()" class="glyphicon glyphicon-eye-close" aria-hidden="true"> </span>
-                    <span *ngIf="_hiddenClock" (click)="toggleClock()" class="glyphicon glyphicon-eye-open" aria-hidden="true"> </span>
-                </h2>
+
+                <button *ngIf="!_hiddenClock" (click)="toggleClock()" class="buttons" md-raised-button>
+                    <span>Désactiver compteur <i class="material-icons">alarm_off</i> </span>
+                </button>
+                <button *ngIf="_hiddenClock" (click)="toggleClock()" class="buttons" md-raised-button>
+                    <span>Réactiver compteur <i class="material-icons">alarm_on</i> </span>
+                </button>
+                <span *ngIf="!_hiddenClock">{{_time.printHours()}} : {{_time.printMinutes()}} : {{_time.printSeconds()}}</span>
+
             </md-card-content>
             <md-card-content>
-                <h2><span class="glyphicon glyphicon-user" aria-hidden="true"> </span> {{_userSetting.name}}</h2>
+                <p> <i class="material-icons">face</i> &nbsp; {{_userSetting.name}}</p>
             </md-card-content>
             <md-card-content>
-                <h2 *ngIf="_userSetting.difficulty === 0">
-                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-                    <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>
-                    <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span> FACILE
-                </h2>
-                <h2 *ngIf="_userSetting.difficulty === 1">
-                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span> DIFFICLE
-                </h2>
+                <p *ngIf="_userSetting.difficulty === 0"> <i class="material-icons">star</i> &nbsp; FACILE </p>
+                <p *ngIf="_userSetting.difficulty === 1"> <i class="material-icons">star</i> &nbsp; DIFFICLE </p>
             </md-card-content>
             <md-card-actions>
-                <button md-button *ngIf="!_isLoading" type="button" class="btn btn-primary" (click)="initializeCurrentGrid()">Reset</button>
-                <button md-button *ngIf="!_isLoading" type="button" class="btn btn-primary" (click)="getNewPuzzle(0)">Facile</button>
-                <button md-button *ngIf="!_isLoading" type="button" class="btn btn-primary" (click)="getNewPuzzle(1)">Difficile</button>
+                <button class="buttons" md-raised-button *ngIf="!_isLoading" (click)="initializeCurrentGrid()"> <span>Reset</span></button>
+                <button class="buttons" md-raised-button *ngIf="!_isLoading" (click)="getNewPuzzle(0)"> <span>Facile</span></button>
+                <button class="buttons" md-raised-button *ngIf="!_isLoading" (click)="getNewPuzzle(1)"> <span>Difficile</span></button>
             </md-card-actions>
         </md-card>
 
@@ -62,8 +57,8 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <strong>Felicitations !</strong> Vous avez réussi cette grille de niveau
-            <strong *ngIf="_userSetting.difficulty === 0"> FACILE. </strong>
-            <strong *ngIf="_userSetting.difficulty === 1"> DIFFICILE </strong>
+            <strong *ngIf="_userSetting.difficulty === 0">  FACILE. </strong>
+            <strong *ngIf="_userSetting.difficulty === 1">  DIFFICILE </strong>
         </div>
 
         <div id="leaderboard" [ngClass]="{hidden: _isTopRecordHidden}" class="col-md-12">
