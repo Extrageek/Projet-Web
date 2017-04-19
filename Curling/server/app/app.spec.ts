@@ -1,5 +1,5 @@
-import { Application } from './app';
-import { expect } from 'chai';
+import { expect } from "chai";
+import { Application } from "./app";
 
 describe("An Application should", () => {
     it("create an application service correctly", done => {
