@@ -65,18 +65,19 @@ describe("Room Handler", () => {
     it("addPlayer, should not add a player with out of range capacity", () => {
         player1.numberOfPlayers = 6;
         let addPlayer = () => roomHandler.addPlayer(player1);
-        expect(addPlayer).throw(Error, "An error occured when adding the player into the room");
+        expect(addPlayer).throw(RangeError, "The capacity of the room should be between 1 and 4");
     });
 
-    it("addPlayer, should not add two players with same name", () => {
-        player1.username = "fakeSamename";
-        player2.username = "fakeSamename";
-        let roomPlayer1 = roomHandler.addPlayer(player1);
-        let roomPlayer2 = roomHandler.addPlayer(player2);
+    // The control is now done before passing parameters to roomHandler
+    // it("addPlayer, should not add two players with same name", () => {
+    //     player1.username = "fakeSamename";
+    //     player2.username = "fakeSamename";
+    //     let roomPlayer1 = roomHandler.addPlayer(player1);
+    //     let roomPlayer2 = roomHandler.addPlayer(player2);
 
-        expect(roomPlayer1).to.not.be.null;
-        expect(roomPlayer2).to.be.null;
-    });
+    //     expect(roomPlayer1).to.not.be.null;
+    //     expect(roomPlayer2).to.be.null;
+    // });
 
     it("getPlayerByUsername, should return a null value", () => {
         player1.username = "fakename1";
@@ -108,7 +109,7 @@ describe("Room Handler", () => {
         player1.numberOfPlayers = 1;
         roomHandler.rooms = new Array<Room>();
         roomHandler.rooms.push(new Room(1));
-        let newRoom = roomHandler.getAvailableRoom(player1.numberOfPlayers);
+        let newRoom = roomHandler.getAvailableRoom(player1.numberOfPlayers, player1.username);
 
         expect(newRoom).not.to.be.undefined;
         assert(newRoom.isFull() === false, "The room should be full");
@@ -130,8 +131,8 @@ describe("Room Handler", () => {
         let invalidRoomCapacityWithLowValue = -1;
         let invalidRoomCapacityWithHighValue = 5;
 
-        let fakeRoom1 = () => roomHandler.getAvailableRoom(invalidRoomCapacityWithLowValue);
-        let fakeRoom2 = () => roomHandler.getAvailableRoom(invalidRoomCapacityWithHighValue);
+        let fakeRoom1 = () => roomHandler.getAvailableRoom(invalidRoomCapacityWithLowValue, "");
+        let fakeRoom2 = () => roomHandler.getAvailableRoom(invalidRoomCapacityWithHighValue, "");
 
         expect(fakeRoom1).to.throw(RangeError,
             "Out of range error: The capacity of the room should be between 1 and 4");
