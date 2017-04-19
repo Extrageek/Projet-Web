@@ -16,33 +16,27 @@
 <div class="content game-room center-block">
     <div class="col-sm-3">
         <info-panel-selector>Chargement du panneau d'informations...</info-panel-selector>
-
-        <div class="">
-            <easel-selector (easelTabKeyEvent)="onTabKeyEventFromEasel($event)">Chargement du chevalet...</easel-selector>
-        </div>
     </div>
 
     <div class="col-sm-5">
         <scrabble-main-board-selector>Chargement du Scrabble...</scrabble-main-board-selector>
-
-        <md-card class="center-block col-xs-12">
-            <md-card-content>
-                <div class="col-xs-8">
-                    <md-input-container class="full-width">
-                        <input mdInput mdInput #message id="inputMessage" [(ngModel)]="inputMessage" autofocus (keydown.enter)="submitMessage();false"
-                            (keydown)="onKeyPressEventHandler($event)" placeholder="Message">
-                    </md-input-container>
-                </div>
-                <div class="col-xs-2">
-                    <button md-button (click)="submitMessage(message)" id="btn-chat">
-                    <i class="material-icons icon-medium-size">send</i>
-                </button>
-                </div>
-            </md-card-content>
-        </md-card>
+        <easel-selector (easelTabKeyEvent)="onTabKeyEventFromEasel($event)">Chargement du chevalet...</easel-selector>
     </div>
 
     <div class="col-sm-4">
         <scrabble-chatroom-selector>Chargement du chat...</scrabble-chatroom-selector>
+        <md-card id="message-card" class="full-width">
+            <md-card-content>
+                <md-input-container id="message-input">
+                    <input mdInput #message id="inputMessage" [(ngModel)]="inputMessage" autofocus (keydown.enter)="submitMessage();false" (keydown)="onKeyPressEventHandler($event)"
+                        placeholder="Message">
+                </md-input-container>
+                <div id="message-send">
+                    <button (click)="submitMessage(message)">
+                            <i class="material-icons">send</i>
+                        </button>
+                </div>
+            </md-card-content>
+        </md-card>
     </div>
 </div>

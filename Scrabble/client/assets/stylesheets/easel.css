@@ -4,6 +4,8 @@ div#easelContainer > input {
     border:1px solid #000;
     margin:1px;
     float:left;
+    display:table-cell;
+    text-align:center;
 }
 
 div#easelContainer > input:focus {
@@ -14,9 +16,13 @@ div#easelContainer > input:focus {
 
 div#easelContainer {
     height: 49px;
+    width: 290px;
     border: 2px solid #6a4305;
     background-color: #916a32;
     align-content: center;
     padding: 4px;
     margin-top: 3%;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
 }

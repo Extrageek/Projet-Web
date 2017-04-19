@@ -35,6 +35,11 @@ md-card {
     background-color: white;
 }
 
+md-card hr {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 .vertical-center {
     display: flex;
     align-items: center;
@@ -105,4 +110,9 @@ md-card {
     text-align: center;
     display: inline-block;
     margin-right: 1vw;
+}
+
+.material-icons {
+    /*text-align: center;*/
+    vertical-align: middle;
 }

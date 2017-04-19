@@ -92,3 +92,28 @@ button#submit-btn {
 .game-room {
     width: 90%;
  }
+
+#message-card{
+    margin-top: 10px;
+    padding: 2px 24px;
+}
+
+#message-input{
+    width: 85%;
+    display: inline-block;
+}
+
+#message-send{
+    width: 10%;
+    font-size: 1.4em;
+    color: #3f51b5;
+    display: inline-block;
+}
+
+#message-send button{
+    font-size: 1.4em;
+    background-color: transparent;
+    border: none;
+    color: #3f51b5;
+    display: inline-block;
+}

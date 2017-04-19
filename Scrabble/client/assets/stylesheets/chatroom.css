@@ -1,15 +1,6 @@
-.chatContainer {
-    width: 100%;
-    height: 630px;
-    background-color: #eee;
-}
-
-.chatTitle {
-    padding: 7px;
-    width: auto;
-    border-bottom: 2px solid dimgrey;
-    /*font-family: Arial, "Times New Roman", Georgia;*/
-    font-size: 26px;
+md-card-title, md-card-header {
+    margin-bottom: 0px !important;
+    font-size: 1.8em;
 }
 
 .chatMessageBox {
@@ -19,7 +10,7 @@
     overflow-y: scroll;
     overflow-x: hidden;
     background-color: #fff;
-    box-shadow: 0 0 5px rgba(0,0,0,0.16);
+    /*box-shadow: 0 0 5px rgba(0,0,0,0.16);*/
     transition-duration: 1s;
 }
 
@@ -112,4 +103,17 @@ p.command-request-error {
 
 .glyphicon-comment {
     transition: opacity .25s ease-in-out;
+}
+
+@media screen and ( max-height: 600px ){
+    .chatMessageBox {
+        height: 300px;
+        border: 1px solid #ddd;
+        margin-top: 1vh;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        background-color: #fff;
+        box-shadow: 0 0 5px rgba(0,0,0,0.16);
+        transition-duration: 1s;
+    }
 }

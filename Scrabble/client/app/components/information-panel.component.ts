@@ -1,6 +1,8 @@
 import { Component, OnInit, AfterViewInit } from "@angular/core";
 import { Subscription } from "rxjs/Subscription";
 
+import { Player } from "../models/player";
+
 import { SocketService } from "../services/socket-service";
 import { CommandType } from "../services/commons/command-type";
 import { CommandStatus } from "../services/commons/command-status";
@@ -20,6 +22,8 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
     public _winner: string;
     public _isWinner: boolean;
     public _username: string;
+    public _players: Array<Player>;
+    public _gameOfNPlayers: number;
 
     constructor(private socketService: SocketService) {
         this._lettersOnEasel = 7;
@@ -36,6 +40,21 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
         this._isWinner = false;
         this._winner = "";
         this._username = this.socketService.player.username;
+        this._gameOfNPlayers = this.socketService.player.numberOfPlayers;
+        this._players = new Array<Player>();
+        let playerOli = new Player("Olivier");
+        playerOli.isOnline = false;
+        playerOli.score = 0;
+        let playerJu = new Player("Julien");
+        playerJu.score = 17;
+        let playerDave = new Player("Dave");
+        playerDave.score = 11;
+        let playerRami = new Player("Rami");
+        playerDave.score = 18;
+        this._players.push(playerJu);
+        this._players.push(playerDave);
+        this._players.push(playerOli);
+        this._players.push(playerRami);
     }
 
     ngAfterViewInit() {
@@ -94,7 +113,6 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
             .subscribe((response: Array<string>) => {
                 if (response !== undefined && response !== null) {
                     // Temporary settings, we can use a manager to
-
                     this.socketService.playersPriorityQueue = response;
                 }
             });
