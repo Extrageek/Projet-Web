@@ -126,7 +126,7 @@ display-component {
 
 table {
     width: 60%;
-    margin-left: 18%;
+    margin-left: 12%;
 }
 
 #endGame-window {
@@ -159,7 +159,9 @@ table {
     top: 80px;
     right: 20px;
 }
-
+p {
+    margin-top: 6px;
+}
 .counterclockwiseArrow {
     width: 4vw !important;
     height: 6vh !important;

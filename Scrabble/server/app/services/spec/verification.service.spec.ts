@@ -41,14 +41,27 @@ describe("VerificationService ", () => {
     });
 
     it("should apply a bonus when a seven letters word is placed", () => {
-        let word = "letters";
-        let newScore = verificationService.applyBonus7LettersWord(score, word);
+        board.addLastLetterAdded(7, 7);
+        board.addLastLetterAdded(7, 8);
+        board.addLastLetterAdded(7, 9);
+        board.addLastLetterAdded(7, 10);
+        board.addLastLetterAdded(7, 11);
+        board.addLastLetterAdded(7, 12);
+        board.addLastLetterAdded(7, 13);
+        let newScore = verificationService.applyBonus7LettersWord(score, board);
+        board.resetLastLettersAdded();
         expect(newScore).to.be.equals(score + BONUS_WORD_7_LETTERS);
     });
 
     it("should not apply a bonus when a word with less than 7 letters is placed", () => {
-        let word = "word";
-        let newScore = verificationService.applyBonus7LettersWord(score, word);
+        board.addLastLetterAdded(7, 7);
+        board.addLastLetterAdded(7, 8);
+        board.addLastLetterAdded(7, 9);
+        board.addLastLetterAdded(7, 10);
+        board.addLastLetterAdded(7, 11);
+        board.addLastLetterAdded(7, 12);
+        let newScore = verificationService.applyBonus7LettersWord(score, board);
+        board.resetLastLettersAdded();
         expect(newScore).to.be.equals(score);
     });
 
@@ -88,7 +101,7 @@ describe("VerificationService ", () => {
         expect(newScore).to.be.equals(letter.point);
     });
 
-    it("should not increase the letter score when the letter on the square has been previsouly placer", () => {
+    it("should not increase the letter score when the letter on the square has been previsouly placed.", () => {
         let letter = new Letter("A", 1, 0);
         board.squares[5][5].letter = letter;
         let newScore = verificationService.calculateScoreLetterInSquare(board.squares[5][5], false);
