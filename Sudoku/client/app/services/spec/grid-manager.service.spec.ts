@@ -2,8 +2,8 @@ import { fakeAsync, inject, TestBed } from "@angular/core/testing";
 
 import { expect, assert } from "chai";
 
-import { GridManagerService } from "./../services/grid-manager.service";
-import { Puzzle, PuzzleItem } from "./../models/puzzle";
+import { GridManagerService } from "../../services/grid-manager.service";
+import { Puzzle, PuzzleItem } from "../../models/puzzle";
 
 describe("GridManagerService", () => {
 

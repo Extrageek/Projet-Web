@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { Activity, Type } from "./../dashboard/activity";
+import { Activity, Type } from "../dashboard/activity";
 
 describe("Activity constructor should", () => {
     let _activity: Activity;

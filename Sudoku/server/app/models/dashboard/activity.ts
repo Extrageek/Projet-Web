@@ -37,4 +37,7 @@ export class Activity {
     }
 }
 
-export enum Type { GRID_GENERATION, GRID_DEMAND }
+export enum Type {
+    GRID_GENERATION,
+    GRID_DEMAND
+}

@@ -1,7 +1,8 @@
 import { expect, assert } from "chai";
-import { ObjectLoader, Vector3, Mesh } from "three";
-import { Stone, StoneColor, StoneSpin } from "./../stone";
 import { Subject } from "rxjs/Subject";
+import { ObjectLoader, Vector3, Mesh } from "three";
+
+import { Stone, StoneColor, StoneSpin } from "../stone";
 
 describe("Stone tester should", function () {
     this.timeout(15000);
@@ -18,7 +19,6 @@ describe("Stone tester should", function () {
             done();
         }).catch(() => {
             console.log("rip");
-            console.log("rip");
         });
     });
 
@@ -32,7 +32,6 @@ describe("Stone tester should", function () {
             expect(stone.stoneColor).to.equals(StoneColor.Blue);
             done();
         }).catch(() => {
-            console.log("rip");
             console.log("rip");
         });
     });
@@ -57,23 +56,12 @@ describe("Stone tester should", function () {
         Stone.createStone(objectLoader, StoneColor.Blue, new Vector3(0, 0, 0)).then((stone: Stone) => {
             let observer = stone.bounce();
             subject.subscribe(observer);
-            expect(stone.position.y === 0);
+            expect(stone.position.y).to.equal(0);
             subject.next();
-            expect(stone.position.y > 0);
+            expect(stone.position.y > 0).to.be.true;
             subject.complete();
-            setTimeout(() => {
-                stone.traverse((child) => {
-                    console.log();
-
-                    if (!stone.isGlowObject(<Mesh>child) && child.type !== "Group") {
-                        console.log(child);
-
-                        expect((<Mesh>child).material.transparent).to.equal(true);
-                        expect((<Mesh>child).material.opacity).to.not.equal(1);
-                    }
-                });
-                done();
-            }, 1000);
+            expect(stone.position.y).to.equal(0);
+            done();
         });
     });
 
@@ -152,32 +140,4 @@ describe("Stone tester physics should", () => {
             done();
         });
     });
-
-    // it("verify stone movement", done => {
-    //     let speed = Stone.SPEED_DIMINUTION_NUMBER;
-    //     let direction = new Vector3(1, 1, 2);
-    //     let directionNormalized = direction.clone().normalize();
-    //     //Applying MRUA with t = 1 second. Xf = Xi + V0 * t + a * t^2 / 2
-    //     let finalPosition = initialPosition.clone().add(
-    //         directionNormalized.multiplyScalar(speed - Stone.SPEED_DIMINUTION_NUMBER / 2));
-    //     stone.speed = Stone.SPEED_DIMINUTION_NUMBER;
-    //     stone.direction = direction;
-    //     function update() {
-    //         stone.update(timePerFrame);
-
-    //         ++frameNumber;
-    //         if (frameNumber === totalNumberOfFrames) {
-    //             //toFixed method used to compare the 6 decimals of the numbers only due to the imprecision of floats.
-    //             expect(stone.position.x.toFixed(6)).to.equals(finalPosition.x.toFixed(6));
-    //             expect(stone.position.y.toFixed(6)).to.equals(finalPosition.y.toFixed(6));
-    //             expect(stone.position.z.toFixed(6)).to.equals(finalPosition.z.toFixed(6));
-    //             expect(stone.speed).to.equals(0);
-    //             done();
-    //         }
-    //         else {
-    //             setTimeout(update, timePerFrame * 1000);
-    //         }
-    //     }
-    //     setTimeout(update, timePerFrame * 1000);
-    // });
 });

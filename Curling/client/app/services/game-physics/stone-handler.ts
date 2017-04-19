@@ -1,15 +1,16 @@
-import { ObjectLoader, Vector3, Box3, Scene } from 'three';
-import { IRinkInfo } from '../../models/scenery/rink-info.interface';
-import { Stone, StoneColor } from '../../models/stone';
-import { IGameState } from '../../models/game-state.interface';
-import { SoundManager } from "../sound-manager";
-import { IShotParameters } from "../../models/shot-parameters.interface";
+import "rxjs/add/observable/interval";
+import "rxjs/add/operator/multicast";
 import { IntervalObservable } from "rxjs/observable/IntervalObservable";
 import { Subject } from "rxjs/Subject";
 import { Subscription } from "rxjs";
-import "rxjs/add/observable/interval";
-import "rxjs/add/operator/multicast";
+import { Box3, ObjectLoader, Scene, Vector3 } from 'three';
 
+import { IGameState } from '../../models/game-state.interface';
+import { IRinkInfo } from '../../models/scenery/rink-info.interface';
+import { IShotParameters } from "../../models/shot-parameters.interface";
+
+import { Stone, StoneColor } from '../../models/stone';
+import { SoundManager } from "../sound-manager";
 
 export interface Points {
     player: number;

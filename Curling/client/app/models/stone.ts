@@ -1,7 +1,8 @@
-import { ObjectLoader, Group, MeshPhongMaterial, Object3D, Sphere, Vector3, Mesh } from "three";
+import { Observable } from "rxjs/Observable";
+import { Group, Object3D, ObjectLoader, Mesh, MeshPhongMaterial, Sphere, Vector3 } from "three";
+
 import { IGameState } from "./game-state.interface";
 import { PhysicEngine } from "../services/game-physics/physic-engine";
-import { Observable } from "rxjs/Observable";
 import { RandomHelper } from "./random-helper";
 
 export enum StoneSpin {
@@ -260,7 +261,7 @@ export class Stone extends Group implements IGameState {
 
         } else {
             // The illumination glow element has a unique name
-            // We have to hide and remove it from the stone 
+            // We have to hide and remove it from the stone
             let glow = this.getObjectByName(Stone.ILLUMINATION_GROUP_NAME);
             if (glow) {
                 this.remove(glow);

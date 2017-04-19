@@ -1,6 +1,6 @@
 import { CUSTOM_ELEMENTS_SCHEMA, Injectable } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { BaseRequestOptions, ConnectionBackend, HttpModule, Http, ResponseOptions, Response } from "@angular/http";
+import { BaseRequestOptions, ConnectionBackend, Http, HttpModule, Response, ResponseOptions } from "@angular/http";
 import { Router } from "@angular/router";
 import { async, ComponentFixture, fakeAsync, inject, TestBed } from "@angular/core/testing";
 import { MockBackend, MockConnection } from "@angular/http/testing";
@@ -11,15 +11,15 @@ import { assert, expect } from "chai";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/of";
 
-import { GridComponent } from "./grid.component";
-import { Puzzle } from "./../models/puzzle";
+import { GridManagerService } from "../services/grid-manager.service";
+import { PuzzleEventManagerService } from "../services/puzzle-event-manager.service";
+import { RestApiProxyService } from "../services/rest-api-proxy.service";
+import { StopwatchService } from "../services/stopwatch.service";
+import { UserSettingService } from "../services/user-setting.service";
 
-import { GridManagerService } from "./../services/grid-manager.service";
-import { RestApiProxyService } from "./../services/rest-api-proxy.service";
 import { FAKE_PUZZLE_FEED, INITIAL_PUZZLE_SEED } from "./../services/mock-data";
-import { PuzzleEventManagerService } from "./../services/puzzle-event-manager.service";
-import { StopwatchService } from "./../services/stopwatch.service";
-import { UserSettingService } from "./../services/user-setting.service";
+import { GridComponent } from "./grid.component";
+import { Puzzle } from "../models/puzzle";
 
 // Mock the REST API Service to give a fake result after a request.
 @Injectable()
@@ -59,8 +59,7 @@ describe("GridComponent", () => {
                 MockRestApiService,
                 BaseRequestOptions,
                 UserSettingService,
-                StopwatchService,
-
+                StopwatchService
             ]
         })
             .compileComponents();

@@ -1,9 +1,9 @@
 import { assert, expect } from "chai";
 
-import { IPuzzleItemData, Puzzle, PuzzleItem } from "./../models/puzzle";
+import { IPuzzleItemData, Puzzle, PuzzleItem } from "../../models/puzzle";
 
 import { INVALID_PUZZLE_ITEMS_DATA_1, INVALID_PUZZLE_ITEMS_DATA_2,
-         INITIAL_PUZZLE_SEED, PUZZLE_ITEMS_DATA } from "../services/mock-data";
+         INITIAL_PUZZLE_SEED, PUZZLE_ITEMS_DATA } from "../../services/mock-data";
 
 describe("Puzzle", () => {
 

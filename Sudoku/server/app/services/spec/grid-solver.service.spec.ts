@@ -1,6 +1,7 @@
 import { expect } from "chai";
-import { GridSolver } from "./../grid-solver.service";
-import { Puzzle } from "./../../models/puzzle/puzzle";
+
+import { GridSolver } from "../grid-solver.service";
+import { Puzzle } from "../../models/puzzle/puzzle";
 
 /*
 Generate that sudoku.

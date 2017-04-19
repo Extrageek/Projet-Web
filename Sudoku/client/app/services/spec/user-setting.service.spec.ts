@@ -4,10 +4,10 @@ import { MockBackend, MockConnection } from "@angular/http/testing";
 
 import { expect } from "chai";
 
-import { RestApiProxyService } from "./rest-api-proxy.service";
-import { UserSettingService } from "./user-setting.service";
+import { RestApiProxyService } from "../rest-api-proxy.service";
+import { UserSettingService } from "../user-setting.service";
 
-import { Difficulty, UserSetting } from "./../models/user-setting";
+import { Difficulty, UserSetting } from "../../models/user-setting";
 
 describe("UserSettingService should", () => {
     beforeEach(() => {

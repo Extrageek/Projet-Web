@@ -2,9 +2,9 @@ import { async, fakeAsync, inject, TestBed } from "@angular/core/testing";
 
 import { assert } from "chai";
 
-import { PuzzleEventManagerService } from "./puzzle-event-manager.service";
-import { GridManagerService } from "./grid-manager.service";
-import { PuzzleCommon } from "./../commons/puzzle-common";
+import { PuzzleEventManagerService } from "../puzzle-event-manager.service";
+import { GridManagerService } from "../grid-manager.service";
+import { PuzzleCommon } from "../../commons/puzzle-common";
 
 describe("PuzzleEventManagerService", () => {
 

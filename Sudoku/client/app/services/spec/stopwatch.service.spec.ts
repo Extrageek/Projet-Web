@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { StopwatchService } from "./stopwatch.service";
+import { StopwatchService } from "../stopwatch.service";
 
 let service: StopwatchService;
 

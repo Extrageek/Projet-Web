@@ -12,8 +12,9 @@ import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 
 import * as route from './routes';
-import { GridGenerationManager } from "./services/grid-generation.service";
+
 import { DatabaseManager } from "./database-management";
+import { GridGenerationManager } from "./services/grid-generation.service";
 
 export class Application {
 

@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { IPuzzleItemData, PuzzleItem } from "./../puzzle/puzzle-item";
+import { IPuzzleItemData, PuzzleItem } from "../puzzle/puzzle-item";
 
 describe("PuzzleItem should", () => {
     it("be hidden and contain 1", () => {
