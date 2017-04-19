@@ -2,7 +2,7 @@ import { expect, assert } from "chai";
 
 import { Room } from "../room";
 import { Letter } from "../letter";
-import { Player } from "../player";
+import { Player, PlayerStatus } from "../player";
 import { SquarePosition } from "../square/square-position";
 import { QueueCollection } from "../queue-collection";
 import { LetterBankHandler } from "../../services/letterbank-handler";
@@ -138,11 +138,9 @@ describe("Room", () => {
         let removedPlayer = room.removePlayer(player1);
         assert(removedPlayer.username === player1.username);
         assert(removedPlayer.numberOfPlayers === player1.numberOfPlayers);
-        assert(room.players.count === 1, "The list of player should be empty");
+        assert(room.players.count === 2, "The list of player should be empty");
 
-        let secondPlayer = room.players.dequeue();
-        assert(secondPlayer.username === player2.username);
-        assert(secondPlayer.numberOfPlayers === player2.numberOfPlayers);
+        expect(removedPlayer.status).to.equals(PlayerStatus.OFFLINE);
 
     });
 

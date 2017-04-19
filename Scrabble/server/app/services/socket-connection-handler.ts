@@ -66,7 +66,6 @@ export class SocketConnectionHandler {
                     let name = this._nameHandler.getNameBySocketId(socket.id);
                     if ((name === null && this._nameHandler.getSocketIdByName(connectionInfos.username) === null)
                         || this._nameHandler.getSocketIdByName(name) === socket.id) {
-
                             name = (name === null) ? connectionInfos.username : name;
 
                             // Create a new player and get his room id
@@ -302,7 +301,7 @@ export class SocketConnectionHandler {
 
                     playerRoom.removePlayer(leavingPlayer);
 
-                    if (playerRoom.players.count === 0) {
+                    if (playerRoom.numberOfMissingPlayers() === playerRoom.roomCapacity) {
                         this._roomHandler.removeRoom(playerRoom);
                     } else {
                         let message = `${leavingPlayer.username}` + ` canceled and left the room`;
@@ -374,7 +373,7 @@ export class SocketConnectionHandler {
         this._socket.to(playerRoom.roomId).emit(SocketEventType.playerLeftRoom, roomMessage);
 
         // If the room is empty, remove it
-        if (playerRoom.players.count === 0) {
+        if (playerRoom.numberOfMissingPlayers() === playerRoom.roomCapacity) {
             this._roomHandler.removeRoom(playerRoom);
         } else {
             // Update the players queue for everyone in the room

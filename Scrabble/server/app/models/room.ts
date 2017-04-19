@@ -1,4 +1,4 @@
-import { Player } from "./player";
+import { Player, PlayerStatus } from "./player";
 import { QueueCollection } from "./queue-collection";
 import { Board } from "./board/board";
 import { TimerService } from "../services/timer.service";
@@ -107,7 +107,13 @@ export class Room {
 
     // Get the number of missing player before the game
     public numberOfMissingPlayers(): number {
-        return this._roomCapacity - this._playersQueue.count;
+        let playersOnline = 0;
+        this.players.forEach((player: Player) => {
+            if (player.status === PlayerStatus.ONLINE) {
+                ++playersOnline;
+            }
+        })
+        return this._roomCapacity - playersOnline;
     }
 
     // Remove a player from the current room
@@ -117,8 +123,8 @@ export class Room {
             throw new Error("Argument error: the player cannot be null");
         }
 
-        playerRemoved = this._playersQueue.remove(player);
-
+        playerRemoved = this._playersQueue.find(player);
+        playerRemoved.status = PlayerStatus.OFFLINE;
         return playerRemoved;
     }
 
@@ -154,11 +160,16 @@ export class Room {
 
     public getAndUpdatePlayersQueue(): Array<string> {
         let newPlayerOrder = new Array<string>();
-        let players = this._playersQueue.updateAndGetQueuePriorities();
+        let players: Player[];
+        do {
+            players = this._playersQueue.updateAndGetQueuePriorities();
+        } while (this.players.peek().status !== PlayerStatus.ONLINE
+            && this.numberOfMissingPlayers() < this.roomCapacity);
 
         for (let index = 0; index < players.length; ++index) {
             newPlayerOrder[index] = players[index].username;
         }
+
         this._timerService.initializeCounter();
         return newPlayerOrder;
     }
