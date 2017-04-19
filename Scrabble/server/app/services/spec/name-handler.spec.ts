@@ -31,7 +31,7 @@ describe("NameHandler", () => {
 
         nameHandler.removeConnection(socketId);
 
-        expect(nameHandler.getNameBySocketId(socketId)).to.be.equal(name);
+        expect(nameHandler.getNameBySocketId(socketId)).to.be.equal(null);
     });
 
     it("should not remove a connection that isn't present", () => {

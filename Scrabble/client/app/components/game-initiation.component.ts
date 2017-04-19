@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 import { SocketService } from "../services/socket-service";
@@ -24,8 +24,11 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
     public _numberOfPlayers: number;
     public _sortsOfGame: Array<number>;
 
-    constructor(private router: Router, public socketService: SocketService) {
-        // Default constructor
+    constructor(
+        private router: Router,
+        private _cdr: ChangeDetectorRef,
+        public socketService: SocketService) {
+            // Default constructor
     }
 
     ngOnInit() {
@@ -83,6 +86,7 @@ export class GameInitiationComponent implements OnInit, OnDestroy {
                 //TODO: activate div like bootstrap alert-success
                 alert("This username is already taken, please choose another username.");
                 this.socketService.player.username = "";
+                this._cdr.detectChanges();
             });
     }
 
