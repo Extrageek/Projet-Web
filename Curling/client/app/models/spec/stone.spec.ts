@@ -57,19 +57,15 @@ describe("Stone tester should", function () {
         Stone.createStone(objectLoader, StoneColor.Blue, new Vector3(0, 0, 0)).then((stone: Stone) => {
             let observer = stone.bounce();
             subject.subscribe(observer);
-            expect(stone.position.y === 0);
+            expect(stone.position.y).to.equal(0);
             subject.next();
-            expect(stone.position.y > 0);
+            subject.next();
+            subject.next();
+            subject.next();
+            expect(stone.position.y > 0).to.be.true;
             subject.complete();
-            setTimeout(() => {
-                stone.traverse((child) => {
-                    if (child.type !== stone.stoneGlow.type) {
-                        expect((<Mesh>child).material.transparent).to.equal(true);
-                        expect((<Mesh>child).material.opacity).to.not.equal(1);
-                    }
-                });
-                done();
-            }, 1000);
+            expect(stone.position.y).to.equal(0);
+            done();
         });
     });
 
