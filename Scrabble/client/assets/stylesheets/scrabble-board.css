@@ -10,20 +10,20 @@
     table-layout: fixed;
 }
 
+.mainBoard .table tr:last-child {
+    line-height: 0px !important;
+}
+
 .mainBoard .table td {
     width: 6.25%;
+    /*line-height: 0px !important;*/
 }
 .mainBoard .table td img {
     max-width: 100%;
 }
 
 .table {
-    background-color: #eee;
-}
-.table-responsive {
-    padding-right: 20px;
-    padding-bottom: 20px;
-    overflow-x: auto;
+    background-color: white;
 }
 
 div.mainBoard > div:lastchild > img.cell {
@@ -56,6 +56,8 @@ td {
 }
 
 .mainBoard {
-    background-color: #eee;
+    background-color: white;
+    padding-right: 20px;
+    padding-bottom: 20px;
 }
 
