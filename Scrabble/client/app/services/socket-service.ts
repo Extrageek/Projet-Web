@@ -4,7 +4,7 @@ import { Observable } from "rxjs/Observable";
 import * as io from "socket.io-client";
 
 import { SocketEventType } from "../commons/socket-eventType";
-
+import { IPlayerInfo } from "../models/player-info.interface";
 import { Player } from "../models/player";
 
 const SERVER_PORT = 3002;
@@ -13,7 +13,7 @@ const SERVER_PORT = 3002;
 export class SocketService {
 
     _socket: SocketIOClient.Socket = null;
-    _playersPriorityQueue: Array<string>;
+    _playersPriorityQueue: Array<IPlayerInfo>;
     private _player: Player;
     private _missingPlayers: number;
     private _serverUri: string = window.location.hostname + ":" + SERVER_PORT;
@@ -34,18 +34,14 @@ export class SocketService {
     }
 
     // Must be removed after a clean debug
-    public set playersPriorityQueue(players: Array<string>) {
+    public set playersPriorityQueue(players: Array<IPlayerInfo>) {
         this._playersPriorityQueue = players;
     }
 
     constructor(private router: Router) {
-        this._playersPriorityQueue = new Array<string>();
+        this._playersPriorityQueue = new Array<IPlayerInfo>();
         this._player = new Player("");
         this.initializeClient();
-    }
-
-    public isCurrentPlayer(): Boolean {
-        return this.getCurrentPlayer() === this.player.username;
     }
 
     private initializeClient() {
@@ -68,11 +64,7 @@ export class SocketService {
         return observable;
     }
 
-    public getCurrentPlayer(): string {
-        return this._playersPriorityQueue[0];
-    }
-
-    public getNextPlayer(): string {
-        return this._playersPriorityQueue[1];
+    public isCurrentPlayer(): boolean{
+        return this._playersPriorityQueue[0].username === this._player.username;
     }
 }
