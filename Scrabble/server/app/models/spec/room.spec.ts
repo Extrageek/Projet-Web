@@ -211,19 +211,21 @@ describe("Room", () => {
         let room = new Room(roomCapacity);
         let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
         let player2 = new Player(fakename2, numberOfPlayers, fakeSocketId2);
+        player1.online = true;
+        player2.online = true;
 
         room.addPlayer(player1);
         room.addPlayer(player2);
 
         // Should change the order of the list
         let priorityList = room.getAndUpdatePlayersQueue();
-        expect(priorityList[0]).to.deep.equals(player2.username);
-        expect(priorityList[1]).to.deep.equals(player1.username);
+        expect(priorityList[0].username).to.deep.equals(player2.username);
+        expect(priorityList[1].username).to.deep.equals(player1.username);
 
         // Should invert the order of the list
         priorityList = room.getAndUpdatePlayersQueue();
-        expect(priorityList[0]).to.deep.equals(player1.username);
-        expect(priorityList[1]).to.deep.equals(player2.username);
+        expect(priorityList[0].username).to.deep.equals(player1.username);
+        expect(priorityList[1].username).to.deep.equals(player2.username);
     });
 
     it("should change the order of 2 players", () => {
@@ -231,19 +233,21 @@ describe("Room", () => {
         let room = new Room(roomCapacity);
         let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
         let player2 = new Player(fakename2, numberOfPlayers, fakeSocketId2);
+        player1.online = true;
+        player2.online = true;
 
         room.addPlayer(player1);
         room.addPlayer(player2);
 
         // Should change the order of the list
         let priorityList = room.getAndUpdatePlayersQueue();
-        expect(priorityList[0]).to.deep.equals(player2.username);
-        expect(priorityList[1]).to.deep.equals(player1.username);
+        expect(priorityList[0].username).to.deep.equals(player2.username);
+        expect(priorityList[1].username).to.deep.equals(player1.username);
 
         // Should invert the order of the list
         priorityList = room.getAndUpdatePlayersQueue();
-        expect(priorityList[0]).to.deep.equals(player1.username);
-        expect(priorityList[1]).to.deep.equals(player2.username);
+        expect(priorityList[0].username).to.deep.equals(player1.username);
+        expect(priorityList[1].username).to.deep.equals(player2.username);
     });
 
     it("should change the order of 3 players", () => {
@@ -256,28 +260,30 @@ describe("Room", () => {
         let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
         let player2 = new Player(fakename2, numberOfPlayers, fakeSocketId2);
         let player3 = new Player(fakename3, numberOfPlayers, fakeSocketId3);
-
+        player1.online = true;
+        player2.online = true;
+        player3.online = true;
         room.addPlayer(player1);
         room.addPlayer(player2);
         room.addPlayer(player3);
 
         // Should change the order and put the player 2 at the first position
         let priorityList = room.getAndUpdatePlayersQueue();
-        expect(priorityList[0]).to.deep.equals(player2.username);
-        expect(priorityList[1]).to.deep.equals(player3.username);
-        expect(priorityList[2]).to.deep.equals(player1.username);
+        expect(priorityList[0].username).to.deep.equals(player2.username);
+        expect(priorityList[1].username).to.deep.equals(player3.username);
+        expect(priorityList[2].username).to.deep.equals(player1.username);
 
         // Should invert the order and put the player 3 at the first position
         priorityList = room.getAndUpdatePlayersQueue();
-        expect(priorityList[0]).to.deep.equals(player3.username);
-        expect(priorityList[1]).to.deep.equals(player1.username);
-        expect(priorityList[2]).to.deep.equals(player2.username);
+        expect(priorityList[0].username).to.deep.equals(player3.username);
+        expect(priorityList[1].username).to.deep.equals(player1.username);
+        expect(priorityList[2].username).to.deep.equals(player2.username);
 
         // Should invert the order and put the player 1 first position
         priorityList = room.getAndUpdatePlayersQueue();
-        expect(priorityList[0]).to.deep.equals(player1.username);
-        expect(priorityList[1]).to.deep.equals(player2.username);
-        expect(priorityList[2]).to.deep.equals(player3.username);
+        expect(priorityList[0].username).to.deep.equals(player1.username);
+        expect(priorityList[1].username).to.deep.equals(player2.username);
+        expect(priorityList[2].username).to.deep.equals(player3.username);
     });
 
     it("should change the order of 4 players", () => {
@@ -293,6 +299,10 @@ describe("Room", () => {
         let player2 = new Player(fakename2, numberOfPlayers, fakeSocketId2);
         let player3 = new Player(fakename3, numberOfPlayers, fakeSocketId3);
         let player4 = new Player(fakename4, numberOfPlayers, fakeSocketId4);
+        player1.online = true;
+        player2.online = true;
+        player3.online = true;
+        player4.online = true;
 
         room.addPlayer(player1);
         room.addPlayer(player2);
@@ -301,31 +311,62 @@ describe("Room", () => {
 
         // Should change the order and put the player 2 at the first position
         let priorityList = room.getAndUpdatePlayersQueue();
-        expect(priorityList[0]).to.deep.equals(player2.username);
-        expect(priorityList[1]).to.deep.equals(player3.username);
-        expect(priorityList[2]).to.deep.equals(player4.username);
-        expect(priorityList[3]).to.deep.equals(player1.username);
+        expect(priorityList[0].username).to.deep.equals(player2.username);
+        expect(priorityList[1].username).to.deep.equals(player3.username);
+        expect(priorityList[2].username).to.deep.equals(player4.username);
+        expect(priorityList[3].username).to.deep.equals(player1.username);
 
         // Should invert the order and put the player 3 at the first position
         priorityList = room.getAndUpdatePlayersQueue();
-        expect(priorityList[0]).to.deep.equals(player3.username);
-        expect(priorityList[1]).to.deep.equals(player4.username);
-        expect(priorityList[2]).to.deep.equals(player1.username);
-        expect(priorityList[3]).to.deep.equals(player2.username);
+        expect(priorityList[0].username).to.deep.equals(player3.username);
+        expect(priorityList[1].username).to.deep.equals(player4.username);
+        expect(priorityList[2].username).to.deep.equals(player1.username);
+        expect(priorityList[3].username).to.deep.equals(player2.username);
 
         // Should invert the order and put the player 4 first position
         priorityList = room.getAndUpdatePlayersQueue();
-        expect(priorityList[0]).to.deep.equals(player4.username);
-        expect(priorityList[1]).to.deep.equals(player1.username);
-        expect(priorityList[2]).to.deep.equals(player2.username);
-        expect(priorityList[3]).to.deep.equals(player3.username);
+        expect(priorityList[0].username).to.deep.equals(player4.username);
+        expect(priorityList[1].username).to.deep.equals(player1.username);
+        expect(priorityList[2].username).to.deep.equals(player2.username);
+        expect(priorityList[3].username).to.deep.equals(player3.username);
 
         // Should invert the order and put the player 1 first position
         priorityList = room.getAndUpdatePlayersQueue();
-        expect(priorityList[0]).to.deep.equals(player1.username);
-        expect(priorityList[1]).to.deep.equals(player2.username);
-        expect(priorityList[2]).to.deep.equals(player3.username);
-        expect(priorityList[3]).to.deep.equals(player4.username);
+        expect(priorityList[0].username).to.deep.equals(player1.username);
+        expect(priorityList[1].username).to.deep.equals(player2.username);
+        expect(priorityList[2].username).to.deep.equals(player3.username);
+        expect(priorityList[3].username).to.deep.equals(player4.username);
+    });
+
+    it("should change the order of 4 players and put offline player at the end.", () => {
+        let roomCapacity = 4;
+        // let numberOfPlayers = 4;
+        let fakename3 = "fakename3";
+        let fakename4 = "fakename4";
+        let fakeSocketId3 = "fafa78777f9a79fa";
+        let fakeSocketId4 = "fafa00000000000a";
+
+        let room = new Room(roomCapacity);
+        let player1 = new Player(fakename1, numberOfPlayers, fakeSocketId1);
+        let player2 = new Player(fakename2, numberOfPlayers, fakeSocketId2);
+        let player3 = new Player(fakename3, numberOfPlayers, fakeSocketId3);
+        let player4 = new Player(fakename4, numberOfPlayers, fakeSocketId4);
+        player1.online = true;
+        player2.online = false;
+        player3.online = true;
+        player4.online = true;
+
+        room.addPlayer(player1);
+        room.addPlayer(player2);
+        room.addPlayer(player3);
+        room.addPlayer(player4);
+
+        // Should change the order and put the player 2 at the first position
+        let priorityList = room.getAndUpdatePlayersQueue();
+        expect(priorityList[0].username).to.deep.equals(player3.username);
+        expect(priorityList[1].username).to.deep.equals(player4.username);
+        expect(priorityList[2].username).to.deep.equals(player1.username);
+        expect(priorityList[3].username).to.deep.equals(player2.username);
     });
 
     it("should create a random order of 2 players in the queue", () => {
