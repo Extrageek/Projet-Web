@@ -74,23 +74,27 @@ export class SocketConnectionHandler {
                             let room = this._roomHandler.addPlayer(player);
                             let message = `${player.username}` + ` joined the room`;
                             // Create the response to send
-                            let response = this._messageHandler
-                                .createRoomMessageResponse(player.username, room, message);
-                            socket.join(response._roomId);
+                            try {
+                                let response = this._messageHandler
+                                    .createRoomMessageResponse(player.username, room, message);
+                                socket.join(response._roomId);
 
-                            // Emit to all the player in the room.
-                            this._socket.to(response._roomId).emit(SocketEventType.joinRoom, response);
+                                // Emit to all the player in the room.
+                                this._socket.to(response._roomId).emit(SocketEventType.joinRoom, response);
 
-                            // Subscribe to the timer in the room if the room is ready
-                            if (room.isFull()) {
-                                this._socket.to(response._roomId).emit(SocketEventType.updateBoard, room.board);
-                                room.timerService.timer().subscribe(
-                                    (counter: { minutes: number, seconds: number }) => {
-                                        // Send the counter value to the members of the room
-                                        this._socket.to(response._roomId).emit(SocketEventType.timerEvent, counter);
-                                    });
-                        }
-
+                                // Subscribe to the timer in the room if the room is ready
+                                if (room.isFull()) {
+                                    this._socket.to(response._roomId).emit(SocketEventType.updateBoard, room.board);
+                                    room.timerService.timer().subscribe(
+                                        (counter: { minutes: number, seconds: number }) => {
+                                            // Send the counter value to the members of the room
+                                            this._socket.to(response._roomId).emit(SocketEventType.timerEvent, counter);
+                                        });
+                                }
+                            }
+                            catch(e) {
+                                    console.log(e);
+                            }
                     } else {
                         // Emit only to the sender
                         socket.emit(SocketEventType.usernameAlreadyExist);
@@ -110,8 +114,12 @@ export class SocketConnectionHandler {
         }) => {
             let player = this._roomHandler.getPlayerBySocketId(socket.id);
             let room = this._roomHandler.getRoomBySocketId(socket.id);
-            let response = this._messageHandler.createRoomMessageResponse(player.username, room, data.message);
-            this._socket.to(response._roomId).emit(SocketEventType.message, response);
+            try {
+                let response = this._messageHandler.createRoomMessageResponse(player.username, room, data.message);
+                this._socket.to(response._roomId).emit(SocketEventType.message, response);
+            } catch (e) {
+                console.log(e);
+            }
         });
     }
 
@@ -126,16 +134,19 @@ export class SocketConnectionHandler {
             let hasChanged = this._roomHandler.exchangeLetterOfCurrentPlayer(socket.id, request.data);
             let room = this._roomHandler.getRoomBySocketId(socket.id);
             let player = this._roomHandler.getPlayerBySocketId(socket.id);
-            let response = this._messageHandler
-                .createExchangeLettersResponse(
-                player.username,
-                room,
-                request.commandStatus,
-                request.data);
-            response._data = request.data;
+            try {
+                let response = this._messageHandler
+                    .createExchangeLettersResponse(
+                    player.username,
+                    room,
+                    request.commandStatus,
+                    request.data);
+                response._data = request.data;
 
-
-            this._socket.to(room.roomId).emit(SocketEventType.commandRequest, response);
+                this._socket.to(room.roomId).emit(SocketEventType.commandRequest, response);
+            } catch (e) {
+                console.log(e);
+            }
             if (hasChanged) {
                 let newEasel = room.letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
                 // Emit a message with the new letters to the sender
@@ -157,62 +168,66 @@ export class SocketConnectionHandler {
 
             let room = this._roomHandler.getRoomBySocketId(socket.id);
             let player = this._roomHandler.getPlayerBySocketId(socket.id);
-            let response = this._messageHandler
-                .createPlaceWordResponse(player.username, room, request._commandStatus, request._response);
+            try {
+                let response = this._messageHandler
+                    .createPlaceWordResponse(player.username, room, request._commandStatus, request._response);
 
-            if (response._commandStatus === CommandStatus.Ok) {
 
-                if (room.placeWordInTheBoard(request._response, player.username)) {
-                    // Place the word in the board and emit an update board to the room members
-                    this._socket.to(room.roomId).emit(SocketEventType.updateBoard, room.board);
-                    // Update easel for the player
-                    let newEasel = room.letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
-                    socket.emit(SocketEventType.updateEasel, newEasel);
-                    socket.emit(SocketEventType.updateLetterInEasel, newEasel.length);
-                    this._socket.to(room.roomId)
-                        .emit(SocketEventType.updateLetterInBank, room.letterBankHandler.bank.numberOfLettersInBank);
+                if (response._commandStatus === CommandStatus.Ok) {
 
-                    // verification
-                    let isVerified = room.verifyWordsCreated(request._response, socket.id);
-
-                    if (isVerified) {
-                        room.refillPlayerEasel(player.socketId);
-                        newEasel = room.letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
-                        if (room.isGameOver) {
-                            let winnerUsername = room.getWinnerUsername();
-
-                            this._socket.to(room.roomId).emit(SocketEventType.gameOver, winnerUsername);
-                        }
-                        else {
-
-                            this._socket.to(room.roomId).emit(
-                                SocketEventType.updateLetterInBank,
-                                room.letterBankHandler.bank.numberOfLettersInBank
-                            );
-                            let playersQueues = room.getAndUpdatePlayersQueue();
-                            this._socket.to(room.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
-                        }
-                        socket.emit(SocketEventType.updateScore, player.score);
-                        socket.emit(SocketEventType.updateLetterInEasel, newEasel.length);
+                    if (room.placeWordInTheBoard(request._response, player.username)) {
+                        // Place the word in the board and emit an update board to the room members
+                        this._socket.to(room.roomId).emit(SocketEventType.updateBoard, room.board);
+                        // Update easel for the player
+                        let newEasel = room.letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
                         socket.emit(SocketEventType.updateEasel, newEasel);
-                    }
-                    // If the word doesn't respect scrabble rules, the word is removed and the board updated
-                    else {
-                        setTimeout(() => {
-                            newEasel = room.removeLastLettersPlacedAndRefill(socket.id);
-                            this._socket.to(room.roomId).emit(SocketEventType.updateBoard, room.board);
+                        socket.emit(SocketEventType.updateLetterInEasel, newEasel.length);
+                        this._socket.to(room.roomId)
+                            .emit(SocketEventType.updateLetterInBank, room.letterBankHandler.bank.numberOfLettersInBank);
+
+                        // verification
+                        let isVerified = room.verifyWordsCreated(request._response, socket.id);
+
+                        if (isVerified) {
+                            room.refillPlayerEasel(player.socketId);
+                            newEasel = room.letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
+                            if (room.isGameOver) {
+                                let winnerUsername = room.getWinnerUsername();
+
+                                this._socket.to(room.roomId).emit(SocketEventType.gameOver, winnerUsername);
+                            }
+                            else {
+
+                                this._socket.to(room.roomId).emit(
+                                    SocketEventType.updateLetterInBank,
+                                    room.letterBankHandler.bank.numberOfLettersInBank
+                                );
+                                let playersQueues = room.getAndUpdatePlayersQueue();
+                                this._socket.to(room.roomId).emit(SocketEventType.updatePlayersQueue, playersQueues);
+                            }
+                            socket.emit(SocketEventType.updateScore, player.score);
                             socket.emit(SocketEventType.updateLetterInEasel, newEasel.length);
                             socket.emit(SocketEventType.updateEasel, newEasel);
-                        }, THREE_SECONDS);
+                        }
+                        // If the word doesn't respect scrabble rules, the word is removed and the board updated
+                        else {
+                            setTimeout(() => {
+                                newEasel = room.removeLastLettersPlacedAndRefill(socket.id);
+                                this._socket.to(room.roomId).emit(SocketEventType.updateBoard, room.board);
+                                socket.emit(SocketEventType.updateLetterInEasel, newEasel.length);
+                                socket.emit(SocketEventType.updateEasel, newEasel);
+                            }, THREE_SECONDS);
+                        }
+                    } else {
+                        response._commandStatus = CommandStatus.NotAllowed;
                     }
-                } else {
-                    response._commandStatus = CommandStatus.NotAllowed;
                 }
+                this._socket.to(response._room.roomId).emit(SocketEventType.commandRequest, response);
+                this._socket.to(response._room.roomId).emit(SocketEventType.placeWordCommandRequest, response);
             }
-
-            this._socket.to(response._room.roomId).emit(SocketEventType.commandRequest, response);
-            this._socket.to(response._room.roomId).emit(SocketEventType.placeWordCommandRequest, response);
-
+            catch (e) {
+                console.log(e);
+            }
         });
     }
 
@@ -224,11 +239,16 @@ export class SocketConnectionHandler {
 
             let room = this._roomHandler.getRoomBySocketId(socket.id);
             let player = this._roomHandler.getPlayerBySocketId(socket.id);
-            let response = this._messageHandler
-                .createCommandResponse(player.username, room, request);
+            try {
+                let response = this._messageHandler
+                    .createCommandResponse(player.username, room, request);
 
-            // Emit a message with the new letters to the sender
-            this._socket.to(room.roomId).emit(SocketEventType.commandRequest, response);
+                // Emit a message with the new letters to the sender
+                this._socket.to(room.roomId).emit(SocketEventType.commandRequest, response);
+            }
+            catch (e) {
+                console.log(e);
+            }
 
             // Update the players queues for everyone in the room
             let playersQueues = room.getAndUpdatePlayersQueue();
@@ -245,14 +265,18 @@ export class SocketConnectionHandler {
 
             let room = this._roomHandler.getRoomBySocketId(socket.id);
             let player = this._roomHandler.getPlayerBySocketId(socket.id);
-            let response = this._messageHandler
-                .createCommandResponse(
-                player.username,
-                room, request);
+            try {
+                let response = this._messageHandler
+                    .createCommandResponse(
+                    player.username,
+                    room, request);
 
-            // Emit a message with the new letters to the sender
-            this._socket.to(response._room.roomId).emit(SocketEventType.commandRequest, response);
-
+                // Emit a message with the new letters to the sender
+                this._socket.to(response._room.roomId).emit(SocketEventType.commandRequest, response);
+            }
+            catch (e) {
+                console.log(e);
+            }
         });
     }
 
@@ -307,16 +331,18 @@ export class SocketConnectionHandler {
                         let message = `${leavingPlayer.username}` + ` canceled and left the room`;
 
                         // Create a response for the other members of the room
-                        let roomMessage = this._messageHandler.createRoomMessageResponse(
-                            leavingPlayer.username,
-                            playerRoom,
-                            message);
+                        try {
+                            let roomMessage = this._messageHandler.createRoomMessageResponse(
+                                leavingPlayer.username,
+                                playerRoom,
+                                message);
 
-                        // Emit a message for the other players in the room.
-                        this._socket.to(playerRoom.roomId).emit(SocketEventType.playerLeftRoom, roomMessage);
+                            // Emit a message for the other players in the room.
+                            this._socket.to(playerRoom.roomId).emit(SocketEventType.playerLeftRoom, roomMessage);
+                        } catch (e) {
+                            console.log(e);
+                        }
                     }
-
-
                 }
             }
         });
@@ -364,14 +390,18 @@ export class SocketConnectionHandler {
         let message = `${leavingPlayer}` + ` left the room`;
 
         // Create a response for the other members of the room
-        let roomMessage = this._messageHandler.createRoomMessageResponse(
-            leavingPlayer,
-            playerRoom,
-            message);
+        try {
+            let roomMessage = this._messageHandler.createRoomMessageResponse(
+                leavingPlayer,
+                playerRoom,
+                message);
 
-        // Emit a message for the other players in the room.
-        this._socket.to(playerRoom.roomId).emit(SocketEventType.playerLeftRoom, roomMessage);
+            // Emit a message for the other players in the room.
+            this._socket.to(playerRoom.roomId).emit(SocketEventType.playerLeftRoom, roomMessage);
 
+        } catch (e) {
+            console.log(e);
+        }
         // If the room is empty, remove it
         if (playerRoom.numberOfMissingPlayers() === playerRoom.roomCapacity) {
             this._roomHandler.removeRoom(playerRoom);
