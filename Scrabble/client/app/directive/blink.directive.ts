@@ -2,16 +2,16 @@ import { Directive, ElementRef, Input, Renderer, OnInit } from '@angular/core';
 
 @Directive({ selector: '[blinking]' })
 export class BlinkDirective implements OnInit {
-    @Input("blinking") duration: number;
+    @Input() duration: number;
 
-    constructor(private element: ElementRef, private renderer: Renderer) {}
+    constructor(private element: ElementRef, private renderer: Renderer) { }
 
     ngOnInit() {
         setInterval((() => {
             let style = "0";
             if (this.element.nativeElement.style.opacity
                 && this.element.nativeElement.style.opacity === "0") {
-                    style = "1";
+                style = "1";
             }
             this.renderer.setElementStyle(this.element.nativeElement, 'opacity', style);
         }), this.duration);
