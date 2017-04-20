@@ -1,6 +1,6 @@
 import { Directive, ElementRef, Input, Renderer, OnInit } from '@angular/core';
 
-@Directive({ selector: '[blinking]' })
+@Directive({ selector: '[duration]' })
 export class BlinkDirective implements OnInit {
     @Input() duration: number;
 
