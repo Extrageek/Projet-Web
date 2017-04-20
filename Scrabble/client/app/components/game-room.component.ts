@@ -55,8 +55,8 @@ export class GameComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private gameRoomEventManagerService: GameRoomManagerService,
         private commandsService: CommandsService) {
-           this._inputMessage = '';
-           this._isOver = false;
+        this._inputMessage = '';
+        this._isOver = false;
     }
 
     ngOnInit() {
@@ -128,15 +128,16 @@ export class GameComponent implements OnInit, OnDestroy {
         if ((!this.socketService.isCurrentPlayer() || this.isOver)
             && commandParameters.commandType !== CommandType.MessageCmd
             && commandParameters.commandType !== CommandType.GuideCmd) {
-                let message = "Veuillez attendre votre tour après " + this.socketService.getCurrentPlayer() +
-                    + "pour pouvoir jouer";
+            let message = "Veuillez attendre votre tour après "
+                + this.socketService._playersPriorityQueue[0].username +
+                + "pour pouvoir jouer";
 
-                // Ask if it's necessary to send this to the server, I'm not sure we can just push it to the chatroom
-                this.socketService.emitMessage(SocketEventType.INVALID_COMMAND_REQUEST, {
-                        commandType: CommandType.InvalidCmd,
-                        commandStatus: CommandStatus.NotAllowed,
-                        data: message
-                });
+            // Ask if it's necessary to send this to the server, I'm not sure we can just push it to the chatroom
+            this.socketService.emitMessage(SocketEventType.INVALID_COMMAND_REQUEST, {
+                commandType: CommandType.InvalidCmd,
+                commandStatus: CommandStatus.NotAllowed,
+                data: message
+            });
         }
         else {
             this.handleInputCommand(commandParameters);
