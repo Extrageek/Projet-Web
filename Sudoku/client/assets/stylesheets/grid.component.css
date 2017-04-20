@@ -13,9 +13,17 @@
     width: 100px;
     height: 100px;
 }
-.buttons {
+#clockButton {
     background-color: #3F51B5;
     color: white;
+}
+.buttons {
+    background-color: #E91E63;
+    color: white;
+}
+#test123 {
+    margin-top: -4vh;
+    margin-left: 4vh;
 }
 .center-grid {
     position: absolute;
@@ -31,9 +39,7 @@
     padding: 1px 2px 0px 2px;
     background-color: #fff;
 }
-button > span {
-    font-size: 23px;
-}
+
 .table-responsive {
     padding: 10px;
 }
@@ -60,6 +66,9 @@ input:focus {
     color: transparent;
     text-shadow: 0 0 0 black;
     box-shadow: 0 0 50px 0 deepskyblue;
+}
+.actionCard {
+    margin-top: 10px;
 }
 
 .readOnlyCell {
