@@ -32,9 +32,13 @@ display-component {
     background: transparent;
 }
 
+
+/***** GAME INFOS */
+
 #playerName {
     font-family: 'Bungee Inline';
     font-size: 45px;
+    /*color:rgb(16, 108, 200)*/
     color: blue;
     text-align: left
 }
@@ -42,9 +46,21 @@ display-component {
 #computerName {
     font-family: 'Bungee Inline';
     font-size: 45px;
-    color: red;
+    color: rgb(255, 82, 82);
     text-align: left
 }
+
+/*
+#gameInfo {
+    /*padding: 6px;
+    background-color: #fff;
+    border: 3px solid #666;
+        -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    border-radius: 70px;
+    margin-bottom: 6px;
+}
+*/
 
 #score {
     font-family: 'Bungee Inline';
@@ -53,26 +69,24 @@ display-component {
     text-align: center
 }
 
-#firstSetToDo {
-    width: 24px;
-    height: 24px;
-    -webkit-border-radius: 12px;
-    -moz-border-radius: 12px;
-    border-radius: 12px;
-    background: black;
-    display: inline-block;
+#score span:first-child {
+    color: blue;
+    ;
 }
 
-#secondSetToDo {
-    width: 24px;
-    height: 24px;
-    -webkit-border-radius: 12px;
-    -moz-border-radius: 12px;
-    border-radius: 12px;
-    background: black;
-    display: inline-block;
+#score span:last-child {
+    color: rgb(255, 82, 82);
+    ;
 }
 
+
+/****** END OF GAME INFO****/
+
+
+/********* GAME SET ********/
+
+#firstSetToDo,
+#secondSetToDo,
 #thirdSetToDo {
     width: 24px;
     height: 24px;
@@ -83,26 +97,8 @@ display-component {
     display: inline-block;
 }
 
-#firstSetDone {
-    width: 24px;
-    height: 24px;
-    -webkit-border-radius: 12px;
-    -moz-border-radius: 12px;
-    border-radius: 12px;
-    background: mediumseagreen;
-    display: inline-block;
-}
-
-#secondSetDone {
-    width: 24px;
-    height: 24px;
-    -webkit-border-radius: 12px;
-    -moz-border-radius: 12px;
-    border-radius: 12px;
-    background: mediumseagreen;
-    display: inline-block;
-}
-
+#firstSetDone,
+#secondSetDone,
 #thirdSetDone {
     width: 24px;
     height: 24px;
@@ -113,6 +109,47 @@ display-component {
     display: inline-block;
 }
 
+
+/********* END GAME SET ********/
+
+/*.user-stone,
+.computer-stone {
+    height: 415px;
+    width: 75px;
+    background-color: #fff;
+    padding: 10px;
+    border: 3px solid #666;
+    border-radius: 13px;
+}*/
+
+
+/*
+.user-stone img,
+.computer-stone img {
+    vertical-align: middle;
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    padding-bottom: 3px;
+}*/
+
+
+/******** SPINNER BUTTON ******/
+
+.counterclockwiseArrow {
+    width: 4vw !important;
+    height: 6vh !important;
+    position: absolute;
+    top: 87vh !important;
+    right: 48vw !important;
+    z-index: 4 !important;
+}
+
+
+/****** OVERLAY BUTTON *******/
+
 .overlay-content p a {
     color: #818181;
 }
@@ -120,14 +157,22 @@ display-component {
 .overlay-box button {
     font-size: 20px;
     margin-bottom: 10px;
+    -webkit-border-radius: 24px;
+    -moz-border-radius: 24px;
     border-radius: 24px 24px;
     padding: 13px;
 }
+
+
+/******* SCORE TABLE ********/
 
 table {
     width: 60%;
     margin-left: 12%;
 }
+
+
+/******* END OF GAME DISPLAY *****/
 
 #endGame-window {
     background-color: rgba(122, 133, 255, 0.9);
@@ -159,14 +204,7 @@ table {
     top: 80px;
     right: 20px;
 }
+
 p {
     margin-top: 6px;
-}
-.counterclockwiseArrow {
-    width: 4vw !important;
-    height: 6vh !important;
-    position: absolute;
-    top: 87vh !important;
-    right: 48vw !important;
-    z-index: 4 !important;
 }
