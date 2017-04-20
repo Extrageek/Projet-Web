@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit } from "@angular/core";
 import { Subscription } from "rxjs/Subscription";
 
-import { Player } from "../models/player";
+import { IPlayerInfo } from "../models/player-info.interface";
 
 import { SocketService } from "../services/socket-service";
 import { CommandType } from "../services/commons/command-type";
@@ -22,7 +22,7 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
     public _winner: string;
     public _isWinner: boolean;
     public _username: string;
-    public _players: Array<Player>;
+    public _players: Array<IPlayerInfo>;
     public _gameOfNPlayers: number;
 
     constructor(private socketService: SocketService) {
@@ -41,20 +41,7 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
         this._winner = "";
         this._username = this.socketService.player.username;
         this._gameOfNPlayers = this.socketService.player.numberOfPlayers;
-        this._players = new Array<Player>();
-        let playerOli = new Player("Olivier");
-        playerOli.isOnline = false;
-        playerOli.score = 0;
-        let playerJu = new Player("Julien");
-        playerJu.score = 17;
-        let playerDave = new Player("Dave");
-        playerDave.score = 11;
-        let playerRami = new Player("Rami");
-        playerDave.score = 18;
-        this._players.push(playerJu);
-        this._players.push(playerDave);
-        this._players.push(playerOli);
-        this._players.push(playerRami);
+        this._players = new Array<IPlayerInfo>();
     }
 
     ngAfterViewInit() {
@@ -110,10 +97,11 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
 
     private onUpdatePlayersQueueEvent(): Subscription {
         return this.socketService.subscribeToChannelEvent(SocketEventType.UPDATE_PLAYERS_QUEUE)
-            .subscribe((response: Array<string>) => {
+            .subscribe((response: Array<IPlayerInfo>) => {
                 if (response !== undefined && response !== null) {
                     // Temporary settings, we can use a manager to
                     this.socketService.playersPriorityQueue = response;
+                    this._players = response;
                 }
             });
     }
@@ -128,13 +116,5 @@ export class InformationPanelComponent implements OnInit, AfterViewInit {
 
     public getScore(): number {
         return this.socketService.player.score;
-    }
-
-    public getCurrentPlayer() {
-        return this.socketService.getCurrentPlayer();
-    }
-
-    public getNextPlayer() {
-        return this.socketService.getNextPlayer();
     }
 }

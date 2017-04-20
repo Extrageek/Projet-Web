@@ -1,4 +1,5 @@
 import { Player } from "./player";
+import { IPlayerInfo } from "../services/commons/player-info.interface";
 import { QueueCollection } from "./queue-collection";
 import { Board } from "./board/board";
 import { TimerService } from "../services/timer.service";
@@ -157,16 +158,32 @@ export class Room {
         return hasChanged;
     }
 
-    public getAndUpdatePlayersQueue(): Array<string> {
-        let newPlayerOrder = new Array<string>();
+    public getAndUpdatePlayersQueue(): Array<IPlayerInfo> {
+        let newPlayerOrder = new Array<IPlayerInfo>();
+        let playersOffline = new Array<IPlayerInfo>();
         let players: Player[];
         do {
             players = this._playersQueue.updateAndGetQueuePriorities();
         } while (!this.players.peek().online && this.numberOfMissingPlayers() < this.roomCapacity);
 
-        for (let index = 0; index < players.length; ++index) {
-            newPlayerOrder[index] = players[index].username;
-        }
+        players.forEach((player: Player) => {
+            let playerInfo = {
+                username: player.username,
+                score: player.score,
+                isOnline: player.online
+            };
+            if (player.online) {
+                newPlayerOrder.push(playerInfo);
+            }
+            else {
+                playersOffline.push(playerInfo);
+            }
+        });
+
+        // We put offline players at the end of the queue
+        playersOffline.forEach((playerInfo: IPlayerInfo) => {
+            newPlayerOrder.push(playerInfo);
+        });
 
         this._timerService.initializeCounter();
         return newPlayerOrder;
