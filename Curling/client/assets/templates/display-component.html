@@ -47,7 +47,7 @@
         </div>
         <div id="gameInfo" class="col-sm-4">
             <div id="score" class="col-sm-12">
-                {{gameStatusService.scorePlayer}} - {{gameStatusService.scoreComputer}}
+                <span>{{gameStatusService.scorePlayer}}</span> - <span>{{gameStatusService.scoreComputer}}</span>
             </div>
             <div id="gameSet" class="col-sm-12">
                 <div class="col-sm-5">
@@ -74,19 +74,20 @@
 
         <div class="col-sm-12">
             <div id="playerStones" class="pull-left col-sm-3">
-                <div *ngFor="let stone of gameStatusService.currentStonesPlayer">
-                    <div>
+                <div class="user-stone">
+                    <div *ngFor="let stone of gameStatusService.currentStonesPlayer">
                         <img src=" ../../assets/images/stone-blue.png" alt="Pierre bleue" height="48" width="48">
                     </div>
                 </div>
             </div>
             <div id="computerStones" class="pull-right col-sm-3">
-                <div *ngFor="let stone of gameStatusService.currentStonesComputer">
-                    <div class="col-sm-12">
-                        <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
+                <div class=" col-sm-12">
+                    <div class="computer-stone pull-right">
+                        <div *ngFor="let stone of gameStatusService.currentStonesComputer">
+                            <img src="../../assets/images/stone-red.png" alt="Pierre rouge" height="48" width="48" class="pull-right">
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

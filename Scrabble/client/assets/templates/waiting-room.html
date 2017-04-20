@@ -5,12 +5,6 @@
     </div>
     <div *ngIf="_username !== '' && _username !== undefined" class="col-sm-6">
         <div class="pull-right">
-            <md-chip-list id="login-info">
-                <md-chip>
-                    <div><i class="material-icons">account_circle</i></div>
-                    <div class="vertical-center">{{ _username }}</div>
-                </md-chip>
-            </md-chip-list>
             <button md-fab class="btn-cancel" (click)="cancelGame()">
                 <i class="material-icons icon-medium-size">exit_to_app</i>
             </button>
@@ -22,17 +16,19 @@
 <div class="col-xs-12 content vertical-center">
     <md-card class="center-block col-xs-10 col-sm-8 col-md-5 col-lg-3">
         <md-card-header>
-            <md-card-title><h3>RECHERCHE DE JOUEURS</h3></md-card-title>
+            <md-card-title>RECHERCHE DE JOUEURS</md-card-title>
         </md-card-header>
         <hr>
         <md-card-content>
-            <div *ngIf="this !== undefined" class="info center-block vertical-center centered">
-                <span *ngFor="let player of _numberOfPlayerConnected"><i class="material-icons icon-medium-size brown">person</i></span>
-                <span *ngFor="let player of _numberOfPlayerMissing"><i class="material-icons icon-medium-size brown">person_outline</i></span>
+            <div *ngIf="this !== undefined" class="centered vertical-center">
+                <div class="centered">
+                    <span *ngFor="let player of _numberOfPlayerConnected"><i class="material-icons icon-medium-size brown">person</i></span>
+                    <span *ngFor="let player of _numberOfPlayerMissing"><i class="material-icons icon-medium-size brown">person_outline</i></span>
+                </div>
             </div>
             <br/>
-            <div class="center-block vertical-center">
-                <md-spinner color="warm" class="centered"></md-spinner>
+            <div class="vertical-center">
+                <md-spinner class="centered" color="warm"></md-spinner>
             </div>
         </md-card-content>
         <md-card-actions>

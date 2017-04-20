@@ -6,19 +6,10 @@ a {
     color: #00B7FF;
 }
 
-body{
-    background-image: url("../images/curling.jpg");
+body {
+    /*background-image: url("../images/curling.jpg");*/
+    background-image: url(' ../../assets/images/bg_image.jpg');
     background-size: cover;
     margin: 0px;
     overflow: hidden;
-}
-
-.user-setting {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    background-color: rgba(122, 133, 255, 0.9);
-    overflow-y: hidden;
 }

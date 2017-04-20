@@ -66,35 +66,35 @@ export class SocketConnectionHandler {
                     let name = this._nameHandler.getNameBySocketId(socket.id);
                     if ((name === null && this._nameHandler.getSocketIdByName(connectionInfos.username) === null)
                         || this._nameHandler.getSocketIdByName(name) === socket.id) {
-                            name = (name === null) ? connectionInfos.username : name;
+                        name = (name === null) ? connectionInfos.username : name;
 
-                            // Create a new player and get his room id
-                            let player = new Player(name, connectionInfos.gameType, socket.id);
-                            this._nameHandler.addConnection(name, socket.id);
-                            let room = this._roomHandler.addPlayer(player);
-                            let message = `${player.username}` + ` joined the room`;
-                            // Create the response to send
-                            try {
-                                let response = this._messageHandler
-                                    .createRoomMessageResponse(player.username, room, message);
-                                socket.join(response._roomId);
+                        // Create a new player and get his room id
+                        let player = new Player(name, connectionInfos.gameType, socket.id);
+                        this._nameHandler.addConnection(name, socket.id);
+                        let room = this._roomHandler.addPlayer(player);
+                        let message = `${player.username}` + ` joined the room`;
+                        // Create the response to send
+                        try {
+                            let response = this._messageHandler
+                                .createRoomMessageResponse(player.username, room, message);
+                            socket.join(response._roomId);
 
-                                // Emit to all the player in the room.
-                                this._socket.to(response._roomId).emit(SocketEventType.joinRoom, response);
+                            // Emit to all the player in the room.
+                            this._socket.to(response._roomId).emit(SocketEventType.joinRoom, response);
 
-                                // Subscribe to the timer in the room if the room is ready
-                                if (room.isFull()) {
-                                    this._socket.to(response._roomId).emit(SocketEventType.updateBoard, room.board);
-                                    room.timerService.timer().subscribe(
-                                        (counter: { minutes: number, seconds: number }) => {
-                                            // Send the counter value to the members of the room
-                                            this._socket.to(response._roomId).emit(SocketEventType.timerEvent, counter);
-                                        });
-                                }
+                            // Subscribe to the timer in the room if the room is ready
+                            if (room.isFull()) {
+                                this._socket.to(response._roomId).emit(SocketEventType.updateBoard, room.board);
+                                room.timerService.timer().subscribe(
+                                    (counter: { minutes: number, seconds: number }) => {
+                                        // Send the counter value to the members of the room
+                                        this._socket.to(response._roomId).emit(SocketEventType.timerEvent, counter);
+                                    });
                             }
-                            catch(e) {
-                                    console.log(e);
-                            }
+                        }
+                        catch (e) {
+                            console.log(e);
+                        }
                     } else {
                         // Emit only to the sender
                         socket.emit(SocketEventType.usernameAlreadyExist);
@@ -182,8 +182,8 @@ export class SocketConnectionHandler {
                         let newEasel = room.letterBankHandler.parseFromListOfLetterToListOfString(player.easel.letters);
                         socket.emit(SocketEventType.updateEasel, newEasel);
                         socket.emit(SocketEventType.updateLetterInEasel, newEasel.length);
-                        this._socket.to(room.roomId)
-                            .emit(SocketEventType.updateLetterInBank, room.letterBankHandler.bank.numberOfLettersInBank);
+                        this._socket.to(room.roomId).emit(SocketEventType.updateLetterInBank,
+                            room.letterBankHandler.bank.numberOfLettersInBank);
 
                         // verification
                         let isVerified = room.verifyWordsCreated(request._response, socket.id);

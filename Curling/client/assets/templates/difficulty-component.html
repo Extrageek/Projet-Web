@@ -1,22 +1,31 @@
-<div class="user-setting">
+<div class="col-md-12 user-setting">
+    <!--<div class="title-box col-md-6 col-md-offset-3">
+        <span>
+         <i class="material-icons">account_circle</i> Bienvenue {{_username}}
+     </span>
 
+    </div>-->
     <div class="difficulty-box card mdl-card mdl-shadow--2dp">
         <div class="mdl-card__title">
-            <h2 class="mdl-card__title-text"> Bonjour {{_username}}</h2>
+            <h2 class="mdl-card__title-text">
+                Veuillez choisir le niveau de difficulté
+            </h2>
         </div>
         <div class="mdl-card__supporting-text">
-            <p> Veuillez choisir le niveau de difficulté :</p>
 
             <md-radio-group [(ngModel)]="_difficulty">
-                <md-radio-button value="0"> <p> Normal </p> </md-radio-button>
+                <md-radio-button value="0">
+                    <p> Normal </p>
+                </md-radio-button>
                 <br>
-                <md-radio-button value="1"> <p> Difficile </p> </md-radio-button>
+                <md-radio-button value="1">
+                    <p> Difficile </p>
+                </md-radio-button>
             </md-radio-group>
 
         </div>
         <div class="mdl-card__actions mdl-card--border">
-            <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored"
-                    (click)="launchGame()">Commencer la partie !</button>
+            <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" (click)="launchGame()">Commencer la partie !</button>
         </div>
     </div>
 </div>
