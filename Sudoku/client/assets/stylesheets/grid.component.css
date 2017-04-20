@@ -25,6 +25,9 @@
     margin-top: -4vh;
     margin-left: 4vh;
 }
+#firstCard {
+    min-height: 221px;
+}
 .center-grid {
     position: absolute;
     margin-left: auto;

@@ -26,15 +26,7 @@
         </div>
     </div>
     <div class="col-md-4 col-sm-5">
-        <md-card>
-            <md-card-content>
-
-                <i *ngIf="_hiddenClock" class="material-icons">alarm_off</i>
-                <h4 *ngIf="!_hiddenClock">
-                    <i *ngIf="!_hiddenClock" class="material-icons">alarm_on</i>
-                    {{_time.printHours()}} : {{_time.printMinutes()}} : {{_time.printSeconds()}}</h4>
-
-            </md-card-content>
+        <md-card id="firstCard">
             <md-card-content>
                 <h4> <i class="material-icons">face</i> &nbsp; {{_userSetting.name}}</h4>
             </md-card-content>
@@ -42,8 +34,16 @@
                 <h4 *ngIf="_userSetting.difficulty === 0"> <i class="material-icons">star</i> &nbsp; FACILE </h4>
                 <h4 *ngIf="_userSetting.difficulty === 1"> <i class="material-icons">star</i> &nbsp; DIFFICLE </h4>
             </md-card-content>
+            <md-card-content>
+                <i *ngIf="_hiddenClock" class="material-icons">alarm_off</i>
+                <h4 *ngIf="!_hiddenClock">
+                    <i *ngIf="!_hiddenClock" class="material-icons">alarm_on</i>
+                    {{_time.printHours()}} : {{_time.printMinutes()}} : {{_time.printSeconds()}}</h4>
+            </md-card-content>
             <md-card-actions>
-                <button id="clockButton" md-raised-button (click)="toggleClock()"> <span> Basculer l'horloge</span></button>
+                <button id="clockButton" md-raised-button (click)="toggleClock()"> <span>
+                    <ng-container *ngIf="!_hiddenClock"> Cacher </ng-container>
+                    <ng-container *ngIf="_hiddenClock"> Montrer </ng-container> l'horloge</span></button>
             </md-card-actions>
         </md-card>
         <md-card class="actionCard">
