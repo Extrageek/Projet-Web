@@ -170,7 +170,8 @@ export class Room {
             let playerInfo = {
                 username: player.username,
                 score: player.score,
-                isOnline: player.online
+                isOnline: player.online,
+                leftDuringGame: player.hasLeftDuringGame
             };
             if (player.online) {
                 newPlayerOrder.push(playerInfo);
