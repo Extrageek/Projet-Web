@@ -179,9 +179,13 @@ export class RoomHandler {
             // Get the leaving player by his/her socket id
             let leavingPlayer = this.getPlayerBySocketId(socketId);
 
+
             let easelLetter = leavingPlayer.easel.letters;
 
             let room = this.getRoomBySocketId(socketId);
+            if (!room.isGameOver) {
+                leavingPlayer.hasLeftDuringGame = true;
+            }
 
             // Put the letters of the player back in the LetterBank
             room.letterBankHandler.putLetterBackInBank(easelLetter);

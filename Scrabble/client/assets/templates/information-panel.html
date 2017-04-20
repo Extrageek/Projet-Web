@@ -28,7 +28,7 @@
             <md-list-item [ngClass]="(player.isOnline) ? 'player-online' : 'player-offline'" *ngFor="let player of _players">
                 <i class="material-icons" *ngIf="player.isOnline" md-list-icon>person</i>
                 <i class="material-icons" *ngIf="!player.isOnline" md-list-icon>person_outline</i>
-                <h4 md-line>{{player.username}}</h4>
+                <h4 md-line [ngClass]="(!player.leftDuringGame && !player.isOnline) ? 'player-left-game-over' : ''">{{player.username}}</h4>
                 <p md-line>Score : {{player.score}}</p>
                 <i *ngIf="player.username === _username" id="player-you" class="material-icons">face</i>
             </md-list-item>
